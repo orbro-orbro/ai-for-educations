@@ -1,0 +1,40 @@
+:root {
+  color: #132238;
+  background: #f4f7fb;
+  font-family: Inter, "Microsoft YaHei", sans-serif;
+}
+
+body {
+  margin: 0;
+}
+
+main {
+  max-width: 720px;
+  margin: 12vh auto;
+  padding: 3rem;
+  background: #ffffff;
+  border: 1px solid #dfe7f1;
+  border-radius: 20px;
+}
+
+.eyebrow {
+  color: #176b87;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+
+nav {
+  display: flex;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+button {
+  padding: 0.75rem 1.25rem;
+  border: 0;
+  border-radius: 999px;
+  color: #ffffff;
+  background: #176b87;
+  font: inherit;
+  font-weight: 700;
+}

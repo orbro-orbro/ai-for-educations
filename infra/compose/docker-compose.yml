@@ -1,0 +1,57 @@
+name: knowbound-cj
+
+services:
+  postgres:
+    image: pgvector/pgvector:pg17
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-knowbound}
+      POSTGRES_USER: ${POSTGRES_USER:-knowbound}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-change-me}
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    networks: [internal]
+
+  api:
+    build:
+      context: ../../backend
+    environment:
+      APP_ENV: ${APP_ENV:-development}
+      DATABASE_URL: ${DATABASE_URL:-postgresql+psycopg://knowbound:knowbound@postgres:5432/knowbound}
+      RUNNER_ENDPOINT: ${RUNNER_ENDPOINT:-http://runner:8080}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    ports:
+      - "${API_PORT:-8000}:8000"
+    networks: [public, internal]
+
+  web:
+    build:
+      context: ../../frontend
+    environment:
+      VITE_API_BASE_URL: http://localhost:${API_PORT:-8000}
+    ports:
+      - "${WEB_PORT:-5173}:5173"
+    depends_on: [api]
+    networks: [public]
+
+  runner:
+    build:
+      context: ../../runner
+    read_only: true
+    tmpfs:
+      - /work:size=64m,mode=1777
+    network_mode: none
+    pids_limit: 64
+    mem_limit: 256m
+    cpus: 1.0
+    security_opt:
+      - no-new-privileges:true
+
+networks:
+  public: {}
+  internal:
+    internal: true

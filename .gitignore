@@ -1,0 +1,17 @@
+.venv/
+__pycache__/
+.pytest_cache/
+.ruff_cache/
+*.py[cod]
+*.egg-info/
+*.tsbuildinfo
+node_modules/
+.npm-cache/
+dist/
+coverage/
+playwright-report/
+test-results/
+.env
+.superpowers/
+.worktrees/
+*.log
