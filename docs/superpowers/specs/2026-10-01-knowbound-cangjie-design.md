@@ -196,7 +196,7 @@
 - 概念图谱：PostgreSQL 中的节点表和边表；
 - ORM 与迁移：SQLAlchemy + Alembic；
 - 模型接入：OpenAI-compatible provider interface，配置从环境变量读取；
-- 代码执行：独立 Docker 容器中的仓颉 1.0.5 cjnative 工具链；
+- 代码执行：独立 Docker 容器中的仓颉 1.2.0 STS cjnative 工具链；
 - 本地编排：Docker Compose；
 - 测试：pytest、前端组件测试、Playwright 端到端测试；
 - API 契约：OpenAPI 为单一接口事实来源。

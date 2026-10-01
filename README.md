@@ -11,7 +11,7 @@ Wave 0 工程基线。此阶段提供 API、前端、执行器协议和容器拓
 - Python 3.11 或更高版本
 - Node.js 20 或更高版本
 - Docker Desktop 或兼容的 Docker Compose 环境
-- 后续执行器阶段需要仓颉 1.0.5 cjnative 工具链
+- 仓颉工具链统一固定为最新正式版 1.2.0 STS（cjnative），不使用 Nightly 构建
 
 ## 本地验证
 

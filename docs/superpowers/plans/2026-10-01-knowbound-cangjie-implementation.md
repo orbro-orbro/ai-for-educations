@@ -6,7 +6,7 @@
 
 **Architecture:** React 前端只通过 OpenAPI 调用 FastAPI；PostgreSQL/pgvector 保存课程、概念图谱、诊断和受控记忆；不可信仓颉代码由独立 Docker 执行器编译运行。权限、记忆过滤、模型网关和教师聚合彼此隔离，所有跨边界数据都通过明确契约传递。
 
-**Tech Stack:** React、TypeScript、Vite、FastAPI、Python、PostgreSQL、pgvector、SQLAlchemy、Alembic、Docker Compose、仓颉 1.0.5 cjnative、pytest、Vitest、Playwright。
+**Tech Stack:** React、TypeScript、Vite、FastAPI、Python、PostgreSQL、pgvector、SQLAlchemy、Alembic、Docker Compose、仓颉 1.2.0 STS cjnative、pytest、Vitest、Playwright。
 
 **Spec:** `docs/superpowers/specs/2026-10-01-knowbound-cangjie-design.md`
 
