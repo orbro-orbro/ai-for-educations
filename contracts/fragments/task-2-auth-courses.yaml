@@ -1,0 +1,223 @@
+paths:
+  /auth/login:
+    post:
+      operationId: login
+      summary: Authenticate a seeded MVP account.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LoginRequest"
+      responses:
+        "200":
+          description: Signed bearer token and server-verified actor.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LoginResponse"
+        "401":
+          description: Credentials are invalid.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /courses:
+    get:
+      operationId: listCourses
+      summary: List courses visible to the authenticated actor.
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Enrolled courses for a student, or owned/authorized courses for a teacher.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/CourseSummary"
+        "401":
+          description: Bearer token is missing or invalid.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /courses/{course_id}/exercises:
+    get:
+      operationId: listCourseExercises
+      summary: List exercises after server-side course membership checks.
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/CourseId"
+      responses:
+        "200":
+          description: Exercises in the authorized course.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ExerciseSummary"
+        "401":
+          description: Bearer token is missing or invalid.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "404":
+          description: Returns RESOURCE_NOT_AVAILABLE for both unknown and unauthorized course IDs.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /teacher/courses:
+    post:
+      operationId: createTeacherCourse
+      summary: Create a course owned by the authenticated teacher.
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateCourseRequest"
+      responses:
+        "201":
+          description: Course created with ownership derived from the bearer token.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CourseSummary"
+        "401":
+          description: Bearer token is missing or invalid.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "404":
+          description: Student actors receive RESOURCE_NOT_AVAILABLE.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /courses/{course_id}/enrollments:
+    post:
+      operationId: enrollCurrentStudent
+      summary: Enroll the authenticated student; no user ID is accepted from the client.
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/CourseId"
+      responses:
+        "201":
+          description: Current student enrolled in the course.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Enrollment"
+        "401":
+          description: Bearer token is missing or invalid.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "404":
+          description: Returns RESOURCE_NOT_AVAILABLE for an unknown course or a disallowed actor.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+components:
+  parameters:
+    CourseId:
+      name: course_id
+      in: path
+      required: true
+      schema:
+        type: string
+
+  schemas:
+    LoginRequest:
+      type: object
+      additionalProperties: false
+      required: [username, password]
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+          format: password
+          writeOnly: true
+
+    Actor:
+      type: object
+      additionalProperties: false
+      required: [user_id, role]
+      properties:
+        user_id:
+          type: string
+        role:
+          $ref: "#/components/schemas/Role"
+
+    LoginResponse:
+      type: object
+      additionalProperties: false
+      required: [access_token, token_type, actor]
+      properties:
+        access_token:
+          type: string
+        token_type:
+          type: string
+          const: bearer
+        actor:
+          $ref: "#/components/schemas/Actor"
+
+    CourseSummary:
+      type: object
+      additionalProperties: false
+      required: [course_id, title]
+      properties:
+        course_id:
+          type: string
+        title:
+          type: string
+
+    ExerciseSummary:
+      type: object
+      additionalProperties: false
+      required: [exercise_id, course_id, title]
+      properties:
+        exercise_id:
+          type: string
+        course_id:
+          type: string
+        title:
+          type: string
+
+    CreateCourseRequest:
+      type: object
+      additionalProperties: false
+      required: [title]
+      properties:
+        title:
+          type: string
+
+    Enrollment:
+      type: object
+      additionalProperties: false
+      required: [course_id, user_id, role]
+      properties:
+        course_id:
+          type: string
+        user_id:
+          type: string
+        role:
+          $ref: "#/components/schemas/Role"
