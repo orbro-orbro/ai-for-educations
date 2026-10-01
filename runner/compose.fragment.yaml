@@ -1,0 +1,19 @@
+services:
+  runner:
+    build:
+      context: ../../runner
+      args:
+        CANGJIE_VERSION: "1.2.0"
+    user: "10001:10001"
+    read_only: true
+    tmpfs: !override
+      - /work:rw,nosuid,nodev,exec,size=64m,mode=0700,uid=10001,gid=10001
+    network_mode: none
+    pids_limit: 64
+    mem_limit: 512m
+    cpus: 1.0
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    restart: "no"
