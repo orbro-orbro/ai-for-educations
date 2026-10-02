@@ -1,0 +1,683 @@
+# 《仓颉语言设计》概念图谱种子。字段约定见 data/course_seed/README.md。
+# 引用前缀：kb: = cangjie-coding 知识库节点；exp: = README 中列出的 cjc/cjpm 1.2.0 最小实验。
+metadata:
+  course_key: cangjie-language-design
+  course_title: 《仓颉语言设计》（仓颉语法与编程实践）
+  seed_version: 2026-10-02.1
+  toolchain:
+    cjc: 1.2.0 (cjnative)
+    cjpm: 1.2.0
+    target: x86_64-w64-mingw32
+  knowledge_base: cangjie-coding skill knowledge base (baseline 1.0.5); every approved record re-verified on cjc/cjpm 1.2.0
+  data_nature: course seed for teaching and diagnosis evidence; not pilot results, contains no student data or measured effects
+  review_policy: approved = reproduced on the toolchain above by Wave 1 Agent C; course-teacher confirmation is still pending
+
+concepts:
+  # ---------------------------------------------------------------- 1 基础类型、变量、表达式和控制流
+  - id: cj.basics.let-var-binding
+    topic: basics_control_flow
+    title: "let 与 var 绑定"
+    summary: "let 绑定只能赋值一次，再次赋值是编译错误；需要重新赋值时使用 var。"
+    review_status: approved
+    reviewed_by: wave1-agent-c
+    review_note: "cjc 1.2.0 拒绝对 let 绑定再次赋值（cannot assign to immutable value）。"
+    source:
+      kind: toolchain_experiment
+      references: ["exp:let_reassign", "kb:language.const.1-const-变量.1-2-与-let-var-的区别"]
+      toolchain_version: cjc 1.2.0 (cjnative) / cjpm 1.2.0
+      verification_status: experiment_verified
+  - id: cj.basics.integer-explicit-conversion
+    topic: basics_control_flow
+    title: "整数类型的显式转换"
+    summary: "不同整数类型之间没有隐式拓宽，Int32 值赋给 Int64 变量需写 Int64(a)。"
+    review_status: approved
+    reviewed_by: wave1-agent-c
+    review_note: "cjc 1.2.0 对 Int32→Int64 隐式赋值报 mismatched types。"
+    source:
+      kind: toolchain_experiment
+      references: ["exp:implicit_int_widening"]
+      toolchain_version: cjc 1.2.0 (cjnative) / cjpm 1.2.0
+      verification_status: experiment_verified
+  - id: cj.basics.integer-overflow-check
+    topic: basics_control_flow
+    title: "整数溢出检查"
+    summary: "默认情况下非常量整数运算溢出会在运行期抛出 OverflowException，而不是静默回绕。"
+    review_status: approved
+    reviewed_by: wave1-agent-c
+    review_note: "Int8 127+1 在 1.2.0 运行期抛出 OverflowException。"
+    source:
+      kind: toolchain_experiment
+      references: ["exp:int_overflow_runtime"]
+      toolchain_version: cjc 1.2.0 (cjnative) / cjpm 1.2.0
+      verification_status: experiment_verified
+  - id: cj.basics.if-bool-condition
+    topic: basics_control_flow
+    title: "if 条件必须为 Bool"
+    summary: "if/while 条件表达式必须是 Bool 类型，整数或其他类型不会被隐式当作真假值。"
+    review_status: approved
+    reviewed_by: wave1-agent-c
+    review_note: "if (x) 且 x 为 Int64 时 1.2.0 报 mismatched types。"
+    source:
+      kind: toolchain_experiment
+      references: ["exp:if_condition_not_bool"]
+      toolchain_version: cjc 1.2.0 (cjnative) / cjpm 1.2.0
+      verification_status: experiment_verified
+  - id: cj.basics.if-expression-value
+    topic: basics_control_flow
+    title: "if 作为表达式取值"
+    summary: "if 是表达式；把它的结果当作非 Unit 值使用时必须提供 else 分支，否则类型不匹配。"
+    review_status: approved
+    reviewed_by: wave1-agent-c
+    review_note: "let v: Int64 = if (true) { 1 } 在 1.2.0 报 mismatched types。"
+    source:
+      kind: toolchain_experiment
+      references: ["exp:if_without_else_as_value"]
+      toolchain_version: cjc 1.2.0 (cjnative) / cjpm 1.2.0
+      verification_status: experiment_verified
+  - id: cj.basics.for-in-range
+    topic: basics_control_flow
+    title: "for-in 与 Range"
+    summary: "for-in 遍历 Range 或 Iterable；a..b 不包含 b，a..=b 包含 b。"
+    review_status: approved
+    reviewed_by: wave1-agent-c
+    review_note: "0..3 输出 012，0..=3 输出 0123（1.2.0）。"
+    source:
+      kind: toolchain_experiment
+      references: ["exp:range_half_open", "kb:language.for"]
+      toolchain_version: cjc 1.2.0 (cjnative) / cjpm 1.2.0
+      verification_status: experiment_verified
+  - id: cj.basics.for-in-binding-immutable
+    topic: basics_control_flow
+    title: "for-in 循环变量不可变"
+    summary: "for-in 引入的循环变量是不可变绑定，循环体内不能对其赋值。"
+    review_status: approved
+    reviewed_by: wave1-agent-c
+    review_note: "循环体内 i = i + 1 在 1.2.0 报 cannot assign to immutable value。"
+    source:
+      kind: toolchain_experiment
+      references: ["exp:for_in_var_immutable", "kb:language.for"]
+      toolchain_version: cjc 1.2.0 (cjnative) / cjpm 1.2.0
+      verification_status: experiment_verified
+  - id: cj.collections.array-bounds
+    topic: basics_control_flow
+    title: "数组下标边界"
+    summary: "运行期下标越界抛出 IndexOutOfBoundsException；cjc 1.2.0 能在编译期检出可静态确定的常量越界。"
+    review_status: approved
+    reviewed_by: wave1-agent-c
+    review_note: "常量越界编译报 array index is out of bounds；函数参数下标越界运行期抛 IndexOutOfBoundsException。"
+    source:
+      kind: toolchain_experiment
+      references: ["exp:array_index_oob_constant", "exp:array_index_oob_runtime", "kb:language.collections.array"]
+      toolchain_version: cjc 1.2.0 (cjnative) / cjpm 1.2.0
+      verification_status: experiment_verified
+
+  # ---------------------------------------------------------------- 2 函数、参数、Lambda 和闭包
+  - id: cj.function.declaration
+    topic: functions_lambdas_closures
+    title: "函数声明与返回值"
+    summary: "func 名称(参数: 类型): 返回类型 { ... }；函数体最后一个表达式的值即返回值。"
+    review_status: approved
+    reviewed_by: wave1-agent-c
+    review_note: "多个 1.2.0 实验中的 func inc/maxOf 均按此形式编译运行。"
+    source:
+      kind: toolchain_experiment
+      references: ["exp:generic_where_ok", "exp:int_overflow_runtime"]
+      toolchain_version: cjc 1.2.0 (cjnative) / cjpm 1.2.0
+      verification_status: experiment_verified
+  - id: cj.function.named-parameters
+    topic: functions_lambdas_closures
+    title: "命名参数"
+    summary: "声明为 p!: T 的命名参数在调用时必须写成 p: value，可带默认值并在调用时省略。"
+    review_status: approved
+    reviewed_by: wave1-agent-c
+    review_note: "f(1) 报 missing argument prefix 'a:'；f(a: 1) 与带默认值的 f() 可运行。"
+    source:
+      kind: toolchain_experiment
+      references: ["exp:named_param_positional_call", "exp:named_param_ok"]
+      toolchain_version: cjc 1.2.0 (cjnative) / cjpm 1.2.0
+      verification_status: experiment_verified
+  - id: cj.function.lambda-syntax
+    topic: functions_lambdas_closures
+    title: "Lambda 表达式语法"
+    summary: "Lambda 写作 { 参数: 类型 => 表达式 }，无参时写 { => 表达式 }。"
+    review_status: approved
+    reviewed_by: wave1-agent-c
+    review_note: "spawn { => ... } 与返回 { => ... } 的实验在 1.2.0 编译通过。"
+    source:
+      kind: toolchain_experiment
+      references: ["exp:spawn_get_placement", "exp:lambda_capture_let_ref_ok"]
+      toolchain_version: cjc 1.2.0 (cjnative) / cjpm 1.2.0
+      verification_status: experiment_verified
+  - id: cj.function.closure-capture
+    topic: functions_lambdas_closures
+    title: "闭包捕获"
+    summary: "Lambda 可捕获外部绑定；捕获 let 绑定的 class 实例后可随闭包返回并保存状态。"
+    review_status: approved
+    reviewed_by: wave1-agent-c
+    review_note: "捕获 let Box 的计数闭包连续调用两次输出 2（1.2.0）。"
+    source:
+      kind: toolchain_experiment
+      references: ["exp:lambda_capture_let_ref_ok", "kb:examples.functions.closure-state"]
+      toolchain_version: cjc 1.2.0 (cjnative) / cjpm 1.2.0
+      verification_status: experiment_verified
+  - id: cj.function.closure-mutable-capture-escape
+    topic: functions_lambdas_closures
+    title: "捕获 var 的闭包不能逃逸"
+    summary: "捕获可变局部变量 var 的 Lambda 只能被直接调用，不能作为返回值或一等值逃逸。"
+    review_status: approved
+    reviewed_by: wave1-agent-c
+    review_note: "1.2.0 报 lambda capturing mutable variables needs to be called directly。"
+    source:
+      kind: toolchain_experiment
+      references: ["exp:closure_var_escape", "kb:examples.functions.closure-state"]
+      toolchain_version: cjc 1.2.0 (cjnative) / cjpm 1.2.0
+      verification_status: experiment_verified
+
+  # ---------------------------------------------------------------- 3 class、struct、值类型与引用类型
+  - id: cj.type.struct-value-semantics
+    topic: class_struct_semantics
+    title: "struct 值语义"
+    summary: "struct 是值类型，赋值和传参会复制实例，修改副本不影响原变量。"
+    review_status: approved
+    reviewed_by: wave1-agent-c
+    review_note: "var b = a; b.x = 2 后 a.x 仍为 1（1.2.0）。"
+    source:
+      kind: toolchain_experiment
+      references: ["exp:struct_vs_class_copy", "kb:language.struct"]
+      toolchain_version: cjc 1.2.0 (cjnative) / cjpm 1.2.0
+      verification_status: experiment_verified
+  - id: cj.type.class-reference-semantics
+    topic: class_struct_semantics
+    title: "class 引用语义"
+    summary: "class 是引用类型，赋值后两个变量指向同一对象；通过任一变量修改 var 成员对另一个可见。"
+    review_status: approved
+    reviewed_by: wave1-agent-c
+    review_note: "let d = c; d.x = 2 后 c.x 为 2（1.2.0）。"
+    source:
+      kind: toolchain_experiment
+      references: ["exp:struct_vs_class_copy", "kb:language.class"]
+      toolchain_version: cjc 1.2.0 (cjnative) / cjpm 1.2.0
+      verification_status: experiment_verified
+  - id: cj.type.struct-mut-function
+    topic: class_struct_semantics
+    title: "struct 的 mut 函数"
+    summary: "修改 struct 实例成员变量的成员函数必须声明为 mut func，普通成员函数中实例是不可变的。"
+    review_status: approved
+    reviewed_by: wave1-agent-c
+    review_note: "非 mut 函数中 n += 1 报 cannot be modified in immutable function（1.2.0）。"
+    source:
+      kind: toolchain_experiment
+      references: ["exp:struct_method_without_mut", "kb:language.extend.4-访问规则.4-3-扩展-struct-的-mut-函数"]
+      toolchain_version: cjc 1.2.0 (cjnative) / cjpm 1.2.0
+      verification_status: experiment_verified
+  - id: cj.type.let-struct-immutability
+    topic: class_struct_semantics
+    title: "let 绑定的 struct 实例不可修改"
+    summary: "用 let 绑定的 struct 实例整体不可变，即使字段声明为 var 也不能对其赋值。"
+    review_status: approved
+    reviewed_by: wave1-agent-c
+    review_note: "let p = P(1); p.x = 2 报 cannot assign to immutable value（1.2.0）。"
+    source:
+      kind: toolchain_experiment
+      references: ["exp:struct_let_field_assign", "kb:language.struct"]
+      toolchain_version: cjc 1.2.0 (cjnative) / cjpm 1.2.0
+      verification_status: experiment_verified
+  - id: cj.type.class-open-inheritance
+    topic: class_struct_semantics
+    title: "open 与类继承"
+    summary: "class 默认不可被继承，只有声明为 open（或抽象类）才能作为父类。"
+    review_status: approved
+    reviewed_by: wave1-agent-c
+    review_note: "class B <: A 且 A 非 open 时报 super class 'A' is not inheritable（1.2.0）。"
+    source:
+      kind: toolchain_experiment
+      references: ["exp:class_not_open_inherit", "kb:language.class"]
+      toolchain_version: cjc 1.2.0 (cjnative) / cjpm 1.2.0
+      verification_status: experiment_verified
+  - id: cj.type.override-open-member
+    topic: class_struct_semantics
+    title: "只有 open 成员可被 override"
+    summary: "子类只能 override 父类中声明为 open 的成员函数；父类是 open class 并不意味着成员也是 open。"
+    review_status: approved
+    reviewed_by: wave1-agent-c
+    review_note: "override 非 open 的 f 报 cannot override function 'f'（1.2.0）。"
+    source:
+      kind: toolchain_experiment
+      references: ["exp:override_non_open_func", "kb:language.class"]
+      toolchain_version: cjc 1.2.0 (cjnative) / cjpm 1.2.0
+      verification_status: experiment_verified
+  - id: cj.collections.array-shared-buffer
+    topic: class_struct_semantics
+    title: "Array 赋值共享元素存储"
+    summary: "Array<T> 赋值不会复制元素，新旧变量共享同一份元素存储；需要独立数据时使用 clone()。"
+    review_status: approved
+    reviewed_by: wave1-agent-c
+    review_note: "let b = a; b[0] = 9 后 a[0] 为 9，而 clone 后修改不影响 a（1.2.0）。"
+    source:
+      kind: toolchain_experiment
+      references: ["exp:array_assign_shares_buffer", "exp:array_shared_one_line", "kb:language.collections.array"]
+      toolchain_version: cjc 1.2.0 (cjnative) / cjpm 1.2.0
+      verification_status: experiment_verified
+
+  # ---------------------------------------------------------------- 4 interface、继承、实现、直接扩展与接口扩展
+  - id: cj.interface.declaration
+    topic: interface_extension
+    title: "接口声明与实现"
+    summary: "interface 声明抽象成员；类型通过 <: 声明实现接口后，才能作为该接口类型使用。"
+    review_status: approved
+    reviewed_by: wave1-agent-c
+    review_note: "Shape 接口经接口扩展实现后可赋给 Shape 变量并调用（1.2.0）。"
+    source:
+      kind: toolchain_experiment
+      references: ["exp:interface_extension_ok", "exp:interface_member_missing"]
+      toolchain_version: cjc 1.2.0 (cjnative) / cjpm 1.2.0
+      verification_status: experiment_verified
+  - id: cj.interface.abstract-member-implementation
+    topic: interface_extension
+    title: "实现接口须实现全部抽象成员"
+    summary: "声明实现接口的非抽象 class 必须实现接口中所有没有默认实现的成员。"
+    review_status: approved
+    reviewed_by: wave1-agent-c
+    review_note: "class A <: I {} 报 missing abstract modifier, otherwise abstract function or property should be implemented（1.2.0）。"
+    source:
+      kind: toolchain_experiment
+      references: ["exp:interface_member_missing"]
+      toolchain_version: cjc 1.2.0 (cjnative) / cjpm 1.2.0
+      verification_status: experiment_verified
+  - id: cj.extend.direct-extension
+    topic: interface_extension
+    title: "直接扩展"
+    summary: "extend T { ... } 为已有类型添加成员函数或属性，但不会让 T 成为任何接口的子类型。"
+    review_status: approved
+    reviewed_by: wave1-agent-c
+    review_note: "直接扩展添加 area() 后把 Sq 赋给 Shape 仍报 mismatched types（1.2.0）。"
+    source:
+      kind: toolchain_experiment
+      references: ["exp:direct_extension_not_subtype", "kb:examples.abstractions.direct-extension"]
+      toolchain_version: cjc 1.2.0 (cjnative) / cjpm 1.2.0
+      verification_status: experiment_verified
+  - id: cj.extend.interface-extension
+    topic: interface_extension
+    title: "接口扩展"
+    summary: "extend T <: I { ... } 在扩展中实现接口 I，使 T 成为 I 的子类型。"
+    review_status: approved
+    reviewed_by: wave1-agent-c
+    review_note: "extend Sq <: Shape 后 let sh: Shape = Sq(2) 输出 4（1.2.0）。"
+    source:
+      kind: toolchain_experiment
+      references: ["exp:interface_extension_ok", "kb:language.extend.4-访问规则.4-11-导入规则"]
+      toolchain_version: cjc 1.2.0 (cjnative) / cjpm 1.2.0
+      verification_status: experiment_verified
+  - id: cj.extend.no-stored-members
+    topic: interface_extension
+    title: "扩展不能添加存储成员"
+    summary: "扩展体中不能声明成员变量，扩展只能添加函数、属性等不含存储状态的成员。"
+    review_status: approved
+    reviewed_by: wave1-agent-c
+    review_note: "extend 中 var extra 报 unexpected variable declaration in extend body（1.2.0）。"
+    source:
+      kind: toolchain_experiment
+      references: ["exp:extension_no_stored_field", "kb:examples.abstractions.direct-extension"]
+      toolchain_version: cjc 1.2.0 (cjnative) / cjpm 1.2.0
+      verification_status: experiment_verified
+
+  # ---------------------------------------------------------------- 5 泛型与 where 约束
+  - id: cj.generic.type-parameters
+    topic: generics_where
+    title: "泛型类型参数"
+    summary: "泛型函数在名称后用 <T> 声明类型参数，调用时通常可由实参推断。"
+    review_status: approved
+    reviewed_by: wave1-agent-c
+    review_note: "maxOf<T>(...) 调用 maxOf(1, 2) 输出 2（1.2.0）。"
+    source:
+      kind: toolchain_experiment
+      references: ["exp:generic_where_ok", "kb:language.generic"]
+      toolchain_version: cjc 1.2.0 (cjnative) / cjpm 1.2.0
+      verification_status: experiment_verified
+  - id: cj.generic.where-constraint
+    topic: generics_where
+    title: "where 约束赋予能力"
+    summary: "未加约束的类型参数 T 不具备 >、== 等操作；需要用 where T <: Comparable<T> 等约束声明所需能力。"
+    review_status: approved
+    reviewed_by: wave1-agent-c
+    review_note: "无约束时 a > b 报 invalid binary operator '>' on type 'Generics-T'；加 where T <: Comparable<T> 后通过（1.2.0）。"
+    source:
+      kind: toolchain_experiment
+      references: ["exp:generic_missing_where", "exp:generic_where_ok", "kb:examples.abstractions.generic-constraint"]
+      toolchain_version: cjc 1.2.0 (cjnative) / cjpm 1.2.0
+      verification_status: experiment_verified
+  - id: cj.generic.where-clause-position
+    topic: generics_where
+    title: "where 子句的位置"
+    summary: "where 子句写在函数签名（返回类型）之后、函数体之前，不能写进 <> 类型参数列表。"
+    review_status: approved
+    reviewed_by: wave1-agent-c
+    review_note: "func maxOf<T where ...> 报 unclosed delimiter: '<'（1.2.0）。"
+    source:
+      kind: toolchain_experiment
+      references: ["exp:generic_where_inside_angle", "exp:generic_where_ok"]
+      toolchain_version: cjc 1.2.0 (cjnative) / cjpm 1.2.0
+      verification_status: experiment_verified
+
+  # ---------------------------------------------------------------- 6 enum 与 match 模式匹配
+  - id: cj.enum.declaration-constructors
+    topic: enum_match
+    title: "enum 声明与构造器"
+    summary: "enum 用 | 分隔构造器，构造器可携带参数，如 Some(T)；值通过 E.A 或构造器调用创建。"
+    review_status: approved
+    reviewed_by: wave1-agent-c
+    review_note: "enum Color { Red | Green | Blue } 与 Option 构造器在 1.2.0 实验中可用。"
+    source:
+      kind: toolchain_experiment
+      references: ["exp:match_wildcard_ok", "exp:option_coalesce_and_match_ok"]
+      toolchain_version: cjc 1.2.0 (cjnative) / cjpm 1.2.0
+      verification_status: experiment_verified
+  - id: cj.enum.no-default-equality
+    topic: enum_match
+    title: "enum 默认不支持 =="
+    summary: "自定义 enum 默认没有 == 运算符；需要比较时用 match，或在 enum 中定义 operator func ==。"
+    review_status: approved
+    reviewed_by: wave1-agent-c
+    review_note: "E.A == E.B 报 invalid binary operator '=='；定义 operator func == 后输出 true false（1.2.0）。"
+    source:
+      kind: toolchain_experiment
+      references: ["exp:enum_eq_not_default", "exp:enum_eq_overload_ok"]
+      toolchain_version: cjc 1.2.0 (cjnative) / cjpm 1.2.0
+      verification_status: experiment_verified
+  - id: cj.pattern-match.match-expression
+    topic: enum_match
+    title: "match 表达式"
+    summary: "match (值) 按顺序选择第一个匹配的 case，分支写作 case 模式 => 表达式，分支值即 match 的值。"
+    review_status: approved
+    reviewed_by: wave1-agent-c
+    review_note: "match 实验在 1.2.0 中按首个匹配分支取值。"
+    source:
+      kind: toolchain_experiment
+      references: ["exp:match_wildcard_ok", "kb:language.pattern_match.1-match-表达式.1-1-有匹配值的-match"]
+      toolchain_version: cjc 1.2.0 (cjnative) / cjpm 1.2.0
+      verification_status: experiment_verified
+  - id: cj.pattern-match.exhaustiveness
+    topic: enum_match
+    title: "match 穷举性"
+    summary: "对 enum 等值的 match 必须覆盖所有可能，否则编译报 non-exhaustive patterns。"
+    review_status: approved
+    reviewed_by: wave1-agent-c
+    review_note: "缺少 Blue 分支时 1.2.0 报 non-exhaustive patterns。"
+    source:
+      kind: toolchain_experiment
+      references: ["exp:match_non_exhaustive", "kb:language.pattern_match.1-match-表达式.1-1-有匹配值的-match"]
+      toolchain_version: cjc 1.2.0 (cjnative) / cjpm 1.2.0
+      verification_status: experiment_verified
+  - id: cj.pattern-match.wildcard
+    topic: enum_match
+    title: "通配符兜底分支"
+    summary: "case _ 匹配任意值，可作为最后的兜底分支满足穷举要求。"
+    review_status: approved
+    reviewed_by: wave1-agent-c
+    review_note: "带 case _ 的 match 在 1.2.0 编译运行并输出 0。"
+    source:
+      kind: toolchain_experiment
+      references: ["exp:match_wildcard_ok"]
+      toolchain_version: cjc 1.2.0 (cjnative) / cjpm 1.2.0
+      verification_status: experiment_verified
+
+  # ---------------------------------------------------------------- 7 Option<T>、Some、None 与异常处理
+  - id: cj.option.option-type
+    topic: option_exceptions
+    title: "Option<T> 类型"
+    summary: "Option<T> 是携带 Some(T) 与 None 两个构造器的 enum，不是可赋给任意类型的空值；使用 T 的运算前必须先解构。"
+    review_status: approved
+    reviewed_by: wave1-agent-c
+    review_note: "Option<Int64> + 1 报 invalid binary operator；let s: String = None 编译失败（1.2.0）。"
+    source:
+      kind: toolchain_experiment
+      references: ["exp:option_arith_without_unwrap", "exp:option_none_to_plain_type", "kb:std.core.enum.option.value-none", "kb:std.core.enum.option.value-some-t"]
+      toolchain_version: cjc 1.2.0 (cjnative) / cjpm 1.2.0
+      verification_status: experiment_verified
+  - id: cj.option.pattern-unwrap
+    topic: option_exceptions
+    title: "用 match 解构 Option"
+    summary: "用 case Some(v) 与 case None 分别处理有值和无值情况，v 在分支内绑定为 T。"
+    review_status: approved
+    reviewed_by: wave1-agent-c
+    review_note: "None 值走 case None 分支输出 none（1.2.0）。"
+    source:
+      kind: toolchain_experiment
+      references: ["exp:option_coalesce_and_match_ok"]
+      toolchain_version: cjc 1.2.0 (cjnative) / cjpm 1.2.0
+      verification_status: experiment_verified
+  - id: cj.option.coalescing
+    topic: option_exceptions
+    title: "?? 合并运算符"
+    summary: "e1 ?? e2 在 e1 为 Some(v) 时得到 v，否则得到 e2。"
+    review_status: approved
+    reviewed_by: wave1-agent-c
+    review_note: "None ?? 0 输出 0（1.2.0）。"
+    source:
+      kind: toolchain_experiment
+      references: ["exp:option_coalesce_and_match_ok", "kb:language.option.5-解构方式.5-2-coalescing-操作符"]
+      toolchain_version: cjc 1.2.0 (cjnative) / cjpm 1.2.0
+      verification_status: experiment_verified
+  - id: cj.option.get-or-throw
+    topic: option_exceptions
+    title: "getOrThrow 的失败语义"
+    summary: "对 None 调用 getOrThrow() 会在运行期抛出 NoneValueException。"
+    review_status: approved
+    reviewed_by: wave1-agent-c
+    review_note: "None.getOrThrow() 在 1.2.0 运行期抛 NoneValueException。"
+    source:
+      kind: toolchain_experiment
+      references: ["exp:option_getOrThrow_none"]
+      toolchain_version: cjc 1.2.0 (cjnative) / cjpm 1.2.0
+      verification_status: experiment_verified
+  - id: cj.exception.try-catch-finally
+    topic: option_exceptions
+    title: "try/catch/finally"
+    summary: "try 块抛出的异常由类型匹配的 catch 处理，finally 在正常和异常路径都会执行。"
+    review_status: approved
+    reviewed_by: wave1-agent-c
+    review_note: "抛出 IllegalArgumentException 后依次输出 caught、finally（1.2.0）。"
+    source:
+      kind: toolchain_experiment
+      references: ["exp:try_finally_ok", "kb:examples.failure.try-resource"]
+      toolchain_version: cjc 1.2.0 (cjnative) / cjpm 1.2.0
+      verification_status: experiment_verified
+
+  # ---------------------------------------------------------------- 8 spawn、Future<T> 与并发任务
+  - id: cj.concurrency.spawn
+    topic: concurrency_spawn_future
+    title: "spawn 创建仓颉线程"
+    summary: "spawn { => ... } 启动一个仓颉线程执行 Lambda，并立即返回 Future<T>，T 为 Lambda 返回类型。"
+    review_status: approved
+    reviewed_by: wave1-agent-c
+    review_note: "spawn 实验在 1.2.0 中返回 Future 并可取得结果。"
+    source:
+      kind: toolchain_experiment
+      references: ["exp:spawn_get_placement", "kb:examples.concurrency.spawn-future"]
+      toolchain_version: cjc 1.2.0 (cjnative) / cjpm 1.2.0
+      verification_status: experiment_verified
+  - id: cj.concurrency.future-get
+    topic: concurrency_spawn_future
+    title: "Future.get 阻塞取结果"
+    summary: "future.get() 阻塞当前线程直到对应任务完成，并返回任务结果。"
+    review_status: approved
+    reviewed_by: wave1-agent-c
+    review_note: "f1.get() + f2.get() 得到两个任务结果之和（1.2.0）。"
+    source:
+      kind: toolchain_experiment
+      references: ["exp:spawn_get_placement", "kb:language.concurrency.6-访问线程.6-1-future-线程句柄"]
+      toolchain_version: cjc 1.2.0 (cjnative) / cjpm 1.2.0
+      verification_status: experiment_verified
+  - id: cj.concurrency.get-placement-parallelism
+    topic: concurrency_spawn_future
+    title: "get 的位置决定并发度"
+    summary: "每次 spawn 后立即 get 会把任务串行化；先启动全部任务再统一 get 才能让任务重叠执行。"
+    review_status: approved
+    reviewed_by: wave1-agent-c
+    review_note: "两个 300ms 任务立即 get 总耗时 ≥550ms，先 spawn 后 get 总耗时 <550ms（1.2.0，本机单次测量）。"
+    source:
+      kind: toolchain_experiment
+      references: ["exp:spawn_get_placement", "kb:language.concurrency.6-访问线程.6-1-future-线程句柄"]
+      toolchain_version: cjc 1.2.0 (cjnative) / cjpm 1.2.0
+      verification_status: experiment_verified
+  - id: cj.concurrency.future-exception-propagation
+    topic: concurrency_spawn_future
+    title: "任务异常经 get 传播"
+    summary: "任务内未捕获的异常会在调用 get() 时重新抛出，应在 get 处处理；cjc 1.2.0 运行时还会把该线程的异常栈打印到输出。"
+    review_status: approved
+    reviewed_by: wave1-agent-c
+    review_note: "get 外层 catch 捕获到 boom，同时运行时输出线程异常栈，进程退出码为 0（1.2.0）。"
+    source:
+      kind: toolchain_experiment
+      references: ["exp:future_get_rethrows", "kb:language.concurrency.6-访问线程.6-1-future-线程句柄"]
+      toolchain_version: cjc 1.2.0 (cjnative) / cjpm 1.2.0
+      verification_status: experiment_verified
+  - id: cj.concurrency.future-get-timeout
+    topic: concurrency_spawn_future
+    title: "get(timeout) 与任务取消"
+    summary: "知识库说明 get(timeout) 超时抛出 TimeoutException，但超时不等于取消任务；尚未在 1.2.0 上复现。"
+    review_status: pending_review
+    source:
+      kind: cangjie_coding_kb
+      references: ["kb:language.concurrency.6-访问线程.6-1-future-线程句柄", "kb:cangjie-build-diagnose/runtime-exception.md#5.2"]
+      toolchain_version: target cjc 1.2.0 (cjnative); not yet reproduced, knowledge base baseline 1.0.5
+      verification_status: knowledge_base_summary
+  - id: cj.concurrency.main-exit-background
+    topic: concurrency_spawn_future
+    title: "主线程退出与后台任务"
+    summary: "知识库提示主线程结束时未被等待的后台任务可能来不及完成；尚未在 1.2.0 上复现。"
+    review_status: pending_review
+    source:
+      kind: cangjie_coding_kb
+      references: ["kb:cangjie-build-diagnose/runtime-exception.md#5.3"]
+      toolchain_version: target cjc 1.2.0 (cjnative); not yet reproduced, knowledge base baseline 1.0.5
+      verification_status: knowledge_base_summary
+
+  # ---------------------------------------------------------------- 9 包、模块、cjc、cjpm 与项目构建
+  - id: cj.package.package-declaration-path
+    topic: packages_build_tools
+    title: "包声明与目录路径"
+    summary: "cjpm 项目中源文件的 package 声明必须与其在 src 下的目录路径一致，如 src/util 对应 demo.util。"
+    review_status: approved
+    reviewed_by: wave1-agent-c
+    review_note: "src/util/u.cj 声明 package demo.wrong 时 cjpm build 报 the right name should be 'demo.util'（cjpm 1.2.0）。"
+    source:
+      kind: toolchain_experiment
+      references: ["exp:cjpm_pkg_mismatch", "kb:language.package"]
+      toolchain_version: cjc 1.2.0 (cjnative) / cjpm 1.2.0
+      verification_status: experiment_verified
+  - id: cj.package.import
+    topic: packages_build_tools
+    title: "import 与重命名导入"
+    summary: "用 import pkg.name 导入其他包的公开声明，冲突时可用 import pkg.name as alias 重命名；尚未在 1.2.0 上复现。"
+    review_status: pending_review
+    source:
+      kind: cangjie_coding_kb
+      references: ["kb:language.package", "kb:language.package.4-包导入.4-5-import-as-重命名导入"]
+      toolchain_version: target cjc 1.2.0 (cjnative); not yet reproduced, knowledge base baseline 1.0.5
+      verification_status: knowledge_base_summary
+  - id: cj.tools.cjc-single-file
+    topic: packages_build_tools
+    title: "cjc 编译单文件"
+    summary: "cjc main.cj -o main.exe 直接把单个源文件编译为可执行文件，适合最小实验。"
+    review_status: approved
+    reviewed_by: wave1-agent-c
+    review_note: "本种子全部 cjc 实验均以此命令在 1.2.0 上编译。"
+    source:
+      kind: toolchain_experiment
+      references: ["exp:struct_vs_class_copy", "kb:tools.cjc"]
+      toolchain_version: cjc 1.2.0 (cjnative) / cjpm 1.2.0
+      verification_status: experiment_verified
+  - id: cj.tools.cjpm-project-build
+    topic: packages_build_tools
+    title: "cjpm 项目构建"
+    summary: "cjpm init --name <包名> --type=executable 生成项目骨架，cjpm build 构建，cjpm run 构建并运行。"
+    review_status: approved
+    reviewed_by: wave1-agent-c
+    review_note: "init/build/run 在 cjpm 1.2.0 上依次成功并输出 hello world。"
+    source:
+      kind: toolchain_experiment
+      references: ["exp:cjpm_ok", "kb:tools.cjpm"]
+      toolchain_version: cjc 1.2.0 (cjnative) / cjpm 1.2.0
+      verification_status: experiment_verified
+
+edges:
+  # prerequisite：必须无环；source 是 target 的先修概念
+  - {source_id: cj.basics.let-var-binding, target_id: cj.basics.for-in-binding-immutable, edge_type: prerequisite}
+  - {source_id: cj.basics.for-in-range, target_id: cj.basics.for-in-binding-immutable, edge_type: prerequisite}
+  - {source_id: cj.basics.let-var-binding, target_id: cj.type.let-struct-immutability, edge_type: prerequisite}
+  - {source_id: cj.type.struct-value-semantics, target_id: cj.type.let-struct-immutability, edge_type: prerequisite}
+  - {source_id: cj.type.struct-value-semantics, target_id: cj.type.struct-mut-function, edge_type: prerequisite}
+  - {source_id: cj.basics.integer-explicit-conversion, target_id: cj.basics.integer-overflow-check, edge_type: prerequisite}
+  - {source_id: cj.basics.if-bool-condition, target_id: cj.basics.if-expression-value, edge_type: prerequisite}
+  - {source_id: cj.basics.for-in-range, target_id: cj.collections.array-bounds, edge_type: prerequisite}
+  - {source_id: cj.function.declaration, target_id: cj.function.named-parameters, edge_type: prerequisite}
+  - {source_id: cj.function.declaration, target_id: cj.function.lambda-syntax, edge_type: prerequisite}
+  - {source_id: cj.function.lambda-syntax, target_id: cj.function.closure-capture, edge_type: prerequisite}
+  - {source_id: cj.function.closure-capture, target_id: cj.function.closure-mutable-capture-escape, edge_type: prerequisite}
+  - {source_id: cj.basics.let-var-binding, target_id: cj.function.closure-mutable-capture-escape, edge_type: prerequisite}
+  - {source_id: cj.type.class-reference-semantics, target_id: cj.type.class-open-inheritance, edge_type: prerequisite}
+  - {source_id: cj.type.class-open-inheritance, target_id: cj.type.override-open-member, edge_type: prerequisite}
+  - {source_id: cj.type.struct-value-semantics, target_id: cj.collections.array-shared-buffer, edge_type: prerequisite}
+  - {source_id: cj.type.class-reference-semantics, target_id: cj.collections.array-shared-buffer, edge_type: prerequisite}
+  - {source_id: cj.interface.declaration, target_id: cj.interface.abstract-member-implementation, edge_type: prerequisite}
+  - {source_id: cj.interface.declaration, target_id: cj.extend.interface-extension, edge_type: prerequisite}
+  - {source_id: cj.extend.direct-extension, target_id: cj.extend.interface-extension, edge_type: prerequisite}
+  - {source_id: cj.extend.direct-extension, target_id: cj.extend.no-stored-members, edge_type: prerequisite}
+  - {source_id: cj.function.declaration, target_id: cj.generic.type-parameters, edge_type: prerequisite}
+  - {source_id: cj.generic.type-parameters, target_id: cj.generic.where-constraint, edge_type: prerequisite}
+  - {source_id: cj.interface.declaration, target_id: cj.generic.where-constraint, edge_type: prerequisite}
+  - {source_id: cj.generic.where-constraint, target_id: cj.generic.where-clause-position, edge_type: prerequisite}
+  - {source_id: cj.enum.declaration-constructors, target_id: cj.pattern-match.match-expression, edge_type: prerequisite}
+  - {source_id: cj.pattern-match.match-expression, target_id: cj.pattern-match.exhaustiveness, edge_type: prerequisite}
+  - {source_id: cj.pattern-match.match-expression, target_id: cj.pattern-match.wildcard, edge_type: prerequisite}
+  - {source_id: cj.enum.declaration-constructors, target_id: cj.enum.no-default-equality, edge_type: prerequisite}
+  - {source_id: cj.enum.declaration-constructors, target_id: cj.option.option-type, edge_type: prerequisite}
+  - {source_id: cj.generic.type-parameters, target_id: cj.option.option-type, edge_type: prerequisite}
+  - {source_id: cj.option.option-type, target_id: cj.option.pattern-unwrap, edge_type: prerequisite}
+  - {source_id: cj.pattern-match.match-expression, target_id: cj.option.pattern-unwrap, edge_type: prerequisite}
+  - {source_id: cj.option.option-type, target_id: cj.option.coalescing, edge_type: prerequisite}
+  - {source_id: cj.option.option-type, target_id: cj.option.get-or-throw, edge_type: prerequisite}
+  - {source_id: cj.exception.try-catch-finally, target_id: cj.option.get-or-throw, edge_type: prerequisite}
+  - {source_id: cj.function.lambda-syntax, target_id: cj.concurrency.spawn, edge_type: prerequisite}
+  - {source_id: cj.concurrency.spawn, target_id: cj.concurrency.future-get, edge_type: prerequisite}
+  - {source_id: cj.generic.type-parameters, target_id: cj.concurrency.future-get, edge_type: prerequisite}
+  - {source_id: cj.concurrency.future-get, target_id: cj.concurrency.get-placement-parallelism, edge_type: prerequisite}
+  - {source_id: cj.concurrency.future-get, target_id: cj.concurrency.future-exception-propagation, edge_type: prerequisite}
+  - {source_id: cj.exception.try-catch-finally, target_id: cj.concurrency.future-exception-propagation, edge_type: prerequisite}
+  - {source_id: cj.concurrency.future-get, target_id: cj.concurrency.future-get-timeout, edge_type: prerequisite}
+  - {source_id: cj.concurrency.spawn, target_id: cj.concurrency.main-exit-background, edge_type: prerequisite}
+  - {source_id: cj.package.package-declaration-path, target_id: cj.package.import, edge_type: prerequisite}
+  - {source_id: cj.tools.cjc-single-file, target_id: cj.tools.cjpm-project-build, edge_type: prerequisite}
+  - {source_id: cj.package.package-declaration-path, target_id: cj.tools.cjpm-project-build, edge_type: prerequisite}
+
+  # confusable_with：允许双向
+  - {source_id: cj.type.struct-value-semantics, target_id: cj.type.class-reference-semantics, edge_type: confusable_with}
+  - {source_id: cj.type.class-reference-semantics, target_id: cj.type.struct-value-semantics, edge_type: confusable_with}
+  - {source_id: cj.extend.direct-extension, target_id: cj.extend.interface-extension, edge_type: confusable_with}
+  - {source_id: cj.extend.interface-extension, target_id: cj.extend.direct-extension, edge_type: confusable_with}
+  - {source_id: cj.collections.array-shared-buffer, target_id: cj.type.struct-value-semantics, edge_type: confusable_with, note: Array 是 struct，但赋值共享元素存储}
+  - {source_id: cj.pattern-match.exhaustiveness, target_id: cj.pattern-match.wildcard, edge_type: confusable_with}
+  - {source_id: cj.basics.let-var-binding, target_id: cj.type.let-struct-immutability, edge_type: confusable_with}
+  - {source_id: cj.option.coalescing, target_id: cj.option.get-or-throw, edge_type: confusable_with}
+  - {source_id: cj.concurrency.future-get, target_id: cj.concurrency.future-get-timeout, edge_type: confusable_with}
+  - {source_id: cj.tools.cjc-single-file, target_id: cj.tools.cjpm-project-build, edge_type: confusable_with}
+  - {source_id: cj.tools.cjpm-project-build, target_id: cj.tools.cjc-single-file, edge_type: confusable_with}
+
+  # used_by：source 概念在 target 概念的典型用法中出现
+  - {source_id: cj.function.closure-capture, target_id: cj.concurrency.spawn, edge_type: used_by}
+  - {source_id: cj.generic.type-parameters, target_id: cj.collections.array-shared-buffer, edge_type: used_by}
+  - {source_id: cj.exception.try-catch-finally, target_id: cj.basics.integer-overflow-check, edge_type: used_by}
+  - {source_id: cj.exception.try-catch-finally, target_id: cj.collections.array-bounds, edge_type: used_by}
+
+  # explains_error：source 概念（除根概念外）可解释 target 误区
+  - {source_id: cj.type.class-reference-semantics, target_id: cj.misconception.struct-copied-as-reference, edge_type: explains_error}
+  - {source_id: cj.type.struct-value-semantics, target_id: cj.misconception.array-assignment-deep-copy, edge_type: explains_error}
+  - {source_id: cj.pattern-match.wildcard, target_id: cj.misconception.match-non-exhaustive, edge_type: explains_error}
+  - {source_id: cj.enum.declaration-constructors, target_id: cj.misconception.option-as-null, edge_type: explains_error}
+  - {source_id: cj.extend.direct-extension, target_id: cj.misconception.direct-extension-implies-interface, edge_type: explains_error}
+  - {source_id: cj.interface.declaration, target_id: cj.misconception.generic-operator-without-constraint, edge_type: explains_error}
+  - {source_id: cj.concurrency.future-get, target_id: cj.misconception.spawn-get-immediately-serializes, edge_type: explains_error}
+  - {source_id: cj.basics.let-var-binding, target_id: cj.misconception.for-in-variable-reassign, edge_type: explains_error}
+  - {source_id: cj.exception.try-catch-finally, target_id: cj.misconception.getorthrow-none-unchecked, edge_type: explains_error}
+  - {source_id: cj.basics.let-var-binding, target_id: cj.misconception.closure-escaping-mutable-capture, edge_type: explains_error}
