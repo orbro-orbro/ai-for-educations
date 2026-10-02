@@ -1,0 +1,10 @@
+.pytest_cache/
+__pycache__/
+*.py[cod]
+.venv/
+*.db
+*.sqlite*
+.coverage
+.mypy_cache/
+.ruff_cache/
+tests/

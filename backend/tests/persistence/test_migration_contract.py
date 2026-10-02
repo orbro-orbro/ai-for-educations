@@ -2,6 +2,8 @@ from __future__ import annotations
 
 from pathlib import Path
 
+import pytest
+
 
 BACKEND = Path(__file__).resolve().parents[2]
 
@@ -146,3 +148,15 @@ def test_bootstrap_creates_idempotent_login_course_and_pending_seed(tmp_path):
     assert first.courses.get("cangjie-language-design").owner_teacher_id == "bootstrap-teacher"
     assert len(second.knowledge.list_concepts("cangjie-language-design")) == 48
     assert second.knowledge.approved_evidence("cangjie-language-design") == []
+
+
+def test_production_bootstrap_rejects_development_passwords(monkeypatch):
+    from app.persistence import bootstrap as bootstrap_module
+
+    monkeypatch.setenv("APP_ENV", "production")
+    monkeypatch.setenv("DATABASE_URL", "sqlite:///:memory:")
+    monkeypatch.delenv("BOOTSTRAP_TEACHER_PASSWORD", raising=False)
+    monkeypatch.delenv("BOOTSTRAP_STUDENT_PASSWORD", raising=False)
+
+    with pytest.raises(RuntimeError, match="production bootstrap passwords"):
+        bootstrap_module.main()

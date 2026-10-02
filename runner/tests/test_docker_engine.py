@@ -1,8 +1,6 @@
-import socket
-
 import pytest
 
-from runner.controller.docker_engine import DockerSandboxLauncher
+from runner.controller.docker_engine import DockerSandboxLauncher, SandboxUnavailable
 from runner.worker.protocol import (
     CommandSummary,
     RunnerLimits,
@@ -72,13 +70,9 @@ def test_launcher_streams_validated_json_and_always_closes_and_removes_container
 
     class Transport:
         payload = b""
-        shutdown_mode = None
 
         def sendall(self, value):
             self.payload += value
-
-        def shutdown(self, mode):
-            self.shutdown_mode = mode
 
     class Attached:
         def __init__(self):
@@ -92,14 +86,16 @@ def test_launcher_streams_validated_json_and_always_closes_and_removes_container
         def __init__(self):
             self.attached = Attached()
             self.removed = False
+            self.started = False
 
         def start(self):
-            pass
+            self.started = True
 
         def attach_socket(self, params):
             return self.attached
 
         def wait(self, timeout):
+            assert self.started is True
             return {"StatusCode": 0}
 
         def logs(self, **kwargs):
@@ -127,8 +123,8 @@ def test_launcher_streams_validated_json_and_always_closes_and_removes_container
     observed = DockerSandboxLauncher(client=Client(), image="fixed").execute(request)
 
     assert observed == result
-    assert RunnerRequest.model_validate_json(container.attached._sock.payload) == request
-    assert container.attached._sock.shutdown_mode == socket.SHUT_WR
+    assert container.attached._sock.payload.endswith(b"\n")
+    assert RunnerRequest.model_validate_json(container.attached._sock.payload.rstrip(b"\n")) == request
     assert container.attached.closed is True
     assert container.removed is True
 
@@ -136,9 +132,6 @@ def test_launcher_streams_validated_json_and_always_closes_and_removes_container
 def test_container_level_resource_kill_is_not_misreported_as_runner_unavailable():
     class Transport:
         def sendall(self, value):
-            pass
-
-        def shutdown(self, mode):
             pass
 
     class Attached:
@@ -189,9 +182,6 @@ def test_controller_wait_timeout_remains_a_non_retryable_execution_timeout():
         def sendall(self, value):
             pass
 
-        def shutdown(self, mode):
-            pass
-
     class Attached:
         _sock = Transport()
 
@@ -234,3 +224,22 @@ def test_controller_wait_timeout_remains_a_non_retryable_execution_timeout():
     assert result.phase is RunnerPhase.control
     assert result.retryable is False
     assert container.removed is True
+
+
+def test_timeout_before_container_wait_is_runner_unavailable():
+    class Containers:
+        def create(self, **kwargs):
+            raise TimeoutError("docker engine did not accept the container")
+
+    class Client:
+        containers = Containers()
+
+    request = RunnerRequest(
+        submission_id="sub-launch-timeout",
+        source_files=[{"path": "main.cj", "content": "main() {}"}],
+        entrypoint="main.cj",
+        timeout_ms=1_000,
+    )
+
+    with pytest.raises(SandboxUnavailable):
+        DockerSandboxLauncher(client=Client(), image="fixed").execute(request)

@@ -15,6 +15,7 @@ from typing import BinaryIO, Iterable
 from runner.worker.parser import parse_compiler_diagnostics
 from runner.worker.protocol import (
     MAX_OUTPUT_CHARS,
+    PID_LIMIT,
     CommandSummary,
     RunnerLimits,
     RunnerPhase,
@@ -363,7 +364,7 @@ def _set_process_limits(timeout_seconds: float):
 
         cpu_seconds = max(1, math.ceil(timeout_seconds))
         resource.setrlimit(resource.RLIMIT_CPU, (cpu_seconds, cpu_seconds + 1))
-        resource.setrlimit(resource.RLIMIT_NPROC, (32, 32))
+        resource.setrlimit(resource.RLIMIT_NPROC, (PID_LIMIT, PID_LIMIT))
         resource.setrlimit(resource.RLIMIT_FSIZE, (16 * 1024 * 1024, 16 * 1024 * 1024))
         resource.setrlimit(resource.RLIMIT_CORE, (0, 0))
 

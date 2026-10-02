@@ -58,6 +58,7 @@ components:
           title: Source Count
         entrypoint:
           type: string
+          maxLength: 255
           title: Entrypoint
         output_kind:
           type: string
@@ -194,6 +195,7 @@ components:
           title: Source Files
         entrypoint:
           type: string
+          maxLength: 255
           title: Entrypoint
         timeout_ms:
           type: integer
@@ -294,6 +296,7 @@ components:
       properties:
         path:
           type: string
+          maxLength: 255
           title: Path
         content:
           type: string
