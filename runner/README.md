@@ -29,4 +29,6 @@ v1 的 `command`、`timeout_seconds`、`timed_out` 和 `resource_limited` 不进
 
 `runner-controller` 是受信控制面并位于内部网络；`runner-sandbox` 服务只负责在普通 `docker compose up --build` 中构建固定镜像并成功退出。每次请求由控制面通过 Docker Engine 创建新的、无网络、只读根文件系统、非 root、资源受限的 sandbox，结束后强制删除。
 
+控制面把单行 JSON 请求加换行符写入 sandbox 的 stdin，worker 读到第一个换行即开始执行。Docker attach 在半关闭后不会向容器传递 EOF，且 Docker SDK 不支持 `stdin_once`，因此不能依赖 EOF 分帧。
+
 Linux 主机若 Docker socket 的组 ID 不是 0，需要设置 `DOCKER_GID`。生产环境应把 `RUNNER_SANDBOX_IMAGE` 设置为构建后验证过的镜像摘要，而不是可变标签。

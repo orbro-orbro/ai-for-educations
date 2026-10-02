@@ -146,3 +146,29 @@ def test_bootstrap_creates_idempotent_login_course_and_pending_seed(tmp_path):
     assert first.courses.get("cangjie-language-design").owner_teacher_id == "bootstrap-teacher"
     assert len(second.knowledge.list_concepts("cangjie-language-design")) == 48
     assert second.knowledge.approved_evidence("cangjie-language-design") == []
+
+
+def test_bootstrap_rerun_keeps_teacher_review_state_instead_of_reimporting_seed(tmp_path):
+    from app.knowledge.models import ReviewStatus
+    from app.persistence.bootstrap import bootstrap
+
+    database_url = f"sqlite:///{(tmp_path / 'bootstrap.db').as_posix()}"
+    credentials = dict(
+        teacher_username="teacher",
+        teacher_password="teacher-password",
+        student_username="student",
+        student_password="student-password",
+    )
+    first = bootstrap(database_url, create_schema=True, **credentials)
+    course_id = "cangjie-language-design"
+    concept = first.knowledge.list_concepts(course_id)[0]
+    first.knowledge.replace_concept(
+        course_id, concept.model_copy(update={"review_status": ReviewStatus.approved, "reviewed_by": "bootstrap-teacher"})
+    )
+
+    second = bootstrap(database_url, **credentials)
+
+    stored = second.knowledge.get_concept(course_id, concept.id)
+    assert stored.review_status is ReviewStatus.approved
+    assert stored.reviewed_by == "bootstrap-teacher"
+    assert len(second.knowledge.list_concepts(course_id)) == 48

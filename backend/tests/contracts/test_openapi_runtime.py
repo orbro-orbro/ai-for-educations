@@ -63,6 +63,34 @@ def test_every_protected_operation_declares_bearer_and_authentication_error():
         assert "401" in operation["responses"], path
 
 
+def test_course_scoped_operations_declare_non_enumerating_404():
+    document = _document()
+    for path, method, operation in _operations(document):
+        if "{course_id}" in path:
+            assert "404" in operation["responses"], (method, path)
+
+
+def test_operations_with_request_bodies_declare_422():
+    document = _document()
+    for path, method, operation in _operations(document):
+        if "requestBody" in operation:
+            assert "422" in operation["responses"], (method, path)
+
+
+def test_error_envelope_has_stable_fields():
+    schema = _document()["components"]["schemas"]["ErrorResponse"]
+    assert schema["required"] == ["code", "message", "request_id"]
+    assert schema["additionalProperties"] is False
+
+
+def test_request_bodies_cannot_name_an_actor_or_reviewer():
+    identity_fields = {"user_id", "teacher_id", "owner_teacher_id", "owner_user_id", "reviewed_by", "role", "actor"}
+    schemas = _document()["components"]["schemas"]
+    for name, schema in schemas.items():
+        if name.endswith(("Request", "Create", "Update", "Decision")):
+            assert not identity_fields & set(schema.get("properties", {})), name
+
+
 def test_all_request_objects_forbid_unknown_properties():
     document = _document()
     for name, schema in document["components"]["schemas"].items():

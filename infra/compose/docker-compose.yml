@@ -19,6 +19,8 @@ services:
   api:
     build:
       context: ../../backend
+      additional_contexts:
+        course_seed: ../../data/course_seed
     environment:
       APP_ENV: ${APP_ENV:-development}
       AUTH_TOKEN_SECRET: ${AUTH_TOKEN_SECRET:-development-only-token-secret}

@@ -87,7 +87,7 @@ class DockerSandboxLauncher:
                 params={"stdin": 1, "stream": 1, "stdout": 0, "stderr": 0}
             )
             transport = getattr(attached, "_sock", attached)
-            transport.sendall(request.model_dump_json().encode("utf-8"))
+            transport.sendall(request.model_dump_json().encode("utf-8") + b"\n")
             transport.shutdown(socket.SHUT_WR)
             wait_result = container.wait(timeout=request.timeout_seconds + 15)
             output = container.logs(stdout=True, stderr=False)
@@ -107,7 +107,7 @@ class DockerSandboxLauncher:
         except SandboxUnavailable:
             raise
         except Exception as exc:
-            if isinstance(exc, TimeoutError) or exc.__class__.__name__ in {"ReadTimeout", "Timeout"}:
+            if _is_wait_timeout(exc):
                 return _control_result(
                     request,
                     RunnerStatus.timed_out,
@@ -126,6 +126,16 @@ class DockerSandboxLauncher:
                     container.remove(force=True)
                 except Exception:
                     pass
+
+
+def _is_wait_timeout(exc: BaseException) -> bool:
+    candidates = [exc, *exc.args, exc.__cause__, exc.__context__]
+    return any(
+        isinstance(item, TimeoutError)
+        or item.__class__.__name__ in {"ReadTimeout", "Timeout", "ReadTimeoutError"}
+        for item in candidates
+        if item is not None
+    )
 
 
 def _control_result(

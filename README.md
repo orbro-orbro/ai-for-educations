@@ -31,7 +31,9 @@ docker compose -f infra\compose\docker-compose.yml up --build
 
 普通 `up --build` 会先构建 `runner-sandbox` 镜像并让构建辅助容器成功退出，再启动受信 `runner-controller`。Linux 主机按 Docker socket 的实际组 ID设置 `DOCKER_GID`。
 
-开发环境会幂等创建《仓颉语言设计》课程、全部待审知识种子以及两个本地账号：`teacher / teacher-change-me`、`student / student-change-me`。教师对种子做出的审核或修改不会在重启时被覆盖。
+开发环境通过 `BOOTSTRAP_TEACHER_USERNAME`、`BOOTSTRAP_TEACHER_PASSWORD`、`BOOTSTRAP_STUDENT_USERNAME`、`BOOTSTRAP_STUDENT_PASSWORD` 幂等创建《仓颉语言设计》课程、全部待审知识种子以及两个本地账号；`.env.example` 的本地默认值对应 `teacher / teacher-change-me`、`student / student-change-me`。教师对种子做出的审核或修改不会在重启时被覆盖。
+
+API 使用 `RUNNER_ENDPOINT=http://runner-controller:8080` 访问内部控制面。`RUNNER_SANDBOX_IMAGE` 固定 sandbox 镜像；Linux 主机用 `DOCKER_GID` 授予 Controller 访问 Docker socket 所需的组权限。
 
 开发默认值只用于本机。`APP_ENV=production` 时必须同时设置：
 

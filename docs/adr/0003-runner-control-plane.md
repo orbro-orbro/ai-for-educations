@@ -52,3 +52,8 @@ ADR 0002 要求不可信仓颉代码在无网络、只读根文件系统、非 r
 - 本地 Docker Desktop/Linux Engine 均通过容器内 Unix socket 工作；Windows 宿主直接执行 worker 仍仅用于开发测试，不代表容器隔离验证。
 - Docker socket 是高价值资产。未来生产部署宜替换为专用调度器或最小权限 socket proxy，但 Wave 1 不把该基础设施扩展作为前置条件。
 - Compose 静态配置可验证；若本机 Docker daemon 不可用，不能把单元测试替身结果描述为真实容器安全验证。
+
+## 补充说明（2026-10-02，Wave 1 Gate）
+
+- 决策第 4 条的标准输入 JSON 以单行加换行符分帧。真实 Docker 验证发现 attach 半关闭不会向容器传递 EOF，Docker SDK 7.2.0 也不支持 `stdin_once`，按 EOF 读取会使 worker 永久等待。该补充不改变隔离边界或控制面接口。
+- 控制面等待超时在真实 SDK 中表现为包裹 `ReadTimeoutError` 的 `requests.exceptions.ConnectionError`，按决策第 6 条归类为不可重试的 `timed_out`，不得报告为 `runner_unavailable`。

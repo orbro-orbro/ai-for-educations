@@ -38,6 +38,14 @@ def test_container_configuration_pins_every_isolation_boundary():
     assert config["auto_remove"] is False
 
 
+def test_container_configuration_only_uses_arguments_the_docker_sdk_accepts():
+    containers = pytest.importorskip("docker.models.containers")
+    config = DockerSandboxLauncher(client=object(), image="fixed@sha256:one").container_configuration()
+
+    accepted = {"image", "command", *containers.RUN_CREATE_KWARGS, *containers.RUN_HOST_CONFIG_KWARGS}
+    assert set(config) <= accepted
+
+
 def test_sandbox_image_is_not_derived_from_request_data():
     first = DockerSandboxLauncher(client=object(), image="fixed@sha256:one").container_configuration()
     second = DockerSandboxLauncher(client=object(), image="fixed@sha256:one").container_configuration()
@@ -128,6 +136,8 @@ def test_launcher_streams_validated_json_and_always_closes_and_removes_container
 
     assert observed == result
     assert RunnerRequest.model_validate_json(container.attached._sock.payload) == request
+    assert container.attached._sock.payload.endswith(b"\n")
+    assert container.attached._sock.payload.count(b"\n") == 1
     assert container.attached._sock.shutdown_mode == socket.SHUT_WR
     assert container.attached.closed is True
     assert container.removed is True
@@ -184,7 +194,23 @@ def test_container_level_resource_kill_is_not_misreported_as_runner_unavailable(
     assert result.exit_code == 137
 
 
-def test_controller_wait_timeout_remains_a_non_retryable_execution_timeout():
+class ReadTimeoutError(Exception):
+    pass
+
+
+class ConnectionError(OSError):
+    pass
+
+
+@pytest.mark.parametrize(
+    "wait_error",
+    [
+        TimeoutError("wait exceeded"),
+        # docker SDK over the Unix socket wraps urllib3's read timeout in requests' ConnectionError.
+        ConnectionError(ReadTimeoutError("UnixHTTPConnectionPool(host='localhost', port=None): Read timed out.")),
+    ],
+)
+def test_controller_wait_timeout_remains_a_non_retryable_execution_timeout(wait_error):
     class Transport:
         def sendall(self, value):
             pass
@@ -208,7 +234,7 @@ def test_controller_wait_timeout_remains_a_non_retryable_execution_timeout():
             return Attached()
 
         def wait(self, timeout):
-            raise TimeoutError("wait exceeded")
+            raise wait_error
 
         def remove(self, force):
             self.removed = True

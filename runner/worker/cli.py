@@ -10,7 +10,8 @@ MAX_REQUEST_BYTES = MAX_SOURCE_BYTES + 256 * 1024
 
 
 def main() -> int:
-    payload = sys.stdin.buffer.read(MAX_REQUEST_BYTES + 1)
+    # Docker keeps attached stdin open, so the request is framed by its trailing newline, not EOF.
+    payload = sys.stdin.buffer.readline(MAX_REQUEST_BYTES + 2).rstrip(b"\n")
     if len(payload) > MAX_REQUEST_BYTES:
         print("request exceeds sandbox input limit", file=sys.stderr)
         return 2

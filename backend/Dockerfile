@@ -12,6 +12,7 @@ RUN groupadd --gid 10003 api \
 
 WORKDIR /app
 COPY . /app
+COPY --from=course_seed . /data/course_seed
 RUN pip install --no-cache-dir .
 
 USER 10003:10003

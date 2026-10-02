@@ -57,15 +57,114 @@ def _fixture():
     return app, tokens
 
 
-def _request(app, method: str, path: str, token: str | None, *, request_id="req-integration"):
+def _request(app, method: str, path: str, token: str | None, *, request_id="req-integration", json=None):
     async def go():
         headers = {"X-Request-ID": request_id}
         if token is not None:
             headers["Authorization"] = f"Bearer {token}"
         async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client:
-            return await client.request(method, path, headers=headers)
+            return await client.request(method, path, headers=headers, json=json)
 
     return anyio.run(go)
+
+
+SOURCE = {
+    "kind": "teacher_authored",
+    "references": ["course:integration"],
+    "toolchain_version": "cjc 1.2.0 (cjnative) / cjpm 1.2.0",
+    "verification_status": "teacher_asserted",
+}
+ROOT_ID = "cj.pattern-match.exhaustiveness"
+RELATED_ID = "cj.pattern-match.wildcard"
+EXPLAINER_ID = "cj.pattern-match.match-expression"
+MISCONCEPTION_ID = "cj.misconception.match-non-exhaustive"
+
+
+def _concept(concept_id):
+    return {"id": concept_id, "topic": "enum_match", "title": concept_id, "summary": "summary", "source": SOURCE}
+
+
+def _misconception():
+    return {
+        "id": MISCONCEPTION_ID,
+        "topic": "enum_match",
+        "title": "match without wildcard",
+        "root_concept_id": ROOT_ID,
+        "related_concept_ids": [RELATED_ID],
+        "trigger_evidence": [{"kind": "compiler_diagnostic", "pattern": "non-exhaustive patterns", "strength": "strong"}],
+        "explanation": "match must be exhaustive",
+        "hint_ladder": [{"level": level, "outline": f"step {level}"} for level in (1, 2, 3, 4)],
+        "source": SOURCE,
+        "verification": {"method": "teacher_assertion", "toolchain_version": "cjc 1.2.0 (cjnative)", "note": "integration"},
+    }
+
+
+def _seed_graph(app, token):
+    base = f"/teacher/courses/{COURSE}"
+    for concept_id in (ROOT_ID, RELATED_ID, EXPLAINER_ID):
+        assert _request(app, "POST", f"{base}/concepts", token, json=_concept(concept_id)).status_code == 201
+    assert _request(app, "POST", f"{base}/misconceptions", token, json=_misconception()).status_code == 201
+    edge = {"source_id": EXPLAINER_ID, "target_id": MISCONCEPTION_ID, "edge_type": "explains_error"}
+    assert _request(app, "POST", f"{base}/concept-edges", token, json=edge).status_code == 201
+
+
+def test_review_records_reviewer_from_verified_bearer_not_from_request():
+    app, tokens = _fixture()
+    _seed_graph(app, tokens["authorized"])
+    path = f"/teacher/courses/{COURSE}/concepts/{ROOT_ID}/review"
+
+    injected = _request(app, "POST", path, tokens["authorized"], json={"decision": "approved", "reviewed_by": "teacher-owner"})
+    reviewed = _request(app, "POST", path, tokens["authorized"], json={"decision": "approved", "note": "checked"})
+
+    assert injected.status_code == 422
+    assert injected.json()["code"] == "VALIDATION_ERROR"
+    assert reviewed.status_code == 200
+    assert reviewed.json()["reviewed_by"] == "teacher-authorized"
+
+
+def test_review_is_denied_uniformly_for_student_foreign_teacher_and_unknown_course():
+    app, tokens = _fixture()
+    _seed_graph(app, tokens["owner"])
+    cases = [
+        (f"/teacher/courses/{COURSE}/concepts/{ROOT_ID}/review", tokens["student"]),
+        (f"/teacher/courses/{COURSE}/concepts/{ROOT_ID}/review", tokens["other"]),
+        (f"/teacher/courses/{COURSE}/misconceptions/{MISCONCEPTION_ID}/review", tokens["student"]),
+        (f"/teacher/courses/{COURSE}/misconceptions/{MISCONCEPTION_ID}/review", tokens["other"]),
+        (f"/teacher/courses/course-unknown/concepts/{ROOT_ID}/review", tokens["owner"]),
+        (f"/teacher/courses/{COURSE}/concepts/cj.missing.node/review", tokens["owner"]),
+    ]
+
+    responses = [_request(app, "POST", path, token, json={"decision": "approved"}) for path, token in cases]
+
+    assert {response.status_code for response in responses} == {404}
+    assert {response.text for response in responses} == {
+        '{"code":"RESOURCE_NOT_AVAILABLE","message":"Resource is not available.","request_id":"req-integration"}'
+    }
+    concept = app.state.knowledge_repository.get_concept(COURSE, ROOT_ID)
+    assert concept.review_status.value == "pending_review"
+
+
+def test_misconception_becomes_evidence_only_after_full_concept_closure_is_approved():
+    app, tokens = _fixture()
+    _seed_graph(app, tokens["owner"])
+    repository = app.state.knowledge_repository
+    base = f"/teacher/courses/{COURSE}"
+
+    def review(kind, node_id):
+        response = _request(app, "POST", f"{base}/{kind}/{node_id}/review", tokens["owner"], json={"decision": "approved"})
+        assert response.status_code == 200
+
+    review("concepts", ROOT_ID)
+    review("misconceptions", MISCONCEPTION_ID)
+    assert repository.approved_evidence(COURSE) == []
+    review("concepts", RELATED_ID)
+    assert repository.approved_evidence(COURSE) == []
+    review("concepts", EXPLAINER_ID)
+    assert [item.misconception_id for item in repository.approved_evidence(COURSE)] == [MISCONCEPTION_ID]
+
+    edited = _request(app, "PATCH", f"{base}/concepts/{RELATED_ID}", tokens["owner"], json={"summary": "edited"})
+    assert edited.json()["review_status"] == "pending_review"
+    assert repository.approved_evidence(COURSE) == []
 
 
 def test_real_bearer_owner_can_reach_knowledge_api():
