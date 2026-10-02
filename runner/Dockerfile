@@ -1,7 +1,6 @@
 ARG BASE_IMAGE=mcr.microsoft.com/devcontainers/python:1-3.12-bookworm@sha256:7876580dc67fd460fd962f004cbeb480027e9bbc0657096f1087db11f9eaff39
 FROM ${BASE_IMAGE} AS sdk
 
-ARG CANGJIE_VERSION=1.2.0
 ARG CANGJIE_SDK_SHA256=8c5fd944cd9cc51ee63d4a240e3ecc4f540345dae1468e8b47c927ecf2ba998f
 ARG CANGJIE_SDK_URL="https://cangjie-lang.cn/v1/files/auth/downLoad?nsId=142267&fileName=cangjie-sdk-linux-x64-1.2.0.tar.gz&objectKey=6ab1e26eece1f87ff5befa73"
 
@@ -12,6 +11,8 @@ RUN curl --fail --location --retry 3 --output /tmp/cangjie-sdk.tar.gz "${CANGJIE
     && rm /tmp/cangjie-sdk.tar.gz
 
 FROM ${BASE_IMAGE}
+
+LABEL org.opencontainers.image.version="1.2.0-sts-cjnative"
 
 ENV PATH="/opt/cangjie/bin:/opt/cangjie/tools/bin:${PATH}" \
     LD_LIBRARY_PATH="/opt/cangjie/runtime/lib/linux_x86_64_cjnative:/opt/cangjie/lib/linux_x86_64_cjnative" \
@@ -39,4 +40,4 @@ COPY worker /app/runner/worker
 WORKDIR /work
 USER 10001:10001
 ENTRYPOINT ["python"]
-CMD ["-c", "import subprocess; subprocess.run(['cjc', '-v'], check=True)"]
+CMD ["-m", "runner.worker.cli"]

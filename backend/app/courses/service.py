@@ -88,6 +88,17 @@ class CourseService:
             Enrollment(course.course_id, actor.user_id, Role.STUDENT)
         )
 
+    def require_teacher_access(self, actor: Actor, course_id: str) -> None:
+        """Authorize a teacher management operation without leaking course existence."""
+
+        actor = self._verified_actor(actor)
+        course = self._required_course(course_id)
+        self._require_allowed(
+            self._policy.authorize(
+                actor, "teacher_operation", self._course_resource(course)
+            )
+        )
+
     def _verified_actor(self, actor: Actor) -> Actor:
         user = self._users.get(actor.user_id)
         if user is None or not user.active or user.role is not actor.role:

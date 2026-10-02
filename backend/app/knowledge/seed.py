@@ -194,7 +194,7 @@ def verify_snippets(bundle: SeedBundle, runner: Runner = cjc_runner) -> SnippetR
     report = SnippetReport()
     for m in bundle.misconceptions:
         v = m.verification
-        if m.review_status is not ReviewStatus.approved or v.expected_outcome is None:
+        if v.expected_outcome is None:
             continue
         report.checked += 1
         result = runner(v)

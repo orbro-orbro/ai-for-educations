@@ -198,6 +198,34 @@ def test_approved_evidence_requires_approved_root_concept():
         graph.get_approved_misconception(MIS)
 
 
+def test_approved_evidence_requires_every_related_concept_to_be_approved():
+    pending_related = Concept.model_validate(concept_data(MATCH, "pending_review"))
+    root = Concept.model_validate(concept_data(EXHAUSTIVE, "approved"))
+    data = misconception_data(MIS, EXHAUSTIVE)
+    data["related_concept_ids"] = [MATCH]
+    misconception = MisconceptionPattern.model_validate(data)
+
+    graph = KnowledgeGraph.build([pending_related, root], [], [misconception])
+
+    assert graph.approved_evidence() == []
+    with pytest.raises(UnapprovedEvidenceError):
+        graph.get_approved_misconception(MIS)
+
+
+def test_approved_evidence_requires_explaining_concept_to_be_approved():
+    pending_explainer = Concept.model_validate(concept_data(MATCH, "pending_review"))
+    root = Concept.model_validate(concept_data(EXHAUSTIVE, "approved"))
+    misconception = MisconceptionPattern.model_validate(misconception_data(MIS, EXHAUSTIVE))
+
+    graph = KnowledgeGraph.build(
+        [pending_explainer, root],
+        [edge(MATCH, MIS, "explains_error")],
+        [misconception],
+    )
+
+    assert graph.approved_evidence() == []
+
+
 def test_approved_evidence_returns_reviewed_pattern_with_source():
     graph = small_graph()
     evidence = graph.approved_evidence(concept_ids=[EXHAUSTIVE])

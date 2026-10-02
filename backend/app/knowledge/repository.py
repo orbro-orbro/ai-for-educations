@@ -62,6 +62,15 @@ class KnowledgeGraph:
         self.edges = edges
         self.misconceptions = misconceptions
 
+    def __eq__(self, other: object) -> bool:
+        if not isinstance(other, KnowledgeGraph):
+            return NotImplemented
+        return (
+            self.concepts == other.concepts
+            and set(self.edges) == set(other.edges)
+            and self.misconceptions == other.misconceptions
+        )
+
     @classmethod
     def build(
         cls,
@@ -143,15 +152,23 @@ class KnowledgeGraph:
         return [self.misconceptions[i] for i in dict.fromkeys(ids)]
 
     def _is_evidence(self, m: MisconceptionPattern) -> bool:
-        root = self.concepts[m.root_concept_id]
-        return m.review_status is ReviewStatus.approved and root.review_status is ReviewStatus.approved
+        referenced_concepts = {m.root_concept_id, *m.related_concept_ids}
+        referenced_concepts.update(
+            edge.source_id
+            for edge in self.edges
+            if edge.edge_type is EdgeType.explains_error and edge.target_id == m.id
+        )
+        return m.review_status is ReviewStatus.approved and all(
+            self.concepts[concept_id].review_status is ReviewStatus.approved
+            for concept_id in referenced_concepts
+        )
 
     def approved_evidence(
         self,
         concept_ids: Iterable[str] | None = None,
         misconception_ids: Iterable[str] | None = None,
     ) -> list[ApprovedEvidence]:
-        """Only approved misconceptions whose root concept is approved may feed diagnosis."""
+        """Return evidence only when the complete referenced concept closure is approved."""
         if concept_ids is None:
             candidates = list(self.misconceptions.values())
         else:
@@ -309,14 +326,18 @@ class InMemoryKnowledgeRepository:
         edges: Iterable[ConceptEdge],
         misconceptions: Iterable[MisconceptionPattern],
     ) -> None:
-        """Bulk import into an empty course in one validated step."""
+        """Bulk import atomically; replaying byte-equivalent seed data is idempotent."""
         with self._lock:
-            if course_id in self._courses:
-                raise KnowledgeValidationError("KNOWLEDGE_ID_CONFLICT", f"course {course_id} already has knowledge")
             graph = KnowledgeGraph.build(concepts, edges, misconceptions)
-            self._courses[course_id] = _CourseState(
+            incoming = _CourseState(
                 dict(graph.concepts), list(graph.edges), dict(graph.misconceptions)
             )
+            existing = self._courses.get(course_id)
+            if existing is not None:
+                if existing == incoming:
+                    return
+                raise KnowledgeValidationError("KNOWLEDGE_ID_CONFLICT", f"course {course_id} already has different knowledge")
+            self._courses[course_id] = incoming
 
     def graph(self, course_id: str) -> KnowledgeGraph:
         s = self._state(course_id)

@@ -3,7 +3,6 @@ from __future__ import annotations
 import codecs
 import math
 import os
-import re
 import signal
 import subprocess
 import tempfile
@@ -13,11 +12,23 @@ from dataclasses import dataclass
 from pathlib import Path, PurePosixPath
 from typing import BinaryIO, Iterable
 
-from runner.worker.protocol import MAX_OUTPUT_CHARS, RunnerRequest, RunnerResult, SourceFile
+from runner.worker.parser import parse_compiler_diagnostics
+from runner.worker.protocol import (
+    MAX_OUTPUT_CHARS,
+    CommandSummary,
+    RunnerLimits,
+    RunnerPhase,
+    RunnerRequest,
+    RunnerResult,
+    RunnerStatus,
+    SourceFile,
+    ToolchainInfo,
+    safe_source_path,
+)
 
 
-_WINDOWS_DRIVE = re.compile(r"^[A-Za-z]:")
 _PROGRAM_NAME = "runner-program"
+_MAX_CAPTURE_CHARS = 1024 * 1024
 _RESOURCE_EXIT_CODES = {137, 152, 153}
 _RESOURCE_SIGNALS = {
     value
@@ -36,6 +47,8 @@ class ProcessResult:
     stdout: str
     stderr: str
     timed_out: bool
+    stdout_truncated: bool = False
+    stderr_truncated: bool = False
 
 
 class _CappedText:
@@ -44,6 +57,7 @@ class _CappedText:
         self._parts: list[str] = []
         self._length = 0
         self._decoder = codecs.getincrementaldecoder("utf-8")(errors="replace")
+        self._truncated = False
 
     def consume(self, stream: BinaryIO) -> None:
         while chunk := stream.read(8192):
@@ -53,20 +67,28 @@ class _CappedText:
     def _append(self, text: str) -> None:
         remaining = self._limit - self._length
         if remaining <= 0:
+            if text:
+                self._truncated = True
             return
         accepted = text[:remaining]
         self._parts.append(accepted)
         self._length += len(accepted)
+        if len(accepted) < len(text):
+            self._truncated = True
 
     @property
     def value(self) -> str:
         return "".join(self._parts)
 
+    @property
+    def truncated(self) -> bool:
+        return self._truncated
+
 
 def execute(request: RunnerRequest) -> RunnerResult:
     """Compile and run one Cangjie request in a fresh, disposable workspace."""
 
-    sources = _validate_command(request)
+    sources = _validated_sources(request)
     temp_root = os.environ.get("RUNNER_TEMP_ROOT")
     with tempfile.TemporaryDirectory(prefix="knowbound-runner-", dir=temp_root) as job_dir:
         workspace = Path(job_dir)
@@ -75,17 +97,22 @@ def execute(request: RunnerRequest) -> RunnerResult:
         compiler = _compile_command(sources)
         compile_result = run_process(compiler, workspace, _remaining(deadline))
         if compile_result.timed_out or compile_result.exit_code != 0:
-            return _runner_result(request, compile_result)
+            return _runner_result(request, compile_result, RunnerPhase.compile, compile_result.stderr)
 
-        executable = _compiled_program(workspace)
+        try:
+            executable = _compiled_program(workspace)
+        except RuntimeError as exc:
+            return _internal_error(request, RunnerPhase.compile, str(exc), compile_result)
         run_result = run_process([os.fspath(executable)], workspace, _remaining(deadline))
         combined = ProcessResult(
             exit_code=run_result.exit_code,
-            stdout=_cap(compile_result.stdout + run_result.stdout),
-            stderr=_cap(compile_result.stderr + run_result.stderr),
+            stdout=compile_result.stdout + run_result.stdout,
+            stderr=compile_result.stderr + run_result.stderr,
             timed_out=run_result.timed_out,
+            stdout_truncated=compile_result.stdout_truncated or run_result.stdout_truncated,
+            stderr_truncated=compile_result.stderr_truncated or run_result.stderr_truncated,
         )
-        return _runner_result(request, combined)
+        return _runner_result(request, combined, RunnerPhase.run, compile_result.stderr)
 
 
 def write_source_files(workspace: Path, source_files: Iterable[SourceFile]) -> None:
@@ -135,8 +162,8 @@ def run_process(args: list[str], cwd: Path, timeout_seconds: float) -> ProcessRe
     process = subprocess.Popen(args, **process_kwargs)
     assert process.stdout is not None
     assert process.stderr is not None
-    stdout = _CappedText(MAX_OUTPUT_CHARS)
-    stderr = _CappedText(MAX_OUTPUT_CHARS)
+    stdout = _CappedText(_MAX_CAPTURE_CHARS)
+    stderr = _CappedText(_MAX_CAPTURE_CHARS)
     readers = [
         threading.Thread(target=stdout.consume, args=(process.stdout,), daemon=True),
         threading.Thread(target=stderr.consume, args=(process.stderr,), daemon=True),
@@ -150,7 +177,11 @@ def run_process(args: list[str], cwd: Path, timeout_seconds: float) -> ProcessRe
     except subprocess.TimeoutExpired:
         timed_out = True
         _terminate_process_tree(process)
-        process.wait()
+        try:
+            process.wait(timeout=5)
+        except subprocess.TimeoutExpired:
+            process.kill()
+            process.wait(timeout=5)
     finally:
         for reader in readers:
             reader.join(timeout=5)
@@ -160,6 +191,8 @@ def run_process(args: list[str], cwd: Path, timeout_seconds: float) -> ProcessRe
         stdout=stdout.value,
         stderr=stderr.value,
         timed_out=timed_out,
+        stdout_truncated=stdout.truncated,
+        stderr_truncated=stderr.truncated,
     )
 
 
@@ -170,39 +203,17 @@ def _job_environment(cwd: Path) -> dict[str, str]:
     return environment
 
 
-def _validate_command(request: RunnerRequest) -> tuple[str, ...]:
-    command = request.command
-    if not command or command[0] != "cjc" or len(command) < 2:
-        raise CommandRejected("only cjc source compilation is allowed")
-
-    requested_sources: list[str] = []
-    available_sources = {source.path for source in request.source_files}
-    for argument in command[1:]:
-        try:
-            path = _safe_relative_path(argument)
-        except ValueError as exc:
-            raise CommandRejected(str(exc)) from exc
-        normalized = path.as_posix()
-        if path.suffix != ".cj" or normalized not in available_sources:
-            raise CommandRejected("cjc arguments must name submitted .cj files")
-        requested_sources.append(normalized)
-    return tuple(requested_sources)
+def _validated_sources(request: RunnerRequest) -> tuple[str, ...]:
+    available = {source.path for source in request.source_files}
+    if request.entrypoint not in available:
+        raise CommandRejected("entrypoint must name a submitted source file")
+    if any(not path.endswith(".cj") for path in available):
+        raise CommandRejected("all submitted sources must be .cj files")
+    return (request.entrypoint, *sorted(available - {request.entrypoint}))
 
 
 def _safe_relative_path(value: str) -> PurePosixPath:
-    normalized = value.replace("\\", "/")
-    candidate = PurePosixPath(normalized)
-    if (
-        not normalized
-        or "\x00" in normalized
-        or candidate.is_absolute()
-        or normalized.startswith("//")
-        or _WINDOWS_DRIVE.match(normalized)
-        or ".." in candidate.parts
-        or "." in candidate.parts
-    ):
-        raise ValueError("source path must stay inside the job workspace")
-    return candidate
+    return PurePosixPath(safe_source_path(value))
 
 
 def _assert_no_symlink(root: Path, parent: Path) -> None:
@@ -242,14 +253,65 @@ def _remaining(deadline: float) -> float:
     return max(0.0, deadline - time.monotonic())
 
 
-def _runner_result(request: RunnerRequest, result: ProcessResult) -> RunnerResult:
+def _runner_result(
+    request: RunnerRequest,
+    result: ProcessResult,
+    phase: RunnerPhase,
+    compiler_stderr: str,
+) -> RunnerResult:
+    resource_limited = not result.timed_out and _is_resource_limit_exit(result.exit_code)
+    if result.timed_out:
+        status = RunnerStatus.timed_out
+    elif resource_limited:
+        status = RunnerStatus.resource_exhausted
+    elif result.exit_code == 0:
+        status = RunnerStatus.succeeded
+    elif phase is RunnerPhase.compile:
+        status = RunnerStatus.compile_failed
+    else:
+        status = RunnerStatus.run_failed
+    stdout = _cap(result.stdout)
+    stderr = _cap(result.stderr)
     return RunnerResult(
         submission_id=request.submission_id,
+        status=status,
+        phase=phase,
+        retryable=False,
         exit_code=result.exit_code,
-        stdout=_cap(result.stdout),
-        stderr=_cap(result.stderr),
-        timed_out=result.timed_out,
-        resource_limited=not result.timed_out and _is_resource_limit_exit(result.exit_code),
+        signal=(-result.exit_code if result.exit_code is not None and result.exit_code < 0 else None),
+        stdout=stdout,
+        stderr=stderr,
+        stdout_truncated=result.stdout_truncated or len(result.stdout) > len(stdout),
+        stderr_truncated=result.stderr_truncated or len(result.stderr) > len(stderr),
+        diagnostics=parse_compiler_diagnostics(compiler_stderr),
+        command_summary=CommandSummary(
+            source_count=len(request.source_files),
+            entrypoint=request.entrypoint,
+        ),
+        limits=RunnerLimits(timeout_ms=request.timeout_ms),
+        toolchain=ToolchainInfo(),
+    )
+
+
+def _internal_error(
+    request: RunnerRequest,
+    phase: RunnerPhase,
+    message: str,
+    partial: ProcessResult,
+) -> RunnerResult:
+    return RunnerResult(
+        submission_id=request.submission_id,
+        status=RunnerStatus.internal_error,
+        phase=phase,
+        retryable=False,
+        exit_code=partial.exit_code,
+        signal=None,
+        stdout=_cap(partial.stdout),
+        stderr=_cap(message),
+        diagnostics=parse_compiler_diagnostics(partial.stderr),
+        command_summary=CommandSummary(source_count=len(request.source_files), entrypoint=request.entrypoint),
+        limits=RunnerLimits(timeout_ms=request.timeout_ms),
+        toolchain=ToolchainInfo(),
     )
 
 
@@ -276,14 +338,21 @@ def _terminate_process_tree(process: subprocess.Popen[bytes]) -> None:
         except ProcessLookupError:
             pass
     elif os.name == "nt":
-        subprocess.run(
-            ["taskkill", "/PID", str(process.pid), "/T", "/F"],
-            stdin=subprocess.DEVNULL,
-            stdout=subprocess.DEVNULL,
-            stderr=subprocess.DEVNULL,
-            check=False,
-            shell=False,
-        )
+        try:
+            completed = subprocess.run(
+                ["taskkill", "/PID", str(process.pid), "/T", "/F"],
+                stdin=subprocess.DEVNULL,
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL,
+                check=False,
+                shell=False,
+                timeout=5,
+            )
+            if completed.returncode != 0 and process.poll() is None:
+                process.kill()
+        except (OSError, subprocess.TimeoutExpired):
+            if process.poll() is None:
+                process.kill()
     else:
         process.kill()
 

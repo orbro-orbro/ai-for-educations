@@ -1,12 +1,40 @@
 services:
-  runner:
+  runner-controller:
     build:
       context: ../../runner
-      args:
-        CANGJIE_VERSION: "1.2.0"
+      dockerfile: controller.Dockerfile
+    environment:
+      APP_ENV: ${APP_ENV:-development}
+      RUNNER_SANDBOX_IMAGE: ${RUNNER_SANDBOX_IMAGE:-knowbound-cj-runner-sandbox:1.2.0}
+    depends_on:
+      runner-sandbox:
+        condition: service_completed_successfully
+    user: "10002:10002"
+    group_add:
+      - "${DOCKER_GID:-0}"
+    read_only: true
+    tmpfs:
+      - /tmp:rw,nosuid,nodev,noexec,size=16m,mode=0700,uid=10002,gid=10002
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    pids_limit: 64
+    mem_limit: 256m
+    cpus: 0.5
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    restart: unless-stopped
+    networks: [internal]
+
+  runner-sandbox:
+    image: ${RUNNER_SANDBOX_IMAGE:-knowbound-cj-runner-sandbox:1.2.0}
+    build:
+      context: ../../runner
+    command: ["-c", "pass"]
     user: "10001:10001"
     read_only: true
-    tmpfs: !override
+    tmpfs:
       - /work:rw,nosuid,nodev,exec,size=64m,mode=0700,uid=10001,gid=10001
     network_mode: none
     pids_limit: 64
@@ -17,3 +45,7 @@ services:
     cap_drop:
       - ALL
     restart: "no"
+
+networks:
+  internal:
+    internal: true

@@ -10,7 +10,7 @@ from typing import Any
 
 from fastapi import APIRouter, Request
 from fastapi.responses import JSONResponse
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 
 from app.auth.models import Actor, Role, UserRepository
 
@@ -113,7 +113,11 @@ class Authenticator:
         return self.authenticate_token(token)
 
 
-class LoginRequest(BaseModel):
+class _RequestBody(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+
+class LoginRequest(_RequestBody):
     username: str
     password: str
 
@@ -130,16 +134,9 @@ class LoginResponse(BaseModel):
 
 
 def authentication_error(request: Request) -> JSONResponse:
-    return JSONResponse(
-        status_code=401,
-        content={
-            "code": "AUTHENTICATION_FAILED",
-            "message": "Authentication failed.",
-            "request_id": str(
-                getattr(request.state, "request_id", "unavailable")
-            ),
-        },
-    )
+    from app.api.errors import error_response
+
+    return error_response(request, 401, "AUTHENTICATION_FAILED", "Authentication failed.")
 
 
 def create_auth_router(authenticator: Authenticator) -> APIRouter:

@@ -30,19 +30,18 @@ def test_default_seed_dir_points_at_repository_data():
 
 
 def test_seed_meets_minimum_size(bundle):
-    approved = [m for m in bundle.misconceptions if m.review_status is ReviewStatus.approved]
     assert len(bundle.concepts) >= 30
-    assert len(approved) >= 20
+    assert len(bundle.misconceptions) >= 20
+    assert all(record.review_status is ReviewStatus.pending_review for record in [*bundle.concepts, *bundle.misconceptions])
 
 
 def test_seed_covers_all_nine_topics(bundle):
-    approved = [m for m in bundle.misconceptions if m.review_status is ReviewStatus.approved]
     assert {c.topic for c in bundle.concepts} == set(Topic)
-    assert {m.topic for m in approved} == set(Topic)
+    assert {m.topic for m in bundle.misconceptions} == set(Topic)
 
 
 def test_seed_covers_spec_named_misconceptions(bundle):
-    ids = {m.id for m in bundle.misconceptions if m.review_status is ReviewStatus.approved}
+    ids = {m.id for m in bundle.misconceptions}
     for required in [
         "cj.misconception.struct-copied-as-reference",
         "cj.misconception.array-assignment-deep-copy",
@@ -96,23 +95,19 @@ def test_check_seed_reports_consistency_and_acyclic_prerequisites():
     assert report.ok
     assert report.prerequisite_acyclic
     assert report.concept_count >= 30
-    assert report.approved_misconception_count >= 20
+    assert report.approved_misconception_count == 0
     assert set(report.topic_coverage) == {t.value for t in Topic}
     edge_counts = Counter(report.edge_counts)
     for edge_type in ("prerequisite", "confusable_with", "used_by", "explains_error"):
         assert edge_counts[edge_type] > 0
 
 
-def test_import_seed_serves_only_approved_evidence(bundle):
+def test_import_seed_is_idempotent_and_serves_no_unreviewed_evidence(bundle):
     repo = InMemoryKnowledgeRepository()
     import_seed(repo, "course-cj", bundle)
-    evidence = repo.approved_evidence("course-cj", concept_ids=["cj.pattern-match.exhaustiveness"])
-    assert "cj.misconception.match-non-exhaustive" in {e.misconception_id for e in evidence}
-    all_ids = {e.misconception_id for e in repo.approved_evidence("course-cj")}
-    pending = {m.id for m in bundle.misconceptions if m.review_status is not ReviewStatus.approved}
-    assert pending and not (pending & all_ids)
-    with pytest.raises(KnowledgeValidationError):
-        import_seed(repo, "course-cj", bundle)
+    assert repo.approved_evidence("course-cj") == []
+    import_seed(repo, "course-cj", bundle)
+    assert len(repo.list_concepts("course-cj")) == len(bundle.concepts)
 
 
 # ------------------------------------------------ loader rejection cases

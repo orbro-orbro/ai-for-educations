@@ -9,9 +9,9 @@ metadata:
     cjc: 1.2.0 (cjnative)
     cjpm: 1.2.0
     target: x86_64-w64-mingw32
-  knowledge_base: cangjie-coding skill knowledge base (baseline 1.0.5); every approved record re-verified on cjc/cjpm 1.2.0
+  knowledge_base: cangjie-coding skill knowledge base (baseline 1.0.5); every technically verified record re-verified on cjc/cjpm 1.2.0
   data_nature: course seed for teaching and diagnosis evidence; not pilot results, contains no student data or measured effects
-  review_policy: approved = reproduced on the toolchain above by Wave 1 Agent C; course-teacher confirmation is still pending
+  review_policy: pending_review = toolchain reproduction complete; course-teacher approval is still required
 
 misconceptions:
   # ================================================================ 3 class / struct
@@ -29,8 +29,8 @@ misconceptions:
       - {level: 2, outline: "回顾值类型（struct）与引用类型（class）在赋值时分别复制什么。"}
       - {level: 3, outline: "画出 a、b、c、d 赋值后的内存关系；若希望共享修改，改用 class 或把修改后的副本写回原变量。"}
       - {level: 4, outline: "完整解析：var b = a 复制了 P 实例，b.x = 2 只改副本；let d = c 复制的是引用，d.x = 2 修改的是同一个 C 对象，因此输出 1 2。"}
-    review_status: approved
-    reviewed_by: wave1-agent-c
+    review_status: pending_review
+    reviewed_by: null
     review_note: "程序输出 1 2 与解释一致（cjc 1.2.0）。"
     source:
       kind: toolchain_experiment
@@ -70,8 +70,8 @@ misconceptions:
       - {level: 2, outline: "回顾 Array 赋值时复制的是什么，以及 clone() 的作用。"}
       - {level: 3, outline: "在需要保留原数组的地方先 let c = a.clone()，再修改 c。"}
       - {level: 4, outline: "完整解析：b = a 后 b[0] = 9 改变了共享的元素存储，a[0] 也变为 9；c = a.clone() 得到独立副本，c[1] = 7 不影响 a，因此输出 9 2。"}
-    review_status: approved
-    reviewed_by: wave1-agent-c
+    review_status: pending_review
+    reviewed_by: null
     review_note: "程序输出 9 2 与解释一致（cjc 1.2.0）。"
     source:
       kind: toolchain_experiment
@@ -108,8 +108,8 @@ misconceptions:
       - {level: 2, outline: "回顾 struct 值语义下 let 绑定对字段修改的限制。"}
       - {level: 3, outline: "把实例绑定改为 var，或构造一个带新字段值的新实例。"}
       - {level: 4, outline: "完整解析：let p = P(1) 使 p 不可变，p.x = 2 被拒绝；改为 var p = P(1) 后即可修改。"}
-    review_status: approved
-    reviewed_by: wave1-agent-c
+    review_status: pending_review
+    reviewed_by: null
     review_note: "cjc 1.2.0 报 cannot assign to immutable value。"
     source:
       kind: toolchain_experiment
@@ -142,8 +142,8 @@ misconceptions:
       - {level: 2, outline: "回顾 struct 中 mut 函数的作用与限制。"}
       - {level: 3, outline: "在该成员函数前加 mut，并确认调用方的实例是 var 绑定。"}
       - {level: 4, outline: "完整解析：func inc() { n += 1 } 修改了 n，须写成 mut func inc() { n += 1 }。"}
-    review_status: approved
-    reviewed_by: wave1-agent-c
+    review_status: pending_review
+    reviewed_by: null
     review_note: "cjc 1.2.0 报 instance member variable 'n' cannot be modified in immutable function。"
     source:
       kind: toolchain_experiment
@@ -175,8 +175,8 @@ misconceptions:
       - {level: 2, outline: "回顾 class 默认是否可被继承，以及 open 修饰符的作用。"}
       - {level: 3, outline: "在父类声明前加 open，或改用接口组合。"}
       - {level: 4, outline: "完整解析：class A {} 不可继承，改为 open class A {} 后 class B <: A {} 可通过。"}
-    review_status: approved
-    reviewed_by: wave1-agent-c
+    review_status: pending_review
+    reviewed_by: null
     review_note: "cjc 1.2.0 报 super class 'A' is not inheritable。"
     source:
       kind: toolchain_experiment
@@ -207,8 +207,8 @@ misconceptions:
       - {level: 2, outline: "回顾类的 open 与成员的 open 是两个独立的声明。"}
       - {level: 3, outline: "在父类的该成员函数前加 open，再在子类中 override。"}
       - {level: 4, outline: "完整解析：open class A { public func f() } 中 f 不是 open，需改为 public open func f()。"}
-    review_status: approved
-    reviewed_by: wave1-agent-c
+    review_status: pending_review
+    reviewed_by: null
     review_note: "cjc 1.2.0 报 cannot override function 'f'。"
     source:
       kind: toolchain_experiment
@@ -240,8 +240,8 @@ misconceptions:
       - {level: 2, outline: "回顾 match 穷举性要求与通配符 _ 的作用。"}
       - {level: 3, outline: "为遗漏的构造器补充 case，或在最后添加 case _ => 默认值。"}
       - {level: 4, outline: "完整解析：Color 有 Red、Green、Blue，match 缺少 Blue；补 case Blue => 3 或 case _ => 0 即可通过。"}
-    review_status: approved
-    reviewed_by: wave1-agent-c
+    review_status: pending_review
+    reviewed_by: null
     review_note: "cjc 1.2.0 报 non-exhaustive patterns。"
     source:
       kind: toolchain_experiment
@@ -278,8 +278,8 @@ misconceptions:
       - {level: 2, outline: "回顾自定义 enum 默认提供哪些能力，以及运算符重载。"}
       - {level: 3, outline: "用 match 判断构造器，或在 enum 体内实现 public operator func ==(rhs) 返回 Bool。"}
       - {level: 4, outline: "完整解析：E.A == E.B 无法编译；在 enum E 中用 match ((this, rhs)) 实现 operator func == 后可得到 true/false。"}
-    review_status: approved
-    reviewed_by: wave1-agent-c
+    review_status: pending_review
+    reviewed_by: null
     review_note: "cjc 1.2.0 报 invalid binary operator '==' on type 'Enum-E'；手动重载后可运行。"
     source:
       kind: toolchain_experiment
@@ -313,8 +313,8 @@ misconceptions:
       - {level: 2, outline: "回顾 Option<T> 的两个构造器以及取值方式。"}
       - {level: 3, outline: "用 (x ?? 0) + 1，或 match (x) { case Some(v) => v + 1 case None => ... } 处理两种情况。"}
       - {level: 4, outline: "完整解析：x 是 Option<Int64>，不能直接 + 1；写成 let y = (x ?? 0) + 1 并说明 None 时的默认值语义。"}
-    review_status: approved
-    reviewed_by: wave1-agent-c
+    review_status: pending_review
+    reviewed_by: null
     review_note: "cjc 1.2.0 报 invalid binary operator '+' on type 'Enum-Option<Int64>' and 'Int64'。"
     source:
       kind: toolchain_experiment
@@ -347,8 +347,8 @@ misconceptions:
       - {level: 2, outline: "回顾 None 属于哪个类型，以及仓颉如何表达可缺省的值。"}
       - {level: 3, outline: "把类型改为 Option<String>，并在使用处解构；或提供真实的默认值。"}
       - {level: 4, outline: "完整解析：let s: String = None 无法编译；改为 let s: Option<String> = None，打印时用 s ?? \"\"。"}
-    review_status: approved
-    reviewed_by: wave1-agent-c
+    review_status: pending_review
+    reviewed_by: null
     review_note: "cjc 1.2.0 编译失败；诊断文本不直接提及 None，诊断时以代码模式为主。"
     source:
       kind: toolchain_experiment
@@ -380,8 +380,8 @@ misconceptions:
       - {level: 2, outline: "回顾 getOrThrow 在 None 上的行为。"}
       - {level: 3, outline: "用 match 或 ?? 提供 None 时的处理；确需异常时用 try/catch 捕获。"}
       - {level: 4, outline: "完整解析：x 为 None，x.getOrThrow() 抛 NoneValueException；改为 println(x ?? 0) 或 match 处理。"}
-    review_status: approved
-    reviewed_by: wave1-agent-c
+    review_status: pending_review
+    reviewed_by: null
     review_note: "cjc 1.2.0 运行期抛出 NoneValueException。"
     source:
       kind: toolchain_experiment
@@ -415,8 +415,8 @@ misconceptions:
       - {level: 2, outline: "回顾直接扩展与接口扩展在子类型关系上的区别。"}
       - {level: 3, outline: "把 extend Sq { ... } 改为 extend Sq <: Shape { ... }。"}
       - {level: 4, outline: "完整解析：仓颉按声明的实现关系判断子类型，而非按方法名匹配；接口扩展后 let sh: Shape = Sq(2) 输出 4。"}
-    review_status: approved
-    reviewed_by: wave1-agent-c
+    review_status: pending_review
+    reviewed_by: null
     review_note: "cjc 1.2.0 对直接扩展版本报 mismatched types，接口扩展版本输出 4。"
     source:
       kind: toolchain_experiment
@@ -456,8 +456,8 @@ misconceptions:
       - {level: 2, outline: "回顾扩展允许添加的成员种类。"}
       - {level: 3, outline: "把状态字段放回原类型定义，或用外部映射/包装类型保存。"}
       - {level: 4, outline: "完整解析：extend Sq { var extra: Int64 = 0 } 不合法；应在 class Sq 中声明 extra，扩展中只添加函数或属性。"}
-    review_status: approved
-    reviewed_by: wave1-agent-c
+    review_status: pending_review
+    reviewed_by: null
     review_note: "cjc 1.2.0 报 unexpected variable declaration in extend body。"
     source:
       kind: toolchain_experiment
@@ -490,8 +490,8 @@ misconceptions:
       - {level: 2, outline: "回顾实现接口的类必须满足的契约。"}
       - {level: 3, outline: "在类中补全缺失成员（注意可见性与签名一致）。"}
       - {level: 4, outline: "完整解析：class A <: I {} 未实现 f()；补上 public func f(): Int64 { ... } 后通过。"}
-    review_status: approved
-    reviewed_by: wave1-agent-c
+    review_status: pending_review
+    reviewed_by: null
     review_note: "cjc 1.2.0 报 missing abstract modifier, otherwise abstract function or property should be implemented。"
     source:
       kind: toolchain_experiment
@@ -523,8 +523,8 @@ misconceptions:
       - {level: 2, outline: "回顾泛型约束 where 如何声明类型参数的能力。"}
       - {level: 3, outline: "在签名后添加 where T <: Comparable<T>。"}
       - {level: 4, outline: "完整解析：func maxOf<T>(a: T, b: T): T where T <: Comparable<T> { if (a > b) { a } else { b } } 可编译，maxOf(1, 2) 输出 2。"}
-    review_status: approved
-    reviewed_by: wave1-agent-c
+    review_status: pending_review
+    reviewed_by: null
     review_note: "cjc 1.2.0 报 invalid binary operator '>' on type 'Generics-T'；加约束后可运行。"
     source:
       kind: toolchain_experiment
@@ -557,8 +557,8 @@ misconceptions:
       - {level: 2, outline: "回顾 where 子句在泛型函数声明中的位置。"}
       - {level: 3, outline: "把约束移到返回类型之后、左花括号之前。"}
       - {level: 4, outline: "完整解析：func maxOf<T where T <: Comparable<T>>(...) 改为 func maxOf<T>(a: T, b: T): T where T <: Comparable<T> { ... }。"}
-    review_status: approved
-    reviewed_by: wave1-agent-c
+    review_status: pending_review
+    reviewed_by: null
     review_note: "cjc 1.2.0 报 unclosed delimiter: '<'。"
     source:
       kind: toolchain_experiment
@@ -592,8 +592,8 @@ misconceptions:
       - {level: 2, outline: "回顾 Future.get() 的阻塞语义。"}
       - {level: 3, outline: "先把所有 spawn 返回的 Future 保存到变量或集合，再依次 get。"}
       - {level: 4, outline: "完整解析：spawn{...}.get() 两次串行耗时约为两者之和；let f1 = spawn{...}; let f2 = spawn{...}; f1.get() + f2.get() 让两个任务重叠执行。"}
-    review_status: approved
-    reviewed_by: wave1-agent-c
+    review_status: pending_review
+    reviewed_by: null
     review_note: "本机 1.2.0 单次测量中立即 get 总耗时 ≥550ms，先启动后 get <550ms；计时依赖机器负载。"
     source:
       kind: toolchain_experiment
@@ -635,8 +635,8 @@ misconceptions:
       - {level: 2, outline: "回顾 Future.get() 对任务异常的传播语义。"}
       - {level: 3, outline: "用 try { f.get() } catch (e: Exception) { ... } 包住 get 调用。"}
       - {level: 4, outline: "完整解析：任务抛出 Exception(\"boom\")，f.get() 重新抛出，外层 catch 打印 caught boom。"}
-    review_status: approved
-    reviewed_by: wave1-agent-c
+    review_status: pending_review
+    reviewed_by: null
     review_note: "cjc 1.2.0 输出 caught boom，并同时打印线程异常栈，进程退出码 0。"
     source:
       kind: toolchain_experiment
@@ -678,8 +678,8 @@ misconceptions:
       - {level: 2, outline: "回顾 for-in 循环变量的可变性。"}
       - {level: 3, outline: "若需跳步，改用带步长的 Range 或 var + while；若需派生值，另声明 let j = i + 1。"}
       - {level: 4, outline: "完整解析：for (i in 0..3) { i = i + 1 } 被拒绝；用 let j = i + 1 或 while 循环表达意图。"}
-    review_status: approved
-    reviewed_by: wave1-agent-c
+    review_status: pending_review
+    reviewed_by: null
     review_note: "cjc 1.2.0 报 cannot assign to immutable value。"
     source:
       kind: toolchain_experiment
@@ -712,8 +712,8 @@ misconceptions:
       - {level: 2, outline: "回顾 let 与 var 的区别。"}
       - {level: 3, outline: "若确需修改改用 var；否则用新的 let 名称保存新值。"}
       - {level: 4, outline: "完整解析：let x = 1; x = 2 被拒绝；改为 var x = 1 后可赋值。"}
-    review_status: approved
-    reviewed_by: wave1-agent-c
+    review_status: pending_review
+    reviewed_by: null
     review_note: "cjc 1.2.0 报 cannot assign to immutable value。"
     source:
       kind: toolchain_experiment
@@ -746,8 +746,8 @@ misconceptions:
       - {level: 2, outline: "回顾条件表达式的类型要求。"}
       - {level: 3, outline: "写出显式比较，如 x != 0 或 opt.isSome()。"}
       - {level: 4, outline: "完整解析：let x = 1; if (x) 类型不匹配；改为 if (x != 0)。"}
-    review_status: approved
-    reviewed_by: wave1-agent-c
+    review_status: pending_review
+    reviewed_by: null
     review_note: "cjc 1.2.0 报 mismatched types。"
     source:
       kind: toolchain_experiment
@@ -779,8 +779,8 @@ misconceptions:
       - {level: 2, outline: "回顾数值类型转换规则。"}
       - {level: 3, outline: "用目标类型名做显式转换，如 Int64(a)。"}
       - {level: 4, outline: "完整解析：let a: Int32 = 1; let b: Int64 = a 被拒绝；写成 let b: Int64 = Int64(a)。"}
-    review_status: approved
-    reviewed_by: wave1-agent-c
+    review_status: pending_review
+    reviewed_by: null
     review_note: "cjc 1.2.0 报 mismatched types。"
     source:
       kind: toolchain_experiment
@@ -814,8 +814,8 @@ misconceptions:
       - {level: 2, outline: "回顾仓颉整数溢出的默认处理策略。"}
       - {level: 3, outline: "使用足够宽的类型，或在运算前检查范围。"}
       - {level: 4, outline: "完整解析：inc(127) 中 Int8 的 127 + 1 抛 OverflowException；改用 Int64 或先判断 v < Int8.Max。"}
-    review_status: approved
-    reviewed_by: wave1-agent-c
+    review_status: pending_review
+    reviewed_by: null
     review_note: "cjc 1.2.0 运行期抛 OverflowException: add。"
     source:
       kind: toolchain_experiment
@@ -849,8 +849,8 @@ misconceptions:
       - {level: 2, outline: "回顾 if 表达式的类型规则。"}
       - {level: 3, outline: "补充 else 分支并保证两个分支类型一致。"}
       - {level: 4, outline: "完整解析：let v: Int64 = if (true) { 1 } 不合法；写成 if (cond) { 1 } else { 0 }。"}
-    review_status: approved
-    reviewed_by: wave1-agent-c
+    review_status: pending_review
+    reviewed_by: null
     review_note: "cjc 1.2.0 报 mismatched types。"
     source:
       kind: toolchain_experiment
@@ -883,8 +883,8 @@ misconceptions:
       - {level: 2, outline: "回顾仓颉对捕获可变变量的闭包的逃逸限制。"}
       - {level: 3, outline: "把计数器放进一个 class，并用 let 绑定该对象后再捕获。"}
       - {level: 4, outline: "完整解析：var c 被返回的 Lambda 捕获而报错；改为 let b = Box() 并在 Lambda 中修改 b.n，连续调用可得到 1、2。"}
-    review_status: approved
-    reviewed_by: wave1-agent-c
+    review_status: pending_review
+    reviewed_by: null
     review_note: "cjc 1.2.0 报 lambda capturing mutable variables needs to be called directly；let 引用对象版本输出 2。"
     source:
       kind: toolchain_experiment
@@ -920,8 +920,8 @@ misconceptions:
       - {level: 2, outline: "回顾命名参数的声明与调用写法。"}
       - {level: 3, outline: "在实参前加上参数名和冒号。"}
       - {level: 4, outline: "完整解析：func f(a!: Int64) 须调用 f(a: 1)；若声明 a!: Int64 = 3 还可调用 f()。"}
-    review_status: approved
-    reviewed_by: wave1-agent-c
+    review_status: pending_review
+    reviewed_by: null
     review_note: "cjc 1.2.0 报 missing argument prefix 'a:' for named parameter。"
     source:
       kind: toolchain_experiment
@@ -952,8 +952,8 @@ misconceptions:
       - {level: 2, outline: "回顾 cjpm 项目中包名与目录结构的对应规则。"}
       - {level: 3, outline: "按提示修改 package 声明，或把文件移动到与包名对应的目录。"}
       - {level: 4, outline: "完整解析：src/util/u.cj 声明 package demo.wrong，cjpm 要求为 demo.util；改正后 cjpm build 成功。"}
-    review_status: approved
-    reviewed_by: wave1-agent-c
+    review_status: pending_review
+    reviewed_by: null
     review_note: "cjpm 1.2.0 报 the package name in ...src\\util is wrong, the right name should be 'demo.util'。"
     source:
       kind: toolchain_experiment

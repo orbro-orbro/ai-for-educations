@@ -1,0 +1,350 @@
+openapi: 3.1.0
+info:
+  title: KnowBound-CJ Runner Controller
+  version: '2'
+paths:
+  /health:
+    get:
+      summary: Health
+      operationId: health_health_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+  /v2/execute:
+    post:
+      summary: Execute
+      operationId: execute_v2_execute_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RunnerRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RunnerResult'
+        '503':
+          description: Sandbox infrastructure is unavailable; retryable is true.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RunnerResult'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+components:
+  schemas:
+    CommandSummary:
+      properties:
+        compiler:
+          type: string
+          const: cjc
+          title: Compiler
+          default: cjc
+        source_count:
+          type: integer
+          maximum: 32.0
+          minimum: 0.0
+          title: Source Count
+        entrypoint:
+          type: string
+          title: Entrypoint
+        output_kind:
+          type: string
+          const: executable
+          title: Output Kind
+          default: executable
+      additionalProperties: false
+      type: object
+      required:
+      - source_count
+      - entrypoint
+      title: CommandSummary
+    CompilerDiagnostic:
+      properties:
+        severity:
+          type: string
+          title: Severity
+        message:
+          type: string
+          title: Message
+        code:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Code
+        file:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: File
+        start_line:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Start Line
+        start_column:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Start Column
+        end_line:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: End Line
+        end_column:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: End Column
+      additionalProperties: false
+      type: object
+      required:
+      - severity
+      - message
+      - code
+      - file
+      - start_line
+      - start_column
+      - end_line
+      - end_column
+      title: CompilerDiagnostic
+      description: Version-independent compiler diagnostic consumed by Task 5.
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    RunnerLimits:
+      properties:
+        timeout_ms:
+          type: integer
+          maximum: 30000.0
+          minimum: 0.0
+          title: Timeout Ms
+        max_output_chars:
+          type: integer
+          title: Max Output Chars
+          default: 65536
+        max_files:
+          type: integer
+          title: Max Files
+          default: 32
+        max_source_bytes:
+          type: integer
+          title: Max Source Bytes
+          default: 1048576
+        pids:
+          type: integer
+          title: Pids
+          default: 64
+        memory_bytes:
+          type: integer
+          title: Memory Bytes
+          default: 536870912
+        cpu_cores:
+          type: number
+          title: Cpu Cores
+          default: 1.0
+      additionalProperties: false
+      type: object
+      required:
+      - timeout_ms
+      title: RunnerLimits
+    RunnerPhase:
+      type: string
+      enum:
+      - compile
+      - run
+      - control
+      title: RunnerPhase
+    RunnerRequest:
+      properties:
+        protocol_version:
+          type: string
+          const: '2'
+          title: Protocol Version
+          default: '2'
+        submission_id:
+          type: string
+          maxLength: 128
+          minLength: 1
+          title: Submission Id
+        source_files:
+          items:
+            $ref: '#/components/schemas/SourceFile'
+          type: array
+          maxItems: 32
+          minItems: 1
+          title: Source Files
+        entrypoint:
+          type: string
+          title: Entrypoint
+        timeout_ms:
+          type: integer
+          maximum: 30000.0
+          minimum: 100.0
+          title: Timeout Ms
+      additionalProperties: false
+      type: object
+      required:
+      - submission_id
+      - source_files
+      - entrypoint
+      - timeout_ms
+      title: RunnerRequest
+    RunnerResult:
+      properties:
+        protocol_version:
+          type: string
+          const: '2'
+          title: Protocol Version
+          default: '2'
+        submission_id:
+          type: string
+          minLength: 1
+          title: Submission Id
+        status:
+          $ref: '#/components/schemas/RunnerStatus'
+        phase:
+          $ref: '#/components/schemas/RunnerPhase'
+        retryable:
+          type: boolean
+          title: Retryable
+        exit_code:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Exit Code
+        signal:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Signal
+        stdout:
+          type: string
+          maxLength: 65536
+          title: Stdout
+        stderr:
+          type: string
+          maxLength: 65536
+          title: Stderr
+        stdout_truncated:
+          type: boolean
+          title: Stdout Truncated
+          default: false
+        stderr_truncated:
+          type: boolean
+          title: Stderr Truncated
+          default: false
+        diagnostics:
+          items:
+            $ref: '#/components/schemas/CompilerDiagnostic'
+          type: array
+          title: Diagnostics
+        command_summary:
+          $ref: '#/components/schemas/CommandSummary'
+        limits:
+          $ref: '#/components/schemas/RunnerLimits'
+        toolchain:
+          $ref: '#/components/schemas/ToolchainInfo'
+      additionalProperties: false
+      type: object
+      required:
+      - submission_id
+      - status
+      - phase
+      - retryable
+      - exit_code
+      - signal
+      - stdout
+      - stderr
+      - diagnostics
+      - command_summary
+      - limits
+      - toolchain
+      title: RunnerResult
+    RunnerStatus:
+      type: string
+      enum:
+      - succeeded
+      - compile_failed
+      - run_failed
+      - timed_out
+      - resource_exhausted
+      - runner_unavailable
+      - internal_error
+      title: RunnerStatus
+    SourceFile:
+      properties:
+        path:
+          type: string
+          title: Path
+        content:
+          type: string
+          title: Content
+      additionalProperties: false
+      type: object
+      required:
+      - path
+      - content
+      title: SourceFile
+    ToolchainInfo:
+      properties:
+        cjc:
+          type: string
+          title: Cjc
+          default: 1.2.0
+        cjpm:
+          type: string
+          title: Cjpm
+          default: 1.2.0
+        backend:
+          type: string
+          const: cjnative
+          title: Backend
+          default: cjnative
+      additionalProperties: false
+      type: object
+      title: ToolchainInfo
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError

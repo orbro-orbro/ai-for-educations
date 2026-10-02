@@ -2,13 +2,15 @@ from __future__ import annotations
 
 import json
 import re
-from dataclasses import dataclass
 from typing import Any, Iterable
 
+from pydantic import BaseModel, ConfigDict
 
-@dataclass(frozen=True, slots=True)
-class CompilerDiagnostic:
+
+class CompilerDiagnostic(BaseModel):
     """Version-independent compiler diagnostic consumed by Task 5."""
+
+    model_config = ConfigDict(extra="forbid", frozen=True)
 
     severity: str
     message: str

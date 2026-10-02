@@ -9,11 +9,10 @@ overrides two dependencies:
 
 from __future__ import annotations
 
-import uuid
 from dataclasses import dataclass
 from typing import Any
 
-from fastapi import APIRouter, Body, Depends, Request
+from fastapi import APIRouter, Body, Depends, Header, Request
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel, ConfigDict, Field
 
@@ -65,16 +64,27 @@ class CourseAuthorization:
         return cls(False)
 
 
-def authorize_course_teacher(course_id: str) -> CourseAuthorization:
-    """Deny-by-default placeholder until Task 2's policy is wired in via dependency override."""
-    return CourseAuthorization.deny()
+def authorize_course_teacher(
+    course_id: str,
+    request: Request,
+    authorization: str | None = Header(default=None),
+) -> CourseAuthorization:
+    """Authenticate the bearer and enforce Task 2's server-side course policy."""
+
+    authenticator = getattr(request.app.state, "authenticator", None)
+    course_service = getattr(request.app.state, "course_service", None)
+    if authenticator is None or course_service is None:
+        return CourseAuthorization.deny()
+    actor = authenticator.authenticate_header(authorization)
+    course_service.require_teacher_access(actor, course_id)
+    return CourseAuthorization.allow(actor.user_id, course_id)
 
 
 _default_repository = InMemoryKnowledgeRepository()
 
 
-def get_knowledge_repository() -> KnowledgeRepository:
-    return _default_repository
+def get_knowledge_repository(request: Request) -> KnowledgeRepository:
+    return getattr(request.app.state, "knowledge_repository", _default_repository)
 
 
 class _Body(BaseModel):
@@ -127,7 +137,9 @@ class ReviewDecision(_Body):
 
 
 def _error(request: Request, code: str, message: str) -> JSONResponse:
-    request_id = request.headers.get("X-Request-ID") or uuid.uuid4().hex
+    from app.api.errors import request_id_for
+
+    request_id = request_id_for(request)
     status = _STATUS_BY_CODE.get(code, 422)
     return JSONResponse(status_code=status, content={"code": code, "message": message, "request_id": request_id})
 

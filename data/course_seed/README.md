@@ -11,13 +11,13 @@
 | `cangjie_concepts.yaml` | `metadata`、`concepts`（概念节点）、`edges`（概念边） |
 | `cangjie_misconceptions.yaml` | `metadata`、`misconceptions`（典型误区模式） |
 
-当前规模：48 个概念（45 approved、3 pending_review），29 个误区（27 approved、2 pending_review），72 条边（prerequisite 47、confusable_with 11、used_by 4、explains_error 10），覆盖设计规格第 6 节的九类主题。以 `python -m app.knowledge.seed check` 的输出为准。
+当前规模：48 个概念、29 个误区、72 条边（prerequisite 47、confusable_with 11、used_by 4、explains_error 10），覆盖设计规格第 6 节的九类主题。所有种子记录初始为 `pending_review`，以 `python -m app.knowledge.seed check` 的输出为准。
 
 ## 字段约定
 
 - **稳定 ID**：`cj.<领域>.<名称>`，小写字母、数字和连字符，例如 `cj.pattern-match.exhaustiveness`、`cj.misconception.match-non-exhaustive`。ID 一经发布不得改名，只能新增或标记 rejected。
 - **topic**：`basics_control_flow`、`functions_lambdas_closures`、`class_struct_semantics`、`interface_extension`、`generics_where`、`enum_match`、`option_exceptions`、`concurrency_spawn_future`、`packages_build_tools`。
-- **review_status**：`draft`、`pending_review`、`approved`、`rejected`。只有 `approved` 的误区，且其根概念也是 `approved`，才会通过 approved-evidence 查询进入生产诊断。
+- **review_status**：`draft`、`pending_review`、`approved`、`rejected`。只有误区、根概念、全部关联概念和解释该误区的概念均为 `approved`，才会通过 approved-evidence 查询进入生产诊断。
 - **边类型**：
   - `prerequisite`：source 是 target 的先修概念；**必须无环**。
   - `confusable_with`：易混淆概念，可以双向。
@@ -28,14 +28,14 @@
 
 ## 审核状态说明
 
-`approved` 表示该记录已由 Wave 1 Agent C 在下列工具链上用最小实验复现，并写入 `reviewed_by: wave1-agent-c`。这**不等于课程教师审核**：试点前应由《仓颉语言设计》教师通过教师知识管理 API 复核；教师修改任意内容会把状态重置为 `pending_review`。
+Wave 1 Agent C 的工具链复现仅记录在来源和审核备注中，所有种子仍为 `pending_review`，不等于课程教师审批。试点前必须由《仓颉语言设计》教师通过教师知识管理 API 复核；教师修改任意内容会再次把状态重置为 `pending_review`。
 
 仅有知识库摘要、尚未在当前工具链复现的记录一律为 `pending_review`，不会作为诊断证据。
 
 ## 工具链与知识来源
 
 - 验证工具链：`cjc 1.2.0 (cjnative)`、`cjpm 1.2.0`，target `x86_64-w64-mingw32`。
-- 知识库：cangjie-coding 技能（基线 1.0.5）。知识库摘要仅用于定位主题；所有 approved 语义均以 1.2.0 实验为准。
+- 知识库：cangjie-coding 技能（基线 1.0.5）。知识库摘要仅用于定位主题；工具链复现以 1.2.0 实验为准，生产审批仍由课程教师完成。
 - 1.2.0 与知识库表述有差异或需补充的点：
   - 常量下标越界在 cjc 1.2.0 编译期即报 `array index is out of bounds`；只有运行期才能确定的下标越界才抛 `IndexOutOfBoundsException`。
   - `Future.get()` 重新抛出任务异常并可被捕获，同时运行时会把该线程的异常栈打印到输出，进程退出码仍为 0。
@@ -47,7 +47,7 @@
 
 ```powershell
 python -m app.knowledge.seed check            # 一致性、prerequisite 无环与覆盖统计
-python -m app.knowledge.seed verify-snippets  # 在 PATH 上的 cjc/cjpm 上重跑全部 approved 误区片段
+python -m app.knowledge.seed verify-snippets  # 在 PATH 上的 cjc/cjpm 上重跑全部带预期结果的误区片段
 ```
 
 `verify-snippets` 只在宿主机编译本仓库自带的种子片段，供维护者使用。学生或教师提交的代码不得经过它，必须走隔离执行器。`spawn-get-immediately-serializes` 是计时型实验，在高负载机器上可能需要重跑。

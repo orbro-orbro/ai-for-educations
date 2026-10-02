@@ -4,7 +4,7 @@ from uuid import uuid4
 
 from fastapi import APIRouter, Header, Request
 from fastapi.responses import JSONResponse
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 
 from app.api.auth import AuthenticationFailed, Authenticator, authentication_error
 from app.courses.models import Course, Enrollment, Exercise
@@ -23,6 +23,8 @@ class ExerciseResponse(BaseModel):
 
 
 class CreateCourseRequest(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
     title: str
 
 
@@ -53,16 +55,9 @@ def _enrollment_response(enrollment: Enrollment) -> EnrollmentResponse:
 
 
 def resource_not_available(request: Request) -> JSONResponse:
-    return JSONResponse(
-        status_code=404,
-        content={
-            "code": "RESOURCE_NOT_AVAILABLE",
-            "message": "Resource is not available.",
-            "request_id": str(
-                getattr(request.state, "request_id", "unavailable")
-            ),
-        },
-    )
+    from app.api.errors import error_response
+
+    return error_response(request, 404, "RESOURCE_NOT_AVAILABLE", "Resource is not available.")
 
 
 def create_courses_router(

@@ -4,10 +4,11 @@ import os
 from pathlib import Path
 
 import pytest
+from pydantic import ValidationError
 
-from runner.worker.executor import CommandRejected, execute, write_source_files
+from runner.worker.executor import execute, write_source_files
 from runner.worker.parser import parse_compiler_diagnostics
-from runner.worker.protocol import MAX_OUTPUT_CHARS, RunnerRequest, RunnerResult, SourceFile
+from runner.worker.protocol import MAX_OUTPUT_CHARS, RunnerRequest, RunnerResult, RunnerStatus, SourceFile
 
 
 FIXTURES = Path(__file__).parent / "fixtures"
@@ -15,10 +16,11 @@ FIXTURES = Path(__file__).parent / "fixtures"
 
 def request_for(source: str, *, timeout_seconds: int = 5) -> RunnerRequest:
     return RunnerRequest(
+        protocol_version="2",
         submission_id="sub-runner-test",
         source_files=[SourceFile(path="main.cj", content=source)],
-        command=["cjc", "main.cj"],
-        timeout_seconds=timeout_seconds,
+        entrypoint="main.cj",
+        timeout_ms=timeout_seconds * 1_000,
     )
 
 
@@ -41,6 +43,7 @@ def test_execute_compiles_and_runs_minimal_cangjie_program() -> None:
     assert result.stderr == ""
     assert result.timed_out is False
     assert result.resource_limited is False
+    assert result.status is RunnerStatus.succeeded
 
 
 def test_execute_terminates_infinite_loop_at_request_timeout() -> None:
@@ -54,26 +57,6 @@ def test_execute_terminates_infinite_loop_at_request_timeout() -> None:
     assert result.exit_code is None
     assert result.timed_out is True
     assert result.resource_limited is False
-
-
-@pytest.mark.parametrize(
-    "command",
-    [
-        ["cjc", "main.cj;touch", "escaped"],
-        ["cjc", "main.cj", "&&", "whoami"],
-        ["cmd.exe", "/c", "whoami"],
-        ["sh", "-c", "whoami"],
-        ["cjc", "-o", "outside", "main.cj"],
-    ],
-)
-def test_execute_rejects_non_allowlisted_commands(command: list[str], tmp_path: Path) -> None:
-    request = request_for((FIXTURES / "hello_world.cj").read_text(encoding="utf-8"))
-    unsafe_request = request.model_copy(update={"command": command})
-
-    with pytest.raises(CommandRejected):
-        execute(unsafe_request)
-
-    assert list(tmp_path.iterdir()) == []
 
 
 def test_execute_caps_excessive_output() -> None:
@@ -90,15 +73,14 @@ def test_execute_caps_excessive_output() -> None:
 
 
 def test_execute_rejects_windows_drive_relative_source_before_writing() -> None:
-    request = RunnerRequest(
-        submission_id="drive-relative",
-        source_files=[SourceFile(path="C:escape.cj", content="main() {}")],
-        command=["cjc", "C:escape.cj"],
-        timeout_seconds=5,
-    )
-
-    with pytest.raises(CommandRejected):
-        execute(request)
+    with pytest.raises(ValidationError):
+        RunnerRequest(
+            protocol_version="2",
+            submission_id="drive-relative",
+            source_files=[SourceFile(path="C:escape.cj", content="main() {}")],
+            entrypoint="C:escape.cj",
+            timeout_ms=5_000,
+        )
 
 
 def test_execute_returns_cjc_diagnostics_in_parser_contract() -> None:
@@ -111,6 +93,8 @@ def test_execute_returns_cjc_diagnostics_in_parser_contract() -> None:
     assert diagnostics[0].code == "parse_expected_expression"
     assert diagnostics[0].file == "main.cj"
     assert diagnostics[0].start_line == 1
+    assert result.status is RunnerStatus.compile_failed
+    assert result.diagnostics == diagnostics
 
 
 def test_write_source_files_rejects_symlink_escape(tmp_path: Path) -> None:
@@ -153,3 +137,48 @@ def test_resource_limit_exit_is_reported(monkeypatch: pytest.MonkeyPatch) -> Non
 
     assert result.exit_code == 137
     assert result.resource_limited is True
+    assert result.status is RunnerStatus.resource_exhausted
+
+
+def test_compile_diagnostics_survive_public_stderr_truncation(monkeypatch: pytest.MonkeyPatch) -> None:
+    from runner.worker import executor
+
+    diagnostic = '{"severity":"error","message":"late diagnostic","file":"main.cj","line":1,"column":1}'
+    raw_stderr = ("noise\n" * 12_000) + diagnostic
+    monkeypatch.setattr(
+        executor,
+        "run_process",
+        lambda *args, **kwargs: executor.ProcessResult(1, "", raw_stderr, False),
+    )
+
+    result = execute(request_for("main() {}"))
+
+    assert result.status is RunnerStatus.compile_failed
+    assert result.stderr_truncated is True
+    assert len(result.stderr) == MAX_OUTPUT_CHARS
+    assert [item.message for item in result.diagnostics] == ["late diagnostic"]
+
+
+def test_windows_taskkill_failure_falls_back_to_direct_kill(monkeypatch: pytest.MonkeyPatch) -> None:
+    from runner.worker import executor
+
+    class FakeProcess:
+        pid = 42
+        killed = False
+
+        def poll(self):
+            return None
+
+        def kill(self):
+            self.killed = True
+
+    class FailedTaskkill:
+        returncode = 1
+
+    process = FakeProcess()
+    monkeypatch.setattr(executor.os, "name", "nt")
+    monkeypatch.setattr(executor.subprocess, "run", lambda *args, **kwargs: FailedTaskkill())
+
+    executor._terminate_process_tree(process)
+
+    assert process.killed is True

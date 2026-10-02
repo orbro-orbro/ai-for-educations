@@ -1,8 +1,3 @@
-# Task 4 knowledge-graph API fragment. Coordinator merges into contracts/openapi.yaml at Wave 1 Gate.
-# All endpoints require a teacher who owns {course_id}. Unknown course, foreign course and
-# missing resource all return 404 RESOURCE_NOT_AVAILABLE so existence is not disclosed.
-# Approved-evidence lookup for Tasks 5/6/8 is an in-process service interface
-# (app.knowledge.repository), not a public endpoint.
 openapi: 3.1.0
 info:
   title: KnowBound-CJ API — Task 4 knowledge fragment
@@ -10,453 +5,716 @@ info:
 paths:
   /teacher/courses/{course_id}/concepts:
     parameters:
-      - $ref: "#/components/parameters/CourseId"
+    - $ref: '#/components/parameters/CourseId'
     get:
       operationId: listCourseConcepts
-      security: [{bearerAuth: []}]
+      security:
+      - bearerAuth: []
       responses:
-        "200":
+        '200':
           description: All concepts of the course, any review status.
           content:
             application/json:
               schema:
                 type: array
-                items: {$ref: "#/components/schemas/Concept"}
-        "404": {$ref: "#/components/responses/NotAvailable"}
+                items:
+                  $ref: '#/components/schemas/Concept'
+        '404':
+          $ref: '#/components/responses/NotAvailable'
+        '401':
+          $ref: '#/components/responses/AuthenticationFailed'
     post:
       operationId: createCourseConcept
-      security: [{bearerAuth: []}]
+      security:
+      - bearerAuth: []
       requestBody:
         required: true
         content:
           application/json:
-            schema: {$ref: "#/components/schemas/ConceptCreate"}
+            schema:
+              $ref: '#/components/schemas/ConceptCreate'
       responses:
-        "201":
+        '201':
           description: Created with review_status=pending_review.
           content:
             application/json:
-              schema: {$ref: "#/components/schemas/Concept"}
-        "404": {$ref: "#/components/responses/NotAvailable"}
-        "409": {$ref: "#/components/responses/Conflict"}
-        "422": {$ref: "#/components/responses/Invalid"}
+              schema:
+                $ref: '#/components/schemas/Concept'
+        '404':
+          $ref: '#/components/responses/NotAvailable'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '422':
+          $ref: '#/components/responses/Invalid'
+        '401':
+          $ref: '#/components/responses/AuthenticationFailed'
   /teacher/courses/{course_id}/concepts/{concept_id}:
     parameters:
-      - $ref: "#/components/parameters/CourseId"
-      - $ref: "#/components/parameters/ConceptId"
+    - $ref: '#/components/parameters/CourseId'
+    - $ref: '#/components/parameters/ConceptId'
     patch:
       operationId: updateCourseConcept
       description: Any content change resets review_status to pending_review.
-      security: [{bearerAuth: []}]
+      security:
+      - bearerAuth: []
       requestBody:
         required: true
         content:
           application/json:
-            schema: {$ref: "#/components/schemas/ConceptUpdate"}
+            schema:
+              $ref: '#/components/schemas/ConceptUpdate'
       responses:
-        "200":
+        '200':
           description: Updated concept.
           content:
             application/json:
-              schema: {$ref: "#/components/schemas/Concept"}
-        "404": {$ref: "#/components/responses/NotAvailable"}
-        "422": {$ref: "#/components/responses/Invalid"}
+              schema:
+                $ref: '#/components/schemas/Concept'
+        '404':
+          $ref: '#/components/responses/NotAvailable'
+        '422':
+          $ref: '#/components/responses/Invalid'
+        '401':
+          $ref: '#/components/responses/AuthenticationFailed'
   /teacher/courses/{course_id}/concepts/{concept_id}/review:
     parameters:
-      - $ref: "#/components/parameters/CourseId"
-      - $ref: "#/components/parameters/ConceptId"
+    - $ref: '#/components/parameters/CourseId'
+    - $ref: '#/components/parameters/ConceptId'
     post:
       operationId: reviewCourseConcept
-      security: [{bearerAuth: []}]
+      security:
+      - bearerAuth: []
       requestBody:
         required: true
         content:
           application/json:
-            schema: {$ref: "#/components/schemas/ReviewDecision"}
+            schema:
+              $ref: '#/components/schemas/ReviewDecision'
       responses:
-        "200":
+        '200':
           description: Reviewed concept.
           content:
             application/json:
-              schema: {$ref: "#/components/schemas/Concept"}
-        "404": {$ref: "#/components/responses/NotAvailable"}
-        "422": {$ref: "#/components/responses/Invalid"}
+              schema:
+                $ref: '#/components/schemas/Concept'
+        '404':
+          $ref: '#/components/responses/NotAvailable'
+        '422':
+          $ref: '#/components/responses/Invalid'
+        '401':
+          $ref: '#/components/responses/AuthenticationFailed'
   /teacher/courses/{course_id}/concept-edges:
     parameters:
-      - $ref: "#/components/parameters/CourseId"
+    - $ref: '#/components/parameters/CourseId'
     get:
       operationId: listCourseConceptEdges
-      security: [{bearerAuth: []}]
+      security:
+      - bearerAuth: []
       responses:
-        "200":
+        '200':
           description: All edges of the course graph.
           content:
             application/json:
               schema:
                 type: array
-                items: {$ref: "#/components/schemas/ConceptEdge"}
-        "404": {$ref: "#/components/responses/NotAvailable"}
+                items:
+                  $ref: '#/components/schemas/ConceptEdge'
+        '404':
+          $ref: '#/components/responses/NotAvailable'
+        '401':
+          $ref: '#/components/responses/AuthenticationFailed'
     post:
       operationId: createCourseConceptEdge
-      description: >
-        Rejects missing endpoints, wrong endpoint kinds and any prerequisite cycle.
-        Only prerequisite edges must be acyclic; other edge types may be bidirectional.
-      security: [{bearerAuth: []}]
+      description: 'Rejects missing endpoints, wrong endpoint kinds and any prerequisite cycle. Only prerequisite edges must
+        be acyclic; other edge types may be bidirectional.
+
+        '
+      security:
+      - bearerAuth: []
       requestBody:
         required: true
         content:
           application/json:
-            schema: {$ref: "#/components/schemas/ConceptEdge"}
+            schema:
+              $ref: '#/components/schemas/ConceptEdge'
       responses:
-        "201":
+        '201':
           description: Created edge.
           content:
             application/json:
-              schema: {$ref: "#/components/schemas/ConceptEdge"}
-        "404": {$ref: "#/components/responses/NotAvailable"}
-        "409": {$ref: "#/components/responses/Conflict"}
-        "422": {$ref: "#/components/responses/Invalid"}
+              schema:
+                $ref: '#/components/schemas/ConceptEdge'
+        '404':
+          $ref: '#/components/responses/NotAvailable'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '422':
+          $ref: '#/components/responses/Invalid'
+        '401':
+          $ref: '#/components/responses/AuthenticationFailed'
   /teacher/courses/{course_id}/misconceptions:
     parameters:
-      - $ref: "#/components/parameters/CourseId"
+    - $ref: '#/components/parameters/CourseId'
     get:
       operationId: listCourseMisconceptions
-      security: [{bearerAuth: []}]
+      security:
+      - bearerAuth: []
       responses:
-        "200":
+        '200':
           description: All misconception patterns of the course, any review status.
           content:
             application/json:
               schema:
                 type: array
-                items: {$ref: "#/components/schemas/MisconceptionPattern"}
-        "404": {$ref: "#/components/responses/NotAvailable"}
+                items:
+                  $ref: '#/components/schemas/MisconceptionPattern'
+        '404':
+          $ref: '#/components/responses/NotAvailable'
+        '401':
+          $ref: '#/components/responses/AuthenticationFailed'
     post:
       operationId: createCourseMisconception
-      security: [{bearerAuth: []}]
+      security:
+      - bearerAuth: []
       requestBody:
         required: true
         content:
           application/json:
-            schema: {$ref: "#/components/schemas/MisconceptionCreate"}
+            schema:
+              $ref: '#/components/schemas/MisconceptionCreate'
       responses:
-        "201":
+        '201':
           description: Created with review_status=pending_review.
           content:
             application/json:
-              schema: {$ref: "#/components/schemas/MisconceptionPattern"}
-        "404": {$ref: "#/components/responses/NotAvailable"}
-        "409": {$ref: "#/components/responses/Conflict"}
-        "422": {$ref: "#/components/responses/Invalid"}
+              schema:
+                $ref: '#/components/schemas/MisconceptionPattern'
+        '404':
+          $ref: '#/components/responses/NotAvailable'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '422':
+          $ref: '#/components/responses/Invalid'
+        '401':
+          $ref: '#/components/responses/AuthenticationFailed'
   /teacher/courses/{course_id}/misconceptions/{misconception_id}:
     parameters:
-      - $ref: "#/components/parameters/CourseId"
-      - $ref: "#/components/parameters/MisconceptionId"
+    - $ref: '#/components/parameters/CourseId'
+    - $ref: '#/components/parameters/MisconceptionId'
     patch:
       operationId: updateCourseMisconception
       description: Any content change resets review_status to pending_review.
-      security: [{bearerAuth: []}]
+      security:
+      - bearerAuth: []
       requestBody:
         required: true
         content:
           application/json:
-            schema: {$ref: "#/components/schemas/MisconceptionUpdate"}
+            schema:
+              $ref: '#/components/schemas/MisconceptionUpdate'
       responses:
-        "200":
+        '200':
           description: Updated misconception.
           content:
             application/json:
-              schema: {$ref: "#/components/schemas/MisconceptionPattern"}
-        "404": {$ref: "#/components/responses/NotAvailable"}
-        "422": {$ref: "#/components/responses/Invalid"}
+              schema:
+                $ref: '#/components/schemas/MisconceptionPattern'
+        '404':
+          $ref: '#/components/responses/NotAvailable'
+        '422':
+          $ref: '#/components/responses/Invalid'
+        '401':
+          $ref: '#/components/responses/AuthenticationFailed'
   /teacher/courses/{course_id}/misconceptions/{misconception_id}/review:
     parameters:
-      - $ref: "#/components/parameters/CourseId"
-      - $ref: "#/components/parameters/MisconceptionId"
+    - $ref: '#/components/parameters/CourseId'
+    - $ref: '#/components/parameters/MisconceptionId'
     post:
       operationId: reviewCourseMisconception
       description: Approval requires the root concept to be approved (409 ROOT_CONCEPT_NOT_APPROVED).
-      security: [{bearerAuth: []}]
+      security:
+      - bearerAuth: []
       requestBody:
         required: true
         content:
           application/json:
-            schema: {$ref: "#/components/schemas/ReviewDecision"}
+            schema:
+              $ref: '#/components/schemas/ReviewDecision'
       responses:
-        "200":
+        '200':
           description: Reviewed misconception.
           content:
             application/json:
-              schema: {$ref: "#/components/schemas/MisconceptionPattern"}
-        "404": {$ref: "#/components/responses/NotAvailable"}
-        "409": {$ref: "#/components/responses/Conflict"}
-        "422": {$ref: "#/components/responses/Invalid"}
+              schema:
+                $ref: '#/components/schemas/MisconceptionPattern'
+        '404':
+          $ref: '#/components/responses/NotAvailable'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '422':
+          $ref: '#/components/responses/Invalid'
+        '401':
+          $ref: '#/components/responses/AuthenticationFailed'
 components:
   parameters:
     CourseId:
       name: course_id
       in: path
       required: true
-      schema: {type: string}
+      schema:
+        type: string
     ConceptId:
       name: concept_id
       in: path
       required: true
-      schema: {$ref: "#/components/schemas/KnowledgeId"}
+      schema:
+        $ref: '#/components/schemas/KnowledgeId'
     MisconceptionId:
       name: misconception_id
       in: path
       required: true
-      schema: {$ref: "#/components/schemas/KnowledgeId"}
+      schema:
+        $ref: '#/components/schemas/KnowledgeId'
   responses:
     NotAvailable:
-      description: "RESOURCE_NOT_AVAILABLE: unknown, foreign or unauthorized resource."
+      description: 'RESOURCE_NOT_AVAILABLE: unknown, foreign or unauthorized resource.'
       content:
         application/json:
-          schema: {$ref: "#/components/schemas/ErrorResponse"}
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
     Conflict:
-      description: "KNOWLEDGE_ID_CONFLICT, EDGE_CONFLICT or ROOT_CONCEPT_NOT_APPROVED."
+      description: KNOWLEDGE_ID_CONFLICT, EDGE_CONFLICT or ROOT_CONCEPT_NOT_APPROVED.
       content:
         application/json:
-          schema: {$ref: "#/components/schemas/ErrorResponse"}
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
     Invalid:
-      description: >
-        VALIDATION_ERROR, MISSING_SOURCE, UNKNOWN_REVIEW_STATUS, UNKNOWN_EDGE_TYPE,
-        UNKNOWN_NODE, INVALID_EDGE_ENDPOINT or PREREQUISITE_CYCLE.
+      description: 'VALIDATION_ERROR, MISSING_SOURCE, UNKNOWN_REVIEW_STATUS, UNKNOWN_EDGE_TYPE, UNKNOWN_NODE, INVALID_EDGE_ENDPOINT
+        or PREREQUISITE_CYCLE.
+
+        '
       content:
         application/json:
-          schema: {$ref: "#/components/schemas/ErrorResponse"}
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    AuthenticationFailed:
+      description: Bearer token is missing or invalid.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
   schemas:
     ErrorResponse:
-      description: Same shape as the shared ErrorResponse in contracts/openapi.yaml.
       type: object
       additionalProperties: false
-      required: [code, message, request_id]
+      required:
+      - code
+      - message
+      - request_id
       properties:
-        code: {type: string}
-        message: {type: string}
-        request_id: {type: string}
+        code:
+          type: string
+        message:
+          type: string
+        request_id:
+          type: string
     KnowledgeId:
       type: string
-      pattern: "^cj(\\.[a-z0-9]+(-[a-z0-9]+)*){2,}$"
-      examples: [cj.pattern-match.exhaustiveness, cj.misconception.match-non-exhaustive]
+      pattern: ^cj(\.[a-z0-9]+(-[a-z0-9]+)*){2,}$
+      examples:
+      - cj.pattern-match.exhaustiveness
+      - cj.misconception.match-non-exhaustive
     Topic:
       type: string
       enum:
-        - basics_control_flow
-        - functions_lambdas_closures
-        - class_struct_semantics
-        - interface_extension
-        - generics_where
-        - enum_match
-        - option_exceptions
-        - concurrency_spawn_future
-        - packages_build_tools
+      - basics_control_flow
+      - functions_lambdas_closures
+      - class_struct_semantics
+      - interface_extension
+      - generics_where
+      - enum_match
+      - option_exceptions
+      - concurrency_spawn_future
+      - packages_build_tools
     ReviewStatus:
       type: string
-      enum: [draft, pending_review, approved, rejected]
+      enum:
+      - draft
+      - pending_review
+      - approved
+      - rejected
     EdgeType:
       type: string
-      enum: [prerequisite, confusable_with, used_by, explains_error]
+      enum:
+      - prerequisite
+      - confusable_with
+      - used_by
+      - explains_error
     SourceMetadata:
       type: object
       additionalProperties: false
-      required: [kind, references, toolchain_version, verification_status]
+      required:
+      - kind
+      - references
+      - toolchain_version
+      - verification_status
       properties:
         kind:
           type: string
-          enum: [cangjie_coding_kb, toolchain_experiment, teacher_authored, course_material]
+          enum:
+          - cangjie_coding_kb
+          - toolchain_experiment
+          - teacher_authored
+          - course_material
         references:
           type: array
           minItems: 1
-          items: {type: string, minLength: 1}
+          items:
+            type: string
+            minLength: 1
         toolchain_version:
           type: string
           minLength: 1
-          examples: ["cjc 1.2.0 (cjnative) / cjpm 1.2.0"]
+          examples:
+          - cjc 1.2.0 (cjnative) / cjpm 1.2.0
         verification_status:
           type: string
-          enum: [experiment_verified, knowledge_base_summary, teacher_asserted, unverified]
-        note: {type: string}
+          enum:
+          - experiment_verified
+          - knowledge_base_summary
+          - teacher_asserted
+          - unverified
+        note:
+          type: string
     Concept:
       type: object
       additionalProperties: false
-      required: [id, topic, title, summary, review_status, source]
+      required:
+      - id
+      - topic
+      - title
+      - summary
+      - review_status
+      - source
       properties:
-        id: {$ref: "#/components/schemas/KnowledgeId"}
-        topic: {$ref: "#/components/schemas/Topic"}
-        title: {type: string, minLength: 1}
-        summary: {type: string, minLength: 1}
-        review_status: {$ref: "#/components/schemas/ReviewStatus"}
-        reviewed_by: {type: [string, "null"]}
-        review_note: {type: [string, "null"]}
-        source: {$ref: "#/components/schemas/SourceMetadata"}
+        id:
+          $ref: '#/components/schemas/KnowledgeId'
+        topic:
+          $ref: '#/components/schemas/Topic'
+        title:
+          type: string
+          minLength: 1
+        summary:
+          type: string
+          minLength: 1
+        review_status:
+          $ref: '#/components/schemas/ReviewStatus'
+        reviewed_by:
+          type:
+          - string
+          - 'null'
+        review_note:
+          type:
+          - string
+          - 'null'
+        source:
+          $ref: '#/components/schemas/SourceMetadata'
     ConceptCreate:
       description: review_status is server-controlled and must not be supplied.
       type: object
       additionalProperties: false
-      required: [id, topic, title, summary, source]
+      required:
+      - id
+      - topic
+      - title
+      - summary
+      - source
       properties:
-        id: {$ref: "#/components/schemas/KnowledgeId"}
-        topic: {$ref: "#/components/schemas/Topic"}
-        title: {type: string, minLength: 1}
-        summary: {type: string, minLength: 1}
-        source: {$ref: "#/components/schemas/SourceMetadata"}
+        id:
+          $ref: '#/components/schemas/KnowledgeId'
+        topic:
+          $ref: '#/components/schemas/Topic'
+        title:
+          type: string
+          minLength: 1
+        summary:
+          type: string
+          minLength: 1
+        source:
+          $ref: '#/components/schemas/SourceMetadata'
     ConceptUpdate:
       type: object
       additionalProperties: false
       minProperties: 1
       properties:
-        topic: {$ref: "#/components/schemas/Topic"}
-        title: {type: string, minLength: 1}
-        summary: {type: string, minLength: 1}
-        source: {$ref: "#/components/schemas/SourceMetadata"}
+        topic:
+          $ref: '#/components/schemas/Topic'
+        title:
+          type: string
+          minLength: 1
+        summary:
+          type: string
+          minLength: 1
+        source:
+          $ref: '#/components/schemas/SourceMetadata'
     ConceptEdge:
-      description: >
-        prerequisite, confusable_with and used_by connect two concepts;
-        explains_error connects a concept (source) to a misconception (target).
+      description: 'prerequisite, confusable_with and used_by connect two concepts; explains_error connects a concept (source)
+        to a misconception (target).
+
+        '
       type: object
       additionalProperties: false
-      required: [source_id, target_id, edge_type]
+      required:
+      - source_id
+      - target_id
+      - edge_type
       properties:
-        source_id: {$ref: "#/components/schemas/KnowledgeId"}
-        target_id: {$ref: "#/components/schemas/KnowledgeId"}
-        edge_type: {$ref: "#/components/schemas/EdgeType"}
-        note: {type: [string, "null"]}
+        source_id:
+          $ref: '#/components/schemas/KnowledgeId'
+        target_id:
+          $ref: '#/components/schemas/KnowledgeId'
+        edge_type:
+          $ref: '#/components/schemas/EdgeType'
+        note:
+          type:
+          - string
+          - 'null'
     TriggerEvidence:
       type: object
       additionalProperties: false
-      required: [kind, pattern, strength]
+      required:
+      - kind
+      - pattern
+      - strength
       properties:
         kind:
           type: string
-          enum: [compiler_diagnostic, runtime_exception, code_pattern, answer_pattern]
+          enum:
+          - compiler_diagnostic
+          - runtime_exception
+          - code_pattern
+          - answer_pattern
         pattern:
           type: string
           minLength: 1
           description: For compiler_diagnostic/runtime_exception, a substring of ANSI-stripped toolchain output.
         strength:
           type: string
-          enum: [strong, weak]
+          enum:
+          - strong
+          - weak
           description: weak triggers are shared by several patterns and need corroborating evidence.
     HintStep:
       type: object
       additionalProperties: false
-      required: [level, outline]
+      required:
+      - level
+      - outline
       properties:
-        level: {type: integer, minimum: 1, maximum: 4}
-        outline: {type: string, minLength: 1}
+        level:
+          type: integer
+          minimum: 1
+          maximum: 4
+        outline:
+          type: string
+          minLength: 1
     Verification:
       type: object
       additionalProperties: false
-      required: [method, toolchain_version, note]
+      required:
+      - method
+      - toolchain_version
+      - note
       properties:
         method:
           type: string
-          enum: [cjc_minimal_repro, cjpm_project_repro, knowledge_base_summary, teacher_assertion]
-        toolchain_version: {type: string, minLength: 1}
+          enum:
+          - cjc_minimal_repro
+          - cjpm_project_repro
+          - knowledge_base_summary
+          - teacher_assertion
+        toolchain_version:
+          type: string
+          minLength: 1
         expected_outcome:
-          type: [string, "null"]
-          enum: [compile_error, runtime_error, run_ok, null]
-        snippet: {type: [string, "null"]}
+          type:
+          - string
+          - 'null'
+          enum:
+          - compile_error
+          - runtime_error
+          - run_ok
+          - null
+        snippet:
+          type:
+          - string
+          - 'null'
         project_files:
-          type: [object, "null"]
-          additionalProperties: {type: string}
-        expected_output_contains: {type: [string, "null"]}
-        observed: {type: [string, "null"]}
-        note: {type: string, minLength: 1}
+          type:
+          - object
+          - 'null'
+          additionalProperties:
+            type: string
+        expected_output_contains:
+          type:
+          - string
+          - 'null'
+        observed:
+          type:
+          - string
+          - 'null'
+        note:
+          type: string
+          minLength: 1
     MisconceptionPattern:
       type: object
       additionalProperties: false
       required:
-        - id
-        - topic
-        - title
-        - root_concept_id
-        - trigger_evidence
-        - explanation
-        - hint_ladder
-        - review_status
-        - source
-        - verification
+      - id
+      - topic
+      - title
+      - root_concept_id
+      - trigger_evidence
+      - explanation
+      - hint_ladder
+      - review_status
+      - source
+      - verification
       properties:
-        id: {$ref: "#/components/schemas/KnowledgeId"}
-        topic: {$ref: "#/components/schemas/Topic"}
-        title: {type: string, minLength: 1}
-        root_concept_id: {$ref: "#/components/schemas/KnowledgeId"}
+        id:
+          $ref: '#/components/schemas/KnowledgeId'
+        topic:
+          $ref: '#/components/schemas/Topic'
+        title:
+          type: string
+          minLength: 1
+        root_concept_id:
+          $ref: '#/components/schemas/KnowledgeId'
         related_concept_ids:
           type: array
-          items: {$ref: "#/components/schemas/KnowledgeId"}
+          items:
+            $ref: '#/components/schemas/KnowledgeId'
         trigger_evidence:
           type: array
           minItems: 1
-          items: {$ref: "#/components/schemas/TriggerEvidence"}
-        explanation: {type: string, minLength: 1}
+          items:
+            $ref: '#/components/schemas/TriggerEvidence'
+        explanation:
+          type: string
+          minLength: 1
         hint_ladder:
           description: Exactly four steps, levels 1..4 in order.
           type: array
           minItems: 4
           maxItems: 4
-          items: {$ref: "#/components/schemas/HintStep"}
-        review_status: {$ref: "#/components/schemas/ReviewStatus"}
-        reviewed_by: {type: [string, "null"]}
-        review_note: {type: [string, "null"]}
-        source: {$ref: "#/components/schemas/SourceMetadata"}
-        verification: {$ref: "#/components/schemas/Verification"}
+          items:
+            $ref: '#/components/schemas/HintStep'
+        review_status:
+          $ref: '#/components/schemas/ReviewStatus'
+        reviewed_by:
+          type:
+          - string
+          - 'null'
+        review_note:
+          type:
+          - string
+          - 'null'
+        source:
+          $ref: '#/components/schemas/SourceMetadata'
+        verification:
+          $ref: '#/components/schemas/Verification'
     MisconceptionCreate:
       description: Same as MisconceptionPattern without review fields.
       type: object
       additionalProperties: false
-      required: [id, topic, title, root_concept_id, trigger_evidence, explanation, hint_ladder, source, verification]
+      required:
+      - id
+      - topic
+      - title
+      - root_concept_id
+      - trigger_evidence
+      - explanation
+      - hint_ladder
+      - source
+      - verification
       properties:
-        id: {$ref: "#/components/schemas/KnowledgeId"}
-        topic: {$ref: "#/components/schemas/Topic"}
-        title: {type: string, minLength: 1}
-        root_concept_id: {$ref: "#/components/schemas/KnowledgeId"}
+        id:
+          $ref: '#/components/schemas/KnowledgeId'
+        topic:
+          $ref: '#/components/schemas/Topic'
+        title:
+          type: string
+          minLength: 1
+        root_concept_id:
+          $ref: '#/components/schemas/KnowledgeId'
         related_concept_ids:
           type: array
-          items: {$ref: "#/components/schemas/KnowledgeId"}
+          items:
+            $ref: '#/components/schemas/KnowledgeId'
         trigger_evidence:
           type: array
           minItems: 1
-          items: {$ref: "#/components/schemas/TriggerEvidence"}
-        explanation: {type: string, minLength: 1}
+          items:
+            $ref: '#/components/schemas/TriggerEvidence'
+        explanation:
+          type: string
+          minLength: 1
         hint_ladder:
           type: array
           minItems: 4
           maxItems: 4
-          items: {$ref: "#/components/schemas/HintStep"}
-        source: {$ref: "#/components/schemas/SourceMetadata"}
-        verification: {$ref: "#/components/schemas/Verification"}
+          items:
+            $ref: '#/components/schemas/HintStep'
+        source:
+          $ref: '#/components/schemas/SourceMetadata'
+        verification:
+          $ref: '#/components/schemas/Verification'
     MisconceptionUpdate:
       type: object
       additionalProperties: false
       minProperties: 1
       properties:
-        topic: {$ref: "#/components/schemas/Topic"}
-        title: {type: string, minLength: 1}
-        root_concept_id: {$ref: "#/components/schemas/KnowledgeId"}
+        topic:
+          $ref: '#/components/schemas/Topic'
+        title:
+          type: string
+          minLength: 1
+        root_concept_id:
+          $ref: '#/components/schemas/KnowledgeId'
         related_concept_ids:
           type: array
-          items: {$ref: "#/components/schemas/KnowledgeId"}
+          items:
+            $ref: '#/components/schemas/KnowledgeId'
         trigger_evidence:
           type: array
           minItems: 1
-          items: {$ref: "#/components/schemas/TriggerEvidence"}
-        explanation: {type: string, minLength: 1}
+          items:
+            $ref: '#/components/schemas/TriggerEvidence'
+        explanation:
+          type: string
+          minLength: 1
         hint_ladder:
           type: array
           minItems: 4
           maxItems: 4
-          items: {$ref: "#/components/schemas/HintStep"}
-        source: {$ref: "#/components/schemas/SourceMetadata"}
-        verification: {$ref: "#/components/schemas/Verification"}
+          items:
+            $ref: '#/components/schemas/HintStep'
+        source:
+          $ref: '#/components/schemas/SourceMetadata'
+        verification:
+          $ref: '#/components/schemas/Verification'
     ReviewDecision:
       type: object
       additionalProperties: false
-      required: [decision]
+      required:
+      - decision
       properties:
         decision:
           type: string
-          enum: [approved, rejected]
-        note: {type: [string, "null"]}
+          enum:
+          - approved
+          - rejected
+        note:
+          type:
+          - string
+          - 'null'

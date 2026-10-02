@@ -12,6 +12,8 @@ services:
       interval: 5s
       timeout: 3s
       retries: 10
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
     networks: [internal]
 
   api:
@@ -19,10 +21,17 @@ services:
       context: ../../backend
     environment:
       APP_ENV: ${APP_ENV:-development}
-      DATABASE_URL: ${DATABASE_URL:-postgresql+psycopg://knowbound:knowbound@postgres:5432/knowbound}
-      RUNNER_ENDPOINT: ${RUNNER_ENDPOINT:-http://runner:8080}
+      AUTH_TOKEN_SECRET: ${AUTH_TOKEN_SECRET:-development-only-token-secret}
+      BOOTSTRAP_TEACHER_USERNAME: ${BOOTSTRAP_TEACHER_USERNAME:-teacher}
+      BOOTSTRAP_TEACHER_PASSWORD: ${BOOTSTRAP_TEACHER_PASSWORD:-teacher-change-me}
+      BOOTSTRAP_STUDENT_USERNAME: ${BOOTSTRAP_STUDENT_USERNAME:-student}
+      BOOTSTRAP_STUDENT_PASSWORD: ${BOOTSTRAP_STUDENT_PASSWORD:-student-change-me}
+      DATABASE_URL: postgresql+psycopg://${POSTGRES_USER:-knowbound}:${POSTGRES_PASSWORD:-change-me}@postgres:5432/${POSTGRES_DB:-knowbound}
+      RUNNER_ENDPOINT: ${RUNNER_ENDPOINT:-http://runner-controller:8080}
     depends_on:
       postgres:
+        condition: service_healthy
+      runner-controller:
         condition: service_healthy
     ports:
       - "${API_PORT:-8000}:8000"
@@ -38,20 +47,58 @@ services:
     depends_on: [api]
     networks: [public]
 
-  runner:
+  runner-controller:
     build:
       context: ../../runner
+      dockerfile: controller.Dockerfile
+    environment:
+      APP_ENV: ${APP_ENV:-development}
+      RUNNER_SANDBOX_IMAGE: ${RUNNER_SANDBOX_IMAGE:-knowbound-cj-runner-sandbox:1.2.0}
+    depends_on:
+      runner-sandbox:
+        condition: service_completed_successfully
+    user: "10002:10002"
+    group_add:
+      - "${DOCKER_GID:-0}"
     read_only: true
     tmpfs:
-      - /work:size=64m,mode=1777
-    network_mode: none
+      - /tmp:rw,nosuid,nodev,noexec,size=16m,mode=0700,uid=10002,gid=10002
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
     pids_limit: 64
     mem_limit: 256m
+    cpus: 0.5
+    security_opt: [no-new-privileges:true]
+    cap_drop: [ALL]
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8080/health', timeout=2)"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    restart: unless-stopped
+    networks: [internal]
+
+  runner-sandbox:
+    image: ${RUNNER_SANDBOX_IMAGE:-knowbound-cj-runner-sandbox:1.2.0}
+    build:
+      context: ../../runner
+    command: ["-c", "pass"]
+    user: "10001:10001"
+    read_only: true
+    tmpfs:
+      - /work:rw,nosuid,nodev,exec,size=64m,mode=0700,uid=10001,gid=10001
+    network_mode: none
+    pids_limit: 64
+    mem_limit: 512m
     cpus: 1.0
-    security_opt:
-      - no-new-privileges:true
+    security_opt: [no-new-privileges:true]
+    cap_drop: [ALL]
+    restart: "no"
 
 networks:
   public: {}
   internal:
     internal: true
+
+volumes:
+  postgres-data: {}
