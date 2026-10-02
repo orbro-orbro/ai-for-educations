@@ -15,6 +15,8 @@ MAX_OUTPUT_CHARS = 64 * 1024
 MAX_FILES = 32
 MAX_FILE_BYTES = 256 * 1024
 MAX_SOURCE_BYTES = 1024 * 1024
+MAX_PATH_BYTES = 255
+PID_LIMIT = 64
 WINDOWS_DRIVE_PREFIX = re.compile(r"^[A-Za-z]:")
 
 
@@ -23,6 +25,8 @@ class _ProtocolModel(BaseModel):
 
 
 def safe_source_path(value: str) -> str:
+    if len(value.encode("utf-8")) > MAX_PATH_BYTES:
+        raise ValueError(f"source path exceeds {MAX_PATH_BYTES} UTF-8 bytes")
     if "\\" in value:
         raise ValueError("source path must use POSIX separators")
     candidate = PurePosixPath(value)
@@ -40,7 +44,7 @@ def safe_source_path(value: str) -> str:
 
 
 class SourceFile(_ProtocolModel):
-    path: str
+    path: str = Field(max_length=MAX_PATH_BYTES)
     content: str
 
     @field_validator("path")
@@ -60,7 +64,7 @@ class RunnerRequest(_ProtocolModel):
     protocol_version: Literal["2"] = PROTOCOL_VERSION
     submission_id: str = Field(min_length=1, max_length=128)
     source_files: list[SourceFile] = Field(min_length=1, max_length=MAX_FILES)
-    entrypoint: str
+    entrypoint: str = Field(max_length=MAX_PATH_BYTES)
     timeout_ms: int = Field(ge=100, le=30_000)
 
     @field_validator("entrypoint")
@@ -109,7 +113,7 @@ class RunnerPhase(StrEnum):
 class CommandSummary(_ProtocolModel):
     compiler: Literal["cjc"] = "cjc"
     source_count: int = Field(ge=0, le=MAX_FILES)
-    entrypoint: str
+    entrypoint: str = Field(max_length=MAX_PATH_BYTES)
     output_kind: Literal["executable"] = "executable"
 
 
@@ -118,7 +122,7 @@ class RunnerLimits(_ProtocolModel):
     max_output_chars: int = MAX_OUTPUT_CHARS
     max_files: int = MAX_FILES
     max_source_bytes: int = MAX_SOURCE_BYTES
-    pids: int = 64
+    pids: int = PID_LIMIT
     memory_bytes: int = 512 * 1024 * 1024
     cpu_cores: float = 1.0
 

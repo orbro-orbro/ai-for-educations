@@ -35,6 +35,8 @@ services:
         condition: service_healthy
     ports:
       - "${API_PORT:-8000}:8000"
+    volumes:
+      - ../../data/course_seed:/data/course_seed:ro
     networks: [public, internal]
 
   web:

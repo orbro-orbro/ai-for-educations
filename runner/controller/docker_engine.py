@@ -3,11 +3,11 @@ from __future__ import annotations
 import json
 import os
 import re
-import socket
 from typing import Any
 
 from runner.worker.protocol import (
     CommandSummary,
+    PID_LIMIT,
     RunnerLimits,
     RunnerPhase,
     RunnerRequest,
@@ -59,7 +59,7 @@ class DockerSandboxLauncher:
             "read_only": True,
             "cap_drop": ["ALL"],
             "security_opt": ["no-new-privileges:true"],
-            "pids_limit": 64,
+            "pids_limit": PID_LIMIT,
             "mem_limit": "512m",
             "nano_cpus": 1_000_000_000,
             "tmpfs": {"/work": "rw,nosuid,nodev,exec,size=64m,mode=0700,uid=10001,gid=10001"},
@@ -87,9 +87,18 @@ class DockerSandboxLauncher:
                 params={"stdin": 1, "stream": 1, "stdout": 0, "stderr": 0}
             )
             transport = getattr(attached, "_sock", attached)
-            transport.sendall(request.model_dump_json().encode("utf-8"))
-            transport.shutdown(socket.SHUT_WR)
-            wait_result = container.wait(timeout=request.timeout_seconds + 15)
+            transport.sendall(request.model_dump_json().encode("utf-8") + b"\n")
+            try:
+                wait_result = container.wait(timeout=request.timeout_seconds + 15)
+            except Exception as exc:
+                if _is_timeout_error(exc):
+                    return _control_result(
+                        request,
+                        RunnerStatus.timed_out,
+                        "sandbox exceeded the controller deadline",
+                        None,
+                    )
+                raise
             output = container.logs(stdout=True, stderr=False)
             if isinstance(output, bytes):
                 output = output.decode("utf-8", "replace")
@@ -107,13 +116,6 @@ class DockerSandboxLauncher:
         except SandboxUnavailable:
             raise
         except Exception as exc:
-            if isinstance(exc, TimeoutError) or exc.__class__.__name__ in {"ReadTimeout", "Timeout"}:
-                return _control_result(
-                    request,
-                    RunnerStatus.timed_out,
-                    "sandbox exceeded the controller deadline",
-                    None,
-                )
             raise SandboxUnavailable("sandbox launch failed") from exc
         finally:
             if attached is not None:
@@ -126,6 +128,28 @@ class DockerSandboxLauncher:
                     container.remove(force=True)
                 except Exception:
                     pass
+
+
+def _is_timeout_error(exc: BaseException) -> bool:
+    seen: set[int] = set()
+    pending: list[BaseException] = [exc]
+    while pending:
+        current = pending.pop()
+        if id(current) in seen:
+            continue
+        seen.add(id(current))
+        if isinstance(current, TimeoutError) or current.__class__.__name__ in {
+            "ReadTimeout",
+            "ReadTimeoutError",
+            "Timeout",
+        }:
+            return True
+        if current.__cause__ is not None:
+            pending.append(current.__cause__)
+        if current.__context__ is not None:
+            pending.append(current.__context__)
+        pending.extend(item for item in current.args if isinstance(item, BaseException))
+    return False
 
 
 def _control_result(

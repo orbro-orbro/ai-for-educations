@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import os
+import sys
 from pathlib import Path
 
 import pytest
@@ -182,3 +183,26 @@ def test_windows_taskkill_failure_falls_back_to_direct_kill(monkeypatch: pytest.
     executor._terminate_process_tree(process)
 
     assert process.killed is True
+
+
+def test_process_pid_limit_matches_container_contract(monkeypatch: pytest.MonkeyPatch) -> None:
+    from runner.worker import executor
+
+    class FakeResource:
+        RLIMIT_CPU = 1
+        RLIMIT_NPROC = 2
+        RLIMIT_FSIZE = 3
+        RLIMIT_CORE = 4
+
+        def __init__(self):
+            self.calls = []
+
+        def setrlimit(self, resource_id, limits):
+            self.calls.append((resource_id, limits))
+
+    resource = FakeResource()
+    monkeypatch.setitem(sys.modules, "resource", resource)
+
+    executor._set_process_limits(1.0)()
+
+    assert (resource.RLIMIT_NPROC, (64, 64)) in resource.calls

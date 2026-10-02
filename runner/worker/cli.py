@@ -9,8 +9,13 @@ from runner.worker.protocol import MAX_SOURCE_BYTES, RunnerRequest
 MAX_REQUEST_BYTES = MAX_SOURCE_BYTES + 256 * 1024
 
 
+def _read_payload() -> bytes:
+    payload = sys.stdin.buffer.readline(MAX_REQUEST_BYTES + 1)
+    return payload[:-1] if payload.endswith(b"\n") else payload
+
+
 def main() -> int:
-    payload = sys.stdin.buffer.read(MAX_REQUEST_BYTES + 1)
+    payload = _read_payload()
     if len(payload) > MAX_REQUEST_BYTES:
         print("request exceeds sandbox input limit", file=sys.stderr)
         return 2

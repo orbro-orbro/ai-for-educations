@@ -30,6 +30,8 @@
 
 Wave 1 Agent C 的工具链复现仅记录在来源和审核备注中，所有种子仍为 `pending_review`，不等于课程教师审批。试点前必须由《仓颉语言设计》教师通过教师知识管理 API 复核；教师修改任意内容会再次把状态重置为 `pending_review`。
 
+教师审核时使用 `docs/wave1-knowledge-review-checklist.md` 逐项记录决定；未明确确认的记录不得批量改为 `approved`。
+
 仅有知识库摘要、尚未在当前工具链复现的记录一律为 `pending_review`，不会作为诊断证据。
 
 ## 工具链与知识来源

@@ -3,6 +3,7 @@ from pydantic import ValidationError
 
 from runner.worker.protocol import (
     MAX_FILES,
+    MAX_PATH_BYTES,
     MAX_SOURCE_BYTES,
     RunnerLimits,
     RunnerPhase,
@@ -53,6 +54,23 @@ def test_runner_request_rejects_non_cangjie_source_files_before_launch():
                 {"path": "src/main.cj", "content": "main() {}"},
                 {"path": "src/payload.txt", "content": "ignored"},
             ]
+        )
+
+
+def test_runner_request_bounds_source_and_entrypoint_path_lengths():
+    overlong_path = ("a" * (MAX_PATH_BYTES - 2)) + ".cj"
+
+    with pytest.raises(ValidationError):
+        request(
+            source_files=[{"path": overlong_path, "content": "main() {}"}],
+            entrypoint=overlong_path,
+        )
+
+    overlong_utf8_path = ("界" * (MAX_PATH_BYTES // 3)) + ".cj"
+    with pytest.raises(ValidationError):
+        request(
+            source_files=[{"path": overlong_utf8_path, "content": "main() {}"}],
+            entrypoint=overlong_utf8_path,
         )
 
 
