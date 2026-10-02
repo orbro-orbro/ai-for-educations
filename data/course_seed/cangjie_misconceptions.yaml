@@ -1,0 +1,1023 @@
+# 《仓颉语言设计》典型误区种子。字段约定见 data/course_seed/README.md。
+# 每条 approved 误区的 verification.snippet / project_files 可用
+#   python -m app.knowledge.seed verify-snippets
+# 在当前 cjc/cjpm 上重新复现；observed 为去除 ANSI 颜色后的工具链输出片段。
+metadata:
+  course_key: cangjie-language-design
+  seed_version: 2026-10-02.1
+  toolchain:
+    cjc: 1.2.0 (cjnative)
+    cjpm: 1.2.0
+    target: x86_64-w64-mingw32
+  knowledge_base: cangjie-coding skill knowledge base (baseline 1.0.5); every approved record re-verified on cjc/cjpm 1.2.0
+  data_nature: course seed for teaching and diagnosis evidence; not pilot results, contains no student data or measured effects
+  review_policy: approved = reproduced on the toolchain above by Wave 1 Agent C; course-teacher confirmation is still pending
+
+misconceptions:
+  # ================================================================ 3 class / struct
+  - id: cj.misconception.struct-copied-as-reference
+    topic: class_struct_semantics
+    title: "把 struct 当作引用类型"
+    root_concept_id: cj.type.struct-value-semantics
+    related_concept_ids: [cj.type.class-reference-semantics]
+    trigger_evidence:
+      - {kind: code_pattern, pattern: "把 struct 实例赋给另一变量后修改副本，并期望原变量随之改变", strength: strong}
+      - {kind: answer_pattern, pattern: "认为 struct 与 class 赋值后都指向同一个对象", strength: strong}
+    explanation: "struct 是值类型，赋值和传参时复制整个实例；class 是引用类型，赋值后共享同一对象。修改 struct 副本不会影响原变量。"
+    hint_ladder:
+      - {level: 1, outline: "对比程序输出中 a.x 与 c.x：两者都“通过另一个变量修改过”，为什么结果不同？"}
+      - {level: 2, outline: "回顾值类型（struct）与引用类型（class）在赋值时分别复制什么。"}
+      - {level: 3, outline: "画出 a、b、c、d 赋值后的内存关系；若希望共享修改，改用 class 或把修改后的副本写回原变量。"}
+      - {level: 4, outline: "完整解析：var b = a 复制了 P 实例，b.x = 2 只改副本；let d = c 复制的是引用，d.x = 2 修改的是同一个 C 对象，因此输出 1 2。"}
+    review_status: approved
+    reviewed_by: wave1-agent-c
+    review_note: "程序输出 1 2 与解释一致（cjc 1.2.0）。"
+    source:
+      kind: toolchain_experiment
+      references: ["exp:struct_vs_class_copy", "kb:language.struct", "kb:language.class"]
+      toolchain_version: cjc 1.2.0 (cjnative) / cjpm 1.2.0
+      verification_status: experiment_verified
+    verification:
+      method: cjc_minimal_repro
+      toolchain_version: cjc 1.2.0 (cjnative)
+      expected_outcome: run_ok
+      expected_output_contains: "1 2"
+      snippet: |
+        struct P { var x: Int64; init(x: Int64) { this.x = x } }
+        class C { var x: Int64; init(x: Int64) { this.x = x } }
+        main() {
+            var a = P(1)
+            var b = a
+            b.x = 2
+            let c = C(1)
+            let d = c
+            d.x = 2
+            println("${a.x} ${c.x}")
+        }
+      note: "struct 副本修改不影响原值，class 引用共享修改。"
+
+  - id: cj.misconception.array-assignment-deep-copy
+    topic: class_struct_semantics
+    title: "误以为 Array 赋值会复制全部元素"
+    root_concept_id: cj.collections.array-shared-buffer
+    related_concept_ids: [cj.type.struct-value-semantics]
+    trigger_evidence:
+      - {kind: code_pattern, pattern: "let b = a 后修改 b[i]，并期望数组 a 保持不变", strength: strong}
+      - {kind: answer_pattern, pattern: "认为 Array 是 struct，所以赋值后两份数据完全独立", strength: strong}
+    explanation: "Array<T> 赋值不会复制元素，新旧变量共享同一份元素存储，通过任一变量修改元素都对另一个可见；需要独立数据时调用 clone()。"
+    hint_ladder:
+      - {level: 1, outline: "修改 b[0] 之后打印 a[0]，结果和你的预期一致吗？"}
+      - {level: 2, outline: "回顾 Array 赋值时复制的是什么，以及 clone() 的作用。"}
+      - {level: 3, outline: "在需要保留原数组的地方先 let c = a.clone()，再修改 c。"}
+      - {level: 4, outline: "完整解析：b = a 后 b[0] = 9 改变了共享的元素存储，a[0] 也变为 9；c = a.clone() 得到独立副本，c[1] = 7 不影响 a，因此输出 9 2。"}
+    review_status: approved
+    reviewed_by: wave1-agent-c
+    review_note: "程序输出 9 2 与解释一致（cjc 1.2.0）。"
+    source:
+      kind: toolchain_experiment
+      references: ["exp:array_shared_one_line", "exp:array_assign_shares_buffer", "kb:language.collections.array"]
+      toolchain_version: cjc 1.2.0 (cjnative) / cjpm 1.2.0
+      verification_status: experiment_verified
+    verification:
+      method: cjc_minimal_repro
+      toolchain_version: cjc 1.2.0 (cjnative)
+      expected_outcome: run_ok
+      expected_output_contains: "9 2"
+      snippet: |
+        main() {
+            let a: Array<Int64> = [1, 2, 3]
+            let b = a
+            b[0] = 9
+            let c = a.clone()
+            c[1] = 7
+            println("${a[0]} ${a[1]}")
+        }
+      note: "赋值共享元素存储，clone 得到独立副本。"
+
+  - id: cj.misconception.let-struct-field-mutation
+    topic: class_struct_semantics
+    title: "修改 let 绑定的 struct 实例字段"
+    root_concept_id: cj.type.let-struct-immutability
+    related_concept_ids: [cj.type.struct-value-semantics, cj.basics.let-var-binding]
+    trigger_evidence:
+      - {kind: compiler_diagnostic, pattern: "cannot assign to immutable value", strength: weak}
+      - {kind: code_pattern, pattern: "对 let 绑定的 struct 实例的 var 字段赋值", strength: strong}
+    explanation: "let 绑定的 struct 实例整体不可变；字段声明为 var 只表示在可变实例上可改，不能绕过 let 的不可变性。"
+    hint_ladder:
+      - {level: 1, outline: "报错指向哪个变量？它是用 let 还是 var 声明的？"}
+      - {level: 2, outline: "回顾 struct 值语义下 let 绑定对字段修改的限制。"}
+      - {level: 3, outline: "把实例绑定改为 var，或构造一个带新字段值的新实例。"}
+      - {level: 4, outline: "完整解析：let p = P(1) 使 p 不可变，p.x = 2 被拒绝；改为 var p = P(1) 后即可修改。"}
+    review_status: approved
+    reviewed_by: wave1-agent-c
+    review_note: "cjc 1.2.0 报 cannot assign to immutable value。"
+    source:
+      kind: toolchain_experiment
+      references: ["exp:struct_let_field_assign", "kb:language.struct"]
+      toolchain_version: cjc 1.2.0 (cjnative) / cjpm 1.2.0
+      verification_status: experiment_verified
+    verification:
+      method: cjc_minimal_repro
+      toolchain_version: cjc 1.2.0 (cjnative)
+      expected_outcome: compile_error
+      observed: cannot assign to immutable value
+      snippet: |
+        struct P { var x: Int64; init(x: Int64) { this.x = x } }
+        main() {
+            let p = P(1)
+            p.x = 2
+        }
+      note: "该诊断文本与 let 重新赋值、for-in 变量赋值共享，需结合代码模式区分。"
+
+  - id: cj.misconception.struct-method-missing-mut
+    topic: class_struct_semantics
+    title: "struct 成员函数修改字段却未声明 mut"
+    root_concept_id: cj.type.struct-mut-function
+    related_concept_ids: [cj.type.struct-value-semantics]
+    trigger_evidence:
+      - {kind: compiler_diagnostic, pattern: "cannot be modified in immutable function", strength: strong}
+    explanation: "struct 的普通成员函数中 this 不可变；需要修改实例成员变量的函数必须声明为 mut func。"
+    hint_ladder:
+      - {level: 1, outline: "报错的函数在做什么？它是否修改了实例自身的字段？"}
+      - {level: 2, outline: "回顾 struct 中 mut 函数的作用与限制。"}
+      - {level: 3, outline: "在该成员函数前加 mut，并确认调用方的实例是 var 绑定。"}
+      - {level: 4, outline: "完整解析：func inc() { n += 1 } 修改了 n，须写成 mut func inc() { n += 1 }。"}
+    review_status: approved
+    reviewed_by: wave1-agent-c
+    review_note: "cjc 1.2.0 报 instance member variable 'n' cannot be modified in immutable function。"
+    source:
+      kind: toolchain_experiment
+      references: ["exp:struct_method_without_mut", "kb:language.extend.4-访问规则.4-3-扩展-struct-的-mut-函数"]
+      toolchain_version: cjc 1.2.0 (cjnative) / cjpm 1.2.0
+      verification_status: experiment_verified
+    verification:
+      method: cjc_minimal_repro
+      toolchain_version: cjc 1.2.0 (cjnative)
+      expected_outcome: compile_error
+      observed: cannot be modified in immutable function
+      snippet: |
+        struct Counter {
+            var n: Int64 = 0
+            func inc() { n += 1 }
+        }
+        main() {}
+      note: "编译期拒绝。"
+
+  - id: cj.misconception.class-inherit-without-open
+    topic: class_struct_semantics
+    title: "继承未声明 open 的类"
+    root_concept_id: cj.type.class-open-inheritance
+    trigger_evidence:
+      - {kind: compiler_diagnostic, pattern: "is not inheritable", strength: strong}
+    explanation: "仓颉中 class 默认不可被继承，父类需要声明为 open（或 abstract）。"
+    hint_ladder:
+      - {level: 1, outline: "报错指向的是子类还是父类？"}
+      - {level: 2, outline: "回顾 class 默认是否可被继承，以及 open 修饰符的作用。"}
+      - {level: 3, outline: "在父类声明前加 open，或改用接口组合。"}
+      - {level: 4, outline: "完整解析：class A {} 不可继承，改为 open class A {} 后 class B <: A {} 可通过。"}
+    review_status: approved
+    reviewed_by: wave1-agent-c
+    review_note: "cjc 1.2.0 报 super class 'A' is not inheritable。"
+    source:
+      kind: toolchain_experiment
+      references: ["exp:class_not_open_inherit", "kb:language.class"]
+      toolchain_version: cjc 1.2.0 (cjnative) / cjpm 1.2.0
+      verification_status: experiment_verified
+    verification:
+      method: cjc_minimal_repro
+      toolchain_version: cjc 1.2.0 (cjnative)
+      expected_outcome: compile_error
+      observed: is not inheritable
+      snippet: |
+        class A {}
+        class B <: A {}
+        main() {}
+      note: "编译期拒绝。"
+
+  - id: cj.misconception.override-non-open-member
+    topic: class_struct_semantics
+    title: "重写未声明 open 的成员函数"
+    root_concept_id: cj.type.override-open-member
+    related_concept_ids: [cj.type.class-open-inheritance]
+    trigger_evidence:
+      - {kind: compiler_diagnostic, pattern: "cannot override function", strength: strong}
+    explanation: "父类是 open class 并不代表其成员可被重写；只有声明为 open 的成员函数才能被子类 override。"
+    hint_ladder:
+      - {level: 1, outline: "父类已经是 open 的，为什么仍然不能重写这个函数？"}
+      - {level: 2, outline: "回顾类的 open 与成员的 open 是两个独立的声明。"}
+      - {level: 3, outline: "在父类的该成员函数前加 open，再在子类中 override。"}
+      - {level: 4, outline: "完整解析：open class A { public func f() } 中 f 不是 open，需改为 public open func f()。"}
+    review_status: approved
+    reviewed_by: wave1-agent-c
+    review_note: "cjc 1.2.0 报 cannot override function 'f'。"
+    source:
+      kind: toolchain_experiment
+      references: ["exp:override_non_open_func", "kb:language.class"]
+      toolchain_version: cjc 1.2.0 (cjnative) / cjpm 1.2.0
+      verification_status: experiment_verified
+    verification:
+      method: cjc_minimal_repro
+      toolchain_version: cjc 1.2.0 (cjnative)
+      expected_outcome: compile_error
+      observed: cannot override function
+      snippet: |
+        open class A { public func f(): Int64 { 1 } }
+        class B <: A { public override func f(): Int64 { 2 } }
+        main() {}
+      note: "编译期拒绝。"
+
+  # ================================================================ 6 enum / match
+  - id: cj.misconception.match-non-exhaustive
+    topic: enum_match
+    title: "match 分支未穷举且没有兜底"
+    root_concept_id: cj.pattern-match.exhaustiveness
+    related_concept_ids: [cj.pattern-match.match-expression, cj.pattern-match.wildcard]
+    trigger_evidence:
+      - {kind: compiler_diagnostic, pattern: "non-exhaustive patterns", strength: strong}
+    explanation: "match 必须覆盖被匹配值的全部可能；遗漏 enum 构造器又没有 case _ 兜底时，编译器拒绝该 match。"
+    hint_ladder:
+      - {level: 1, outline: "这个 enum 一共有哪些构造器？你的 match 覆盖了哪些？"}
+      - {level: 2, outline: "回顾 match 穷举性要求与通配符 _ 的作用。"}
+      - {level: 3, outline: "为遗漏的构造器补充 case，或在最后添加 case _ => 默认值。"}
+      - {level: 4, outline: "完整解析：Color 有 Red、Green、Blue，match 缺少 Blue；补 case Blue => 3 或 case _ => 0 即可通过。"}
+    review_status: approved
+    reviewed_by: wave1-agent-c
+    review_note: "cjc 1.2.0 报 non-exhaustive patterns。"
+    source:
+      kind: toolchain_experiment
+      references: ["exp:match_non_exhaustive", "kb:language.pattern_match.1-match-表达式.1-1-有匹配值的-match"]
+      toolchain_version: cjc 1.2.0 (cjnative) / cjpm 1.2.0
+      verification_status: experiment_verified
+    verification:
+      method: cjc_minimal_repro
+      toolchain_version: cjc 1.2.0 (cjnative)
+      expected_outcome: compile_error
+      observed: non-exhaustive patterns
+      snippet: |
+        enum Color { Red | Green | Blue }
+        main() {
+            let c = Color.Red
+            let n = match (c) {
+                case Red => 1
+                case Green => 2
+            }
+            println(n)
+        }
+      note: "编译期拒绝。"
+
+  - id: cj.misconception.enum-default-equality
+    topic: enum_match
+    title: "认为枚举默认支持 =="
+    root_concept_id: cj.enum.no-default-equality
+    related_concept_ids: [cj.pattern-match.match-expression]
+    trigger_evidence:
+      - {kind: compiler_diagnostic, pattern: "invalid binary operator '==' on type 'Enum-", strength: strong}
+    explanation: "自定义 enum 默认没有 == 运算符；比较构造器应使用 match，或在 enum 中定义 operator func ==。"
+    hint_ladder:
+      - {level: 1, outline: "编译器说哪个运算符不能用于这个类型？"}
+      - {level: 2, outline: "回顾自定义 enum 默认提供哪些能力，以及运算符重载。"}
+      - {level: 3, outline: "用 match 判断构造器，或在 enum 体内实现 public operator func ==(rhs) 返回 Bool。"}
+      - {level: 4, outline: "完整解析：E.A == E.B 无法编译；在 enum E 中用 match ((this, rhs)) 实现 operator func == 后可得到 true/false。"}
+    review_status: approved
+    reviewed_by: wave1-agent-c
+    review_note: "cjc 1.2.0 报 invalid binary operator '==' on type 'Enum-E'；手动重载后可运行。"
+    source:
+      kind: toolchain_experiment
+      references: ["exp:enum_eq_not_default", "exp:enum_eq_overload_ok"]
+      toolchain_version: cjc 1.2.0 (cjnative) / cjpm 1.2.0
+      verification_status: experiment_verified
+    verification:
+      method: cjc_minimal_repro
+      toolchain_version: cjc 1.2.0 (cjnative)
+      expected_outcome: compile_error
+      observed: "invalid binary operator '=='"
+      snippet: |
+        enum E { A | B }
+        main() {
+            println(E.A == E.B)
+        }
+      note: "编译期拒绝；修正版见 exp:enum_eq_overload_ok。"
+
+  # ================================================================ 7 Option / 异常
+  - id: cj.misconception.option-as-null
+    topic: option_exceptions
+    title: "把 Option<T> 当作普通空值直接使用"
+    root_concept_id: cj.option.option-type
+    related_concept_ids: [cj.option.pattern-unwrap, cj.option.coalescing]
+    trigger_evidence:
+      - {kind: compiler_diagnostic, pattern: "on type 'Enum-Option<", strength: strong}
+      - {kind: code_pattern, pattern: "对 Option<T> 值直接做 T 的运算或调用 T 的成员", strength: strong}
+    explanation: "Option<T> 是 Some(T)/None 的 enum，不是“可能为 null 的 T”；使用 T 的运算前必须用 match、?? 等方式先取出值。"
+    hint_ladder:
+      - {level: 1, outline: "变量 x 的类型到底是 Int64 还是别的类型？"}
+      - {level: 2, outline: "回顾 Option<T> 的两个构造器以及取值方式。"}
+      - {level: 3, outline: "用 (x ?? 0) + 1，或 match (x) { case Some(v) => v + 1 case None => ... } 处理两种情况。"}
+      - {level: 4, outline: "完整解析：x 是 Option<Int64>，不能直接 + 1；写成 let y = (x ?? 0) + 1 并说明 None 时的默认值语义。"}
+    review_status: approved
+    reviewed_by: wave1-agent-c
+    review_note: "cjc 1.2.0 报 invalid binary operator '+' on type 'Enum-Option<Int64>' and 'Int64'。"
+    source:
+      kind: toolchain_experiment
+      references: ["exp:option_arith_without_unwrap", "kb:std.core.enum.option.value-none"]
+      toolchain_version: cjc 1.2.0 (cjnative) / cjpm 1.2.0
+      verification_status: experiment_verified
+    verification:
+      method: cjc_minimal_repro
+      toolchain_version: cjc 1.2.0 (cjnative)
+      expected_outcome: compile_error
+      observed: "invalid binary operator '+'"
+      snippet: |
+        main() {
+            let x: Option<Int64> = None
+            let y = x + 1
+            println(y)
+        }
+      note: "编译期拒绝。"
+
+  - id: cj.misconception.none-assigned-to-plain-type
+    topic: option_exceptions
+    title: "把 None 赋给非 Option 类型"
+    root_concept_id: cj.option.option-type
+    trigger_evidence:
+      - {kind: code_pattern, pattern: "把 None 赋给声明为 String、Int64 等非 Option 类型的变量或返回值", strength: strong}
+      - {kind: compiler_diagnostic, pattern: "generic type should be used with type argument", strength: weak}
+    explanation: "None 是 Option<T> 的构造器，不是所有类型共享的空值；只有 Option<T> 类型的位置才能放 None。"
+    hint_ladder:
+      - {level: 1, outline: "变量 s 的声明类型能否表示“没有值”？"}
+      - {level: 2, outline: "回顾 None 属于哪个类型，以及仓颉如何表达可缺省的值。"}
+      - {level: 3, outline: "把类型改为 Option<String>，并在使用处解构；或提供真实的默认值。"}
+      - {level: 4, outline: "完整解析：let s: String = None 无法编译；改为 let s: Option<String> = None，打印时用 s ?? \"\"。"}
+    review_status: approved
+    reviewed_by: wave1-agent-c
+    review_note: "cjc 1.2.0 编译失败；诊断文本不直接提及 None，诊断时以代码模式为主。"
+    source:
+      kind: toolchain_experiment
+      references: ["exp:option_none_to_plain_type"]
+      toolchain_version: cjc 1.2.0 (cjnative) / cjpm 1.2.0
+      verification_status: experiment_verified
+    verification:
+      method: cjc_minimal_repro
+      toolchain_version: cjc 1.2.0 (cjnative)
+      expected_outcome: compile_error
+      observed: generic type should be used with type argument
+      snippet: |
+        main() {
+            let s: String = None
+            println(s)
+        }
+      note: "1.2.0 的诊断文本较间接，属弱触发证据。"
+
+  - id: cj.misconception.getorthrow-none-unchecked
+    topic: option_exceptions
+    title: "未检查就对 Option 调用 getOrThrow"
+    root_concept_id: cj.option.get-or-throw
+    related_concept_ids: [cj.option.option-type, cj.exception.try-catch-finally]
+    trigger_evidence:
+      - {kind: runtime_exception, pattern: "NoneValueException", strength: strong}
+    explanation: "getOrThrow() 在值为 None 时抛出 NoneValueException；它不是安全取值方式，应先判断或使用 ??、match。"
+    hint_ladder:
+      - {level: 1, outline: "程序在哪一行抛出异常？那时变量的值是什么？"}
+      - {level: 2, outline: "回顾 getOrThrow 在 None 上的行为。"}
+      - {level: 3, outline: "用 match 或 ?? 提供 None 时的处理；确需异常时用 try/catch 捕获。"}
+      - {level: 4, outline: "完整解析：x 为 None，x.getOrThrow() 抛 NoneValueException；改为 println(x ?? 0) 或 match 处理。"}
+    review_status: approved
+    reviewed_by: wave1-agent-c
+    review_note: "cjc 1.2.0 运行期抛出 NoneValueException。"
+    source:
+      kind: toolchain_experiment
+      references: ["exp:option_getOrThrow_none"]
+      toolchain_version: cjc 1.2.0 (cjnative) / cjpm 1.2.0
+      verification_status: experiment_verified
+    verification:
+      method: cjc_minimal_repro
+      toolchain_version: cjc 1.2.0 (cjnative)
+      expected_outcome: runtime_error
+      observed: NoneValueException
+      snippet: |
+        main() {
+            let x: Option<Int64> = None
+            println(x.getOrThrow())
+        }
+      note: "运行期失败，退出码非零。"
+
+  # ================================================================ 4 interface / extension
+  - id: cj.misconception.direct-extension-implies-interface
+    topic: interface_extension
+    title: "混淆直接扩展与接口扩展"
+    root_concept_id: cj.extend.interface-extension
+    related_concept_ids: [cj.extend.direct-extension, cj.interface.declaration]
+    trigger_evidence:
+      - {kind: code_pattern, pattern: "用 extend T { } 添加与接口同名的函数后，把 T 当作该接口类型使用", strength: strong}
+      - {kind: compiler_diagnostic, pattern: "mismatched types", strength: weak}
+    explanation: "直接扩展只为类型添加成员，不建立子类型关系；只有 extend T <: I 的接口扩展（或在类型声明处实现接口）才让 T 成为 I 的子类型。"
+    hint_ladder:
+      - {level: 1, outline: "Sq 已经有 area() 了，为什么仍不能赋给 Shape？"}
+      - {level: 2, outline: "回顾直接扩展与接口扩展在子类型关系上的区别。"}
+      - {level: 3, outline: "把 extend Sq { ... } 改为 extend Sq <: Shape { ... }。"}
+      - {level: 4, outline: "完整解析：仓颉按声明的实现关系判断子类型，而非按方法名匹配；接口扩展后 let sh: Shape = Sq(2) 输出 4。"}
+    review_status: approved
+    reviewed_by: wave1-agent-c
+    review_note: "cjc 1.2.0 对直接扩展版本报 mismatched types，接口扩展版本输出 4。"
+    source:
+      kind: toolchain_experiment
+      references: ["exp:direct_extension_not_subtype", "exp:interface_extension_ok", "kb:examples.abstractions.direct-extension"]
+      toolchain_version: cjc 1.2.0 (cjnative) / cjpm 1.2.0
+      verification_status: experiment_verified
+    verification:
+      method: cjc_minimal_repro
+      toolchain_version: cjc 1.2.0 (cjnative)
+      expected_outcome: compile_error
+      observed: mismatched types
+      snippet: |
+        interface Shape { func area(): Int64 }
+        class Sq {
+            public let s: Int64
+            init(s: Int64) { this.s = s }
+        }
+        extend Sq {
+            public func area(): Int64 { s * s }
+        }
+        main() {
+            let sh: Shape = Sq(2)
+            println(sh.area())
+        }
+      note: "mismatched types 为通用诊断，需结合代码模式。"
+
+  - id: cj.misconception.extension-adds-stored-field
+    topic: interface_extension
+    title: "试图在扩展中添加成员变量"
+    root_concept_id: cj.extend.no-stored-members
+    related_concept_ids: [cj.extend.direct-extension]
+    trigger_evidence:
+      - {kind: compiler_diagnostic, pattern: "unexpected variable declaration in extend body", strength: strong}
+    explanation: "扩展不能改变类型的存储布局，扩展体中不能声明成员变量；需要新状态时修改原类型或使用组合。"
+    hint_ladder:
+      - {level: 1, outline: "扩展体里出现了哪一类声明？"}
+      - {level: 2, outline: "回顾扩展允许添加的成员种类。"}
+      - {level: 3, outline: "把状态字段放回原类型定义，或用外部映射/包装类型保存。"}
+      - {level: 4, outline: "完整解析：extend Sq { var extra: Int64 = 0 } 不合法；应在 class Sq 中声明 extra，扩展中只添加函数或属性。"}
+    review_status: approved
+    reviewed_by: wave1-agent-c
+    review_note: "cjc 1.2.0 报 unexpected variable declaration in extend body。"
+    source:
+      kind: toolchain_experiment
+      references: ["exp:extension_no_stored_field"]
+      toolchain_version: cjc 1.2.0 (cjnative) / cjpm 1.2.0
+      verification_status: experiment_verified
+    verification:
+      method: cjc_minimal_repro
+      toolchain_version: cjc 1.2.0 (cjnative)
+      expected_outcome: compile_error
+      observed: unexpected variable declaration in extend body
+      snippet: |
+        class Sq {}
+        extend Sq {
+            var extra: Int64 = 0
+        }
+        main() {}
+      note: "编译期拒绝。"
+
+  - id: cj.misconception.interface-member-not-implemented
+    topic: interface_extension
+    title: "声明实现接口但遗漏抽象成员"
+    root_concept_id: cj.interface.abstract-member-implementation
+    related_concept_ids: [cj.interface.declaration]
+    trigger_evidence:
+      - {kind: compiler_diagnostic, pattern: "missing abstract modifier", strength: strong}
+    explanation: "非抽象 class 声明 <: I 后必须实现 I 中所有没有默认实现的成员，否则编译器要求将类标为 abstract。"
+    hint_ladder:
+      - {level: 1, outline: "接口 I 要求实现哪些成员？类 A 实现了哪些？"}
+      - {level: 2, outline: "回顾实现接口的类必须满足的契约。"}
+      - {level: 3, outline: "在类中补全缺失成员（注意可见性与签名一致）。"}
+      - {level: 4, outline: "完整解析：class A <: I {} 未实现 f()；补上 public func f(): Int64 { ... } 后通过。"}
+    review_status: approved
+    reviewed_by: wave1-agent-c
+    review_note: "cjc 1.2.0 报 missing abstract modifier, otherwise abstract function or property should be implemented。"
+    source:
+      kind: toolchain_experiment
+      references: ["exp:interface_member_missing"]
+      toolchain_version: cjc 1.2.0 (cjnative) / cjpm 1.2.0
+      verification_status: experiment_verified
+    verification:
+      method: cjc_minimal_repro
+      toolchain_version: cjc 1.2.0 (cjnative)
+      expected_outcome: compile_error
+      observed: missing abstract modifier
+      snippet: |
+        interface I { func f(): Int64 }
+        class A <: I {}
+        main() {}
+      note: "编译期拒绝。"
+
+  # ================================================================ 5 generics / where
+  - id: cj.misconception.generic-operator-without-constraint
+    topic: generics_where
+    title: "对未约束的泛型参数使用运算符"
+    root_concept_id: cj.generic.where-constraint
+    related_concept_ids: [cj.generic.type-parameters, cj.interface.declaration]
+    trigger_evidence:
+      - {kind: compiler_diagnostic, pattern: "on type 'Generics-", strength: strong}
+    explanation: "未加约束的类型参数 T 不具备任何具体能力；要使用 > 等操作，必须用 where T <: Comparable<T> 声明该能力。"
+    hint_ladder:
+      - {level: 1, outline: "编译器能否确定任意类型 T 都支持 > ？"}
+      - {level: 2, outline: "回顾泛型约束 where 如何声明类型参数的能力。"}
+      - {level: 3, outline: "在签名后添加 where T <: Comparable<T>。"}
+      - {level: 4, outline: "完整解析：func maxOf<T>(a: T, b: T): T where T <: Comparable<T> { if (a > b) { a } else { b } } 可编译，maxOf(1, 2) 输出 2。"}
+    review_status: approved
+    reviewed_by: wave1-agent-c
+    review_note: "cjc 1.2.0 报 invalid binary operator '>' on type 'Generics-T'；加约束后可运行。"
+    source:
+      kind: toolchain_experiment
+      references: ["exp:generic_missing_where", "exp:generic_where_ok", "kb:examples.abstractions.generic-constraint"]
+      toolchain_version: cjc 1.2.0 (cjnative) / cjpm 1.2.0
+      verification_status: experiment_verified
+    verification:
+      method: cjc_minimal_repro
+      toolchain_version: cjc 1.2.0 (cjnative)
+      expected_outcome: compile_error
+      observed: "invalid binary operator '>'"
+      snippet: |
+        func maxOf<T>(a: T, b: T): T {
+            if (a > b) { a } else { b }
+        }
+        main() { println(maxOf(1, 2)) }
+      note: "编译期拒绝。"
+
+  - id: cj.misconception.where-inside-angle-brackets
+    topic: generics_where
+    title: "把 where 约束写进尖括号"
+    root_concept_id: cj.generic.where-clause-position
+    related_concept_ids: [cj.generic.where-constraint]
+    trigger_evidence:
+      - {kind: code_pattern, pattern: "在 <T ...> 类型参数列表内书写 where 子句", strength: strong}
+      - {kind: compiler_diagnostic, pattern: "unclosed delimiter: '<'", strength: weak}
+    explanation: "仓颉的 where 子句位于函数签名（返回类型）之后、函数体之前，不能写在类型参数列表的尖括号内。"
+    hint_ladder:
+      - {level: 1, outline: "编译器认为哪个括号没有闭合？"}
+      - {level: 2, outline: "回顾 where 子句在泛型函数声明中的位置。"}
+      - {level: 3, outline: "把约束移到返回类型之后、左花括号之前。"}
+      - {level: 4, outline: "完整解析：func maxOf<T where T <: Comparable<T>>(...) 改为 func maxOf<T>(a: T, b: T): T where T <: Comparable<T> { ... }。"}
+    review_status: approved
+    reviewed_by: wave1-agent-c
+    review_note: "cjc 1.2.0 报 unclosed delimiter: '<'。"
+    source:
+      kind: toolchain_experiment
+      references: ["exp:generic_where_inside_angle", "exp:generic_where_ok"]
+      toolchain_version: cjc 1.2.0 (cjnative) / cjpm 1.2.0
+      verification_status: experiment_verified
+    verification:
+      method: cjc_minimal_repro
+      toolchain_version: cjc 1.2.0 (cjnative)
+      expected_outcome: compile_error
+      observed: unclosed delimiter
+      snippet: |
+        func maxOf<T where T <: Comparable<T>>(a: T, b: T): T {
+            if (a > b) { a } else { b }
+        }
+        main() { println(maxOf(1, 2)) }
+      note: "语法错误，诊断文本较通用。"
+
+  # ================================================================ 8 spawn / Future
+  - id: cj.misconception.spawn-get-immediately-serializes
+    topic: concurrency_spawn_future
+    title: "spawn 后立即 get，把并发写成串行"
+    root_concept_id: cj.concurrency.get-placement-parallelism
+    related_concept_ids: [cj.concurrency.spawn, cj.concurrency.future-get]
+    trigger_evidence:
+      - {kind: code_pattern, pattern: "spawn { ... }.get() 链式调用，或每次 spawn 后紧接着对同一 Future 调用 get()", strength: strong}
+      - {kind: answer_pattern, pattern: "认为只要使用 spawn 任务就一定并行执行", strength: strong}
+    explanation: "get() 会阻塞直到任务完成；每次 spawn 后立即 get 会让下一个任务在前一个结束后才启动。应先启动全部任务，再统一 get。"
+    hint_ladder:
+      - {level: 1, outline: "第二个任务是在第一个任务结束之前还是之后启动的？"}
+      - {level: 2, outline: "回顾 Future.get() 的阻塞语义。"}
+      - {level: 3, outline: "先把所有 spawn 返回的 Future 保存到变量或集合，再依次 get。"}
+      - {level: 4, outline: "完整解析：spawn{...}.get() 两次串行耗时约为两者之和；let f1 = spawn{...}; let f2 = spawn{...}; f1.get() + f2.get() 让两个任务重叠执行。"}
+    review_status: approved
+    reviewed_by: wave1-agent-c
+    review_note: "本机 1.2.0 单次测量中立即 get 总耗时 ≥550ms，先启动后 get <550ms；计时依赖机器负载。"
+    source:
+      kind: toolchain_experiment
+      references: ["exp:spawn_get_placement", "kb:language.concurrency.6-访问线程.6-1-future-线程句柄"]
+      toolchain_version: cjc 1.2.0 (cjnative) / cjpm 1.2.0
+      verification_status: experiment_verified
+    verification:
+      method: cjc_minimal_repro
+      toolchain_version: cjc 1.2.0 (cjnative)
+      expected_outcome: run_ok
+      expected_output_contains: "serial_ge_550=true parallel_lt_550=true"
+      snippet: |
+        import std.time.*
+        main() {
+            let t0 = MonoTime.now()
+            let s1 = spawn { => sleep(Duration.millisecond * 300); 1 }.get()
+            let s2 = spawn { => sleep(Duration.millisecond * 300); 2 }.get()
+            let serial = (MonoTime.now() - t0).toMilliseconds()
+            let t1 = MonoTime.now()
+            let f1 = spawn { => sleep(Duration.millisecond * 300); 1 }
+            let f2 = spawn { => sleep(Duration.millisecond * 300); 2 }
+            let p = f1.get() + f2.get()
+            let parallel = (MonoTime.now() - t1).toMilliseconds()
+            println("sum=${s1 + s2 + p} serial_ge_550=${serial >= 550} parallel_lt_550=${parallel < 550}")
+        }
+      note: "计时型实验，在高负载机器上可能需要重跑。"
+
+  - id: cj.misconception.future-exception-ignored
+    topic: concurrency_spawn_future
+    title: "认为子任务异常不会影响 get 的调用方"
+    root_concept_id: cj.concurrency.future-exception-propagation
+    related_concept_ids: [cj.concurrency.future-get, cj.exception.try-catch-finally]
+    trigger_evidence:
+      - {kind: answer_pattern, pattern: "认为 spawn 任务内抛出的异常会被吞掉，get() 照常返回", strength: strong}
+      - {kind: code_pattern, pattern: "对可能抛异常的任务调用 get() 时没有任何异常处理", strength: weak}
+    explanation: "任务中未捕获的异常会在 get() 处重新抛出，调用方需要在 get 处处理；cjc 1.2.0 运行时还会把该线程的异常栈打印到输出。"
+    hint_ladder:
+      - {level: 1, outline: "任务内抛出的异常最终在哪个线程、哪一行被观察到？"}
+      - {level: 2, outline: "回顾 Future.get() 对任务异常的传播语义。"}
+      - {level: 3, outline: "用 try { f.get() } catch (e: Exception) { ... } 包住 get 调用。"}
+      - {level: 4, outline: "完整解析：任务抛出 Exception(\"boom\")，f.get() 重新抛出，外层 catch 打印 caught boom。"}
+    review_status: approved
+    reviewed_by: wave1-agent-c
+    review_note: "cjc 1.2.0 输出 caught boom，并同时打印线程异常栈，进程退出码 0。"
+    source:
+      kind: toolchain_experiment
+      references: ["exp:future_get_rethrows", "kb:language.concurrency.6-访问线程.6-1-future-线程句柄"]
+      toolchain_version: cjc 1.2.0 (cjnative) / cjpm 1.2.0
+      verification_status: experiment_verified
+    verification:
+      method: cjc_minimal_repro
+      toolchain_version: cjc 1.2.0 (cjnative)
+      expected_outcome: run_ok
+      expected_output_contains: caught boom
+      snippet: |
+        main() {
+            let f = spawn { =>
+                if (true) { throw Exception("boom") }
+                1
+            }
+            try {
+                f.get()
+                println("no exception")
+            } catch (e: Exception) {
+                println("caught ${e.message}")
+            }
+        }
+      note: "异常栈打印行为为 1.2.0 实测，未在其他版本验证。"
+
+  # ================================================================ 1 基础与控制流
+  - id: cj.misconception.for-in-variable-reassign
+    topic: basics_control_flow
+    title: "修改 for-in 中的不可变循环变量"
+    root_concept_id: cj.basics.for-in-binding-immutable
+    related_concept_ids: [cj.basics.for-in-range, cj.basics.let-var-binding]
+    trigger_evidence:
+      - {kind: code_pattern, pattern: "在 for-in 循环体内对循环变量赋值以“跳过”或“调整”迭代", strength: strong}
+      - {kind: compiler_diagnostic, pattern: "cannot assign to immutable value", strength: weak}
+    explanation: "for-in 的循环变量是每轮迭代新建的不可变绑定，不能在循环体内赋值；需要可变计数时使用 var 与 while，或调整 Range/步长。"
+    hint_ladder:
+      - {level: 1, outline: "报错的赋值目标是谁声明的？"}
+      - {level: 2, outline: "回顾 for-in 循环变量的可变性。"}
+      - {level: 3, outline: "若需跳步，改用带步长的 Range 或 var + while；若需派生值，另声明 let j = i + 1。"}
+      - {level: 4, outline: "完整解析：for (i in 0..3) { i = i + 1 } 被拒绝；用 let j = i + 1 或 while 循环表达意图。"}
+    review_status: approved
+    reviewed_by: wave1-agent-c
+    review_note: "cjc 1.2.0 报 cannot assign to immutable value。"
+    source:
+      kind: toolchain_experiment
+      references: ["exp:for_in_var_immutable", "kb:language.for"]
+      toolchain_version: cjc 1.2.0 (cjnative) / cjpm 1.2.0
+      verification_status: experiment_verified
+    verification:
+      method: cjc_minimal_repro
+      toolchain_version: cjc 1.2.0 (cjnative)
+      expected_outcome: compile_error
+      observed: cannot assign to immutable value
+      snippet: |
+        main() {
+            for (i in 0..3) {
+                i = i + 1
+            }
+        }
+      note: "诊断文本与其他不可变赋值共享。"
+
+  - id: cj.misconception.let-reassign
+    topic: basics_control_flow
+    title: "对 let 绑定重新赋值"
+    root_concept_id: cj.basics.let-var-binding
+    trigger_evidence:
+      - {kind: code_pattern, pattern: "用 let 声明后再次对同一名称赋值", strength: strong}
+      - {kind: compiler_diagnostic, pattern: "cannot assign to immutable value", strength: weak}
+    explanation: "let 绑定只能赋值一次；需要重新赋值的变量必须用 var 声明。"
+    hint_ladder:
+      - {level: 1, outline: "这个变量是用哪个关键字声明的？"}
+      - {level: 2, outline: "回顾 let 与 var 的区别。"}
+      - {level: 3, outline: "若确需修改改用 var；否则用新的 let 名称保存新值。"}
+      - {level: 4, outline: "完整解析：let x = 1; x = 2 被拒绝；改为 var x = 1 后可赋值。"}
+    review_status: approved
+    reviewed_by: wave1-agent-c
+    review_note: "cjc 1.2.0 报 cannot assign to immutable value。"
+    source:
+      kind: toolchain_experiment
+      references: ["exp:let_reassign", "kb:language.const.1-const-变量.1-2-与-let-var-的区别"]
+      toolchain_version: cjc 1.2.0 (cjnative) / cjpm 1.2.0
+      verification_status: experiment_verified
+    verification:
+      method: cjc_minimal_repro
+      toolchain_version: cjc 1.2.0 (cjnative)
+      expected_outcome: compile_error
+      observed: cannot assign to immutable value
+      snippet: |
+        main() {
+            let x = 1
+            x = 2
+            println(x)
+        }
+      note: "编译期拒绝。"
+
+  - id: cj.misconception.if-non-bool-condition
+    topic: basics_control_flow
+    title: "用非 Bool 值作 if 条件"
+    root_concept_id: cj.basics.if-bool-condition
+    trigger_evidence:
+      - {kind: code_pattern, pattern: "if/while 条件直接使用整数、Option 或对象（如 if (count)）", strength: strong}
+      - {kind: compiler_diagnostic, pattern: "mismatched types", strength: weak}
+    explanation: "仓颉不做“真值”隐式转换，条件必须是 Bool 表达式，例如 if (count != 0)。"
+    hint_ladder:
+      - {level: 1, outline: "if 括号里的表达式是什么类型？"}
+      - {level: 2, outline: "回顾条件表达式的类型要求。"}
+      - {level: 3, outline: "写出显式比较，如 x != 0 或 opt.isSome()。"}
+      - {level: 4, outline: "完整解析：let x = 1; if (x) 类型不匹配；改为 if (x != 0)。"}
+    review_status: approved
+    reviewed_by: wave1-agent-c
+    review_note: "cjc 1.2.0 报 mismatched types。"
+    source:
+      kind: toolchain_experiment
+      references: ["exp:if_condition_not_bool"]
+      toolchain_version: cjc 1.2.0 (cjnative) / cjpm 1.2.0
+      verification_status: experiment_verified
+    verification:
+      method: cjc_minimal_repro
+      toolchain_version: cjc 1.2.0 (cjnative)
+      expected_outcome: compile_error
+      observed: mismatched types
+      snippet: |
+        main() {
+            let x = 1
+            if (x) { println("y") }
+        }
+      note: "mismatched types 为通用诊断。"
+
+  - id: cj.misconception.implicit-integer-widening
+    topic: basics_control_flow
+    title: "期望整数类型自动拓宽"
+    root_concept_id: cj.basics.integer-explicit-conversion
+    trigger_evidence:
+      - {kind: code_pattern, pattern: "把 Int32/UInt8 等值直接赋给 Int64 变量或传给 Int64 参数", strength: strong}
+      - {kind: compiler_diagnostic, pattern: "mismatched types", strength: weak}
+    explanation: "仓颉整数类型之间没有隐式转换，即使目标类型更宽也要显式写 Int64(a)。"
+    hint_ladder:
+      - {level: 1, outline: "赋值两边分别是什么整数类型？"}
+      - {level: 2, outline: "回顾数值类型转换规则。"}
+      - {level: 3, outline: "用目标类型名做显式转换，如 Int64(a)。"}
+      - {level: 4, outline: "完整解析：let a: Int32 = 1; let b: Int64 = a 被拒绝；写成 let b: Int64 = Int64(a)。"}
+    review_status: approved
+    reviewed_by: wave1-agent-c
+    review_note: "cjc 1.2.0 报 mismatched types。"
+    source:
+      kind: toolchain_experiment
+      references: ["exp:implicit_int_widening"]
+      toolchain_version: cjc 1.2.0 (cjnative) / cjpm 1.2.0
+      verification_status: experiment_verified
+    verification:
+      method: cjc_minimal_repro
+      toolchain_version: cjc 1.2.0 (cjnative)
+      expected_outcome: compile_error
+      observed: mismatched types
+      snippet: |
+        main() {
+            let a: Int32 = 1
+            let b: Int64 = a
+            println(b)
+        }
+      note: "mismatched types 为通用诊断。"
+
+  - id: cj.misconception.integer-overflow-wraps
+    topic: basics_control_flow
+    title: "以为整数溢出会静默回绕"
+    root_concept_id: cj.basics.integer-overflow-check
+    related_concept_ids: [cj.basics.integer-explicit-conversion]
+    trigger_evidence:
+      - {kind: runtime_exception, pattern: "OverflowException", strength: strong}
+      - {kind: answer_pattern, pattern: "认为 Int8 的 127 + 1 会变成 -128", strength: strong}
+    explanation: "默认情况下整数运算溢出会抛出 OverflowException，而不是像部分语言那样回绕；需要更大范围时选用更宽的类型。"
+    hint_ladder:
+      - {level: 1, outline: "异常发生时参与运算的值和类型是什么？"}
+      - {level: 2, outline: "回顾仓颉整数溢出的默认处理策略。"}
+      - {level: 3, outline: "使用足够宽的类型，或在运算前检查范围。"}
+      - {level: 4, outline: "完整解析：inc(127) 中 Int8 的 127 + 1 抛 OverflowException；改用 Int64 或先判断 v < Int8.Max。"}
+    review_status: approved
+    reviewed_by: wave1-agent-c
+    review_note: "cjc 1.2.0 运行期抛 OverflowException: add。"
+    source:
+      kind: toolchain_experiment
+      references: ["exp:int_overflow_runtime"]
+      toolchain_version: cjc 1.2.0 (cjnative) / cjpm 1.2.0
+      verification_status: experiment_verified
+    verification:
+      method: cjc_minimal_repro
+      toolchain_version: cjc 1.2.0 (cjnative)
+      expected_outcome: runtime_error
+      observed: OverflowException
+      snippet: |
+        func inc(v: Int8): Int8 { v + 1 }
+        main() {
+            let base: Int8 = Int8(126)
+            println(inc(base + 1))
+        }
+      note: "未验证编译选项对溢出策略的影响。"
+
+  - id: cj.misconception.if-without-else-as-value
+    topic: basics_control_flow
+    title: "把无 else 的 if 当作有值表达式"
+    root_concept_id: cj.basics.if-expression-value
+    related_concept_ids: [cj.basics.if-bool-condition]
+    trigger_evidence:
+      - {kind: code_pattern, pattern: "把没有 else 分支的 if 赋给非 Unit 类型的变量", strength: strong}
+      - {kind: compiler_diagnostic, pattern: "mismatched types", strength: weak}
+    explanation: "if 是表达式，但没有 else 时条件不成立的分支没有值，整体类型为 Unit；要作为值使用必须补充 else。"
+    hint_ladder:
+      - {level: 1, outline: "条件为 false 时这个 if 应该得到什么值？"}
+      - {level: 2, outline: "回顾 if 表达式的类型规则。"}
+      - {level: 3, outline: "补充 else 分支并保证两个分支类型一致。"}
+      - {level: 4, outline: "完整解析：let v: Int64 = if (true) { 1 } 不合法；写成 if (cond) { 1 } else { 0 }。"}
+    review_status: approved
+    reviewed_by: wave1-agent-c
+    review_note: "cjc 1.2.0 报 mismatched types。"
+    source:
+      kind: toolchain_experiment
+      references: ["exp:if_without_else_as_value"]
+      toolchain_version: cjc 1.2.0 (cjnative) / cjpm 1.2.0
+      verification_status: experiment_verified
+    verification:
+      method: cjc_minimal_repro
+      toolchain_version: cjc 1.2.0 (cjnative)
+      expected_outcome: compile_error
+      observed: mismatched types
+      snippet: |
+        main() {
+            let v: Int64 = if (true) { 1 }
+            println(v)
+        }
+      note: "mismatched types 为通用诊断。"
+
+  # ================================================================ 2 函数 / 闭包
+  - id: cj.misconception.closure-escaping-mutable-capture
+    topic: functions_lambdas_closures
+    title: "返回捕获了 var 的闭包"
+    root_concept_id: cj.function.closure-mutable-capture-escape
+    related_concept_ids: [cj.function.closure-capture, cj.basics.let-var-binding]
+    trigger_evidence:
+      - {kind: compiler_diagnostic, pattern: "lambda capturing mutable variables needs to be called directly", strength: strong}
+    explanation: "捕获可变局部变量 var 的 Lambda 只能被直接调用，不能返回或存储；需要保存状态时让闭包捕获 let 绑定的 class 实例。"
+    hint_ladder:
+      - {level: 1, outline: "这个 Lambda 捕获了哪些外部变量？它们是 let 还是 var？"}
+      - {level: 2, outline: "回顾仓颉对捕获可变变量的闭包的逃逸限制。"}
+      - {level: 3, outline: "把计数器放进一个 class，并用 let 绑定该对象后再捕获。"}
+      - {level: 4, outline: "完整解析：var c 被返回的 Lambda 捕获而报错；改为 let b = Box() 并在 Lambda 中修改 b.n，连续调用可得到 1、2。"}
+    review_status: approved
+    reviewed_by: wave1-agent-c
+    review_note: "cjc 1.2.0 报 lambda capturing mutable variables needs to be called directly；let 引用对象版本输出 2。"
+    source:
+      kind: toolchain_experiment
+      references: ["exp:closure_var_escape", "exp:lambda_capture_let_ref_ok", "kb:examples.functions.closure-state"]
+      toolchain_version: cjc 1.2.0 (cjnative) / cjpm 1.2.0
+      verification_status: experiment_verified
+    verification:
+      method: cjc_minimal_repro
+      toolchain_version: cjc 1.2.0 (cjnative)
+      expected_outcome: compile_error
+      observed: lambda capturing mutable variables needs to be called directly
+      snippet: |
+        func make(): () -> Int64 {
+            var c = 0
+            return { => c += 1; c }
+        }
+        main() {
+            let f = make()
+            println(f())
+        }
+      note: "编译期拒绝。"
+
+  - id: cj.misconception.named-param-positional-call
+    topic: functions_lambdas_closures
+    title: "按位置传递命名参数"
+    root_concept_id: cj.function.named-parameters
+    related_concept_ids: [cj.function.declaration]
+    trigger_evidence:
+      - {kind: compiler_diagnostic, pattern: "missing argument prefix", strength: strong}
+    explanation: "声明为 p!: T 的命名参数调用时必须写 p: value，不能按位置传入；有默认值时可以省略。"
+    hint_ladder:
+      - {level: 1, outline: "函数声明里这个参数名后面有什么特殊符号？"}
+      - {level: 2, outline: "回顾命名参数的声明与调用写法。"}
+      - {level: 3, outline: "在实参前加上参数名和冒号。"}
+      - {level: 4, outline: "完整解析：func f(a!: Int64) 须调用 f(a: 1)；若声明 a!: Int64 = 3 还可调用 f()。"}
+    review_status: approved
+    reviewed_by: wave1-agent-c
+    review_note: "cjc 1.2.0 报 missing argument prefix 'a:' for named parameter。"
+    source:
+      kind: toolchain_experiment
+      references: ["exp:named_param_positional_call", "exp:named_param_ok"]
+      toolchain_version: cjc 1.2.0 (cjnative) / cjpm 1.2.0
+      verification_status: experiment_verified
+    verification:
+      method: cjc_minimal_repro
+      toolchain_version: cjc 1.2.0 (cjnative)
+      expected_outcome: compile_error
+      observed: missing argument prefix
+      snippet: |
+        func f(a!: Int64): Int64 { a }
+        main() { println(f(1)) }
+      note: "编译期拒绝。"
+
+  # ================================================================ 9 包与构建
+  - id: cj.misconception.package-name-path-mismatch
+    topic: packages_build_tools
+    title: "包声明与目录路径不一致"
+    root_concept_id: cj.package.package-declaration-path
+    related_concept_ids: [cj.tools.cjpm-project-build]
+    trigger_evidence:
+      - {kind: compiler_diagnostic, pattern: "is wrong, the right name should be", strength: strong}
+    explanation: "cjpm 项目中 src 下每个子目录对应一个子包，文件的 package 声明必须与目录路径一致（如 src/util 对应 <模块名>.util）。"
+    hint_ladder:
+      - {level: 1, outline: "报错文件位于哪个目录？它声明的包名是什么？"}
+      - {level: 2, outline: "回顾 cjpm 项目中包名与目录结构的对应规则。"}
+      - {level: 3, outline: "按提示修改 package 声明，或把文件移动到与包名对应的目录。"}
+      - {level: 4, outline: "完整解析：src/util/u.cj 声明 package demo.wrong，cjpm 要求为 demo.util；改正后 cjpm build 成功。"}
+    review_status: approved
+    reviewed_by: wave1-agent-c
+    review_note: "cjpm 1.2.0 报 the package name in ...src\\util is wrong, the right name should be 'demo.util'。"
+    source:
+      kind: toolchain_experiment
+      references: ["exp:cjpm_pkg_mismatch", "kb:language.package"]
+      toolchain_version: cjc 1.2.0 (cjnative) / cjpm 1.2.0
+      verification_status: experiment_verified
+    verification:
+      method: cjpm_project_repro
+      toolchain_version: cjpm 1.2.0
+      expected_outcome: compile_error
+      observed: "the right name should be 'demo.util'"
+      project_files:
+        src/util/u.cj: |
+          package demo.wrong
+
+          public func one(): Int64 { 1 }
+      note: "在 cjpm init --name demo --type=executable 生成的项目上添加该文件后执行 cjpm build。"
+
+  # ================================================================ 待审核（未在 1.2.0 复现，不得作为诊断证据）
+  - id: cj.misconception.get-timeout-cancels-task
+    topic: concurrency_spawn_future
+    title: "以为 get(timeout) 超时会取消任务"
+    root_concept_id: cj.concurrency.future-get-timeout
+    related_concept_ids: [cj.concurrency.future-get]
+    trigger_evidence:
+      - {kind: runtime_exception, pattern: "TimeoutException", strength: weak}
+      - {kind: answer_pattern, pattern: "认为 get(timeout) 抛出超时后后台任务也随之停止", strength: strong}
+    explanation: "知识库说明 get(timeout) 超时只表示等待结束并抛出 TimeoutException，任务本身不会因此被取消。"
+    hint_ladder:
+      - {level: 1, outline: "超时之后，被等待的任务还在运行吗？"}
+      - {level: 2, outline: "回顾“等待超时”与“任务取消”的区别。"}
+      - {level: 3, outline: "需要停止任务时使用显式的取消/协作检查机制。"}
+      - {level: 4, outline: "待教师审核并在 1.2.0 上复现后补充完整解析。"}
+    review_status: pending_review
+    source:
+      kind: cangjie_coding_kb
+      references: ["kb:language.concurrency.6-访问线程.6-1-future-线程句柄", "kb:cangjie-build-diagnose/runtime-exception.md#5.2"]
+      toolchain_version: target cjc 1.2.0 (cjnative); not yet reproduced, knowledge base baseline 1.0.5
+      verification_status: knowledge_base_summary
+    verification:
+      method: knowledge_base_summary
+      toolchain_version: knowledge base baseline 1.0.5
+      note: "尚未编写 1.2.0 复现实验；取消 API 在 1.2.0 的确切形式未核实。"
+
+  - id: cj.misconception.main-exit-waits-background
+    topic: concurrency_spawn_future
+    title: "以为主线程会自动等待所有后台任务"
+    root_concept_id: cj.concurrency.main-exit-background
+    related_concept_ids: [cj.concurrency.spawn]
+    trigger_evidence:
+      - {kind: code_pattern, pattern: "spawn 任务后不保存 Future、main 直接结束，却期望任务输出完整", strength: weak}
+    explanation: "知识库提示主线程结束时未被等待的后台任务可能来不及完成，应保存 Future 并在退出前 get。"
+    hint_ladder:
+      - {level: 1, outline: "main 返回时后台任务是否已经执行完？"}
+      - {level: 2, outline: "回顾程序退出与仓颉线程生命周期的关系。"}
+      - {level: 3, outline: "保存所有 Future，并在 main 结束前逐一 get。"}
+      - {level: 4, outline: "待教师审核并在 1.2.0 上复现后补充完整解析。"}
+    review_status: pending_review
+    source:
+      kind: cangjie_coding_kb
+      references: ["kb:cangjie-build-diagnose/runtime-exception.md#5.3"]
+      toolchain_version: target cjc 1.2.0 (cjnative); not yet reproduced, knowledge base baseline 1.0.5
+      verification_status: knowledge_base_summary
+    verification:
+      method: knowledge_base_summary
+      toolchain_version: knowledge base baseline 1.0.5
+      note: "行为依赖调度时机，需设计可重复的 1.2.0 实验后再审核。"
