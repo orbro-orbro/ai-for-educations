@@ -29,3 +29,5 @@ docker compose -f infra\compose\docker-compose.yml config
 ```
 
 项目设计、实现计划和 Agent 约束分别位于 `docs/superpowers/specs/`、`docs/superpowers/plans/` 和 `AGENTS.md`。
+
+hello
