@@ -25,6 +25,10 @@ class Runner(Protocol):
     def execute(self, request: RunnerRequest): ...
 
 
+class ExecutionCompleted(Protocol):
+    def __call__(self, submission_id: str, request_id: str) -> None: ...
+
+
 class InvalidSubmissionInput(ValueError):
     pass
 
@@ -67,12 +71,14 @@ class SubmissionService:
         access: ExerciseAccess,
         runner: Runner,
         knowledge: KnowledgeRepository,
+        execution_completed: ExecutionCompleted | None = None,
         id_factory: Callable[[], str] = lambda: str(uuid4()),
     ) -> None:
         self._repository = repository
         self._access = access
         self._runner = runner
         self._knowledge = knowledge
+        self._execution_completed = execution_completed
         self._id_factory = id_factory
 
     def get_submission(self, actor: Actor, submission_id: str) -> Submission:
@@ -156,12 +162,16 @@ class SubmissionService:
             diagnostics=execution.diagnostics,
             knowledge=self._knowledge,
         )
-        return self._repository.complete_execution(
+        completed = self._repository.complete_execution(
             execution,
             matches,
             request_id=request_id,
             reason=f"runner completed with {runner_result.status.value}",
         )
+        if self._execution_completed is None:
+            return completed
+        self._execution_completed(submission_id, request_id)
+        return self._repository.get(submission_id)
 
 
 class ExecutionResultNotAvailable(LookupError):

@@ -20,7 +20,7 @@ from app.diagnostics.service import (
 from app.model_gateway.base import ProviderFailure, ProviderTimeout
 from app.model_gateway.mock import DeterministicMockProvider
 from app.submissions.models import SubmissionStatus
-from app.submissions.repository import InMemorySubmissionRepository
+from app.submissions.repository import InMemorySubmissionRepository, SubmissionPersistenceError
 
 from conftest import (
     COURSE_ID,
@@ -77,6 +77,35 @@ def test_high_confidence_diagnosis_uses_only_current_course_approved_knowledge(
     ]
     assert all(item.request_id == "req-diag" for item in transitions)
     assert all(item.changed_at.utcoffset().total_seconds() == 0 for item in transitions)
+
+
+def test_restart_finishes_saved_diagnosis_after_terminal_transition_failure(knowledge):
+    class FailTerminalTransitionOnce(InMemorySubmissionRepository):
+        failed = False
+
+        def transition(self, submission_id, status, **kwargs):
+            if status is SubmissionStatus.diagnosed and not self.failed:
+                self.failed = True
+                raise SubmissionPersistenceError("commit failed")
+            return super().transition(submission_id, status, **kwargs)
+
+    submissions = FailTerminalTransitionOnce()
+    seed_executed_submission(submissions)
+    service, repository, provider = make_service(
+        submissions, knowledge, [diagnosis_output()]
+    )
+
+    with pytest.raises(SubmissionPersistenceError, match="commit failed"):
+        service.diagnose("sub-1", request_id="req-diag")
+
+    assert submissions.get("sub-1").status is SubmissionStatus.diagnosing
+    assert repository.get_for_submission("sub-1") is not None
+
+    result = service.diagnose("sub-1", request_id="req-diag")
+
+    assert result.diagnosis is repository.get_for_submission("sub-1")
+    assert submissions.get("sub-1").status is SubmissionStatus.diagnosed
+    assert len(provider.diagnosis_requests) == 1
 
 
 def test_low_confidence_enters_review_and_is_not_memory_eligible(submissions, knowledge):

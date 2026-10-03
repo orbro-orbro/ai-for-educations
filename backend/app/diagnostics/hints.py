@@ -9,7 +9,7 @@ from app.auth.models import Actor, Role
 from app.courses.models import ProtectedAnswerLookup
 from app.courses.service import ResourceNotAvailable
 from app.diagnostics.leakage import contains_answer_leakage, safe_fallback
-from app.diagnostics.repository import InMemoryDiagnosticRepository
+from app.diagnostics.repository import DiagnosticRepository
 from app.diagnostics.schema import HintEvent
 from app.model_gateway.base import (
     HintModelOutput,
@@ -29,7 +29,7 @@ class HintLadderService:
     def __init__(
         self,
         *,
-        repository: InMemoryDiagnosticRepository,
+        repository: DiagnosticRepository,
         knowledge,
         provider: ModelProvider,
         submissions,

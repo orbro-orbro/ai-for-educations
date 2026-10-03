@@ -8,7 +8,7 @@ from pydantic import ValidationError
 
 from app.auth.models import Actor, Role
 from app.courses.service import ResourceNotAvailable
-from app.diagnostics.repository import InMemoryDiagnosticRepository
+from app.diagnostics.repository import DiagnosticRepository
 from app.diagnostics.schema import (
     Diagnosis,
     DiagnosisValidationContext,
@@ -48,7 +48,7 @@ class DiagnosisService:
         *,
         submissions,
         knowledge,
-        repository: InMemoryDiagnosticRepository,
+        repository: DiagnosticRepository,
         provider: ModelProvider,
         access,
         confidence_threshold: float,
@@ -94,11 +94,15 @@ class DiagnosisService:
             raise ExecutionEvidenceUnavailable(str(prior_run))
         if prior_run is not None:
             return prior_run
+        submission = self._submissions.get(submission_id)
         existing = self._repository.get_for_submission(submission_id)
         if existing is not None:
-            return DiagnosisRunResult(existing, None)
+            return self._resume_existing(
+                submission=submission,
+                diagnosis=existing,
+                request_id=request_id,
+            )
 
-        submission = self._submissions.get(submission_id)
         execution = self._submissions.execution_result(submission_id)
         if (
             submission is None
@@ -193,6 +197,42 @@ class DiagnosisService:
         )
         result = DiagnosisRunResult(diagnosis, None)
         self._repository.save_run_result(submission_id, request_id, result)
+        return result
+
+    def _resume_existing(
+        self,
+        *,
+        submission,
+        diagnosis: Diagnosis,
+        request_id: str,
+    ) -> DiagnosisRunResult:
+        if submission is None:
+            raise ExecutionEvidenceUnavailable("submission is unavailable")
+        review_event = next(
+            (
+                item
+                for item in self._repository.review_events()
+                if item.submission_id == submission.submission_id
+                and item.diagnosis_id == diagnosis.diagnosis_id
+            ),
+            None,
+        )
+        if submission.status is SubmissionStatus.diagnosing:
+            if diagnosis.requires_teacher_review:
+                return self._finish_review(
+                    submission=submission,
+                    request_id=request_id,
+                    reason="low_confidence",
+                    diagnosis=diagnosis,
+                )
+            self._submissions.transition(
+                submission.submission_id,
+                SubmissionStatus.diagnosed,
+                request_id=request_id,
+                reason="resumed evidence-bound diagnosis completed",
+            )
+        result = DiagnosisRunResult(diagnosis, review_event)
+        self._repository.save_run_result(submission.submission_id, request_id, result)
         return result
 
     def get_diagnosis(self, actor: Actor, submission_id: str) -> Diagnosis:
