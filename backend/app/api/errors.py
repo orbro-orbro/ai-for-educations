@@ -25,6 +25,9 @@ def error_response(request: Request, status_code: int, code: str, message: str) 
 def install_error_handling(app: FastAPI) -> None:
     from app.api.auth import AuthenticationFailed
     from app.courses.service import ResourceNotAvailable
+    from app.diagnostics.repository import DiagnosticPersistenceError
+    from app.diagnostics.service import ExecutionEvidenceUnavailable
+    from app.submissions.repository import SubmissionPersistenceError
 
     @app.middleware("http")
     async def attach_request_id(request: Request, call_next):
@@ -44,3 +47,24 @@ def install_error_handling(app: FastAPI) -> None:
     @app.exception_handler(RequestValidationError)
     async def handle_validation_error(request: Request, _exc: RequestValidationError):
         return error_response(request, 422, "VALIDATION_ERROR", "Request validation failed.")
+
+    @app.exception_handler(ExecutionEvidenceUnavailable)
+    async def handle_execution_unavailable(
+        request: Request, _exc: ExecutionEvidenceUnavailable
+    ):
+        return error_response(
+            request,
+            409,
+            "EXECUTION_EVIDENCE_UNAVAILABLE",
+            "Execution evidence is unavailable.",
+        )
+
+    @app.exception_handler(DiagnosticPersistenceError)
+    @app.exception_handler(SubmissionPersistenceError)
+    async def handle_storage_unavailable(request: Request, _exc: RuntimeError):
+        return error_response(
+            request,
+            503,
+            "STORAGE_UNAVAILABLE",
+            "The request could not be persisted safely.",
+        )
