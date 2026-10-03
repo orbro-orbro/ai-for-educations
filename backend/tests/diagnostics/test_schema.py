@@ -3,7 +3,11 @@ from __future__ import annotations
 import pytest
 from pydantic import ValidationError
 
-from app.diagnostics.schema import DiagnosisValidationContext, validate_diagnosis_output
+from app.diagnostics.schema import (
+    DiagnosisCandidate,
+    DiagnosisValidationContext,
+    validate_diagnosis_output,
+)
 from app.knowledge.repository import ApprovedEvidence
 
 from conftest import CONCEPT_ID, diagnosis_output
@@ -133,3 +137,34 @@ def test_concept_must_be_covered_by_evidence_cited_in_this_response(
             diagnosis_output(concept_ids=[unrelated.root_concept_id]),
             validation_context,
         )
+
+
+@pytest.mark.parametrize(
+    "evidence",
+    [
+        {
+            "kind": "compiler_diagnostic",
+            "summary": "compiler",
+            "diagnostic_index": 0,
+            "misconception_id": "must-not-be-accepted",
+        },
+        {
+            "kind": "rule_match",
+            "summary": "rule",
+            "misconception_id": "cj.misconception.match_non_exhaustive",
+            "source_reference": "must-not-be-accepted",
+        },
+        {
+            "kind": "approved_knowledge",
+            "summary": "knowledge",
+            "misconception_id": "cj.misconception.match_non_exhaustive",
+            "source_reference": "exp:match_non_exhaustive",
+            "diagnostic_index": 0,
+        },
+    ],
+)
+def test_evidence_variants_reject_fields_from_other_variants(evidence):
+    payload = diagnosis_output(evidence=[evidence])
+
+    with pytest.raises(ValidationError):
+        DiagnosisCandidate.model_validate(payload)

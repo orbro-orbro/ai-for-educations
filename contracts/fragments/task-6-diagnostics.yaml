@@ -78,16 +78,42 @@ components:
         file: {type: string, minLength: 1}
         start_line: {type: integer, minimum: 1}
         end_line: {type: integer, minimum: 1}
-    EvidenceBinding:
+    CompilerDiagnosticEvidence:
       type: object
       additionalProperties: false
-      required: [kind, summary]
+      required: [kind, summary, diagnostic_index]
       properties:
-        kind: {type: string, enum: [compiler_diagnostic, rule_match, approved_knowledge]}
+        kind: {type: string, const: compiler_diagnostic}
         summary: {type: string, minLength: 1}
-        diagnostic_index: {type: [integer, 'null'], minimum: 0}
-        misconception_id: {type: [string, 'null']}
-        source_reference: {type: [string, 'null']}
+        diagnostic_index: {type: integer, minimum: 0}
+    RuleMatchEvidence:
+      type: object
+      additionalProperties: false
+      required: [kind, summary, misconception_id]
+      properties:
+        kind: {type: string, const: rule_match}
+        summary: {type: string, minLength: 1}
+        misconception_id: {type: string, minLength: 1}
+    ApprovedKnowledgeEvidence:
+      type: object
+      additionalProperties: false
+      required: [kind, summary, misconception_id, source_reference]
+      properties:
+        kind: {type: string, const: approved_knowledge}
+        summary: {type: string, minLength: 1}
+        misconception_id: {type: string, minLength: 1}
+        source_reference: {type: string, minLength: 1}
+    EvidenceBinding:
+      oneOf:
+      - $ref: '#/components/schemas/CompilerDiagnosticEvidence'
+      - $ref: '#/components/schemas/RuleMatchEvidence'
+      - $ref: '#/components/schemas/ApprovedKnowledgeEvidence'
+      discriminator:
+        propertyName: kind
+        mapping:
+          compiler_diagnostic: '#/components/schemas/CompilerDiagnosticEvidence'
+          rule_match: '#/components/schemas/RuleMatchEvidence'
+          approved_knowledge: '#/components/schemas/ApprovedKnowledgeEvidence'
     Diagnosis:
       type: object
       additionalProperties: false

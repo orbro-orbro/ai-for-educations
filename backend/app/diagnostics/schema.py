@@ -3,7 +3,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from datetime import datetime
 from enum import StrEnum
-from typing import Literal
+from typing import Annotated, Literal
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
 
@@ -34,26 +34,29 @@ class DiagnosisLocation(_StrictModel):
         return self
 
 
-class EvidenceBinding(_StrictModel):
-    kind: Literal["compiler_diagnostic", "rule_match", "approved_knowledge"]
+class CompilerDiagnosticEvidence(_StrictModel):
+    kind: Literal["compiler_diagnostic"]
     summary: str = Field(min_length=1)
-    diagnostic_index: int | None = Field(default=None, ge=0)
-    misconception_id: str | None = None
-    source_reference: str | None = None
+    diagnostic_index: int = Field(ge=0)
 
-    @model_validator(mode="after")
-    def fields_match_kind(self):
-        if self.kind == "compiler_diagnostic":
-            if self.diagnostic_index is None:
-                raise ValueError("compiler evidence requires diagnostic_index")
-        elif self.kind == "rule_match":
-            if not self.misconception_id:
-                raise ValueError("rule evidence requires misconception_id")
-        elif not self.misconception_id or not self.source_reference:
-            raise ValueError(
-                "approved knowledge requires misconception_id and source_reference"
-            )
-        return self
+
+class RuleMatchEvidence(_StrictModel):
+    kind: Literal["rule_match"]
+    summary: str = Field(min_length=1)
+    misconception_id: str = Field(min_length=1)
+
+
+class ApprovedKnowledgeEvidence(_StrictModel):
+    kind: Literal["approved_knowledge"]
+    summary: str = Field(min_length=1)
+    misconception_id: str = Field(min_length=1)
+    source_reference: str = Field(min_length=1)
+
+
+EvidenceBinding = Annotated[
+    CompilerDiagnosticEvidence | RuleMatchEvidence | ApprovedKnowledgeEvidence,
+    Field(discriminator="kind"),
+]
 
 
 class DiagnosisCandidate(_StrictModel):
