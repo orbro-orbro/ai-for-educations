@@ -5,26 +5,23 @@ from functools import wraps
 from typing import Iterable
 
 from sqlalchemy import (
-    JSON,
-    Boolean,
-    CheckConstraint,
-    DateTime,
-    ForeignKey,
-    ForeignKeyConstraint,
-    Index,
-    Integer,
-    String,
-    Text,
-    UniqueConstraint,
     create_engine,
     event,
     func,
     select,
 )
 from sqlalchemy.exc import IntegrityError, SQLAlchemyError
-from sqlalchemy.orm import Mapped, Session, mapped_column, sessionmaker
+from sqlalchemy.orm import Session, sessionmaker
 
-from app.persistence.models import Base, ExerciseRow
+from app.persistence.models import (
+    Base,
+    ExecutionResultRow,
+    ExerciseRow,
+    RuleMatchRelatedConceptRow,
+    RuleMatchRow,
+    SubmissionRow,
+    SubmissionTransitionRow,
+)
 from app.submissions.models import (
     ExecutionResult,
     Submission,
@@ -45,9 +42,6 @@ from app.submissions.runner_contract import (
 )
 
 
-_STATUS_SQL = "'received','executing','executed','execution_unavailable','diagnosing','diagnosed','needs_review'"
-
-
 def _translate_storage_errors(method):
     @wraps(method)
     def wrapped(*args, **kwargs):
@@ -59,145 +53,6 @@ def _translate_storage_errors(method):
             raise SubmissionPersistenceError("submission storage operation failed") from exc
 
     return wrapped
-
-
-class SubmissionRow(Base):
-    __tablename__ = "submissions"
-    id: Mapped[str] = mapped_column(String(128), primary_key=True)
-    exercise_id: Mapped[str] = mapped_column(
-        ForeignKey("exercises.id", ondelete="RESTRICT"), nullable=False
-    )
-    owner_user_id: Mapped[str] = mapped_column(
-        ForeignKey("users.id", ondelete="RESTRICT"), nullable=False
-    )
-    source_files: Mapped[list[dict[str, str]]] = mapped_column(JSON, nullable=False)
-    entrypoint: Mapped[str] = mapped_column(String(255), nullable=False)
-    is_formal: Mapped[bool] = mapped_column(Boolean, nullable=False)
-    status: Mapped[str] = mapped_column(String(32), nullable=False)
-    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
-    request_id: Mapped[str] = mapped_column(String(128), nullable=False)
-    __table_args__ = (
-        CheckConstraint(f"status IN ({_STATUS_SQL})", name="ck_submissions_status"),
-        Index("ix_submissions_exercise_owner", "exercise_id", "owner_user_id"),
-        Index("ix_submissions_status", "status"),
-    )
-
-
-class SubmissionTransitionRow(Base):
-    __tablename__ = "submission_transitions"
-    submission_id: Mapped[str] = mapped_column(
-        ForeignKey("submissions.id", ondelete="CASCADE"), primary_key=True
-    )
-    sequence: Mapped[int] = mapped_column(Integer, primary_key=True)
-    from_status: Mapped[str | None] = mapped_column(String(32))
-    to_status: Mapped[str] = mapped_column(String(32), nullable=False)
-    changed_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
-    request_id: Mapped[str] = mapped_column(String(128), nullable=False)
-    reason: Mapped[str] = mapped_column(Text, nullable=False)
-    __table_args__ = (
-        CheckConstraint(f"from_status IS NULL OR from_status IN ({_STATUS_SQL})", name="ck_submission_transitions_from"),
-        CheckConstraint(f"to_status IN ({_STATUS_SQL})", name="ck_submission_transitions_to"),
-        Index("ix_submission_transitions_changed_at", "changed_at"),
-    )
-
-
-class ExecutionResultRow(Base):
-    __tablename__ = "execution_results"
-    submission_id: Mapped[str] = mapped_column(
-        ForeignKey("submissions.id", ondelete="CASCADE"), primary_key=True
-    )
-    protocol_version: Mapped[str] = mapped_column(String(16), nullable=False)
-    status: Mapped[str] = mapped_column(String(32), nullable=False)
-    phase: Mapped[str] = mapped_column(String(16), nullable=False)
-    retryable: Mapped[bool] = mapped_column(Boolean, nullable=False)
-    exit_code: Mapped[int | None] = mapped_column(Integer)
-    signal: Mapped[int | None] = mapped_column(Integer)
-    stdout: Mapped[str] = mapped_column(Text, nullable=False)
-    stderr: Mapped[str] = mapped_column(Text, nullable=False)
-    stdout_truncated: Mapped[bool] = mapped_column(Boolean, nullable=False)
-    stderr_truncated: Mapped[bool] = mapped_column(Boolean, nullable=False)
-    diagnostics: Mapped[list[dict]] = mapped_column(JSON, nullable=False)
-    command_summary: Mapped[dict] = mapped_column(JSON, nullable=False)
-    limits: Mapped[dict] = mapped_column(JSON, nullable=False)
-    toolchain: Mapped[dict] = mapped_column(JSON, nullable=False)
-    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
-    request_id: Mapped[str] = mapped_column(String(128), nullable=False)
-    __table_args__ = (
-        CheckConstraint(
-            "status IN ('succeeded','compile_failed','run_failed','timed_out','resource_exhausted')",
-            name="ck_execution_results_status",
-        ),
-        CheckConstraint("phase IN ('compile','run','control')", name="ck_execution_results_phase"),
-    )
-
-
-class RuleMatchRow(Base):
-    __tablename__ = "rule_matches"
-    submission_id: Mapped[str] = mapped_column(
-        ForeignKey("submissions.id", ondelete="CASCADE"), primary_key=True
-    )
-    course_id: Mapped[str] = mapped_column(String(128), nullable=False)
-    misconception_id: Mapped[str] = mapped_column(String(256), primary_key=True)
-    root_concept_id: Mapped[str] = mapped_column(String(256), nullable=False)
-    diagnostic_indices: Mapped[list[int]] = mapped_column(JSON, nullable=False)
-    evidence_kind: Mapped[str] = mapped_column(String(64), nullable=False)
-    evidence_summary: Mapped[str] = mapped_column(Text, nullable=False)
-    source_references: Mapped[list[str]] = mapped_column(JSON, nullable=False)
-    match_strength: Mapped[str] = mapped_column(String(16), nullable=False)
-    __table_args__ = (
-        ForeignKeyConstraint(
-            ["course_id", "misconception_id"],
-            ["misconception_patterns.course_id", "misconception_patterns.id"],
-            ondelete="RESTRICT",
-        ),
-        ForeignKeyConstraint(
-            ["course_id", "root_concept_id"],
-            ["concepts.course_id", "concepts.id"],
-            ondelete="RESTRICT",
-        ),
-        CheckConstraint("evidence_kind = 'compiler_diagnostic'", name="ck_rule_matches_evidence_kind"),
-        CheckConstraint("match_strength IN ('strong','weak')", name="ck_rule_matches_strength"),
-        UniqueConstraint(
-            "submission_id",
-            "misconception_id",
-            "course_id",
-            name="uq_rule_matches_submission_misconception_course",
-        ),
-        Index("ix_rule_matches_course_misconception", "course_id", "misconception_id"),
-        Index("ix_rule_matches_course_root", "course_id", "root_concept_id"),
-    )
-
-
-class RuleMatchRelatedConceptRow(Base):
-    __tablename__ = "rule_match_related_concepts"
-    submission_id: Mapped[str] = mapped_column(String(128), primary_key=True)
-    misconception_id: Mapped[str] = mapped_column(String(256), primary_key=True)
-    ordinal: Mapped[int] = mapped_column(Integer, primary_key=True)
-    course_id: Mapped[str] = mapped_column(String(128), nullable=False)
-    concept_id: Mapped[str] = mapped_column(String(256), nullable=False)
-    __table_args__ = (
-        ForeignKeyConstraint(
-            ["submission_id", "misconception_id", "course_id"],
-            [
-                "rule_matches.submission_id",
-                "rule_matches.misconception_id",
-                "rule_matches.course_id",
-            ],
-            ondelete="CASCADE",
-        ),
-        ForeignKeyConstraint(
-            ["course_id", "concept_id"],
-            ["concepts.course_id", "concepts.id"],
-            ondelete="RESTRICT",
-        ),
-        UniqueConstraint(
-            "submission_id",
-            "misconception_id",
-            "concept_id",
-            name="uq_rule_match_related_concept",
-        ),
-        Index("ix_rule_match_related_course_concept", "course_id", "concept_id"),
-    )
 
 
 class SqlSubmissionRepository:
@@ -230,6 +85,7 @@ class SqlSubmissionRepository:
                 session.add(
                     SubmissionRow(
                         id=submission_id,
+                        course_id=course_id,
                         exercise_id=exercise_id,
                         owner_user_id=owner_user_id,
                         source_files=[item.model_dump(mode="json") for item in sources],
@@ -272,8 +128,7 @@ class SqlSubmissionRepository:
             row = session.get(SubmissionRow, submission_id)
             if row is None:
                 return None
-            exercise = session.get(ExerciseRow, row.exercise_id)
-            return _submission(row, exercise.course_id)
+            return _submission(row)
 
     @_translate_storage_errors
     def transition(
@@ -288,8 +143,7 @@ class SqlSubmissionRepository:
             row = session.get(SubmissionRow, submission_id)
             if row is None:
                 raise KeyError(submission_id)
-            exercise = session.get(ExerciseRow, row.exercise_id)
-            current = _submission(row, exercise.course_id)
+            current = _submission(row)
             updated = current.transition_to(to_status)
             sequence = session.scalar(
                 select(func.max(SubmissionTransitionRow.sequence)).where(
@@ -338,10 +192,9 @@ class SqlSubmissionRepository:
             if row is None:
                 return None
             submission = session.get(SubmissionRow, submission_id)
-            exercise = session.get(ExerciseRow, submission.exercise_id)
             return ExecutionResult(
                 submission_id=row.submission_id,
-                course_id=exercise.course_id,
+                course_id=submission.course_id,
                 protocol_version=row.protocol_version,
                 status=RunnerStatus(row.status),
                 phase=RunnerPhase(row.phase),
@@ -415,8 +268,7 @@ class SqlSubmissionRepository:
             submission_row = session.get(SubmissionRow, result.submission_id)
             if submission_row is None:
                 raise KeyError(result.submission_id)
-            exercise = session.get(ExerciseRow, submission_row.exercise_id)
-            current = _submission(submission_row, exercise.course_id)
+            current = _submission(submission_row)
             if current.course_id != result.course_id:
                 raise ValueError("execution result course mismatch")
             if any(match.course_id != current.course_id for match in match_values):
@@ -511,10 +363,10 @@ def _aware_utc(value: datetime) -> datetime:
     return value.astimezone(UTC)
 
 
-def _submission(row: SubmissionRow, course_id: str) -> Submission:
+def _submission(row: SubmissionRow) -> Submission:
     return Submission(
         submission_id=row.id,
-        course_id=course_id,
+        course_id=row.course_id,
         exercise_id=row.exercise_id,
         owner_user_id=row.owner_user_id,
         source_files=tuple(SourceFile.model_validate(item) for item in row.source_files),

@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Iterable
+from typing import TYPE_CHECKING, Iterable
 
 from sqlalchemy import create_engine, delete, event, select
 from sqlalchemy.exc import IntegrityError
@@ -23,6 +23,9 @@ from app.persistence.models import (
     MisconceptionRow,
     UserRow,
 )
+
+if TYPE_CHECKING:
+    from app.submissions.persistence import SqlSubmissionRepository
 
 
 class SqlUserRepository:
@@ -80,14 +83,24 @@ class SqlCourseRepository:
     def add_exercise(self, exercise: Exercise) -> None:
         try:
             with self._sessions.begin() as session:
-                session.add(ExerciseRow(id=exercise.exercise_id, course_id=exercise.course_id, title=exercise.title))
+                session.add(
+                    ExerciseRow(
+                        id=exercise.exercise_id,
+                        course_id=exercise.course_id,
+                        title=exercise.title,
+                        is_published=exercise.is_published,
+                    )
+                )
         except IntegrityError as exc:
             raise ValueError("duplicate exercise or missing course") from exc
 
     def list_exercises(self, course_id: str) -> list[Exercise]:
         with self._sessions() as session:
             rows = session.scalars(select(ExerciseRow).where(ExerciseRow.course_id == course_id).order_by(ExerciseRow.id)).all()
-            return [Exercise(row.id, row.course_id, row.title) for row in rows]
+            return [
+                Exercise(row.id, row.course_id, row.title, row.is_published)
+                for row in rows
+            ]
 
 
 class SqlEnrollmentRepository:
@@ -231,9 +244,12 @@ class SqlRepositories:
     courses: SqlCourseRepository
     enrollments: SqlEnrollmentRepository
     knowledge: SqlKnowledgeRepository
+    submissions: "SqlSubmissionRepository"
 
 
 def create_sql_repositories(database_url: str, *, create_schema: bool = False) -> SqlRepositories:
+    from app.submissions.persistence import SqlSubmissionRepository
+
     engine = create_engine(database_url, pool_pre_ping=True)
     if database_url.startswith("sqlite"):
         @event.listens_for(engine, "connect")
@@ -249,6 +265,7 @@ def create_sql_repositories(database_url: str, *, create_schema: bool = False) -
         SqlCourseRepository(sessions),
         SqlEnrollmentRepository(sessions),
         SqlKnowledgeRepository(sessions),
+        SqlSubmissionRepository(sessions),
     )
 
 

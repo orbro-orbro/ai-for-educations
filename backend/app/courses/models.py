@@ -29,6 +29,7 @@ class Exercise:
     exercise_id: str
     course_id: str
     title: str
+    is_published: bool = False
 
 
 class CourseRepository:

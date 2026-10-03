@@ -68,3 +68,17 @@ def test_all_request_objects_forbid_unknown_properties():
     for name, schema in document["components"]["schemas"].items():
         if name.endswith(("Request", "Create", "Update", "Decision")):
             assert schema.get("additionalProperties") is False, name
+
+
+def test_task5_paths_and_bounded_identifiers_are_in_shared_contract():
+    document = _document()
+
+    for path in (
+        "/exercises/{exercise_id}/submissions",
+        "/submissions/{submission_id}",
+        "/submissions/{submission_id}/execution-result",
+    ):
+        assert path in document["paths"]
+    assert document["components"]["parameters"]["ExerciseId"]["schema"]["maxLength"] == 128
+    assert document["components"]["parameters"]["SubmissionId"]["schema"]["maxLength"] == 128
+    assert document["components"]["schemas"]["SubmissionCreateRequest"]["additionalProperties"] is False

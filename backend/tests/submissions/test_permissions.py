@@ -221,6 +221,7 @@ def test_submission_api_rejects_missing_auth_cross_course_and_client_control_fie
             "runner_url": "http://attacker",
             "image": "attacker/image",
             "command": ["sh"],
+            "is_published": True,
         },
     )
 

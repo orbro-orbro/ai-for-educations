@@ -1,8 +1,9 @@
 from __future__ import annotations
 
 from datetime import datetime
+from typing import Annotated
 
-from fastapi import APIRouter, Header, Request
+from fastapi import APIRouter, Header, Path, Request
 from pydantic import BaseModel, ConfigDict, Field
 
 from app.api.auth import Authenticator
@@ -33,14 +34,14 @@ class SourceFileResponse(BaseModel):
 
 class SourceFileInput(BaseModel):
     model_config = ConfigDict(extra="forbid")
-    path: str
-    content: str
+    path: str = Field(min_length=1, max_length=255)
+    content: str = Field(max_length=262_144)
 
 
 class SubmissionCreateRequest(BaseModel):
     model_config = ConfigDict(extra="forbid")
     source_files: list[SourceFileInput] = Field(min_length=1, max_length=32)
-    entrypoint: str
+    entrypoint: str = Field(min_length=1, max_length=255)
     is_formal: bool = True
 
 
@@ -142,7 +143,7 @@ def create_submissions_router(
         operation_id="createExerciseSubmission",
     )
     def create_submission(
-        exercise_id: str,
+        exercise_id: Annotated[str, Path(min_length=1, max_length=128)],
         payload: SubmissionCreateRequest,
         request: Request,
         authorization: str | None = Header(default=None),
@@ -174,7 +175,7 @@ def create_submissions_router(
         operation_id="getSubmission",
     )
     def get_submission(
-        submission_id: str,
+        submission_id: Annotated[str, Path(min_length=1, max_length=128)],
         request: Request,
         authorization: str | None = Header(default=None),
     ):
@@ -193,7 +194,7 @@ def create_submissions_router(
         operation_id="getSubmissionExecutionResult",
     )
     def get_execution_result(
-        submission_id: str,
+        submission_id: Annotated[str, Path(min_length=1, max_length=128)],
         request: Request,
         authorization: str | None = Header(default=None),
     ):

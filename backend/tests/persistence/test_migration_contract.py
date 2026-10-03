@@ -47,6 +47,40 @@ def test_sqlalchemy_metadata_has_composite_course_keys_and_foreign_keys():
     assert ("course_id", "concept_id") in related_fks
 
 
+def test_task5_metadata_and_migration_cover_submission_pipeline():
+    from app.persistence.models import Base
+
+    migration = BACKEND / "migrations/versions/0003_submissions_diagnostics.py"
+    assert migration.is_file()
+    source = migration.read_text(encoding="utf-8")
+    assert 'down_revision = "0002_knowledge_graph"' in source
+    for table in (
+        "submissions",
+        "submission_transitions",
+        "execution_results",
+        "rule_matches",
+        "rule_match_related_concepts",
+    ):
+        assert table in Base.metadata.tables
+        assert f'"{table}"' in source
+    assert "is_published" in Base.metadata.tables["exercises"].columns
+    assert "is_published" in source
+
+    rule_match_fks = {
+        tuple(element.parent.name for element in constraint.elements)
+        for constraint in Base.metadata.tables["rule_matches"].foreign_key_constraints
+    }
+    assert ("submission_id", "course_id") in rule_match_fks
+
+
+def test_exercise_publication_defaults_to_unpublished_in_metadata():
+    from app.persistence.models import Base
+
+    column = Base.metadata.tables["exercises"].columns["is_published"]
+    assert column.nullable is False
+    assert column.server_default is not None
+
+
 def test_sql_repositories_survive_adapter_recreation(tmp_path):
     from app.auth.models import Role, User
     from app.courses.models import Course

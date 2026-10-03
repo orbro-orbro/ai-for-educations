@@ -1,16 +1,21 @@
 from __future__ import annotations
 
+from datetime import datetime
 from typing import Any
 
 from sqlalchemy import (
     Boolean,
     CheckConstraint,
+    DateTime,
     ForeignKey,
     ForeignKeyConstraint,
     Index,
+    Integer,
     JSON,
     String,
     Text,
+    UniqueConstraint,
+    false,
 )
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 
@@ -59,7 +64,13 @@ class ExerciseRow(Base):
     id: Mapped[str] = mapped_column(String(128), primary_key=True)
     course_id: Mapped[str] = mapped_column(ForeignKey("courses.id", ondelete="CASCADE"), nullable=False)
     title: Mapped[str] = mapped_column(String(256), nullable=False)
-    __table_args__ = (Index("ix_exercises_course", "course_id"),)
+    is_published: Mapped[bool] = mapped_column(
+        Boolean, nullable=False, default=False, server_default=false()
+    )
+    __table_args__ = (
+        UniqueConstraint("id", "course_id", name="uq_exercises_id_course"),
+        Index("ix_exercises_course", "course_id"),
+    )
 
 
 class ConceptRow(Base):
@@ -151,4 +162,174 @@ class ConceptEdgeRow(Base):
         CheckConstraint("edge_type IN ('prerequisite','confusable_with','used_by','explains_error')", name="ck_concept_edges_type"),
         Index("ix_concept_edges_course_source", "course_id", "source_concept_id"),
         Index("ix_concept_edges_course_target", "course_id", "target_id"),
+    )
+
+
+_SUBMISSION_STATUS_SQL = (
+    "'received','executing','executed','execution_unavailable',"
+    "'diagnosing','diagnosed','needs_review'"
+)
+
+
+class SubmissionRow(Base):
+    __tablename__ = "submissions"
+    id: Mapped[str] = mapped_column(String(128), primary_key=True)
+    course_id: Mapped[str] = mapped_column(String(128), nullable=False)
+    exercise_id: Mapped[str] = mapped_column(String(128), nullable=False)
+    owner_user_id: Mapped[str] = mapped_column(
+        ForeignKey("users.id", ondelete="RESTRICT"), nullable=False
+    )
+    source_files: Mapped[list[dict[str, str]]] = mapped_column(JSON, nullable=False)
+    entrypoint: Mapped[str] = mapped_column(String(255), nullable=False)
+    is_formal: Mapped[bool] = mapped_column(Boolean, nullable=False)
+    status: Mapped[str] = mapped_column(String(32), nullable=False)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
+    request_id: Mapped[str] = mapped_column(String(128), nullable=False)
+    __table_args__ = (
+        ForeignKeyConstraint(
+            ["exercise_id", "course_id"],
+            ["exercises.id", "exercises.course_id"],
+            ondelete="RESTRICT",
+        ),
+        UniqueConstraint("id", "course_id", name="uq_submissions_id_course"),
+        CheckConstraint(
+            f"status IN ({_SUBMISSION_STATUS_SQL})", name="ck_submissions_status"
+        ),
+        Index("ix_submissions_exercise_owner", "exercise_id", "owner_user_id"),
+        Index("ix_submissions_status", "status"),
+    )
+
+
+class SubmissionTransitionRow(Base):
+    __tablename__ = "submission_transitions"
+    submission_id: Mapped[str] = mapped_column(
+        ForeignKey("submissions.id", ondelete="CASCADE"), primary_key=True
+    )
+    sequence: Mapped[int] = mapped_column(Integer, primary_key=True)
+    from_status: Mapped[str | None] = mapped_column(String(32))
+    to_status: Mapped[str] = mapped_column(String(32), nullable=False)
+    changed_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
+    request_id: Mapped[str] = mapped_column(String(128), nullable=False)
+    reason: Mapped[str] = mapped_column(Text, nullable=False)
+    __table_args__ = (
+        CheckConstraint(
+            f"from_status IS NULL OR from_status IN ({_SUBMISSION_STATUS_SQL})",
+            name="ck_submission_transitions_from",
+        ),
+        CheckConstraint(
+            f"to_status IN ({_SUBMISSION_STATUS_SQL})",
+            name="ck_submission_transitions_to",
+        ),
+        Index("ix_submission_transitions_changed_at", "changed_at"),
+    )
+
+
+class ExecutionResultRow(Base):
+    __tablename__ = "execution_results"
+    submission_id: Mapped[str] = mapped_column(
+        ForeignKey("submissions.id", ondelete="CASCADE"), primary_key=True
+    )
+    protocol_version: Mapped[str] = mapped_column(String(16), nullable=False)
+    status: Mapped[str] = mapped_column(String(32), nullable=False)
+    phase: Mapped[str] = mapped_column(String(16), nullable=False)
+    retryable: Mapped[bool] = mapped_column(Boolean, nullable=False)
+    exit_code: Mapped[int | None] = mapped_column(Integer)
+    signal: Mapped[int | None] = mapped_column(Integer)
+    stdout: Mapped[str] = mapped_column(Text, nullable=False)
+    stderr: Mapped[str] = mapped_column(Text, nullable=False)
+    stdout_truncated: Mapped[bool] = mapped_column(Boolean, nullable=False)
+    stderr_truncated: Mapped[bool] = mapped_column(Boolean, nullable=False)
+    diagnostics: Mapped[list[dict[str, Any]]] = mapped_column(JSON, nullable=False)
+    command_summary: Mapped[dict[str, Any]] = mapped_column(JSON, nullable=False)
+    limits: Mapped[dict[str, Any]] = mapped_column(JSON, nullable=False)
+    toolchain: Mapped[dict[str, Any]] = mapped_column(JSON, nullable=False)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
+    request_id: Mapped[str] = mapped_column(String(128), nullable=False)
+    __table_args__ = (
+        CheckConstraint(
+            "status IN ('succeeded','compile_failed','run_failed','timed_out','resource_exhausted')",
+            name="ck_execution_results_status",
+        ),
+        CheckConstraint(
+            "phase IN ('compile','run','control')", name="ck_execution_results_phase"
+        ),
+    )
+
+
+class RuleMatchRow(Base):
+    __tablename__ = "rule_matches"
+    submission_id: Mapped[str] = mapped_column(String(128), primary_key=True)
+    course_id: Mapped[str] = mapped_column(String(128), nullable=False)
+    misconception_id: Mapped[str] = mapped_column(String(256), primary_key=True)
+    root_concept_id: Mapped[str] = mapped_column(String(256), nullable=False)
+    diagnostic_indices: Mapped[list[int]] = mapped_column(JSON, nullable=False)
+    evidence_kind: Mapped[str] = mapped_column(String(64), nullable=False)
+    evidence_summary: Mapped[str] = mapped_column(Text, nullable=False)
+    source_references: Mapped[list[str]] = mapped_column(JSON, nullable=False)
+    match_strength: Mapped[str] = mapped_column(String(16), nullable=False)
+    __table_args__ = (
+        ForeignKeyConstraint(
+            ["submission_id", "course_id"],
+            ["submissions.id", "submissions.course_id"],
+            ondelete="CASCADE",
+        ),
+        ForeignKeyConstraint(
+            ["course_id", "misconception_id"],
+            ["misconception_patterns.course_id", "misconception_patterns.id"],
+            ondelete="RESTRICT",
+        ),
+        ForeignKeyConstraint(
+            ["course_id", "root_concept_id"],
+            ["concepts.course_id", "concepts.id"],
+            ondelete="RESTRICT",
+        ),
+        CheckConstraint(
+            "evidence_kind = 'compiler_diagnostic'",
+            name="ck_rule_matches_evidence_kind",
+        ),
+        CheckConstraint(
+            "match_strength IN ('strong','weak')", name="ck_rule_matches_strength"
+        ),
+        UniqueConstraint(
+            "submission_id",
+            "misconception_id",
+            "course_id",
+            name="uq_rule_matches_submission_misconception_course",
+        ),
+        Index(
+            "ix_rule_matches_course_misconception", "course_id", "misconception_id"
+        ),
+        Index("ix_rule_matches_course_root", "course_id", "root_concept_id"),
+    )
+
+
+class RuleMatchRelatedConceptRow(Base):
+    __tablename__ = "rule_match_related_concepts"
+    submission_id: Mapped[str] = mapped_column(String(128), primary_key=True)
+    misconception_id: Mapped[str] = mapped_column(String(256), primary_key=True)
+    ordinal: Mapped[int] = mapped_column(Integer, primary_key=True)
+    course_id: Mapped[str] = mapped_column(String(128), nullable=False)
+    concept_id: Mapped[str] = mapped_column(String(256), nullable=False)
+    __table_args__ = (
+        ForeignKeyConstraint(
+            ["submission_id", "misconception_id", "course_id"],
+            [
+                "rule_matches.submission_id",
+                "rule_matches.misconception_id",
+                "rule_matches.course_id",
+            ],
+            ondelete="CASCADE",
+        ),
+        ForeignKeyConstraint(
+            ["course_id", "concept_id"],
+            ["concepts.course_id", "concepts.id"],
+            ondelete="RESTRICT",
+        ),
+        UniqueConstraint(
+            "submission_id",
+            "misconception_id",
+            "concept_id",
+            name="uq_rule_match_related_concept",
+        ),
+        Index("ix_rule_match_related_course_concept", "course_id", "concept_id"),
     )
