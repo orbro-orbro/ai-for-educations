@@ -1,0 +1,197 @@
+openapi: 3.1.0
+info:
+  title: KnowBound-CJ API — Task 5 submission fragment
+  version: 0.1.0
+paths:
+  /exercises/{exercise_id}/submissions:
+    post:
+      operationId: createExerciseSubmission
+      security:
+      - bearerAuth: []
+      parameters:
+      - $ref: '#/components/parameters/ExerciseId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SubmissionCreateRequest'
+      responses:
+        '201':
+          description: Submission persisted before Runner invocation; execution_unavailable is retryable state, not fabricated compiler output.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Submission'
+        '401': {description: Missing or invalid bearer token., content: {application/json: {schema: {$ref: '#/components/schemas/ErrorResponse'}}}}
+        '404': {description: Unknown and unauthorized exercises are indistinguishable., content: {application/json: {schema: {$ref: '#/components/schemas/ErrorResponse'}}}}
+        '409': {description: Submission state conflict., content: {application/json: {schema: {$ref: '#/components/schemas/ErrorResponse'}}}}
+        '422': {description: Source files, entrypoint or request body violate the public boundary., content: {application/json: {schema: {$ref: '#/components/schemas/ErrorResponse'}}}}
+        '503': {description: Submission persistence is temporarily unavailable; no Runner call is made., content: {application/json: {schema: {$ref: '#/components/schemas/ErrorResponse'}}}}
+  /submissions/{submission_id}:
+    get:
+      operationId: getSubmission
+      security:
+      - bearerAuth: []
+      parameters:
+      - $ref: '#/components/parameters/SubmissionId'
+      responses:
+        '200': {description: Authorized submission and durable status., content: {application/json: {schema: {$ref: '#/components/schemas/Submission'}}}}
+        '401': {description: Missing or invalid bearer token., content: {application/json: {schema: {$ref: '#/components/schemas/ErrorResponse'}}}}
+        '404': {description: Unknown and unauthorized submissions are indistinguishable., content: {application/json: {schema: {$ref: '#/components/schemas/ErrorResponse'}}}}
+        '409': {description: Submission state conflict., content: {application/json: {schema: {$ref: '#/components/schemas/ErrorResponse'}}}}
+        '422': {description: Invalid path input., content: {application/json: {schema: {$ref: '#/components/schemas/ErrorResponse'}}}}
+        '503': {description: Submission persistence is temporarily unavailable., content: {application/json: {schema: {$ref: '#/components/schemas/ErrorResponse'}}}}
+  /submissions/{submission_id}/execution-result:
+    get:
+      operationId: getSubmissionExecutionResult
+      security:
+      - bearerAuth: []
+      parameters:
+      - $ref: '#/components/parameters/SubmissionId'
+      responses:
+        '200': {description: Persisted real Runner v2 result and approved deterministic rule matches., content: {application/json: {schema: {$ref: '#/components/schemas/ExecutionResult'}}}}
+        '401': {description: Missing or invalid bearer token., content: {application/json: {schema: {$ref: '#/components/schemas/ErrorResponse'}}}}
+        '404': {description: Unknown and unauthorized submissions are indistinguishable., content: {application/json: {schema: {$ref: '#/components/schemas/ErrorResponse'}}}}
+        '409': {description: No real execution result exists yet or Runner was unavailable., content: {application/json: {schema: {$ref: '#/components/schemas/ErrorResponse'}}}}
+        '422': {description: Invalid path input., content: {application/json: {schema: {$ref: '#/components/schemas/ErrorResponse'}}}}
+        '503': {description: Submission persistence is temporarily unavailable., content: {application/json: {schema: {$ref: '#/components/schemas/ErrorResponse'}}}}
+components:
+  parameters:
+    ExerciseId:
+      name: exercise_id
+      in: path
+      required: true
+      schema: {type: string, minLength: 1, maxLength: 128}
+    SubmissionId:
+      name: submission_id
+      in: path
+      required: true
+      schema: {type: string, minLength: 1, maxLength: 128}
+  schemas:
+    SubmissionStatus:
+      type: string
+      enum: [received, executing, executed, execution_unavailable, diagnosing, diagnosed, needs_review]
+    SourceFileInput:
+      type: object
+      additionalProperties: false
+      required: [path, content]
+      properties:
+        path:
+          type: string
+          minLength: 1
+          maxLength: 255
+          description: Relative POSIX .cj path; the service also enforces the 255 UTF-8 byte Runner v2 limit.
+        content:
+          type: string
+          maxLength: 262144
+          description: The service enforces 256 KiB UTF-8 bytes per file and 1 MiB total.
+    SubmissionCreateRequest:
+      type: object
+      additionalProperties: false
+      required: [source_files, entrypoint]
+      properties:
+        source_files:
+          type: array
+          minItems: 1
+          maxItems: 32
+          items: {$ref: '#/components/schemas/SourceFileInput'}
+        entrypoint:
+          type: string
+          minLength: 1
+          maxLength: 255
+          description: Must name one submitted .cj file.
+        is_formal: {type: boolean, default: true}
+    Submission:
+      type: object
+      additionalProperties: false
+      required: [submission_id, course_id, exercise_id, owner_user_id, source_files, entrypoint, is_formal, status, created_at, request_id]
+      properties:
+        submission_id: {type: string}
+        course_id: {type: string, readOnly: true}
+        exercise_id: {type: string, readOnly: true}
+        owner_user_id: {type: string, readOnly: true}
+        source_files: {type: array, items: {$ref: '#/components/schemas/SourceFileInput'}}
+        entrypoint: {type: string}
+        is_formal: {type: boolean}
+        status: {$ref: '#/components/schemas/SubmissionStatus'}
+        created_at: {type: string, format: date-time}
+        request_id: {type: string}
+    CompilerDiagnostic:
+      type: object
+      additionalProperties: false
+      required: [severity, message, code, file, start_line, start_column, end_line, end_column]
+      properties:
+        severity: {type: string}
+        message: {type: string}
+        code: {type: [string, 'null']}
+        file: {type: [string, 'null']}
+        start_line: {type: [integer, 'null']}
+        start_column: {type: [integer, 'null']}
+        end_line: {type: [integer, 'null']}
+        end_column: {type: [integer, 'null']}
+    CommandSummary:
+      type: object
+      additionalProperties: false
+      required: [compiler, source_count, entrypoint, output_kind]
+      properties:
+        compiler: {type: string, const: cjc}
+        source_count: {type: integer, minimum: 0, maximum: 32}
+        entrypoint: {type: string}
+        output_kind: {type: string, const: executable}
+    RunnerLimits:
+      type: object
+      additionalProperties: false
+      required: [timeout_ms, max_output_chars, max_files, max_source_bytes, pids, memory_bytes, cpu_cores]
+      properties:
+        timeout_ms: {type: integer}
+        max_output_chars: {type: integer}
+        max_files: {type: integer}
+        max_source_bytes: {type: integer}
+        pids: {type: integer}
+        memory_bytes: {type: integer}
+        cpu_cores: {type: number}
+    ToolchainInfo:
+      type: object
+      additionalProperties: false
+      required: [cjc, cjpm, backend]
+      properties:
+        cjc: {type: string}
+        cjpm: {type: string}
+        backend: {type: string, const: cjnative}
+    RuleMatch:
+      type: object
+      additionalProperties: false
+      required: [misconception_id, root_concept_id, related_concept_ids, diagnostic_indices, evidence_kind, evidence_summary, source_references, match_strength]
+      properties:
+        misconception_id: {type: string}
+        root_concept_id: {type: string}
+        related_concept_ids: {type: array, items: {type: string}}
+        diagnostic_indices: {type: array, items: {type: integer, minimum: 0}}
+        evidence_kind: {type: string, const: compiler_diagnostic}
+        evidence_summary: {type: string}
+        source_references: {type: array, items: {type: string}}
+        match_strength: {type: string, enum: [strong, weak]}
+    ExecutionResult:
+      type: object
+      additionalProperties: false
+      required: [submission_id, protocol_version, status, phase, retryable, exit_code, signal, stdout, stderr, stdout_truncated, stderr_truncated, diagnostics, command_summary, limits, toolchain, created_at, request_id, rule_matches]
+      properties:
+        submission_id: {type: string}
+        protocol_version: {type: string, const: '2'}
+        status: {type: string, enum: [succeeded, compile_failed, run_failed, timed_out, resource_exhausted]}
+        phase: {type: string, enum: [compile, run, control]}
+        retryable: {type: boolean}
+        exit_code: {type: [integer, 'null']}
+        signal: {type: [integer, 'null']}
+        stdout: {type: string, maxLength: 65536}
+        stderr: {type: string, maxLength: 65536}
+        stdout_truncated: {type: boolean}
+        stderr_truncated: {type: boolean}
+        diagnostics: {type: array, items: {$ref: '#/components/schemas/CompilerDiagnostic'}}
+        command_summary: {$ref: '#/components/schemas/CommandSummary'}
+        limits: {$ref: '#/components/schemas/RunnerLimits'}
+        toolchain: {$ref: '#/components/schemas/ToolchainInfo'}
+        created_at: {type: string, format: date-time}
+        request_id: {type: string}
+        rule_matches: {type: array, items: {$ref: '#/components/schemas/RuleMatch'}}
