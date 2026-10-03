@@ -25,6 +25,7 @@ from app.persistence.models import (
 )
 
 if TYPE_CHECKING:
+    from app.diagnostics.persistence import SqlDiagnosticRepository
     from app.submissions.persistence import SqlSubmissionRepository
 
 
@@ -268,9 +269,11 @@ class SqlRepositories:
     enrollments: SqlEnrollmentRepository
     knowledge: SqlKnowledgeRepository
     submissions: "SqlSubmissionRepository"
+    diagnostics: "SqlDiagnosticRepository"
 
 
 def create_sql_repositories(database_url: str, *, create_schema: bool = False) -> SqlRepositories:
+    from app.diagnostics.persistence import SqlDiagnosticRepository
     from app.submissions.persistence import SqlSubmissionRepository
 
     engine = create_engine(database_url, pool_pre_ping=True)
@@ -289,6 +292,7 @@ def create_sql_repositories(database_url: str, *, create_schema: bool = False) -
         SqlEnrollmentRepository(sessions),
         SqlKnowledgeRepository(sessions),
         SqlSubmissionRepository(sessions),
+        SqlDiagnosticRepository(sessions),
     )
 
 

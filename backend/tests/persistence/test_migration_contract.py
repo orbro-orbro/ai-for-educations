@@ -73,6 +73,29 @@ def test_task5_metadata_and_migration_cover_submission_pipeline():
     assert ("submission_id", "course_id") in rule_match_fks
 
 
+def test_task6_metadata_and_migration_cover_diagnostic_pipeline():
+    from app.persistence.models import Base
+
+    migration = BACKEND / "migrations/versions/0004_diagnostics_hints.py"
+    assert migration.is_file()
+    source = migration.read_text(encoding="utf-8")
+    assert 'down_revision = "0003_submissions_diagnostics"' in source
+    for table in (
+        "diagnoses",
+        "diagnosis_concepts",
+        "evidence_bindings",
+        "review_queue_events",
+        "hint_events",
+        "diagnosis_attempts",
+        "explanation_checks",
+        "diagnosis_run_results",
+    ):
+        assert table in Base.metadata.tables
+        assert f'"{table}"' in source
+    assert "protected_answer" in Base.metadata.tables["exercises"].columns
+    assert "protected_answer" in source
+
+
 def test_exercise_publication_defaults_to_unpublished_in_metadata():
     from app.persistence.models import Base
 
