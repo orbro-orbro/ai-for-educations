@@ -115,8 +115,8 @@ class DiagnosisModelOutput(_GatewayModel):
 
 
 class HintModelOutput(_GatewayModel):
-    level: int
-    content: str
+    level: int = Field(ge=1, le=4)
+    content: str = Field(min_length=1)
 
 
 class ExplanationModelOutput(_GatewayModel):
