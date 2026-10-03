@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Literal, Protocol
+from typing import Annotated, Literal, Protocol
 
 from pydantic import BaseModel, ConfigDict, Field
 
@@ -77,12 +77,31 @@ class ExplanationCheckRequest(_GatewayModel):
     explanation: str = Field(min_length=1)
 
 
-class EvidenceOutput(_GatewayModel):
-    kind: Literal["compiler_diagnostic", "rule_match", "approved_knowledge"]
+class CompilerDiagnosticEvidenceOutput(_GatewayModel):
+    kind: Literal["compiler_diagnostic"]
     summary: str = Field(min_length=1)
-    diagnostic_index: int | None = None
-    misconception_id: str | None = None
-    source_reference: str | None = None
+    diagnostic_index: int = Field(ge=0)
+
+
+class RuleMatchEvidenceOutput(_GatewayModel):
+    kind: Literal["rule_match"]
+    summary: str = Field(min_length=1)
+    misconception_id: str = Field(min_length=1)
+
+
+class ApprovedKnowledgeEvidenceOutput(_GatewayModel):
+    kind: Literal["approved_knowledge"]
+    summary: str = Field(min_length=1)
+    misconception_id: str = Field(min_length=1)
+    source_reference: str = Field(min_length=1)
+
+
+EvidenceOutput = Annotated[
+    CompilerDiagnosticEvidenceOutput
+    | RuleMatchEvidenceOutput
+    | ApprovedKnowledgeEvidenceOutput,
+    Field(discriminator="kind"),
+]
 
 
 class DiagnosisModelOutput(_GatewayModel):

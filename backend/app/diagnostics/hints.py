@@ -6,6 +6,7 @@ from uuid import uuid4
 from pydantic import ValidationError
 
 from app.auth.models import Actor, Role
+from app.courses.models import ProtectedAnswerLookup
 from app.courses.service import ResourceNotAvailable
 from app.diagnostics.leakage import contains_answer_leakage, safe_fallback
 from app.diagnostics.repository import InMemoryDiagnosticRepository
@@ -35,7 +36,7 @@ class HintLadderService:
         access,
         max_regenerations: int = 1,
         min_attempts_for_level_four: int = 2,
-        protected_answers: tuple[str, ...] = (),
+        protected_answer_lookup: ProtectedAnswerLookup | None = None,
         id_factory: Callable[[], str] = lambda: str(uuid4()),
     ) -> None:
         self._repository = repository
@@ -45,7 +46,7 @@ class HintLadderService:
         self._access = access
         self._max_regenerations = max_regenerations
         self._min_attempts_for_level_four = min_attempts_for_level_four
-        self._protected_answers = protected_answers
+        self._protected_answer_lookup = protected_answer_lookup
         self._id_factory = id_factory
 
     def next_hint(
@@ -112,6 +113,13 @@ class HintLadderService:
             ),
             safe_fallback(level),
         )
+        protected_answer = (
+            self._protected_answer_lookup.for_exercise(
+                submission.course_id, submission.exercise_id
+            )
+            if self._protected_answer_lookup is not None
+            else None
+        )
         content = safe_fallback(level)
         used_fallback = True
         attempts_to_generate = self._max_regenerations + 1 if level <= 2 else 1
@@ -139,7 +147,7 @@ class HintLadderService:
             if contains_answer_leakage(
                 output.content,
                 level=level,
-                protected_answers=self._protected_answers,
+                protected_answers=(protected_answer,) if protected_answer else (),
             ):
                 continue
             content = output.content

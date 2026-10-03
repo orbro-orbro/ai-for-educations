@@ -67,6 +67,7 @@ class ExerciseRow(Base):
     is_published: Mapped[bool] = mapped_column(
         Boolean, nullable=False, default=False, server_default=false()
     )
+    protected_answer: Mapped[str | None] = mapped_column(Text)
     __table_args__ = (
         UniqueConstraint("id", "course_id", name="uq_exercises_id_course"),
         Index("ix_exercises_course", "course_id"),

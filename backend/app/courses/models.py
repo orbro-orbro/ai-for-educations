@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import Iterable
+from typing import Iterable, Protocol
 
 from app.auth.models import Role
 
@@ -32,6 +32,10 @@ class Exercise:
     is_published: bool = False
 
 
+class ProtectedAnswerLookup(Protocol):
+    def for_exercise(self, course_id: str, exercise_id: str) -> str | None: ...
+
+
 class CourseRepository:
     """In-memory MVP repository behind a database-replaceable interface."""
 
@@ -42,6 +46,7 @@ class CourseRepository:
     ) -> None:
         self._courses: dict[str, Course] = {}
         self._exercises: dict[str, Exercise] = {}
+        self._protected_answers: dict[tuple[str, str], str] = {}
         for course in courses:
             self.add(course)
         for exercise in exercises:
@@ -74,6 +79,24 @@ class CourseRepository:
             ),
             key=lambda exercise: exercise.exercise_id,
         )
+
+    def set_protected_answer(
+        self, course_id: str, exercise_id: str, answer: str | None
+    ) -> None:
+        exercise = self._exercises.get(exercise_id)
+        if exercise is None or exercise.course_id != course_id:
+            raise ValueError("exercise does not belong to course")
+        key = (course_id, exercise_id)
+        if answer is None:
+            self._protected_answers.pop(key, None)
+        else:
+            self._protected_answers[key] = answer
+
+    def for_exercise(self, course_id: str, exercise_id: str) -> str | None:
+        exercise = self._exercises.get(exercise_id)
+        if exercise is None or exercise.course_id != course_id:
+            return None
+        return self._protected_answers.get((course_id, exercise_id))
 
 
 class EnrollmentRepository:

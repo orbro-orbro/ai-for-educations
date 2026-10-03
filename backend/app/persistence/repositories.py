@@ -102,6 +102,29 @@ class SqlCourseRepository:
                 for row in rows
             ]
 
+    def set_protected_answer(
+        self, course_id: str, exercise_id: str, answer: str | None
+    ) -> None:
+        with self._sessions.begin() as session:
+            row = session.scalar(
+                select(ExerciseRow).where(
+                    ExerciseRow.id == exercise_id,
+                    ExerciseRow.course_id == course_id,
+                )
+            )
+            if row is None:
+                raise ValueError("exercise does not belong to course")
+            row.protected_answer = answer
+
+    def for_exercise(self, course_id: str, exercise_id: str) -> str | None:
+        with self._sessions() as session:
+            return session.scalar(
+                select(ExerciseRow.protected_answer).where(
+                    ExerciseRow.id == exercise_id,
+                    ExerciseRow.course_id == course_id,
+                )
+            )
+
 
 class SqlEnrollmentRepository:
     def __init__(self, sessions: sessionmaker[Session]) -> None:

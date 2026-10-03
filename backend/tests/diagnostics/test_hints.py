@@ -12,7 +12,14 @@ from app.model_gateway.mock import DeterministicMockProvider
 from conftest import StudentSubmissionAccess, diagnosis_output, seed_executed_submission
 
 
-def setup_services(submissions, knowledge, hints, *, max_regenerations=1):
+def setup_services(
+    submissions,
+    knowledge,
+    hints,
+    *,
+    max_regenerations=1,
+    protected_answer_lookup=None,
+):
     access = StudentSubmissionAccess()
     provider = DeterministicMockProvider(diagnoses=[diagnosis_output()], hints=hints)
     repository = InMemoryDiagnosticRepository()
@@ -34,6 +41,7 @@ def setup_services(submissions, knowledge, hints, *, max_regenerations=1):
         access=access,
         max_regenerations=max_regenerations,
         min_attempts_for_level_four=2,
+        protected_answer_lookup=protected_answer_lookup,
     )
     return diagnosis, hints_service, repository, provider
 
@@ -187,6 +195,65 @@ def test_protected_reference_answer_similarity_is_leakage():
     assert contains_answer_leakage(
         output, level=1, protected_answers=(answer,)
     )
+
+
+def test_current_exercise_reference_answer_is_used_for_leakage_check(
+    submissions, knowledge
+):
+    class Answers:
+        def __init__(self):
+            self.calls = []
+
+        def for_exercise(self, course_id, exercise_id):
+            self.calls.append((course_id, exercise_id))
+            return "The missing branch is None and must be handled explicitly."
+
+    answers = Answers()
+    diagnosis, service, _, provider = setup_services(
+        submissions,
+        knowledge,
+        [
+            hint(1, "The missing branch is None and must be handled explicitly."),
+            hint(1, "Which input case is absent from the match?"),
+        ],
+        protected_answer_lookup=answers,
+    )
+
+    event = service.next_hint(
+        Actor("student-1", Role.STUDENT),
+        diagnosis.diagnosis_id,
+        reason="help",
+        request_id="req-protected",
+    )
+
+    assert event.content == "Which input case is absent from the match?"
+    assert answers.calls == [("course-1", "exercise-1")]
+    assert [request.low_information for request in provider.hint_requests] == [False, True]
+
+
+def test_other_exercise_answer_is_not_used_for_current_hint(submissions, knowledge):
+    class OtherExerciseAnswers:
+        def for_exercise(self, course_id, exercise_id):
+            if (course_id, exercise_id) == ("course-1", "exercise-other"):
+                return "The unrelated exercise answer is forty two exactly."
+            return None
+
+    diagnosis, service, _, _ = setup_services(
+        submissions,
+        knowledge,
+        [hint(1, "The unrelated exercise answer is forty two exactly.")],
+        protected_answer_lookup=OtherExerciseAnswers(),
+    )
+
+    event = service.next_hint(
+        Actor("student-1", Role.STUDENT),
+        diagnosis.diagnosis_id,
+        reason="help",
+        request_id="req-other-answer",
+    )
+
+    assert event.content == "The unrelated exercise answer is forty two exactly."
+    assert event.used_safe_fallback is False
 
 
 def test_low_confidence_diagnosis_cannot_generate_model_hint(submissions, knowledge):
