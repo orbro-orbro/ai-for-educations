@@ -106,6 +106,28 @@ def test_timeout_is_mapped_without_leaking_private_input(caplog):
     assert "secret-key-sentinel" not in caplog.text
 
 
+def test_untrusted_provider_request_id_is_redacted(caplog):
+    provider = OpenAIResponsesProvider(
+        api_key="key",
+        model="model",
+        client=httpx.Client(
+            transport=httpx.MockTransport(
+                lambda _request: httpx.Response(
+                    429,
+                    headers={"x-request-id": "secret-key-sentinel unsafe"},
+                    json={"error": {"message": "unavailable"}},
+                )
+            )
+        ),
+    )
+
+    with caplog.at_level(logging.WARNING), pytest.raises(ProviderFailure):
+        provider.generate_hint(_request())
+
+    assert "secret-key-sentinel" not in caplog.text
+    assert "request_id=unavailable" in caplog.text
+
+
 @pytest.mark.parametrize(
     "body",
     [

@@ -31,8 +31,10 @@ from app.persistence.models import (
     HintEventRow,
     MisconceptionRow,
     ReviewQueueEventRow,
+    SubmissionRow,
+    SubmissionTransitionRow,
 )
-from app.submissions.models import utc_now
+from app.submissions.models import SubmissionStatus, utc_now
 
 
 class SqlDiagnosticRepository:
@@ -409,6 +411,82 @@ class SqlDiagnosticRepository:
                 session.flush()
         except SQLAlchemyError as exc:
             raise DiagnosticPersistenceError("diagnostic storage operation failed") from exc
+
+    def finalize_run(
+        self,
+        *,
+        submission_id: str,
+        request_id: str,
+        result,
+        terminal_status: SubmissionStatus,
+        reason: str,
+    ):
+        if terminal_status not in {
+            SubmissionStatus.diagnosed,
+            SubmissionStatus.needs_review,
+        }:
+            raise ValueError("diagnosis run requires a terminal status")
+        try:
+            with self._sessions.begin() as session:
+                row = session.scalar(
+                    select(SubmissionRow)
+                    .where(SubmissionRow.id == submission_id)
+                    .with_for_update()
+                )
+                if row is None:
+                    raise DiagnosticPersistenceError(
+                        "diagnostic storage operation failed"
+                    )
+                token = self._active_session.set(session)
+                try:
+                    existing_run = self.get_run_result(submission_id, request_id)
+                    if existing_run is not None:
+                        return existing_run
+                    if row.status != SubmissionStatus.diagnosing.value:
+                        raise DiagnosticPersistenceError(
+                            "diagnostic storage operation failed"
+                        )
+                    persisted_diagnosis = None
+                    if result.diagnosis is not None:
+                        persisted_diagnosis = self.save_diagnosis(result.diagnosis)
+                    persisted_review = None
+                    if result.review_event is not None:
+                        persisted_review = self.add_review_event(result.review_event)
+                    from app.diagnostics.service import DiagnosisRunResult
+
+                    persisted_result = DiagnosisRunResult(
+                        persisted_diagnosis, persisted_review
+                    )
+                    sequence = session.scalar(
+                        select(func.max(SubmissionTransitionRow.sequence)).where(
+                            SubmissionTransitionRow.submission_id == submission_id
+                        )
+                    )
+                    changed_at = utc_now()
+                    row.status = terminal_status.value
+                    session.add(
+                        SubmissionTransitionRow(
+                            submission_id=submission_id,
+                            sequence=int(sequence or 0) + 1,
+                            from_status=SubmissionStatus.diagnosing.value,
+                            to_status=terminal_status.value,
+                            changed_at=changed_at,
+                            request_id=request_id,
+                            reason=reason,
+                        )
+                    )
+                    self.save_run_result(
+                        submission_id, request_id, persisted_result
+                    )
+                    return persisted_result
+                finally:
+                    self._active_session.reset(token)
+        except DiagnosticPersistenceError:
+            raise
+        except SQLAlchemyError as exc:
+            raise DiagnosticPersistenceError(
+                "diagnostic storage operation failed"
+            ) from exc
 
 
 def _evidence_row(diagnosis: Diagnosis, evidence, ordinal: int) -> EvidenceBindingRow:

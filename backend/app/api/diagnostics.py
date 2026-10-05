@@ -6,7 +6,7 @@ from fastapi import APIRouter, Header, Path, Request
 from pydantic import BaseModel, ConfigDict, Field
 
 from app.api.auth import Authenticator
-from app.api.errors import error_response
+from app.api.errors import ErrorResponse, error_response
 from app.diagnostics.hints import HintLadderService, HintLevelExhausted
 from app.diagnostics.schema import Diagnosis, ExplanationCheck, HintEvent
 from app.diagnostics.service import DiagnosisService
@@ -22,6 +22,12 @@ class ExplanationCheckRequest(BaseModel):
     explanation: str = Field(min_length=1, max_length=8_000)
 
 
+_ERROR_RESPONSES = {
+    status: {"model": ErrorResponse}
+    for status in (401, 404, 409, 422, 503)
+}
+
+
 def create_diagnostics_router(
     diagnosis_service: DiagnosisService | None,
     hint_service: HintLadderService | None,
@@ -33,6 +39,7 @@ def create_diagnostics_router(
         "/submissions/{submission_id}/diagnosis",
         response_model=Diagnosis,
         operation_id="getSubmissionDiagnosis",
+        responses=_ERROR_RESPONSES,
     )
     def get_diagnosis(
         submission_id: Annotated[str, Path(min_length=1, max_length=128)],
@@ -45,6 +52,7 @@ def create_diagnostics_router(
         "/diagnoses/{diagnosis_id}/hints/next",
         response_model=HintEvent,
         operation_id="createNextDiagnosisHint",
+        responses=_ERROR_RESPONSES,
     )
     def next_hint(
         diagnosis_id: Annotated[str, Path(min_length=1, max_length=128)],
@@ -72,6 +80,7 @@ def create_diagnostics_router(
         "/diagnoses/{diagnosis_id}/explanation-check",
         response_model=ExplanationCheck,
         operation_id="checkDiagnosisExplanation",
+        responses=_ERROR_RESPONSES,
     )
     def explanation_check(
         diagnosis_id: Annotated[str, Path(min_length=1, max_length=128)],

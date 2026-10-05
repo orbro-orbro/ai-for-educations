@@ -5,6 +5,7 @@ from threading import Lock, RLock
 from typing import ContextManager, Protocol
 
 from app.diagnostics.schema import Diagnosis, ExplanationCheck, HintEvent, ReviewQueueEvent
+from app.submissions.models import SubmissionStatus
 
 
 class DiagnosticPersistenceError(RuntimeError):
@@ -29,6 +30,18 @@ class DiagnosticRepository(Protocol):
     def get_explanation(self, diagnosis_id: str, request_id: str) -> ExplanationCheck | None: ...
     def add_explanation(self, result: ExplanationCheck) -> ExplanationCheck: ...
     def explanation_checks(self) -> tuple[ExplanationCheck, ...]: ...
+
+
+class AtomicDiagnosticRepository(DiagnosticRepository, Protocol):
+    def finalize_run(
+        self,
+        *,
+        submission_id: str,
+        request_id: str,
+        result,
+        terminal_status: SubmissionStatus,
+        reason: str,
+    ): ...
 
 
 class InMemoryDiagnosticRepository:

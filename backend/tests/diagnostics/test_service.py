@@ -108,6 +108,58 @@ def test_restart_finishes_saved_diagnosis_after_terminal_transition_failure(know
     assert len(provider.diagnosis_requests) == 1
 
 
+def test_atomic_repository_finalizes_diagnosis_and_status_together(
+    submissions, knowledge
+):
+    class AtomicRepository(InMemoryDiagnosticRepository):
+        def __init__(self, submission_repository):
+            super().__init__()
+            self.submissions = submission_repository
+            self.finalize_calls = []
+
+        def finalize_run(
+            self,
+            *,
+            submission_id,
+            request_id,
+            result,
+            terminal_status,
+            reason,
+        ):
+            self.finalize_calls.append((submission_id, terminal_status))
+            if result.diagnosis is not None:
+                self.save_diagnosis(result.diagnosis)
+            if result.review_event is not None:
+                self.add_review_event(result.review_event)
+            self.submissions.transition(
+                submission_id,
+                terminal_status,
+                request_id=request_id,
+                reason=reason,
+            )
+            self.save_run_result(submission_id, request_id, result)
+            return result
+
+    repository = AtomicRepository(submissions)
+    service = DiagnosisService(
+        submissions=submissions,
+        knowledge=knowledge,
+        repository=repository,
+        provider=DeterministicMockProvider(diagnoses=[diagnosis_output()]),
+        access=StudentSubmissionAccess(),
+        confidence_threshold=0.75,
+        id_factory=lambda: "diag-atomic",
+    )
+
+    result = service.diagnose("sub-1", request_id="req-atomic")
+
+    assert repository.finalize_calls == [
+        ("sub-1", SubmissionStatus.diagnosed)
+    ]
+    assert repository.get_for_submission("sub-1") == result.diagnosis
+    assert submissions.get("sub-1").status is SubmissionStatus.diagnosed
+
+
 def test_low_confidence_enters_review_and_is_not_memory_eligible(submissions, knowledge):
     service, repository, _ = make_service(
         submissions, knowledge, [diagnosis_output(confidence=0.4)]

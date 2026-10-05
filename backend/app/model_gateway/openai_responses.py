@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import logging
+import re
 from time import monotonic
 from typing import TypeVar
 
@@ -22,6 +23,7 @@ from app.model_gateway.base import (
 
 _LOG = logging.getLogger(__name__)
 _Output = TypeVar("_Output", bound=BaseModel)
+_SAFE_REQUEST_ID = re.compile(r"[A-Za-z0-9._:-]{1,128}\Z")
 
 
 class OpenAIResponsesProvider:
@@ -74,7 +76,10 @@ class OpenAIResponsesProvider:
 
     @staticmethod
     def _log_failure(category: str, request_id: str, started: float) -> None:
-        _LOG.warning("model provider failure category=%s request_id=%s elapsed_ms=%d", category, request_id, int((monotonic() - started) * 1000))
+        safe_request_id = (
+            request_id if _SAFE_REQUEST_ID.fullmatch(request_id) else "unavailable"
+        )
+        _LOG.warning("model provider failure category=%s request_id=%s elapsed_ms=%d", category, safe_request_id, int((monotonic() - started) * 1000))
 
 
 def _output_text(body: dict) -> str:

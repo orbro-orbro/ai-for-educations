@@ -117,7 +117,8 @@ def create_app(
     protected_answer_lookup: ProtectedAnswerLookup | None = None,
     model_provider: ModelProvider | None = None,
     diagnosis_service: DiagnosisService | None = None,
-    hint_service: HintLadderService | None = None,
+    hint_ladder_service: HintLadderService | None = None,
+    diagnosis_confidence_threshold: float | None = None,
     submission_service: SubmissionService | None = None,
 ) -> FastAPI:
     if (
@@ -139,10 +140,17 @@ def create_app(
     access = CourseSubmissionAccess(
         course_service, is_published=lambda exercise: exercise.is_published
     )
-    try:
-        confidence_threshold = float(os.environ.get("DIAGNOSIS_CONFIDENCE_THRESHOLD", "0.75"))
-    except ValueError as exc:
-        raise RuntimeError("DIAGNOSIS_CONFIDENCE_THRESHOLD must be in [0,1]") from exc
+    if diagnosis_confidence_threshold is None:
+        try:
+            diagnosis_confidence_threshold = float(
+                os.environ.get("DIAGNOSIS_CONFIDENCE_THRESHOLD", "0.75")
+            )
+        except ValueError as exc:
+            raise RuntimeError(
+                "DIAGNOSIS_CONFIDENCE_THRESHOLD must be in [0,1]"
+            ) from exc
+    if not 0 <= diagnosis_confidence_threshold <= 1:
+        raise RuntimeError("DIAGNOSIS_CONFIDENCE_THRESHOLD must be in [0,1]")
     if diagnosis_service is None:
         diagnosis_service = DiagnosisService(
             submissions=submission_repository,
@@ -150,10 +158,10 @@ def create_app(
             repository=diagnostic_repository,
             provider=provider,
             access=access,
-            confidence_threshold=confidence_threshold,
+            confidence_threshold=diagnosis_confidence_threshold,
         )
-    if hint_service is None:
-        hint_service = HintLadderService(
+    if hint_ladder_service is None:
+        hint_ladder_service = HintLadderService(
             repository=diagnostic_repository,
             knowledge=knowledge_repository,
             provider=provider,
@@ -177,7 +185,8 @@ def create_app(
     application.state.submission_service = submission_service
     application.state.diagnostic_repository = diagnostic_repository
     application.state.diagnosis_service = diagnosis_service
-    application.state.hint_service = hint_service
+    application.state.hint_service = hint_ladder_service
+    application.state.diagnosis_confidence_threshold = diagnosis_confidence_threshold
     install_error_handling(application)
     application.include_router(create_auth_router(authenticator))
     application.include_router(create_courses_router(course_service, authenticator))
@@ -186,7 +195,9 @@ def create_app(
         create_submissions_router(submission_service, authenticator)
     )
     application.include_router(
-        create_diagnostics_router(diagnosis_service, hint_service, authenticator)
+        create_diagnostics_router(
+            diagnosis_service, hint_ladder_service, authenticator
+        )
     )
 
     @application.get("/health")

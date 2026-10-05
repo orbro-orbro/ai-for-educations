@@ -5,6 +5,14 @@ import uuid
 from fastapi import FastAPI, Request
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
+from pydantic import BaseModel, ConfigDict
+
+
+class ErrorResponse(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    code: str
+    message: str
+    request_id: str
 
 
 def request_id_for(request: Request) -> str:

@@ -181,7 +181,6 @@ class DiagnosisService:
             created_at=utc_now(),
             request_id=request_id,
         )
-        diagnosis = self._repository.save_diagnosis(diagnosis)
         if requires_review:
             return self._finish_review(
                 submission=submission,
@@ -189,15 +188,12 @@ class DiagnosisService:
                 reason="low_confidence",
                 diagnosis=diagnosis,
             )
-        self._submissions.transition(
-            submission_id,
-            SubmissionStatus.diagnosed,
+        return self._finish_diagnosed(
+            submission=submission,
             request_id=request_id,
+            diagnosis=diagnosis,
             reason="validated evidence-bound diagnosis completed",
         )
-        result = DiagnosisRunResult(diagnosis, None)
-        self._repository.save_run_result(submission_id, request_id, result)
-        return result
 
     def _resume_existing(
         self,
@@ -225,10 +221,10 @@ class DiagnosisService:
                     reason="low_confidence",
                     diagnosis=diagnosis,
                 )
-            self._submissions.transition(
-                submission.submission_id,
-                SubmissionStatus.diagnosed,
+            return self._finish_diagnosed(
+                submission=submission,
                 request_id=request_id,
+                diagnosis=diagnosis,
                 reason="resumed evidence-bound diagnosis completed",
             )
         result = DiagnosisRunResult(diagnosis, review_event)
@@ -357,19 +353,58 @@ class DiagnosisService:
     def _finish_review(
         self, *, submission, request_id: str, reason: str, diagnosis: Diagnosis | None
     ) -> DiagnosisRunResult:
-        event = self._review_event(
+        event = self._new_review_event(
             submission=submission,
             request_id=request_id,
             reason=reason,
             diagnosis_id=diagnosis.diagnosis_id if diagnosis else None,
         )
+        result = DiagnosisRunResult(diagnosis, event)
+        terminal_reason = f"diagnosis requires review: {reason}"
+        finalize = getattr(self._repository, "finalize_run", None)
+        if callable(finalize):
+            return finalize(
+                submission_id=submission.submission_id,
+                request_id=request_id,
+                result=result,
+                terminal_status=SubmissionStatus.needs_review,
+                reason=terminal_reason,
+            )
+        if diagnosis is not None:
+            diagnosis = self._repository.save_diagnosis(diagnosis)
+            result = DiagnosisRunResult(diagnosis, event)
+        event = self._repository.add_review_event(event)
+        result = DiagnosisRunResult(diagnosis, event)
         self._submissions.transition(
             submission.submission_id,
             SubmissionStatus.needs_review,
             request_id=request_id,
-            reason=f"diagnosis requires review: {reason}",
+            reason=terminal_reason,
         )
-        result = DiagnosisRunResult(diagnosis, event)
+        self._repository.save_run_result(submission.submission_id, request_id, result)
+        return result
+
+    def _finish_diagnosed(
+        self, *, submission, request_id: str, diagnosis: Diagnosis, reason: str
+    ) -> DiagnosisRunResult:
+        result = DiagnosisRunResult(diagnosis, None)
+        finalize = getattr(self._repository, "finalize_run", None)
+        if callable(finalize):
+            return finalize(
+                submission_id=submission.submission_id,
+                request_id=request_id,
+                result=result,
+                terminal_status=SubmissionStatus.diagnosed,
+                reason=reason,
+            )
+        diagnosis = self._repository.save_diagnosis(diagnosis)
+        result = DiagnosisRunResult(diagnosis, None)
+        self._submissions.transition(
+            submission.submission_id,
+            SubmissionStatus.diagnosed,
+            request_id=request_id,
+            reason=reason,
+        )
         self._repository.save_run_result(submission.submission_id, request_id, result)
         return result
 
@@ -377,17 +412,27 @@ class DiagnosisService:
         self, *, submission, request_id: str, reason: str, diagnosis_id: str | None
     ) -> ReviewQueueEvent:
         return self._repository.add_review_event(
-            ReviewQueueEvent(
-                event_id=self._id_factory(),
-                submission_id=submission.submission_id,
-                diagnosis_id=diagnosis_id,
-                course_id=submission.course_id,
-                owner_user_id=submission.owner_user_id,
-                reason=reason,
-                summary="Diagnosis requires authorized review; private source is omitted.",
-                created_at=utc_now(),
+            self._new_review_event(
+                submission=submission,
                 request_id=request_id,
+                reason=reason,
+                diagnosis_id=diagnosis_id,
             )
+        )
+
+    def _new_review_event(
+        self, *, submission, request_id: str, reason: str, diagnosis_id: str | None
+    ) -> ReviewQueueEvent:
+        return ReviewQueueEvent(
+            event_id=self._id_factory(),
+            submission_id=submission.submission_id,
+            diagnosis_id=diagnosis_id,
+            course_id=submission.course_id,
+            owner_user_id=submission.owner_user_id,
+            reason=reason,
+            summary="Diagnosis requires authorized review; private source is omitted.",
+            created_at=utc_now(),
+            request_id=request_id,
         )
 
 
