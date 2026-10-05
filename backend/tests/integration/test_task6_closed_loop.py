@@ -239,4 +239,3 @@ def test_real_runner_mock_model_postgres_survives_recreation() -> None:
     assert restarted.courses.for_exercise(course_id, exercise_id) == (
         "private reference answer"
     )
-

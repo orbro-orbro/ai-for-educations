@@ -217,4 +217,3 @@ def test_two_repository_instances_serialize_postgres_hint_levels() -> None:
             diagnosis.diagnosis_id
         )
     ] == [1, 2]
-

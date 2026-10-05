@@ -56,4 +56,3 @@ def test_create_app_accepts_explicit_task6_service_and_threshold_injection() -> 
     assert application.state.diagnosis_service is diagnosis_service
     assert application.state.hint_service is hint_service
     assert application.state.diagnosis_confidence_threshold == 0.81
-
