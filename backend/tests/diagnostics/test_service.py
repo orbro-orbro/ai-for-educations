@@ -12,7 +12,10 @@ from app.api.auth import Authenticator, TokenCodec
 from app.api.diagnostics import create_diagnostics_router
 from app.api.errors import install_error_handling
 from app.auth.models import Actor, Role, User, UserRepository
-from app.diagnostics.repository import InMemoryDiagnosticRepository
+from app.diagnostics.repository import (
+    DiagnosticPersistenceError,
+    InMemoryDiagnosticRepository,
+)
 from app.diagnostics.service import (
     DiagnosisService,
     ExecutionEvidenceUnavailable,
@@ -158,6 +161,62 @@ def test_atomic_repository_finalizes_diagnosis_and_status_together(
     ]
     assert repository.get_for_submission("sub-1") == result.diagnosis
     assert submissions.get("sub-1").status is SubmissionStatus.diagnosed
+
+
+def test_atomic_finalization_rollback_can_resume_from_diagnosing(
+    submissions, knowledge
+):
+    class FailsAtomicFinalizeOnce(InMemoryDiagnosticRepository):
+        failed = False
+
+        def finalize_run(
+            self,
+            *,
+            submission_id,
+            request_id,
+            result,
+            terminal_status,
+            reason,
+        ):
+            if not self.failed:
+                self.failed = True
+                raise DiagnosticPersistenceError("diagnostic storage operation failed")
+            if result.diagnosis is not None:
+                self.save_diagnosis(result.diagnosis)
+            submissions.transition(
+                submission_id,
+                terminal_status,
+                request_id=request_id,
+                reason=reason,
+            )
+            self.save_run_result(submission_id, request_id, result)
+            return result
+
+    repository = FailsAtomicFinalizeOnce()
+    provider = DeterministicMockProvider(
+        diagnoses=[diagnosis_output(), diagnosis_output()]
+    )
+    service = DiagnosisService(
+        submissions=submissions,
+        knowledge=knowledge,
+        repository=repository,
+        provider=provider,
+        access=StudentSubmissionAccess(),
+        confidence_threshold=0.75,
+        id_factory=lambda: "diag-resumed",
+    )
+
+    with pytest.raises(DiagnosticPersistenceError):
+        service.diagnose("sub-1", request_id="req-resumed")
+
+    assert submissions.get("sub-1").status is SubmissionStatus.diagnosing
+    assert repository.get_for_submission("sub-1") is None
+
+    result = service.diagnose("sub-1", request_id="req-resumed")
+
+    assert result.diagnosis.diagnosis_id == "diag-resumed"
+    assert submissions.get("sub-1").status is SubmissionStatus.diagnosed
+    assert len(provider.diagnosis_requests) == 2
 
 
 def test_low_confidence_enters_review_and_is_not_memory_eligible(submissions, knowledge):

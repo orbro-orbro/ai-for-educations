@@ -121,15 +121,20 @@ class DiagnosisService:
                 )
             self._repository.save_run_result(submission_id, request_id, failure)
             raise failure
-        if submission.status not in {SubmissionStatus.executed, SubmissionStatus.needs_review}:
+        if submission.status not in {
+            SubmissionStatus.executed,
+            SubmissionStatus.needs_review,
+            SubmissionStatus.diagnosing,
+        }:
             raise ExecutionEvidenceUnavailable("submission is not ready for diagnosis")
 
-        self._submissions.transition(
-            submission_id,
-            SubmissionStatus.diagnosing,
-            request_id=request_id,
-            reason="evidence-bound diagnosis started",
-        )
+        if submission.status is not SubmissionStatus.diagnosing:
+            self._submissions.transition(
+                submission_id,
+                SubmissionStatus.diagnosing,
+                request_id=request_id,
+                reason="evidence-bound diagnosis started",
+            )
         approved = tuple(self._knowledge.approved_evidence(submission.course_id))
         if not approved:
             return self._finish_review(
