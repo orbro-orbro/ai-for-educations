@@ -25,6 +25,7 @@ from app.persistence.models import (
 )
 
 if TYPE_CHECKING:
+    from app.diagnostics.persistence import SqlDiagnosticRepository
     from app.submissions.persistence import SqlSubmissionRepository
 
 
@@ -101,6 +102,29 @@ class SqlCourseRepository:
                 Exercise(row.id, row.course_id, row.title, row.is_published)
                 for row in rows
             ]
+
+    def set_protected_answer(
+        self, course_id: str, exercise_id: str, answer: str | None
+    ) -> None:
+        with self._sessions.begin() as session:
+            row = session.scalar(
+                select(ExerciseRow).where(
+                    ExerciseRow.id == exercise_id,
+                    ExerciseRow.course_id == course_id,
+                )
+            )
+            if row is None:
+                raise ValueError("exercise does not belong to course")
+            row.protected_answer = answer
+
+    def for_exercise(self, course_id: str, exercise_id: str) -> str | None:
+        with self._sessions() as session:
+            return session.scalar(
+                select(ExerciseRow.protected_answer).where(
+                    ExerciseRow.id == exercise_id,
+                    ExerciseRow.course_id == course_id,
+                )
+            )
 
 
 class SqlEnrollmentRepository:
@@ -245,9 +269,11 @@ class SqlRepositories:
     enrollments: SqlEnrollmentRepository
     knowledge: SqlKnowledgeRepository
     submissions: "SqlSubmissionRepository"
+    diagnostics: "SqlDiagnosticRepository"
 
 
 def create_sql_repositories(database_url: str, *, create_schema: bool = False) -> SqlRepositories:
+    from app.diagnostics.persistence import SqlDiagnosticRepository
     from app.submissions.persistence import SqlSubmissionRepository
 
     engine = create_engine(database_url, pool_pre_ping=True)
@@ -266,6 +292,7 @@ def create_sql_repositories(database_url: str, *, create_schema: bool = False) -
         SqlEnrollmentRepository(sessions),
         SqlKnowledgeRepository(sessions),
         SqlSubmissionRepository(sessions),
+        SqlDiagnosticRepository(sessions),
     )
 
 

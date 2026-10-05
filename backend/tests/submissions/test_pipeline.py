@@ -244,6 +244,68 @@ def test_compile_failure_is_persisted_as_real_execution_and_executed_state():
     ]
 
 
+def test_completed_execution_triggers_diagnosis_and_returns_terminal_state():
+    repository = InMemorySubmissionRepository()
+    observed = []
+
+    def diagnose(submission_id: str, request_id: str) -> None:
+        observed.append(
+            (
+                submission_id,
+                request_id,
+                repository.get(submission_id).status,
+                repository.execution_result(submission_id).status,
+            )
+        )
+        repository.transition(
+            submission_id,
+            SubmissionStatus.diagnosing,
+            request_id=request_id,
+            reason="diagnosis started",
+        )
+        repository.transition(
+            submission_id,
+            SubmissionStatus.diagnosed,
+            request_id=request_id,
+            reason="diagnosis completed",
+        )
+
+    service = SubmissionService(
+        repository=repository,
+        access=ExerciseAccess(),
+        runner=CompileFailureRunner(),
+        knowledge=NoApprovedEvidence(),
+        execution_completed=diagnose,
+        id_factory=lambda: "sub-diagnosed",
+    )
+
+    submission = service.submit(
+        actor=Actor("student-1", Role.STUDENT),
+        exercise_id="exercise-1",
+        source_files=[{"path": "main.cj", "content": "main() {}"}],
+        entrypoint="main.cj",
+        is_formal=True,
+        request_id="req-diagnosed",
+    )
+
+    assert observed == [
+        (
+            "sub-diagnosed",
+            "req-diagnosed",
+            SubmissionStatus.executed,
+            RunnerStatus.compile_failed,
+        )
+    ]
+    assert submission.status is SubmissionStatus.diagnosed
+    assert [item.to_status for item in repository.transitions("sub-diagnosed")] == [
+        SubmissionStatus.received,
+        SubmissionStatus.executing,
+        SubmissionStatus.executed,
+        SubmissionStatus.diagnosing,
+        SubmissionStatus.diagnosed,
+    ]
+
+
 def test_runner_infrastructure_failure_preserves_source_without_fake_result():
     repository = InMemorySubmissionRepository()
     service = SubmissionService(

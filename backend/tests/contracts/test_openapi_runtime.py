@@ -82,3 +82,15 @@ def test_task5_paths_and_bounded_identifiers_are_in_shared_contract():
     assert document["components"]["parameters"]["ExerciseId"]["schema"]["maxLength"] == 128
     assert document["components"]["parameters"]["SubmissionId"]["schema"]["maxLength"] == 128
     assert document["components"]["schemas"]["SubmissionCreateRequest"]["additionalProperties"] is False
+
+
+def test_task6_runtime_documents_stable_error_statuses() -> None:
+    runtime = create_app().openapi()
+
+    for path in (
+        "/submissions/{submission_id}/diagnosis",
+        "/diagnoses/{diagnosis_id}/hints/next",
+        "/diagnoses/{diagnosis_id}/explanation-check",
+    ):
+        operation = next(iter(runtime["paths"][path].values()))
+        assert {"401", "404", "409", "422", "503"} <= set(operation["responses"])

@@ -280,3 +280,22 @@ def test_student_receives_non_enumerating_error_for_teacher_course_route() -> No
 
     assert response.status_code == 404
     assert response.json()["code"] == "RESOURCE_NOT_AVAILABLE"
+
+
+def test_protected_answer_is_course_scoped_and_absent_from_public_exercise():
+    repository = CourseRepository(
+        [Course("course-a", "Course A", "teacher-a")],
+        [Exercise("exercise-a", "course-a", "Exercise A", True)],
+    )
+
+    repository.set_protected_answer(
+        "course-a", "exercise-a", "private reference answer"
+    )
+
+    assert (
+        repository.for_exercise("course-a", "exercise-a")
+        == "private reference answer"
+    )
+    assert repository.for_exercise("course-b", "exercise-a") is None
+    public_exercise = repository.list_exercises("course-a")[0]
+    assert not hasattr(public_exercise, "protected_answer")

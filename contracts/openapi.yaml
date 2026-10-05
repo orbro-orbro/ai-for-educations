@@ -484,6 +484,78 @@ paths:
           $ref: '#/components/responses/InvalidRequest'
         '503':
           $ref: '#/components/responses/PersistenceUnavailable'
+  /submissions/{submission_id}/diagnosis:
+    get:
+      operationId: getSubmissionDiagnosis
+      summary: Read an existing evidence-bound diagnosis without invoking a model.
+      security:
+      - bearerAuth: []
+      parameters:
+      - $ref: '#/components/parameters/SubmissionId'
+      responses:
+        '200':
+          description: Existing validated diagnosis.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Diagnosis'
+        '401': {$ref: '#/components/responses/AuthenticationFailed'}
+        '404': {$ref: '#/components/responses/NotAvailable'}
+        '409': {$ref: '#/components/responses/DiagnosticConflict'}
+        '422': {$ref: '#/components/responses/InvalidRequest'}
+        '503': {$ref: '#/components/responses/DiagnosticUnavailable'}
+  /diagnoses/{diagnosis_id}/hints/next:
+    post:
+      operationId: createNextDiagnosisHint
+      summary: Create the next server-selected hint level.
+      security:
+      - bearerAuth: []
+      parameters:
+      - $ref: '#/components/parameters/DiagnosisId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NextHintRequest'
+      responses:
+        '200':
+          description: Persisted next hint; provider failure may return a safe fallback.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HintEvent'
+        '401': {$ref: '#/components/responses/AuthenticationFailed'}
+        '404': {$ref: '#/components/responses/NotAvailable'}
+        '409': {$ref: '#/components/responses/DiagnosticConflict'}
+        '422': {$ref: '#/components/responses/InvalidRequest'}
+        '503': {$ref: '#/components/responses/DiagnosticUnavailable'}
+  /diagnoses/{diagnosis_id}/explanation-check:
+    post:
+      operationId: checkDiagnosisExplanation
+      summary: Check a student's explanation against approved diagnosis evidence.
+      security:
+      - bearerAuth: []
+      parameters:
+      - $ref: '#/components/parameters/DiagnosisId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ExplanationCheckRequest'
+      responses:
+        '200':
+          description: Persisted check; provider failure is safely recorded as ineligible.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExplanationCheck'
+        '401': {$ref: '#/components/responses/AuthenticationFailed'}
+        '404': {$ref: '#/components/responses/NotAvailable'}
+        '409': {$ref: '#/components/responses/DiagnosticConflict'}
+        '422': {$ref: '#/components/responses/InvalidRequest'}
+        '503': {$ref: '#/components/responses/DiagnosticUnavailable'}
 components:
   securitySchemes:
     bearerAuth:
@@ -1239,6 +1311,122 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/RuleMatch'
+    NextHintRequest:
+      type: object
+      additionalProperties: false
+      required: [reason]
+      properties:
+        reason: {type: string, minLength: 1, maxLength: 512}
+    ExplanationCheckRequest:
+      type: object
+      additionalProperties: false
+      required: [explanation]
+      properties:
+        explanation: {type: string, minLength: 1, maxLength: 8000}
+    DiagnosisLocation:
+      type: object
+      additionalProperties: false
+      required: [file, start_line, end_line]
+      properties:
+        file: {type: string, minLength: 1}
+        start_line: {type: integer, minimum: 1}
+        end_line: {type: integer, minimum: 1}
+    CompilerDiagnosticEvidence:
+      type: object
+      additionalProperties: false
+      required: [kind, summary, diagnostic_index]
+      properties:
+        kind: {type: string, const: compiler_diagnostic}
+        summary: {type: string, minLength: 1}
+        diagnostic_index: {type: integer, minimum: 0}
+    RuleMatchEvidence:
+      type: object
+      additionalProperties: false
+      required: [kind, summary, misconception_id]
+      properties:
+        kind: {type: string, const: rule_match}
+        summary: {type: string, minLength: 1}
+        misconception_id: {type: string, minLength: 1}
+    ApprovedKnowledgeEvidence:
+      type: object
+      additionalProperties: false
+      required: [kind, summary, misconception_id, source_reference]
+      properties:
+        kind: {type: string, const: approved_knowledge}
+        summary: {type: string, minLength: 1}
+        misconception_id: {type: string, minLength: 1}
+        source_reference: {type: string, minLength: 1}
+    EvidenceBinding:
+      oneOf:
+      - $ref: '#/components/schemas/CompilerDiagnosticEvidence'
+      - $ref: '#/components/schemas/RuleMatchEvidence'
+      - $ref: '#/components/schemas/ApprovedKnowledgeEvidence'
+      discriminator:
+        propertyName: kind
+        mapping:
+          compiler_diagnostic: '#/components/schemas/CompilerDiagnosticEvidence'
+          rule_match: '#/components/schemas/RuleMatchEvidence'
+          approved_knowledge: '#/components/schemas/ApprovedKnowledgeEvidence'
+    Diagnosis:
+      type: object
+      additionalProperties: false
+      required: [diagnosis_id, submission_id, course_id, owner_user_id, category, locations, concept_ids, root_cause, evidence, confidence, recommended_hint_level, requires_teacher_review, created_at, request_id]
+      properties:
+        diagnosis_id: {type: string}
+        submission_id: {type: string}
+        course_id: {type: string, readOnly: true}
+        owner_user_id: {type: string, readOnly: true}
+        category: {type: string, enum: [conceptual, strategic, procedural, expression]}
+        locations:
+          type: array
+          minItems: 1
+          items: {$ref: '#/components/schemas/DiagnosisLocation'}
+        concept_ids:
+          type: array
+          minItems: 1
+          items: {type: string}
+        root_cause: {type: string, minLength: 1}
+        evidence:
+          type: array
+          minItems: 1
+          items: {$ref: '#/components/schemas/EvidenceBinding'}
+        confidence: {type: number, minimum: 0, maximum: 1}
+        recommended_hint_level: {type: integer, minimum: 1, maximum: 4}
+        requires_teacher_review: {type: boolean, readOnly: true}
+        created_at: {type: string, format: date-time}
+        request_id: {type: string}
+    HintEvent:
+      type: object
+      additionalProperties: false
+      required: [hint_event_id, diagnosis_id, previous_level, current_level, reason, previous_attempt_count, content, used_safe_fallback, created_at, request_id]
+      properties:
+        hint_event_id: {type: string}
+        diagnosis_id: {type: string}
+        previous_level: {type: integer, minimum: 0, maximum: 3}
+        current_level: {type: integer, minimum: 1, maximum: 4}
+        reason: {type: string, minLength: 1}
+        previous_attempt_count: {type: integer, minimum: 0}
+        content: {type: string, minLength: 1}
+        used_safe_fallback: {type: boolean}
+        created_at: {type: string, format: date-time}
+        request_id: {type: string}
+    ExplanationCheck:
+      type: object
+      additionalProperties: false
+      required: [explanation_check_id, diagnosis_id, understands, concept_ids, evidence_summary, confidence, feedback, memory_proposal_eligible, created_at, request_id]
+      properties:
+        explanation_check_id: {type: string}
+        diagnosis_id: {type: string}
+        understands: {type: boolean}
+        concept_ids:
+          type: array
+          items: {type: string}
+        evidence_summary: {type: string}
+        confidence: {type: number, minimum: 0, maximum: 1}
+        feedback: {type: string}
+        memory_proposal_eligible: {type: boolean, readOnly: true}
+        created_at: {type: string, format: date-time}
+        request_id: {type: string}
   parameters:
     CourseId:
       name: course_id
@@ -1268,6 +1456,14 @@ components:
         maxLength: 128
     SubmissionId:
       name: submission_id
+      in: path
+      required: true
+      schema:
+        type: string
+        minLength: 1
+        maxLength: 128
+    DiagnosisId:
+      name: diagnosis_id
       in: path
       required: true
       schema:
@@ -1316,6 +1512,18 @@ components:
             $ref: '#/components/schemas/ErrorResponse'
     PersistenceUnavailable:
       description: Submission storage is temporarily unavailable.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    DiagnosticConflict:
+      description: Execution evidence or the requested diagnosis/hint state is not available.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    DiagnosticUnavailable:
+      description: Diagnostic persistence or provider service is temporarily unavailable; private input is never returned.
       content:
         application/json:
           schema:
