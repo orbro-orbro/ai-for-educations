@@ -17,6 +17,7 @@ from sqlalchemy import (
     Text,
     UniqueConstraint,
     false,
+    text,
 )
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 
@@ -364,6 +365,12 @@ class DiagnosisRow(Base):
             ondelete="CASCADE",
         ),
         UniqueConstraint("id", "course_id", name="uq_diagnoses_id_course"),
+        UniqueConstraint(
+            "id",
+            "course_id",
+            "owner_user_id",
+            name="uq_diagnoses_id_course_owner",
+        ),
         CheckConstraint(
             "category IN ('conceptual','strategic','procedural','expression')",
             name="ck_diagnoses_category",
@@ -498,6 +505,9 @@ class ExplanationCheckRow(Base):
     request_id: Mapped[str] = mapped_column(String(128), nullable=False)
     __table_args__ = (
         UniqueConstraint("diagnosis_id", "request_id", name="uq_explanation_checks_request"),
+        UniqueConstraint(
+            "id", "diagnosis_id", name="uq_explanation_checks_id_diagnosis"
+        ),
         CheckConstraint("confidence >= 0 AND confidence <= 1", name="ck_explanation_checks_confidence"),
     )
 
@@ -516,4 +526,361 @@ class DiagnosisRunResultRow(Base):
             "result_kind IN ('diagnosis','review','evidence_unavailable')",
             name="ck_diagnosis_run_results_kind",
         ),
+    )
+
+
+class MemoryProposalRow(Base):
+    __tablename__ = "memory_proposals"
+    id: Mapped[str] = mapped_column(String(128), primary_key=True)
+    root_proposal_id: Mapped[str] = mapped_column(String(128), nullable=False)
+    previous_proposal_id: Mapped[str | None] = mapped_column(String(128))
+    version: Mapped[int] = mapped_column(Integer, nullable=False)
+    owner_user_id: Mapped[str] = mapped_column(String(128), nullable=False)
+    course_id: Mapped[str] = mapped_column(String(128), nullable=False)
+    diagnosis_id: Mapped[str] = mapped_column(String(128), nullable=False)
+    explanation_check_id: Mapped[str] = mapped_column(String(128), nullable=False)
+    content: Mapped[str] = mapped_column(Text, nullable=False)
+    concept_ids: Mapped[list[str]] = mapped_column(JSON, nullable=False)
+    confidence: Mapped[float] = mapped_column(Float, nullable=False)
+    status: Mapped[str] = mapped_column(String(32), nullable=False)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
+    expires_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
+    request_id: Mapped[str] = mapped_column(String(128), nullable=False)
+    __table_args__ = (
+        ForeignKeyConstraint(
+            ["diagnosis_id", "course_id", "owner_user_id"],
+            ["diagnoses.id", "diagnoses.course_id", "diagnoses.owner_user_id"],
+            ondelete="RESTRICT",
+        ),
+        ForeignKeyConstraint(
+            ["explanation_check_id", "diagnosis_id"],
+            ["explanation_checks.id", "explanation_checks.diagnosis_id"],
+            ondelete="RESTRICT",
+        ),
+        ForeignKeyConstraint(
+            ["root_proposal_id", "owner_user_id", "course_id"],
+            ["memory_proposals.id", "memory_proposals.owner_user_id", "memory_proposals.course_id"],
+            ondelete="RESTRICT",
+        ),
+        ForeignKeyConstraint(
+            ["previous_proposal_id", "owner_user_id", "course_id"],
+            ["memory_proposals.id", "memory_proposals.owner_user_id", "memory_proposals.course_id"],
+            ondelete="RESTRICT",
+        ),
+        UniqueConstraint(
+            "explanation_check_id", name="uq_memory_proposals_explanation_check"
+        ),
+        UniqueConstraint(
+            "root_proposal_id", "version", name="uq_memory_proposals_root_version"
+        ),
+        UniqueConstraint(
+            "previous_proposal_id", name="uq_memory_proposals_previous"
+        ),
+        UniqueConstraint(
+            "id",
+            "owner_user_id",
+            "course_id",
+            name="uq_memory_proposals_id_owner_course",
+        ),
+        CheckConstraint("version >= 1", name="ck_memory_proposals_version"),
+        CheckConstraint(
+            "confidence >= 0 AND confidence <= 1",
+            name="ck_memory_proposals_confidence",
+        ),
+        CheckConstraint(
+            "status IN ('pending','accepted','rejected','superseded','expired')",
+            name="ck_memory_proposals_status",
+        ),
+        CheckConstraint(
+            "expires_at > created_at", name="ck_memory_proposals_expiry"
+        ),
+        Index(
+            "ix_memory_proposals_owner_course_status_expiry",
+            "owner_user_id",
+            "course_id",
+            "status",
+            "expires_at",
+        ),
+        Index(
+            "ix_memory_proposals_root_version", "root_proposal_id", "version"
+        ),
+    )
+
+
+class LearningMemoryRow(Base):
+    __tablename__ = "learning_memories"
+    id: Mapped[str] = mapped_column(String(128), primary_key=True)
+    logical_memory_id: Mapped[str] = mapped_column(String(128), nullable=False)
+    previous_version_id: Mapped[str | None] = mapped_column(String(128))
+    version: Mapped[int] = mapped_column(Integer, nullable=False)
+    owner_user_id: Mapped[str] = mapped_column(String(128), nullable=False)
+    course_id: Mapped[str] = mapped_column(String(128), nullable=False)
+    memory_type: Mapped[str] = mapped_column(String(64), nullable=False)
+    visibility: Mapped[str] = mapped_column(String(16), nullable=False)
+    content: Mapped[str | None] = mapped_column(Text)
+    concept_ids: Mapped[list[str]] = mapped_column(JSON, nullable=False)
+    source_diagnosis_id: Mapped[str] = mapped_column(String(128), nullable=False)
+    source_proposal_id: Mapped[str] = mapped_column(String(128), nullable=False)
+    confidence: Mapped[float] = mapped_column(Float, nullable=False)
+    allowed_purposes: Mapped[list[str]] = mapped_column(JSON, nullable=False)
+    status: Mapped[str] = mapped_column(String(32), nullable=False)
+    index_document_id: Mapped[str] = mapped_column(String(128), nullable=False)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
+    updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
+    expires_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    request_id: Mapped[str] = mapped_column(String(128), nullable=False)
+    __table_args__ = (
+        ForeignKeyConstraint(
+            ["source_proposal_id", "owner_user_id", "course_id"],
+            ["memory_proposals.id", "memory_proposals.owner_user_id", "memory_proposals.course_id"],
+            ondelete="RESTRICT",
+        ),
+        ForeignKeyConstraint(
+            ["source_diagnosis_id", "course_id", "owner_user_id"],
+            ["diagnoses.id", "diagnoses.course_id", "diagnoses.owner_user_id"],
+            ondelete="RESTRICT",
+        ),
+        ForeignKeyConstraint(
+            ["logical_memory_id", "owner_user_id", "course_id"],
+            ["learning_memories.id", "learning_memories.owner_user_id", "learning_memories.course_id"],
+            ondelete="RESTRICT",
+        ),
+        ForeignKeyConstraint(
+            ["previous_version_id", "owner_user_id", "course_id"],
+            ["learning_memories.id", "learning_memories.owner_user_id", "learning_memories.course_id"],
+            ondelete="RESTRICT",
+        ),
+        UniqueConstraint(
+            "source_proposal_id", name="uq_learning_memories_source_proposal"
+        ),
+        UniqueConstraint(
+            "logical_memory_id",
+            "version",
+            name="uq_learning_memories_logical_version",
+        ),
+        UniqueConstraint(
+            "previous_version_id", name="uq_learning_memories_previous"
+        ),
+        UniqueConstraint(
+            "index_document_id", name="uq_learning_memories_index_document"
+        ),
+        UniqueConstraint(
+            "id",
+            "owner_user_id",
+            "course_id",
+            name="uq_learning_memories_id_owner_course",
+        ),
+        CheckConstraint("version >= 1", name="ck_learning_memories_version"),
+        CheckConstraint(
+            "confidence >= 0 AND confidence <= 1",
+            name="ck_learning_memories_confidence",
+        ),
+        CheckConstraint("visibility = 'private'", name="ck_learning_memories_visibility"),
+        CheckConstraint(
+            "status IN ('active','superseded','expired','deletion_pending','deleted')",
+            name="ck_learning_memories_status",
+        ),
+        CheckConstraint(
+            "status NOT IN ('deletion_pending','deleted') OR content IS NULL",
+            name="ck_learning_memories_deleted_content",
+        ),
+        Index(
+            "uq_learning_memories_one_active",
+            "logical_memory_id",
+            unique=True,
+            postgresql_where=text("status = 'active'"),
+            sqlite_where=text("status = 'active'"),
+        ),
+        Index(
+            "ix_learning_memories_owner_course_status_expiry",
+            "owner_user_id",
+            "course_id",
+            "status",
+            "expires_at",
+        ),
+        Index(
+            "ix_learning_memories_logical_version", "logical_memory_id", "version"
+        ),
+    )
+
+
+class ShareGrantRow(Base):
+    __tablename__ = "share_grants"
+    id: Mapped[str] = mapped_column(String(128), primary_key=True)
+    owner_user_id: Mapped[str] = mapped_column(String(128), nullable=False)
+    course_id: Mapped[str] = mapped_column(String(128), nullable=False)
+    resource_type: Mapped[str] = mapped_column(String(64), nullable=False)
+    resource_id: Mapped[str] = mapped_column(String(128), nullable=False)
+    grantee_user_id: Mapped[str] = mapped_column(
+        ForeignKey("users.id", ondelete="RESTRICT"), nullable=False
+    )
+    purpose: Mapped[str] = mapped_column(String(256), nullable=False)
+    status: Mapped[str] = mapped_column(String(32), nullable=False)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
+    expires_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    revoked_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    request_id: Mapped[str] = mapped_column(String(128), nullable=False)
+    __table_args__ = (
+        ForeignKeyConstraint(
+            ["resource_id", "course_id", "owner_user_id"],
+            ["diagnoses.id", "diagnoses.course_id", "diagnoses.owner_user_id"],
+            ondelete="RESTRICT",
+        ),
+        UniqueConstraint(
+            "owner_user_id",
+            "resource_id",
+            "grantee_user_id",
+            "purpose",
+            name="uq_share_grants_exact_scope",
+        ),
+        CheckConstraint(
+            "resource_type = 'diagnosis_summary'",
+            name="ck_share_grants_resource_type",
+        ),
+        CheckConstraint(
+            "status IN ('active','revoked','expired')",
+            name="ck_share_grants_status",
+        ),
+        CheckConstraint(
+            "(status = 'revoked' AND revoked_at IS NOT NULL) OR "
+            "(status <> 'revoked' AND revoked_at IS NULL)",
+            name="ck_share_grants_revocation",
+        ),
+        Index(
+            "ix_share_grants_grantee_course_status",
+            "grantee_user_id",
+            "course_id",
+            "status",
+        ),
+        Index(
+            "ix_share_grants_owner_course_status",
+            "owner_user_id",
+            "course_id",
+            "status",
+        ),
+    )
+
+
+class MemoryDeletionRow(Base):
+    __tablename__ = "memory_deletions"
+    id: Mapped[str] = mapped_column(String(128), primary_key=True)
+    logical_memory_id: Mapped[str] = mapped_column(String(128), nullable=False)
+    owner_user_id: Mapped[str] = mapped_column(String(128), nullable=False)
+    course_id: Mapped[str] = mapped_column(String(128), nullable=False)
+    status: Mapped[str] = mapped_column(String(32), nullable=False)
+    requested_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
+    completed_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    attempts: Mapped[int] = mapped_column(Integer, nullable=False)
+    index_cleared: Mapped[bool] = mapped_column(Boolean, nullable=False)
+    cache_cleared: Mapped[bool] = mapped_column(Boolean, nullable=False)
+    model_references_cleared: Mapped[bool] = mapped_column(Boolean, nullable=False)
+    reverse_lookup_absent: Mapped[bool] = mapped_column(Boolean, nullable=False)
+    error_code: Mapped[str | None] = mapped_column(String(128))
+    request_id: Mapped[str] = mapped_column(String(128), nullable=False)
+    __table_args__ = (
+        ForeignKeyConstraint(
+            ["logical_memory_id", "owner_user_id", "course_id"],
+            ["learning_memories.id", "learning_memories.owner_user_id", "learning_memories.course_id"],
+            ondelete="RESTRICT",
+        ),
+        UniqueConstraint(
+            "logical_memory_id", name="uq_memory_deletions_logical_memory"
+        ),
+        CheckConstraint(
+            "status IN ('deletion_pending','deleted')",
+            name="ck_memory_deletions_status",
+        ),
+        CheckConstraint("attempts >= 0", name="ck_memory_deletions_attempts"),
+        CheckConstraint(
+            "(status = 'deletion_pending' AND completed_at IS NULL) OR "
+            "(status = 'deleted' AND completed_at IS NOT NULL AND "
+            "index_cleared AND cache_cleared AND model_references_cleared "
+            "AND reverse_lookup_absent)",
+            name="ck_memory_deletions_completion",
+        ),
+        Index(
+            "ix_memory_deletions_owner_course_status",
+            "owner_user_id",
+            "course_id",
+            "status",
+        ),
+    )
+
+
+class MemoryTombstoneRow(Base):
+    __tablename__ = "memory_tombstones"
+    logical_memory_id: Mapped[str] = mapped_column(String(128), primary_key=True)
+    deletion_id: Mapped[str] = mapped_column(
+        ForeignKey("memory_deletions.id", ondelete="RESTRICT"), nullable=False
+    )
+    owner_user_id: Mapped[str] = mapped_column(String(128), nullable=False)
+    course_id: Mapped[str] = mapped_column(String(128), nullable=False)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
+    __table_args__ = (
+        ForeignKeyConstraint(
+            ["logical_memory_id", "owner_user_id", "course_id"],
+            ["learning_memories.id", "learning_memories.owner_user_id", "learning_memories.course_id"],
+            ondelete="RESTRICT",
+        ),
+        UniqueConstraint("deletion_id", name="uq_memory_tombstones_deletion"),
+    )
+
+
+class MemoryIdempotencyResultRow(Base):
+    __tablename__ = "memory_idempotency_results"
+    id: Mapped[str] = mapped_column(String(128), primary_key=True)
+    actor_user_id: Mapped[str] = mapped_column(
+        ForeignKey("users.id", ondelete="RESTRICT"), nullable=False
+    )
+    operation: Mapped[str] = mapped_column(String(128), nullable=False)
+    idempotency_key: Mapped[str] = mapped_column(String(128), nullable=False)
+    resource_type: Mapped[str] = mapped_column(String(64), nullable=False)
+    resource_id: Mapped[str] = mapped_column(String(128), nullable=False)
+    request_fingerprint: Mapped[str] = mapped_column(String(64), nullable=False)
+    result_type: Mapped[str] = mapped_column(String(64), nullable=False)
+    result_id: Mapped[str] = mapped_column(String(128), nullable=False)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
+    __table_args__ = (
+        UniqueConstraint(
+            "actor_user_id",
+            "operation",
+            "idempotency_key",
+            name="uq_memory_idempotency_scope",
+        ),
+        Index(
+            "ix_memory_idempotency_result", "result_type", "result_id"
+        ),
+    )
+
+
+class AuditEventRow(Base):
+    __tablename__ = "audit_events"
+    id: Mapped[str] = mapped_column(String(128), primary_key=True)
+    event_type: Mapped[str] = mapped_column(String(128), nullable=False)
+    actor_user_id: Mapped[str] = mapped_column(
+        ForeignKey("users.id", ondelete="RESTRICT"), nullable=False
+    )
+    actor_role: Mapped[str] = mapped_column(String(16), nullable=False)
+    target_type: Mapped[str] = mapped_column(String(64), nullable=False)
+    target_id: Mapped[str] = mapped_column(String(128), nullable=False)
+    owner_user_id: Mapped[str] = mapped_column(String(128), nullable=False)
+    course_id: Mapped[str] = mapped_column(
+        ForeignKey("courses.id", ondelete="RESTRICT"), nullable=False
+    )
+    outcome: Mapped[str] = mapped_column(String(64), nullable=False)
+    reason_code: Mapped[str] = mapped_column(String(128), nullable=False)
+    request_id: Mapped[str] = mapped_column(String(128), nullable=False)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
+    related_id: Mapped[str | None] = mapped_column(String(128))
+    __table_args__ = (
+        CheckConstraint(
+            "actor_role IN ('student','teacher')",
+            name="ck_audit_events_actor_role",
+        ),
+        CheckConstraint("length(outcome) > 0", name="ck_audit_events_outcome"),
+        CheckConstraint(
+            "length(reason_code) > 0", name="ck_audit_events_reason_code"
+        ),
+        Index("ix_audit_events_course_created", "course_id", "created_at"),
+        Index("ix_audit_events_target", "target_type", "target_id"),
     )
