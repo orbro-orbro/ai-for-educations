@@ -64,6 +64,7 @@ def test_memory_api_requires_authentication_and_uses_uniform_resource_denial(mem
             headers = {
                 "Authorization": f"Bearer {student_b}",
                 "X-Request-ID": "req-api-denied",
+                "Idempotency-Key": "deny-accept",
             }
             foreign = await client.post(
                 f"/memory-proposals/{proposal.proposal_id}/accept", headers=headers
@@ -93,6 +94,7 @@ def test_owner_can_accept_list_correct_and_delete_through_api(memory_fixture):
         headers = {
             "Authorization": f"Bearer {token}",
             "X-Request-ID": "req-api",
+            "Idempotency-Key": "owner-lifecycle",
         }
         async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client:
             accepted = await client.post(
@@ -156,10 +158,12 @@ def test_share_grant_and_deletion_retry_routes_enforce_exact_actors(memory_fixtu
         student_headers = {
             "Authorization": f"Bearer {student_token}",
             "X-Request-ID": "req-student-api",
+            "Idempotency-Key": "student-lifecycle",
         }
         teacher_headers = {
             "Authorization": f"Bearer {teacher_token}",
             "X-Request-ID": "req-teacher-api",
+            "Idempotency-Key": "teacher-lifecycle",
         }
         async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client:
             accepted = await client.post(
@@ -234,6 +238,7 @@ def test_whitespace_correction_uses_uniform_validation_error(memory_fixture):
                 headers={
                     "Authorization": f"Bearer {token}",
                     "X-Request-ID": "req-whitespace",
+                    "Idempotency-Key": "whitespace-correction",
                 },
             )
 
@@ -263,6 +268,7 @@ def test_timezone_free_share_expiry_uses_uniform_validation_error(memory_fixture
                 headers={
                     "Authorization": f"Bearer {token}",
                     "X-Request-ID": "req-naive-expiry",
+                    "Idempotency-Key": "naive-expiry",
                 },
             )
 

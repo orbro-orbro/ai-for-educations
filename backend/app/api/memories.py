@@ -3,18 +3,19 @@ from __future__ import annotations
 from datetime import UTC, datetime
 from typing import Annotated
 
-from fastapi import APIRouter, Header, Path, Query, Request
+from fastapi import APIRouter, Header, Path, Query, Request, Security
+from fastapi.security import HTTPBearer
 from pydantic import BaseModel, ConfigDict, Field, field_validator
 
 from app.api.auth import Authenticator
-from app.api.errors import error_response, request_id_for
+from app.api.errors import ErrorResponse, error_response, request_id_for
 from app.memories.deletion import DeletionService
 from app.memories.models import (
-    DeletionReceipt,
-    DiagnosisSummary,
-    LearningMemory,
-    MemoryProposal,
-    ShareGrant,
+    DeletionReceipt as DomainDeletionReceipt,
+    DiagnosisSummary as DomainDiagnosisSummary,
+    LearningMemory as DomainLearningMemory,
+    MemoryProposal as DomainMemoryProposal,
+    ShareGrant as DomainShareGrant,
 )
 from app.memories.service import (
     MemoryConflict,
@@ -25,6 +26,18 @@ from app.memories.service import (
 
 BoundedPathId = Annotated[str, Path(min_length=1, max_length=128)]
 CourseIdQuery = Annotated[str, Query(min_length=1, max_length=128)]
+IdempotencyKeyHeader = Annotated[
+    str,
+    Header(alias="Idempotency-Key", min_length=1, max_length=128),
+]
+
+_READ_ONLY = {"readOnly": True}
+_WRITE_ONLY = {"writeOnly": True}
+_ERROR_RESPONSES = {
+    status: {"model": ErrorResponse}
+    for status in (401, 404, 409, 422, 503)
+}
+_BEARER = HTTPBearer(auto_error=False, scheme_name="bearerAuth")
 
 
 class _StrictRequest(BaseModel):
@@ -32,17 +45,33 @@ class _StrictRequest(BaseModel):
 
 
 class ProposalCorrectionRequest(_StrictRequest):
-    content: str = Field(min_length=1, max_length=8000, pattern=r".*\S.*")
+    content: str = Field(
+        min_length=1,
+        max_length=8000,
+        pattern=r".*\S.*",
+        json_schema_extra=_WRITE_ONLY,
+    )
 
 
 class MemoryCorrectionRequest(_StrictRequest):
-    content: str = Field(min_length=1, max_length=8000, pattern=r".*\S.*")
+    content: str = Field(
+        min_length=1,
+        max_length=8000,
+        pattern=r".*\S.*",
+        json_schema_extra=_WRITE_ONLY,
+    )
 
 
 class ShareGrantCreateRequest(_StrictRequest):
-    grantee_user_id: str = Field(min_length=1, max_length=128)
-    purpose: str = Field(min_length=1, max_length=256)
-    expires_at: datetime | None = None
+    grantee_user_id: str = Field(
+        min_length=1, max_length=128, json_schema_extra=_WRITE_ONLY
+    )
+    purpose: str = Field(
+        min_length=1, max_length=256, json_schema_extra=_WRITE_ONLY
+    )
+    expires_at: datetime | None = Field(
+        default=None, json_schema_extra=_WRITE_ONLY
+    )
 
     @field_validator("expires_at")
     @classmethod
@@ -54,78 +83,78 @@ class ShareGrantCreateRequest(_StrictRequest):
         return value.astimezone(UTC)
 
 
-class MemoryProposalResponse(BaseModel):
-    proposal_id: str
-    root_proposal_id: str
-    previous_proposal_id: str | None
-    version: int
-    owner_user_id: str
-    course_id: str
-    diagnosis_id: str
-    explanation_check_id: str
+class MemoryProposal(BaseModel):
+    proposal_id: str = Field(json_schema_extra=_READ_ONLY)
+    root_proposal_id: str = Field(json_schema_extra=_READ_ONLY)
+    previous_proposal_id: str | None = Field(json_schema_extra=_READ_ONLY)
+    version: int = Field(json_schema_extra=_READ_ONLY)
+    owner_user_id: str = Field(json_schema_extra=_READ_ONLY)
+    course_id: str = Field(json_schema_extra=_READ_ONLY)
+    diagnosis_id: str = Field(json_schema_extra=_READ_ONLY)
+    explanation_check_id: str = Field(json_schema_extra=_READ_ONLY)
     content: str
     concept_ids: tuple[str, ...]
     confidence: float
-    status: str
-    created_at: datetime
-    expires_at: datetime
-    request_id: str
+    status: str = Field(json_schema_extra=_READ_ONLY)
+    created_at: datetime = Field(json_schema_extra=_READ_ONLY)
+    expires_at: datetime = Field(json_schema_extra=_READ_ONLY)
+    request_id: str = Field(json_schema_extra=_READ_ONLY)
 
 
-class LearningMemoryResponse(BaseModel):
-    memory_id: str
-    logical_memory_id: str
-    previous_version_id: str | None
-    version: int
-    owner_user_id: str
-    course_id: str
+class LearningMemory(BaseModel):
+    memory_id: str = Field(json_schema_extra=_READ_ONLY)
+    logical_memory_id: str = Field(json_schema_extra=_READ_ONLY)
+    previous_version_id: str | None = Field(json_schema_extra=_READ_ONLY)
+    version: int = Field(json_schema_extra=_READ_ONLY)
+    owner_user_id: str = Field(json_schema_extra=_READ_ONLY)
+    course_id: str = Field(json_schema_extra=_READ_ONLY)
     memory_type: str
     visibility: str
     content: str | None
     concept_ids: tuple[str, ...]
-    source_diagnosis_id: str
+    source_diagnosis_id: str = Field(json_schema_extra=_READ_ONLY)
     confidence: float
     allowed_purposes: tuple[str, ...]
-    status: str
-    created_at: datetime
-    updated_at: datetime
+    status: str = Field(json_schema_extra=_READ_ONLY)
+    created_at: datetime = Field(json_schema_extra=_READ_ONLY)
+    updated_at: datetime = Field(json_schema_extra=_READ_ONLY)
     expires_at: datetime | None
-    request_id: str
+    request_id: str = Field(json_schema_extra=_READ_ONLY)
 
 
-class ShareGrantResponse(BaseModel):
-    grant_id: str
-    owner_user_id: str
-    course_id: str
-    resource_type: str
-    resource_id: str
+class ShareGrant(BaseModel):
+    grant_id: str = Field(json_schema_extra=_READ_ONLY)
+    owner_user_id: str = Field(json_schema_extra=_READ_ONLY)
+    course_id: str = Field(json_schema_extra=_READ_ONLY)
+    resource_type: str = Field(json_schema_extra=_READ_ONLY)
+    resource_id: str = Field(json_schema_extra=_READ_ONLY)
     grantee_user_id: str
     purpose: str
-    status: str
-    created_at: datetime
+    status: str = Field(json_schema_extra=_READ_ONLY)
+    created_at: datetime = Field(json_schema_extra=_READ_ONLY)
     expires_at: datetime | None
-    revoked_at: datetime | None
-    request_id: str
+    revoked_at: datetime | None = Field(json_schema_extra=_READ_ONLY)
+    request_id: str = Field(json_schema_extra=_READ_ONLY)
 
 
-class DeletionReceiptResponse(BaseModel):
-    deletion_id: str
-    memory_id: str
-    owner_user_id: str
-    course_id: str
-    status: str
-    requested_at: datetime
-    completed_at: datetime | None
-    attempts: int
-    index_cleared: bool
-    cache_cleared: bool
-    model_references_cleared: bool
-    reverse_lookup_absent: bool
-    error_code: str | None
-    request_id: str
+class DeletionReceipt(BaseModel):
+    deletion_id: str = Field(json_schema_extra=_READ_ONLY)
+    memory_id: str = Field(json_schema_extra=_READ_ONLY)
+    owner_user_id: str = Field(json_schema_extra=_READ_ONLY)
+    course_id: str = Field(json_schema_extra=_READ_ONLY)
+    status: str = Field(json_schema_extra=_READ_ONLY)
+    requested_at: datetime = Field(json_schema_extra=_READ_ONLY)
+    completed_at: datetime | None = Field(json_schema_extra=_READ_ONLY)
+    attempts: int = Field(json_schema_extra=_READ_ONLY)
+    index_cleared: bool = Field(json_schema_extra=_READ_ONLY)
+    cache_cleared: bool = Field(json_schema_extra=_READ_ONLY)
+    model_references_cleared: bool = Field(json_schema_extra=_READ_ONLY)
+    reverse_lookup_absent: bool = Field(json_schema_extra=_READ_ONLY)
+    error_code: str | None = Field(json_schema_extra=_READ_ONLY)
+    request_id: str = Field(json_schema_extra=_READ_ONLY)
 
 
-class DiagnosisSummaryResponse(BaseModel):
+class DiagnosisSummary(BaseModel):
     diagnosis_id: str
     owner_user_id: str
     course_id: str
@@ -135,8 +164,8 @@ class DiagnosisSummaryResponse(BaseModel):
     confidence: float
 
 
-def _proposal(item: MemoryProposal) -> MemoryProposalResponse:
-    return MemoryProposalResponse(
+def _proposal(item: DomainMemoryProposal) -> MemoryProposal:
+    return MemoryProposal(
         proposal_id=item.proposal_id,
         root_proposal_id=item.root_proposal_id,
         previous_proposal_id=item.previous_proposal_id,
@@ -155,8 +184,8 @@ def _proposal(item: MemoryProposal) -> MemoryProposalResponse:
     )
 
 
-def _memory(item: LearningMemory) -> LearningMemoryResponse:
-    return LearningMemoryResponse(
+def _memory(item: DomainLearningMemory) -> LearningMemory:
+    return LearningMemory(
         memory_id=item.memory_id,
         logical_memory_id=item.logical_memory_id,
         previous_version_id=item.previous_version_id,
@@ -178,8 +207,8 @@ def _memory(item: LearningMemory) -> LearningMemoryResponse:
     )
 
 
-def _grant(item: ShareGrant) -> ShareGrantResponse:
-    return ShareGrantResponse(
+def _grant(item: DomainShareGrant) -> ShareGrant:
+    return ShareGrant(
         grant_id=item.grant_id,
         owner_user_id=item.owner_user_id,
         course_id=item.course_id,
@@ -195,12 +224,12 @@ def _grant(item: ShareGrant) -> ShareGrantResponse:
     )
 
 
-def _receipt(item: DeletionReceipt) -> DeletionReceiptResponse:
-    return DeletionReceiptResponse(**item.public_dict())
+def _receipt(item: DomainDeletionReceipt) -> DeletionReceipt:
+    return DeletionReceipt(**item.public_dict())
 
 
-def _summary(item: DiagnosisSummary) -> DiagnosisSummaryResponse:
-    return DiagnosisSummaryResponse(
+def _summary(item: DomainDiagnosisSummary) -> DiagnosisSummary:
+    return DiagnosisSummary(
         diagnosis_id=item.diagnosis_id,
         owner_user_id=item.owner_user_id,
         course_id=item.course_id,
@@ -226,17 +255,21 @@ def create_memories_router(
     deletion: DeletionService,
     authenticator: Authenticator,
 ) -> APIRouter:
-    router = APIRouter()
+    router = APIRouter(
+        tags=["memories"],
+        dependencies=[Security(_BEARER)],
+        responses=_ERROR_RESPONSES,
+    )
 
     @router.get(
         "/me/memory-proposals",
-        response_model=list[MemoryProposalResponse],
+        response_model=list[MemoryProposal],
         operation_id="listMyMemoryProposals",
     )
     def list_my_proposals(
         request: Request,
         course_id: CourseIdQuery,
-        authorization: str | None = Header(default=None),
+        authorization: str | None = Header(default=None, include_in_schema=False),
     ):
         actor = _actor(authenticator, authorization)
         return [
@@ -248,13 +281,14 @@ def create_memories_router(
 
     @router.post(
         "/memory-proposals/{proposal_id}/accept",
-        response_model=LearningMemoryResponse,
+        response_model=LearningMemory,
         operation_id="acceptMemoryProposal",
     )
     def accept_proposal(
         proposal_id: BoundedPathId,
         request: Request,
-        authorization: str | None = Header(default=None),
+        _idempotency_key: IdempotencyKeyHeader,
+        authorization: str | None = Header(default=None, include_in_schema=False),
     ):
         try:
             actor = _actor(authenticator, authorization)
@@ -268,13 +302,14 @@ def create_memories_router(
 
     @router.post(
         "/memory-proposals/{proposal_id}/reject",
-        response_model=MemoryProposalResponse,
+        response_model=MemoryProposal,
         operation_id="rejectMemoryProposal",
     )
     def reject_proposal(
         proposal_id: BoundedPathId,
         request: Request,
-        authorization: str | None = Header(default=None),
+        _idempotency_key: IdempotencyKeyHeader,
+        authorization: str | None = Header(default=None, include_in_schema=False),
     ):
         try:
             actor = _actor(authenticator, authorization)
@@ -288,14 +323,15 @@ def create_memories_router(
 
     @router.patch(
         "/memory-proposals/{proposal_id}",
-        response_model=MemoryProposalResponse,
+        response_model=MemoryProposal,
         operation_id="correctMemoryProposal",
     )
     def correct_proposal(
         proposal_id: BoundedPathId,
         payload: ProposalCorrectionRequest,
         request: Request,
-        authorization: str | None = Header(default=None),
+        _idempotency_key: IdempotencyKeyHeader,
+        authorization: str | None = Header(default=None, include_in_schema=False),
     ):
         try:
             actor = _actor(authenticator, authorization)
@@ -312,7 +348,7 @@ def create_memories_router(
 
     @router.get(
         "/me/memories",
-        response_model=list[LearningMemoryResponse],
+        response_model=list[LearningMemory],
         operation_id="listMyLearningMemories",
     )
     def list_my_memories(
@@ -320,7 +356,7 @@ def create_memories_router(
         course_id: CourseIdQuery,
         query: str | None = Query(default=None),
         purpose: str = Query(default="learning_support"),
-        authorization: str | None = Header(default=None),
+        authorization: str | None = Header(default=None, include_in_schema=False),
     ):
         actor = _actor(authenticator, authorization)
         values = (
@@ -340,14 +376,15 @@ def create_memories_router(
 
     @router.patch(
         "/memories/{memory_id}",
-        response_model=LearningMemoryResponse,
+        response_model=LearningMemory,
         operation_id="correctLearningMemory",
     )
     def correct_memory(
         memory_id: BoundedPathId,
         payload: MemoryCorrectionRequest,
         request: Request,
-        authorization: str | None = Header(default=None),
+        _idempotency_key: IdempotencyKeyHeader,
+        authorization: str | None = Header(default=None, include_in_schema=False),
     ):
         try:
             actor = _actor(authenticator, authorization)
@@ -364,14 +401,15 @@ def create_memories_router(
 
     @router.delete(
         "/memories/{memory_id}",
-        response_model=DeletionReceiptResponse,
+        response_model=DeletionReceipt,
         status_code=202,
         operation_id="deleteLearningMemory",
     )
     def delete_memory(
         memory_id: BoundedPathId,
         request: Request,
-        authorization: str | None = Header(default=None),
+        _idempotency_key: IdempotencyKeyHeader,
+        authorization: str | None = Header(default=None, include_in_schema=False),
     ):
         actor = _actor(authenticator, authorization)
         return _receipt(
@@ -382,13 +420,13 @@ def create_memories_router(
 
     @router.get(
         "/memory-deletions/{deletion_id}",
-        response_model=DeletionReceiptResponse,
+        response_model=DeletionReceipt,
         operation_id="getMemoryDeletion",
     )
     def get_deletion(
         deletion_id: BoundedPathId,
         request: Request,
-        authorization: str | None = Header(default=None),
+        authorization: str | None = Header(default=None, include_in_schema=False),
     ):
         actor = _actor(authenticator, authorization)
         return _receipt(
@@ -399,13 +437,14 @@ def create_memories_router(
 
     @router.post(
         "/memory-deletions/{deletion_id}/retry",
-        response_model=DeletionReceiptResponse,
+        response_model=DeletionReceipt,
         operation_id="retryMemoryDeletion",
     )
     def retry_deletion(
         deletion_id: BoundedPathId,
         request: Request,
-        authorization: str | None = Header(default=None),
+        _idempotency_key: IdempotencyKeyHeader,
+        authorization: str | None = Header(default=None, include_in_schema=False),
     ):
         actor = _actor(authenticator, authorization)
         return _receipt(
@@ -414,7 +453,7 @@ def create_memories_router(
 
     @router.post(
         "/diagnoses/{diagnosis_id}/share-grants",
-        response_model=ShareGrantResponse,
+        response_model=ShareGrant,
         status_code=201,
         operation_id="createDiagnosisShareGrant",
     )
@@ -422,7 +461,8 @@ def create_memories_router(
         diagnosis_id: BoundedPathId,
         payload: ShareGrantCreateRequest,
         request: Request,
-        authorization: str | None = Header(default=None),
+        _idempotency_key: IdempotencyKeyHeader,
+        authorization: str | None = Header(default=None, include_in_schema=False),
     ):
         actor = _actor(authenticator, authorization)
         return _grant(
@@ -438,13 +478,13 @@ def create_memories_router(
 
     @router.get(
         "/me/share-grants",
-        response_model=list[ShareGrantResponse],
+        response_model=list[ShareGrant],
         operation_id="listMyShareGrants",
     )
     def list_share_grants(
         request: Request,
         course_id: CourseIdQuery,
-        authorization: str | None = Header(default=None),
+        authorization: str | None = Header(default=None, include_in_schema=False),
     ):
         actor = _actor(authenticator, authorization)
         return [
@@ -456,13 +496,13 @@ def create_memories_router(
 
     @router.get(
         "/share-grants/{grant_id}",
-        response_model=ShareGrantResponse,
+        response_model=ShareGrant,
         operation_id="getShareGrant",
     )
     def get_share_grant(
         grant_id: BoundedPathId,
         request: Request,
-        authorization: str | None = Header(default=None),
+        authorization: str | None = Header(default=None, include_in_schema=False),
     ):
         actor = _actor(authenticator, authorization)
         return _grant(
@@ -473,13 +513,14 @@ def create_memories_router(
 
     @router.delete(
         "/share-grants/{grant_id}",
-        response_model=ShareGrantResponse,
+        response_model=ShareGrant,
         operation_id="revokeShareGrant",
     )
     def revoke_share_grant(
         grant_id: BoundedPathId,
         request: Request,
-        authorization: str | None = Header(default=None),
+        _idempotency_key: IdempotencyKeyHeader,
+        authorization: str | None = Header(default=None, include_in_schema=False),
     ):
         actor = _actor(authenticator, authorization)
         return _grant(
@@ -490,13 +531,13 @@ def create_memories_router(
 
     @router.get(
         "/share-grants/{grant_id}/diagnosis-summary",
-        response_model=DiagnosisSummaryResponse,
+        response_model=DiagnosisSummary,
         operation_id="getSharedDiagnosisSummary",
     )
     def get_shared_summary(
         grant_id: BoundedPathId,
         request: Request,
-        authorization: str | None = Header(default=None),
+        authorization: str | None = Header(default=None, include_in_schema=False),
     ):
         actor = _actor(authenticator, authorization)
         return _summary(

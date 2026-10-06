@@ -556,6 +556,252 @@ paths:
         '409': {$ref: '#/components/responses/DiagnosticConflict'}
         '422': {$ref: '#/components/responses/InvalidRequest'}
         '503': {$ref: '#/components/responses/DiagnosticUnavailable'}
+  /me/memory-proposals:
+    get:
+      operationId: listMyMemoryProposals
+      security: [{bearerAuth: []}]
+      parameters: [{$ref: '#/components/parameters/CourseIdQuery'}]
+      responses:
+        '200': {description: Current student's course-scoped proposals., content: {application/json: {schema: {type: array, items: {$ref: '#/components/schemas/MemoryProposal'}}}}}
+        '401': {$ref: '#/components/responses/AuthenticationFailed'}
+        '404': {$ref: '#/components/responses/NotAvailable'}
+        '409': {$ref: '#/components/responses/Conflict'}
+        '422': {$ref: '#/components/responses/InvalidRequest'}
+        '503': {$ref: '#/components/responses/PersistenceUnavailable'}
+  /memory-proposals/{proposal_id}/accept:
+    post:
+      operationId: acceptMemoryProposal
+      security: [{bearerAuth: []}]
+      parameters:
+      - $ref: '#/components/parameters/ProposalId'
+      - $ref: '#/components/parameters/IdempotencyKey'
+      responses:
+        '200': {description: The one active memory created by student acceptance., content: {application/json: {schema: {$ref: '#/components/schemas/LearningMemory'}}}}
+        '401': {$ref: '#/components/responses/AuthenticationFailed'}
+        '404': {$ref: '#/components/responses/NotAvailable'}
+        '409': {$ref: '#/components/responses/Conflict'}
+        '422': {$ref: '#/components/responses/InvalidRequest'}
+        '503': {$ref: '#/components/responses/PersistenceUnavailable'}
+  /memory-proposals/{proposal_id}/reject:
+    post:
+      operationId: rejectMemoryProposal
+      security: [{bearerAuth: []}]
+      parameters:
+      - $ref: '#/components/parameters/ProposalId'
+      - $ref: '#/components/parameters/IdempotencyKey'
+      responses:
+        '200': {description: Rejected proposal., content: {application/json: {schema: {$ref: '#/components/schemas/MemoryProposal'}}}}
+        '401': {$ref: '#/components/responses/AuthenticationFailed'}
+        '404': {$ref: '#/components/responses/NotAvailable'}
+        '409': {$ref: '#/components/responses/Conflict'}
+        '422': {$ref: '#/components/responses/InvalidRequest'}
+        '503': {$ref: '#/components/responses/PersistenceUnavailable'}
+  /memory-proposals/{proposal_id}:
+    patch:
+      operationId: correctMemoryProposal
+      security: [{bearerAuth: []}]
+      parameters:
+      - $ref: '#/components/parameters/ProposalId'
+      - $ref: '#/components/parameters/IdempotencyKey'
+      requestBody: {required: true, content: {application/json: {schema: {$ref: '#/components/schemas/ProposalCorrectionRequest'}}}}
+      responses:
+        '200': {description: New immutable proposal version., content: {application/json: {schema: {$ref: '#/components/schemas/MemoryProposal'}}}}
+        '401': {$ref: '#/components/responses/AuthenticationFailed'}
+        '404': {$ref: '#/components/responses/NotAvailable'}
+        '409': {$ref: '#/components/responses/Conflict'}
+        '422': {$ref: '#/components/responses/InvalidRequest'}
+        '503': {$ref: '#/components/responses/PersistenceUnavailable'}
+  /me/memories:
+    get:
+      operationId: listMyLearningMemories
+      security: [{bearerAuth: []}]
+      parameters:
+      - $ref: '#/components/parameters/CourseIdQuery'
+      - {name: query, in: query, required: false, schema: {type: [string, 'null']}}
+      - {name: purpose, in: query, required: false, schema: {type: string, default: learning_support}}
+      responses:
+        '200': {description: Authorized active memories for the current student and course., content: {application/json: {schema: {type: array, items: {$ref: '#/components/schemas/LearningMemory'}}}}}
+        '401': {$ref: '#/components/responses/AuthenticationFailed'}
+        '404': {$ref: '#/components/responses/NotAvailable'}
+        '409': {$ref: '#/components/responses/Conflict'}
+        '422': {$ref: '#/components/responses/InvalidRequest'}
+        '503': {$ref: '#/components/responses/PersistenceUnavailable'}
+  /memories/{memory_id}:
+    patch:
+      operationId: correctLearningMemory
+      security: [{bearerAuth: []}]
+      parameters:
+      - $ref: '#/components/parameters/MemoryId'
+      - $ref: '#/components/parameters/IdempotencyKey'
+      requestBody: {required: true, content: {application/json: {schema: {$ref: '#/components/schemas/MemoryCorrectionRequest'}}}}
+      responses:
+        '200': {description: New active immutable memory version., content: {application/json: {schema: {$ref: '#/components/schemas/LearningMemory'}}}}
+        '401': {$ref: '#/components/responses/AuthenticationFailed'}
+        '404': {$ref: '#/components/responses/NotAvailable'}
+        '409': {$ref: '#/components/responses/Conflict'}
+        '422': {$ref: '#/components/responses/InvalidRequest'}
+        '503': {$ref: '#/components/responses/PersistenceUnavailable'}
+    delete:
+      operationId: deleteLearningMemory
+      security: [{bearerAuth: []}]
+      parameters:
+      - $ref: '#/components/parameters/MemoryId'
+      - $ref: '#/components/parameters/IdempotencyKey'
+      responses:
+        '202': {description: Deletion receipt; pending is already non-retrievable., content: {application/json: {schema: {$ref: '#/components/schemas/DeletionReceipt'}}}}
+        '401': {$ref: '#/components/responses/AuthenticationFailed'}
+        '404': {$ref: '#/components/responses/NotAvailable'}
+        '409': {$ref: '#/components/responses/Conflict'}
+        '422': {$ref: '#/components/responses/InvalidRequest'}
+        '503': {$ref: '#/components/responses/PersistenceUnavailable'}
+  /memory-deletions/{deletion_id}:
+    get:
+      operationId: getMemoryDeletion
+      security: [{bearerAuth: []}]
+      parameters: [{$ref: '#/components/parameters/DeletionId'}]
+      responses:
+        '200': {description: Owner-visible deletion status without private text., content: {application/json: {schema: {$ref: '#/components/schemas/DeletionReceipt'}}}}
+        '401': {$ref: '#/components/responses/AuthenticationFailed'}
+        '404': {$ref: '#/components/responses/NotAvailable'}
+        '409': {$ref: '#/components/responses/Conflict'}
+        '422': {$ref: '#/components/responses/InvalidRequest'}
+        '503': {$ref: '#/components/responses/PersistenceUnavailable'}
+  /memory-deletions/{deletion_id}/retry:
+    post:
+      operationId: retryMemoryDeletion
+      security: [{bearerAuth: []}]
+      parameters:
+      - $ref: '#/components/parameters/DeletionId'
+      - $ref: '#/components/parameters/IdempotencyKey'
+      responses:
+        '200': {description: Idempotent compensation result., content: {application/json: {schema: {$ref: '#/components/schemas/DeletionReceipt'}}}}
+        '401': {$ref: '#/components/responses/AuthenticationFailed'}
+        '404': {$ref: '#/components/responses/NotAvailable'}
+        '409': {$ref: '#/components/responses/Conflict'}
+        '422': {$ref: '#/components/responses/InvalidRequest'}
+        '503': {$ref: '#/components/responses/PersistenceUnavailable'}
+  /diagnoses/{diagnosis_id}/share-grants:
+    post:
+      operationId: createDiagnosisShareGrant
+      security: [{bearerAuth: []}]
+      parameters:
+      - $ref: '#/components/parameters/DiagnosisId'
+      - $ref: '#/components/parameters/IdempotencyKey'
+      requestBody: {required: true, content: {application/json: {schema: {$ref: '#/components/schemas/ShareGrantCreateRequest'}}}}
+      responses:
+        '201': {description: Exact diagnosis-summary grant., content: {application/json: {schema: {$ref: '#/components/schemas/ShareGrant'}}}}
+        '401': {$ref: '#/components/responses/AuthenticationFailed'}
+        '404': {$ref: '#/components/responses/NotAvailable'}
+        '409': {$ref: '#/components/responses/Conflict'}
+        '422': {$ref: '#/components/responses/InvalidRequest'}
+        '503': {$ref: '#/components/responses/PersistenceUnavailable'}
+  /me/share-grants:
+    get:
+      operationId: listMyShareGrants
+      security: [{bearerAuth: []}]
+      parameters: [{$ref: '#/components/parameters/CourseIdQuery'}]
+      responses:
+        '200': {description: Current student's exact grants., content: {application/json: {schema: {type: array, items: {$ref: '#/components/schemas/ShareGrant'}}}}}
+        '401': {$ref: '#/components/responses/AuthenticationFailed'}
+        '404': {$ref: '#/components/responses/NotAvailable'}
+        '409': {$ref: '#/components/responses/Conflict'}
+        '422': {$ref: '#/components/responses/InvalidRequest'}
+        '503': {$ref: '#/components/responses/PersistenceUnavailable'}
+  /share-grants/{grant_id}:
+    get:
+      operationId: getShareGrant
+      security: [{bearerAuth: []}]
+      parameters: [{$ref: '#/components/parameters/GrantId'}]
+      responses:
+        '200': {description: Owner-visible grant metadata., content: {application/json: {schema: {$ref: '#/components/schemas/ShareGrant'}}}}
+        '401': {$ref: '#/components/responses/AuthenticationFailed'}
+        '404': {$ref: '#/components/responses/NotAvailable'}
+        '409': {$ref: '#/components/responses/Conflict'}
+        '422': {$ref: '#/components/responses/InvalidRequest'}
+        '503': {$ref: '#/components/responses/PersistenceUnavailable'}
+    delete:
+      operationId: revokeShareGrant
+      security: [{bearerAuth: []}]
+      parameters:
+      - $ref: '#/components/parameters/GrantId'
+      - $ref: '#/components/parameters/IdempotencyKey'
+      responses:
+        '200': {description: Revoked or already-terminal grant., content: {application/json: {schema: {$ref: '#/components/schemas/ShareGrant'}}}}
+        '401': {$ref: '#/components/responses/AuthenticationFailed'}
+        '404': {$ref: '#/components/responses/NotAvailable'}
+        '409': {$ref: '#/components/responses/Conflict'}
+        '422': {$ref: '#/components/responses/InvalidRequest'}
+        '503': {$ref: '#/components/responses/PersistenceUnavailable'}
+  /share-grants/{grant_id}/diagnosis-summary:
+    get:
+      operationId: getSharedDiagnosisSummary
+      security: [{bearerAuth: []}]
+      parameters: [{$ref: '#/components/parameters/GrantId'}]
+      responses:
+        '200': {description: Exact active granted diagnosis summary; never a private memory., content: {application/json: {schema: {$ref: '#/components/schemas/DiagnosisSummary'}}}}
+        '401': {$ref: '#/components/responses/AuthenticationFailed'}
+        '404': {$ref: '#/components/responses/NotAvailable'}
+        '409': {$ref: '#/components/responses/Conflict'}
+        '422': {$ref: '#/components/responses/InvalidRequest'}
+        '503': {$ref: '#/components/responses/PersistenceUnavailable'}
+  /teacher/courses/{course_id}/analytics:
+    get:
+      operationId: getTeacherCourseAnalytics
+      x-contract-status: frozen-for-wave-3
+      security: [{bearerAuth: []}]
+      parameters:
+      - $ref: '#/components/parameters/CourseId'
+      - $ref: '#/components/parameters/TeacherConceptIdFilter'
+      - $ref: '#/components/parameters/TeacherExerciseIdFilter'
+      - $ref: '#/components/parameters/TeacherStartAtFilter'
+      - $ref: '#/components/parameters/TeacherEndAtFilter'
+      responses:
+        '200':
+          description: Privacy-preserving course analytics or a suppressed result below five distinct students.
+          content:
+            application/json:
+              schema:
+                oneOf:
+                - $ref: '#/components/schemas/TeacherAnalyticsAvailable'
+                - $ref: '#/components/schemas/TeacherAnalyticsSuppressed'
+                discriminator: {propertyName: status}
+        '401': {$ref: '#/components/responses/AuthenticationFailed'}
+        '404': {$ref: '#/components/responses/NotAvailable'}
+        '409': {$ref: '#/components/responses/Conflict'}
+        '422': {$ref: '#/components/responses/InvalidRequest'}
+        '503': {$ref: '#/components/responses/PersistenceUnavailable'}
+  /teacher/courses/{course_id}/review-queue:
+    get:
+      operationId: listTeacherReviewQueue
+      x-contract-status: frozen-for-wave-3
+      security: [{bearerAuth: []}]
+      parameters:
+      - $ref: '#/components/parameters/CourseId'
+      - $ref: '#/components/parameters/TeacherConceptIdFilter'
+      - $ref: '#/components/parameters/TeacherExerciseIdFilter'
+      - $ref: '#/components/parameters/TeacherStartAtFilter'
+      - $ref: '#/components/parameters/TeacherEndAtFilter'
+      responses:
+        '200': {description: De-identified diagnoses awaiting teacher review., content: {application/json: {schema: {$ref: '#/components/schemas/TeacherReviewQueue'}}}}
+        '401': {$ref: '#/components/responses/AuthenticationFailed'}
+        '404': {$ref: '#/components/responses/NotAvailable'}
+        '409': {$ref: '#/components/responses/Conflict'}
+        '422': {$ref: '#/components/responses/InvalidRequest'}
+        '503': {$ref: '#/components/responses/PersistenceUnavailable'}
+  /teacher/diagnoses/{diagnosis_id}/review:
+    post:
+      operationId: reviewTeacherDiagnosis
+      x-contract-status: frozen-for-wave-3
+      security: [{bearerAuth: []}]
+      parameters: [{$ref: '#/components/parameters/DiagnosisId'}]
+      requestBody: {required: true, content: {application/json: {schema: {$ref: '#/components/schemas/TeacherDiagnosisReviewRequest'}}}}
+      responses:
+        '200': {description: Teacher review metadata; this operation never mutates student learning memory., content: {application/json: {schema: {$ref: '#/components/schemas/TeacherDiagnosisReview'}}}}
+        '401': {$ref: '#/components/responses/AuthenticationFailed'}
+        '404': {$ref: '#/components/responses/NotAvailable'}
+        '409': {$ref: '#/components/responses/Conflict'}
+        '422': {$ref: '#/components/responses/InvalidRequest'}
+        '503': {$ref: '#/components/responses/PersistenceUnavailable'}
 components:
   securitySchemes:
     bearerAuth:
@@ -1427,6 +1673,200 @@ components:
         memory_proposal_eligible: {type: boolean, readOnly: true}
         created_at: {type: string, format: date-time}
         request_id: {type: string}
+    ProposalCorrectionRequest:
+      type: object
+      additionalProperties: false
+      required: [content]
+      properties:
+        content: {type: string, minLength: 1, maxLength: 8000, pattern: '.*\S.*', writeOnly: true}
+    MemoryCorrectionRequest:
+      type: object
+      additionalProperties: false
+      required: [content]
+      properties:
+        content: {type: string, minLength: 1, maxLength: 8000, pattern: '.*\S.*', writeOnly: true}
+    ShareGrantCreateRequest:
+      type: object
+      additionalProperties: false
+      required: [grantee_user_id, purpose]
+      properties:
+        grantee_user_id: {type: string, minLength: 1, maxLength: 128, writeOnly: true}
+        purpose: {type: string, minLength: 1, maxLength: 256, writeOnly: true}
+        expires_at: {type: [string, 'null'], format: date-time, writeOnly: true}
+    MemoryProposal:
+      type: object
+      additionalProperties: false
+      required: [proposal_id, root_proposal_id, previous_proposal_id, version, owner_user_id, course_id, diagnosis_id, explanation_check_id, content, concept_ids, confidence, status, created_at, expires_at, request_id]
+      properties:
+        proposal_id: {type: string, readOnly: true}
+        root_proposal_id: {type: string, readOnly: true}
+        previous_proposal_id: {type: [string, 'null'], readOnly: true}
+        version: {type: integer, minimum: 1, readOnly: true}
+        owner_user_id: {type: string, readOnly: true}
+        course_id: {type: string, readOnly: true}
+        diagnosis_id: {type: string, readOnly: true}
+        explanation_check_id: {type: string, readOnly: true}
+        content: {type: string}
+        concept_ids: {type: array, items: {type: string}}
+        confidence: {type: number, minimum: 0, maximum: 1}
+        status: {type: string, enum: [pending, accepted, rejected, superseded, expired], readOnly: true}
+        created_at: {type: string, format: date-time, readOnly: true}
+        expires_at: {type: string, format: date-time, readOnly: true}
+        request_id: {type: string, readOnly: true}
+    LearningMemory:
+      type: object
+      additionalProperties: false
+      required: [memory_id, logical_memory_id, previous_version_id, version, owner_user_id, course_id, memory_type, visibility, content, concept_ids, source_diagnosis_id, confidence, allowed_purposes, status, created_at, updated_at, expires_at, request_id]
+      properties:
+        memory_id: {type: string, readOnly: true}
+        logical_memory_id: {type: string, readOnly: true}
+        previous_version_id: {type: [string, 'null'], readOnly: true}
+        version: {type: integer, minimum: 1, readOnly: true}
+        owner_user_id: {type: string, readOnly: true}
+        course_id: {type: string, readOnly: true}
+        memory_type: {type: string}
+        visibility: {type: string, const: private}
+        content: {type: [string, 'null']}
+        concept_ids: {type: array, items: {type: string}}
+        source_diagnosis_id: {type: string, readOnly: true}
+        confidence: {type: number, minimum: 0, maximum: 1}
+        allowed_purposes: {type: array, items: {type: string}}
+        status: {type: string, enum: [active, superseded, expired, deletion_pending, deleted], readOnly: true}
+        created_at: {type: string, format: date-time, readOnly: true}
+        updated_at: {type: string, format: date-time, readOnly: true}
+        expires_at: {type: [string, 'null'], format: date-time}
+        request_id: {type: string, readOnly: true}
+    ShareGrant:
+      type: object
+      additionalProperties: false
+      required: [grant_id, owner_user_id, course_id, resource_type, resource_id, grantee_user_id, purpose, status, created_at, expires_at, revoked_at, request_id]
+      properties:
+        grant_id: {type: string, readOnly: true}
+        owner_user_id: {type: string, readOnly: true}
+        course_id: {type: string, readOnly: true}
+        resource_type: {type: string, const: diagnosis_summary, readOnly: true}
+        resource_id: {type: string, readOnly: true}
+        grantee_user_id: {type: string}
+        purpose: {type: string}
+        status: {type: string, enum: [active, revoked, expired], readOnly: true}
+        created_at: {type: string, format: date-time, readOnly: true}
+        expires_at: {type: [string, 'null'], format: date-time}
+        revoked_at: {type: [string, 'null'], format: date-time, readOnly: true}
+        request_id: {type: string, readOnly: true}
+    DeletionReceipt:
+      type: object
+      additionalProperties: false
+      required: [deletion_id, memory_id, owner_user_id, course_id, status, requested_at, completed_at, attempts, index_cleared, cache_cleared, model_references_cleared, reverse_lookup_absent, error_code, request_id]
+      properties:
+        deletion_id: {type: string, readOnly: true}
+        memory_id: {type: string, readOnly: true}
+        owner_user_id: {type: string, readOnly: true}
+        course_id: {type: string, readOnly: true}
+        status: {type: string, enum: [deletion_pending, deleted], readOnly: true}
+        requested_at: {type: string, format: date-time, readOnly: true}
+        completed_at: {type: [string, 'null'], format: date-time, readOnly: true}
+        attempts: {type: integer, minimum: 0, readOnly: true}
+        index_cleared: {type: boolean, readOnly: true}
+        cache_cleared: {type: boolean, readOnly: true}
+        model_references_cleared: {type: boolean, readOnly: true}
+        reverse_lookup_absent: {type: boolean, readOnly: true}
+        error_code: {type: [string, 'null'], readOnly: true}
+        request_id: {type: string, readOnly: true}
+    DiagnosisSummary:
+      type: object
+      additionalProperties: false
+      required: [diagnosis_id, owner_user_id, course_id, category, concept_ids, root_cause, confidence]
+      properties:
+        diagnosis_id: {type: string, readOnly: true}
+        owner_user_id: {type: string, readOnly: true}
+        course_id: {type: string, readOnly: true}
+        category: {type: string, readOnly: true}
+        concept_ids: {type: array, items: {type: string}, readOnly: true}
+        root_cause: {type: string, readOnly: true}
+        confidence: {type: number, minimum: 0, maximum: 1, readOnly: true}
+    TeacherAnalyticsFilters:
+      type: object
+      additionalProperties: false
+      required: [concept_id, exercise_id, start_at, end_at]
+      properties:
+        concept_id: {type: [string, 'null']}
+        exercise_id: {type: [string, 'null']}
+        start_at: {type: [string, 'null'], format: date-time}
+        end_at: {type: [string, 'null'], format: date-time}
+    TeacherAnalyticsGroup:
+      type: object
+      additionalProperties: false
+      required: [concept_id, exercise_id, category, sample_size, diagnosis_count, independent_repair_count]
+      properties:
+        concept_id: {type: string}
+        exercise_id: {type: [string, 'null']}
+        category: {type: string}
+        sample_size: {type: integer, minimum: 5}
+        diagnosis_count: {type: integer, minimum: 0}
+        independent_repair_count: {type: integer, minimum: 0}
+    TeacherAnalyticsAvailable:
+      type: object
+      additionalProperties: false
+      required: [status, course_id, filters, minimum_sample_size, sample_size, groups]
+      properties:
+        status: {type: string, const: available}
+        course_id: {type: string}
+        filters: {$ref: '#/components/schemas/TeacherAnalyticsFilters'}
+        minimum_sample_size: {type: integer, const: 5}
+        sample_size: {type: integer, minimum: 5}
+        groups: {type: array, items: {$ref: '#/components/schemas/TeacherAnalyticsGroup'}}
+    TeacherAnalyticsSuppressed:
+      type: object
+      additionalProperties: false
+      required: [status, course_id, filters, minimum_sample_size]
+      properties:
+        status: {type: string, const: insufficient_sample}
+        course_id: {type: string}
+        filters: {$ref: '#/components/schemas/TeacherAnalyticsFilters'}
+        minimum_sample_size: {type: integer, const: 5}
+    TeacherReviewQueueItem:
+      type: object
+      additionalProperties: false
+      required: [queue_event_id, diagnosis_id, submission_id, exercise_id, category, concept_ids, root_cause, evidence_summaries, confidence, review_reason, queued_at]
+      properties:
+        queue_event_id: {type: string}
+        diagnosis_id: {type: string}
+        submission_id: {type: string}
+        exercise_id: {type: string}
+        category: {type: string}
+        concept_ids: {type: array, items: {type: string}}
+        root_cause: {type: string}
+        evidence_summaries: {type: array, items: {type: string}}
+        confidence: {type: number, minimum: 0, maximum: 1}
+        review_reason: {type: string}
+        queued_at: {type: string, format: date-time}
+    TeacherReviewQueue:
+      type: object
+      additionalProperties: false
+      required: [course_id, filters, items]
+      properties:
+        course_id: {type: string}
+        filters: {$ref: '#/components/schemas/TeacherAnalyticsFilters'}
+        items: {type: array, items: {$ref: '#/components/schemas/TeacherReviewQueueItem'}}
+    TeacherDiagnosisReviewRequest:
+      type: object
+      additionalProperties: false
+      required: [decision, reason]
+      properties:
+        decision: {type: string, enum: [confirmed, overturned, insufficient_evidence], writeOnly: true}
+        reason: {type: string, minLength: 1, maxLength: 2000, writeOnly: true}
+    TeacherDiagnosisReview:
+      description: Teacher review metadata only; this does not create, modify, or activate LearningMemory.
+      type: object
+      additionalProperties: false
+      required: [diagnosis_id, course_id, reviewer_user_id, decision, reason, reviewed_at]
+      properties:
+        diagnosis_id: {type: string, readOnly: true}
+        course_id: {type: string, readOnly: true}
+        reviewer_user_id: {type: string, readOnly: true}
+        decision: {type: string, enum: [confirmed, overturned, insufficient_evidence]}
+        reason: {type: string, minLength: 1, maxLength: 2000}
+        reviewed_at: {type: string, format: date-time, readOnly: true}
   parameters:
     CourseId:
       name: course_id
@@ -1470,6 +1910,56 @@ components:
         type: string
         minLength: 1
         maxLength: 128
+    CourseIdQuery:
+      name: course_id
+      in: query
+      required: true
+      schema: {type: string, minLength: 1, maxLength: 128}
+    ProposalId:
+      name: proposal_id
+      in: path
+      required: true
+      schema: {type: string, minLength: 1, maxLength: 128}
+    MemoryId:
+      name: memory_id
+      in: path
+      required: true
+      schema: {type: string, minLength: 1, maxLength: 128}
+    DeletionId:
+      name: deletion_id
+      in: path
+      required: true
+      schema: {type: string, minLength: 1, maxLength: 128}
+    GrantId:
+      name: grant_id
+      in: path
+      required: true
+      schema: {type: string, minLength: 1, maxLength: 128}
+    IdempotencyKey:
+      name: Idempotency-Key
+      in: header
+      required: true
+      schema: {type: string, minLength: 1, maxLength: 128}
+    TeacherConceptIdFilter:
+      name: concept_id
+      in: query
+      required: false
+      schema: {type: [string, 'null']}
+    TeacherExerciseIdFilter:
+      name: exercise_id
+      in: query
+      required: false
+      schema: {type: [string, 'null']}
+    TeacherStartAtFilter:
+      name: start_at
+      in: query
+      required: false
+      schema: {type: [string, 'null'], format: date-time}
+    TeacherEndAtFilter:
+      name: end_at
+      in: query
+      required: false
+      schema: {type: [string, 'null'], format: date-time}
   responses:
     NotAvailable:
       description: 'RESOURCE_NOT_AVAILABLE: unknown, foreign or unauthorized resource.'
