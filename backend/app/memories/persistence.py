@@ -6,7 +6,7 @@ from datetime import UTC, datetime
 from typing import Iterator
 from uuid import uuid4
 
-from sqlalchemy import select
+from sqlalchemy import select, update
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import Session, sessionmaker
 
@@ -320,12 +320,66 @@ class SqlMemoryRepository:
 
     def save_memory(self, memory: LearningMemory) -> LearningMemory:
         session = self.uow.require_session()
-        row = session.get(LearningMemoryRow, memory.memory_id)
-        if row is None:
-            raise MemoryPersistenceError("memory storage operation failed")
-        _set_memory(row, memory)
+        statement = update(LearningMemoryRow).where(
+            LearningMemoryRow.id == memory.memory_id
+        )
+        if memory.status is LearningMemoryStatus.deleted:
+            statement = statement.where(
+                LearningMemoryRow.status != LearningMemoryStatus.deleted.value
+            )
+        elif memory.status is LearningMemoryStatus.deletion_pending:
+            statement = statement.where(
+                LearningMemoryRow.status != LearningMemoryStatus.deleted.value
+            )
+        else:
+            statement = statement.where(
+                LearningMemoryRow.status.notin_(
+                    (
+                        LearningMemoryStatus.deletion_pending.value,
+                        LearningMemoryStatus.deleted.value,
+                    )
+                )
+            )
+        result = session.execute(
+            statement.values(
+                content=memory.content,
+                concept_ids=list(memory.concept_ids),
+                confidence=memory.confidence,
+                allowed_purposes=list(memory.allowed_purposes),
+                status=memory.status.value,
+                updated_at=memory.updated_at,
+                expires_at=memory.expires_at,
+                request_id=memory.request_id,
+            ).execution_options(synchronize_session=False)
+        )
+        if result.rowcount == 0:
+            session.expire_all()
+            row = session.get(LearningMemoryRow, memory.memory_id)
+            if row is None:
+                raise MemoryPersistenceError("memory storage operation failed")
+            return _memory(row)
         session.flush()
         return memory
+
+    def pending_deletions(self) -> tuple[DeletionReceipt, ...]:
+        with self.uow.read_session() as session:
+            rows = session.scalars(
+                select(MemoryDeletionRow)
+                .where(
+                    MemoryDeletionRow.status
+                    == DeletionStatus.deletion_pending.value
+                )
+                .order_by(MemoryDeletionRow.requested_at, MemoryDeletionRow.id)
+            ).all()
+            return tuple(_deletion(row) for row in rows)
+
+    def _required_deletion_row(
+        self, session: Session, deletion_id: str
+    ) -> MemoryDeletionRow:
+        row = session.get(MemoryDeletionRow, deletion_id)
+        if row is None:
+            raise MemoryPersistenceError("memory storage operation failed")
+        return row
 
     def list_memories(
         self, owner_user_id: str, course_id: str
@@ -448,10 +502,30 @@ class SqlMemoryRepository:
 
     def save_deletion(self, receipt: DeletionReceipt) -> DeletionReceipt:
         session = self.uow.require_session()
-        row = session.get(MemoryDeletionRow, receipt.deletion_id)
-        if row is None:
-            raise MemoryPersistenceError("memory storage operation failed")
-        _set_deletion(row, receipt)
+        result = session.execute(
+            update(MemoryDeletionRow)
+            .where(
+                MemoryDeletionRow.id == receipt.deletion_id,
+                MemoryDeletionRow.status == DeletionStatus.deletion_pending.value,
+            )
+            .values(
+                status=receipt.status.value,
+                completed_at=receipt.completed_at,
+                attempts=receipt.attempts,
+                index_cleared=receipt.index_cleared,
+                cache_cleared=receipt.cache_cleared,
+                model_references_cleared=receipt.model_references_cleared,
+                reverse_lookup_absent=receipt.reverse_lookup_absent,
+                error_code=receipt.error_code,
+                request_id=receipt.request_id,
+            )
+            .execution_options(synchronize_session=False)
+        )
+        if result.rowcount == 0:
+            session.expire_all()
+            return _deletion(
+                self._required_deletion_row(session, receipt.deletion_id)
+            )
         session.flush()
         return receipt
 

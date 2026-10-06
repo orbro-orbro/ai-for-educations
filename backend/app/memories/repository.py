@@ -7,7 +7,9 @@ from typing import ContextManager, Protocol
 
 from app.memories.models import (
     DeletionReceipt,
+    DeletionStatus,
     LearningMemory,
+    LearningMemoryStatus,
     MemoryProposal,
     ShareGrant,
 )
@@ -87,6 +89,7 @@ class MemoryRepository(Protocol):
         self, logical_memory_id: str
     ) -> DeletionReceipt | None: ...
     def save_deletion(self, receipt: DeletionReceipt) -> DeletionReceipt: ...
+    def pending_deletions(self) -> tuple[DeletionReceipt, ...]: ...
     def claim_idempotency(
         self,
         *,
@@ -334,6 +337,21 @@ class InMemoryMemoryRepository:
 
     def save_memory(self, memory: LearningMemory) -> LearningMemory:
         with self._lock:
+            current = self._memories.get(memory.memory_id)
+            if current is None:
+                self._memories[memory.memory_id] = memory
+                return memory
+            if current.status is LearningMemoryStatus.deleted:
+                return current
+            if (
+                current.status is LearningMemoryStatus.deletion_pending
+                and memory.status
+                not in {
+                    LearningMemoryStatus.deletion_pending,
+                    LearningMemoryStatus.deleted,
+                }
+            ):
+                return current
             self._memories[memory.memory_id] = memory
             return memory
 
@@ -437,8 +455,19 @@ class InMemoryMemoryRepository:
 
     def save_deletion(self, receipt: DeletionReceipt) -> DeletionReceipt:
         with self._lock:
+            current = self._deletions.get(receipt.deletion_id)
+            if current is not None and current.status is DeletionStatus.deleted:
+                return current
             self._deletions[receipt.deletion_id] = receipt
             return receipt
+
+    def pending_deletions(self) -> tuple[DeletionReceipt, ...]:
+        with self._lock:
+            return tuple(
+                item
+                for item in self._deletions.values()
+                if item.status is DeletionStatus.deletion_pending
+            )
 
     def all_deletions(self) -> tuple[DeletionReceipt, ...]:
         with self._lock:

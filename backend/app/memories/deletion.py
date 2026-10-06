@@ -281,34 +281,38 @@ class DeletionService:
         lineage = self._repository.memory_lineage(receipt.memory_id)
         document_ids = frozenset(item.index_document_id for item in lineage)
         attempts = receipt.attempts + 1
-        try:
-            for document_id in document_ids:
-                self._index.delete(document_id)
-        except RetrievalDeletionError:
-            with self._atomic_mutation():
-                pending = self._repository.save_deletion(
-                    replace(
-                        receipt,
-                        attempts=attempts,
-                        index_cleared=False,
-                        reverse_lookup_absent=False,
-                        error_code="INDEX_DELETE_FAILED",
+        if not receipt.index_cleared:
+            try:
+                for document_id in document_ids:
+                    self._index.delete(document_id)
+            except RetrievalDeletionError:
+                with self._atomic_mutation():
+                    pending = self._repository.save_deletion(
+                        replace(
+                            receipt,
+                            attempts=attempts,
+                            index_cleared=False,
+                            reverse_lookup_absent=False,
+                            error_code="INDEX_DELETE_FAILED",
+                        )
                     )
-                )
-                self._audit.record(
-                    event_type="learning_memory_deletion_attempted",
-                    actor=actor,
-                    target_type="learning_memory",
-                    target_id=receipt.memory_id,
-                    owner_user_id=receipt.owner_user_id,
-                    course_id=receipt.course_id,
-                    outcome="deletion_pending",
-                    reason_code="index_delete_failed",
-                    request_id=request_id,
-                    related_id=receipt.deletion_id,
-                )
-                return pending
-        reverse_lookup_absent = self._index.verify_absent(document_ids)
+                    self._audit.record(
+                        event_type="learning_memory_deletion_attempted",
+                        actor=actor,
+                        target_type="learning_memory",
+                        target_id=receipt.memory_id,
+                        owner_user_id=receipt.owner_user_id,
+                        course_id=receipt.course_id,
+                        outcome="deletion_pending",
+                        reason_code="index_delete_failed",
+                        request_id=request_id,
+                        related_id=receipt.deletion_id,
+                    )
+                    return pending
+        reverse_lookup_absent = (
+            receipt.reverse_lookup_absent
+            or self._index.verify_absent(document_ids)
+        )
         if not reverse_lookup_absent:
             with self._atomic_mutation():
                 pending = self._repository.save_deletion(

@@ -392,13 +392,13 @@ class MemoryService:
                     request_id=request_id,
                     related_id=proposal.proposal_id,
                 )
-            with self._repository.memory_claim(memory.logical_memory_id):
-                current = self._repository.get_memory(memory.memory_id)
-                if current is None:
-                    raise ResourceNotAvailable()
-                if current.status is LearningMemoryStatus.active:
-                    self._index.upsert(current)
-                return current
+        with self._repository.memory_claim(memory.logical_memory_id):
+            current = self._repository.get_memory(memory.memory_id)
+            if current is None:
+                raise ResourceNotAvailable()
+            if current.status is LearningMemoryStatus.active:
+                self._index.upsert(current)
+            return current
 
     def reject_proposal(
         self,
