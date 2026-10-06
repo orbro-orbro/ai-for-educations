@@ -315,83 +315,83 @@ class MemoryService:
                     request_fingerprint=fingerprint,
                 )
                 if replay is not None:
-                    existing = self._repository.get_memory(replay.result_id)
-                    if existing is None:
+                    memory = self._repository.get_memory(replay.result_id)
+                    if memory is None:
                         raise MemoryConflict(MemoryConflict.public_message)
-                    return existing
-                proposal = self._expire_proposal_claimed(proposal)
-                if proposal.status is MemoryProposalStatus.accepted:
-                    existing = self._repository.get_memory_for_proposal(proposal_id)
-                    if existing is None:
-                        raise MemoryConflict(MemoryConflict.public_message)
-                    self._repository.remember_idempotency_result(
-                        actor_user_id=actor.user_id,
-                        operation="accept_proposal",
-                        idempotency_key=idempotency_key,
-                        resource_type="memory_proposal",
-                        resource_id=proposal_id,
-                        request_fingerprint=fingerprint,
-                        result_type="learning_memory",
-                        result_id=existing.memory_id,
-                    )
-                    return existing
-                if proposal.status is not MemoryProposalStatus.pending:
-                    raise MemoryConflict(MemoryConflict.public_message)
-                now = self._clock()
-                memory_id = self._id_factory()
-                memory = self._repository.add_memory(
-                    LearningMemory(
-                        memory_id=memory_id,
-                        logical_memory_id=memory_id,
-                        previous_version_id=None,
-                        version=1,
-                        owner_user_id=proposal.owner_user_id,
-                        course_id=proposal.course_id,
-                        memory_type="misconception_state",
-                        visibility="private",
-                        content=proposal.content,
-                        concept_ids=proposal.concept_ids,
-                        source_diagnosis_id=proposal.diagnosis_id,
-                        source_proposal_id=proposal.proposal_id,
-                        confidence=proposal.confidence,
-                        allowed_purposes=("learning_support",),
-                        status=LearningMemoryStatus.active,
-                        index_document_id=f"memory-index:{memory_id}",
-                        created_at=now,
-                        updated_at=now,
-                        expires_at=None,
-                        request_id=request_id,
-                    )
-                )
-                self._repository.save_proposal(
-                    replace(
-                        proposal,
-                        status=MemoryProposalStatus.accepted,
-                        accepted_memory_id=memory.memory_id,
-                    )
-                )
-                self._repository.remember_idempotency_result(
-                    actor_user_id=actor.user_id,
-                    operation="accept_proposal",
-                    idempotency_key=idempotency_key,
-                    resource_type="memory_proposal",
-                    resource_id=proposal_id,
-                    request_fingerprint=fingerprint,
-                    result_type="learning_memory",
-                    result_id=memory.memory_id,
-                )
-                self._audit.record(
-                    event_type="memory_proposal_accepted",
-                    actor=actor,
-                    target_type="learning_memory",
-                    target_id=memory.memory_id,
-                    owner_user_id=memory.owner_user_id,
-                    course_id=memory.course_id,
-                    outcome="active",
-                    reason_code="student_accepted",
-                    request_id=request_id,
-                    related_id=proposal.proposal_id,
-                )
+                else:
+                    proposal = self._expire_proposal_claimed(proposal)
+                    if proposal.status is MemoryProposalStatus.accepted:
+                        memory = self._repository.get_memory_for_proposal(proposal_id)
+                        if memory is None:
+                            raise MemoryConflict(MemoryConflict.public_message)
+                        self._repository.remember_idempotency_result(
+                            actor_user_id=actor.user_id,
+                            operation="accept_proposal",
+                            idempotency_key=idempotency_key,
+                            resource_type="memory_proposal",
+                            resource_id=proposal_id,
+                            request_fingerprint=fingerprint,
+                            result_type="learning_memory",
+                            result_id=memory.memory_id,
+                        )
+                    else:
+                        if proposal.status is not MemoryProposalStatus.pending:
+                            raise MemoryConflict(MemoryConflict.public_message)
+                        now = self._clock()
+                        memory_id = self._id_factory()
+                        memory = self._repository.add_memory(
+                            LearningMemory(
+                                memory_id=memory_id,
+                                logical_memory_id=memory_id,
+                                previous_version_id=None,
+                                version=1,
+                                owner_user_id=proposal.owner_user_id,
+                                course_id=proposal.course_id,
+                                memory_type="misconception_state",
+                                visibility="private",
+                                content=proposal.content,
+                                concept_ids=proposal.concept_ids,
+                                source_diagnosis_id=proposal.diagnosis_id,
+                                source_proposal_id=proposal.proposal_id,
+                                confidence=proposal.confidence,
+                                allowed_purposes=("learning_support",),
+                                status=LearningMemoryStatus.active,
+                                index_document_id=f"memory-index:{memory_id}",
+                                created_at=now,
+                                updated_at=now,
+                                expires_at=None,
+                                request_id=request_id,
+                            )
+                        )
+                        self._repository.save_proposal(
+                            replace(
+                                proposal,
+                                status=MemoryProposalStatus.accepted,
+                                accepted_memory_id=memory.memory_id,
+                            )
+                        )
+                        self._repository.remember_idempotency_result(
+                            actor_user_id=actor.user_id,
+                            operation="accept_proposal",
+                            idempotency_key=idempotency_key,
+                            resource_type="memory_proposal",
+                            resource_id=proposal_id,
+                            request_fingerprint=fingerprint,
+                            result_type="learning_memory",
+                            result_id=memory.memory_id,
+                        )
+                        self._audit.record(
+                            event_type="memory_proposal_accepted",
+                            actor=actor,
+                            target_type="learning_memory",
+                            target_id=memory.memory_id,
+                            owner_user_id=memory.owner_user_id,
+                            course_id=memory.course_id,
+                            outcome="active",
+                            reason_code="student_accepted",
+                            request_id=request_id,
+                            related_id=proposal.proposal_id,
+                        )
         with self._repository.memory_claim(memory.logical_memory_id):
             current = self._repository.get_memory(memory.memory_id)
             if current is None:

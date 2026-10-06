@@ -324,6 +324,44 @@ def test_accept_replay_returns_original_memory_current_state(memory_fixture):
     assert replayed.status is LearningMemoryStatus.superseded
 
 
+def test_accept_replay_republishes_active_memory_after_index_failure(
+    memory_fixture, monkeypatch
+):
+    service = memory_fixture["service"]
+    index = memory_fixture["index"]
+    proposal = service.create_proposal(STUDENT_A, "check-a", request_id="req-proposal")
+    original_upsert = index.upsert
+    attempts = 0
+
+    def fail_once(memory):
+        nonlocal attempts
+        attempts += 1
+        if attempts == 1:
+            raise RuntimeError("index unavailable")
+        original_upsert(memory)
+
+    monkeypatch.setattr(index, "upsert", fail_once)
+
+    with pytest.raises(RuntimeError, match="index unavailable"):
+        service.accept_proposal(
+            STUDENT_A,
+            proposal.proposal_id,
+            request_id="req-accept",
+            idempotency_key="accept-after-index-failure",
+        )
+
+    replayed = service.accept_proposal(
+        STUDENT_A,
+        proposal.proposal_id,
+        request_id="req-accept-retry",
+        idempotency_key="accept-after-index-failure",
+    )
+
+    assert replayed.status is LearningMemoryStatus.active
+    assert index.contains(replayed.index_document_id)
+    assert attempts == 2
+
+
 def test_audit_failure_rolls_back_acceptance(memory_fixture, monkeypatch):
     service = memory_fixture["service"]
     proposal = service.create_proposal(STUDENT_A, "check-a", request_id="req-proposal")
