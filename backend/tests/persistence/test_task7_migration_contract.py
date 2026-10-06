@@ -133,8 +133,22 @@ def test_grants_deletions_idempotency_and_audit_have_named_guards():
         "ck_share_grants_resource_type",
         "ck_share_grants_status",
         "ck_share_grants_revocation",
-        "uq_share_grants_exact_scope",
     } <= _constraint_names(tables["share_grants"])
+    active_grant = next(
+        index
+        for index in tables["share_grants"].indexes
+        if index.name == "uq_share_grants_active_scope"
+    )
+    assert active_grant.unique is True
+    assert tuple(column.name for column in active_grant.columns) == (
+        "owner_user_id",
+        "resource_id",
+        "grantee_user_id",
+        "purpose",
+    )
+    assert "status = 'active'" in str(
+        active_grant.dialect_options["postgresql"]["where"]
+    )
     assert {
         "ck_memory_deletions_status",
         "ck_memory_deletions_attempts",

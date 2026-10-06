@@ -25,6 +25,7 @@ from app.memories.repository import (
     IdempotencyReplay,
 )
 from app.persistence.models import (
+    ExplanationCheckRow,
     LearningMemoryRow,
     MemoryDeletionRow,
     MemoryIdempotencyResultRow,
@@ -106,6 +107,16 @@ class SqlMemoryRepository:
 
     def transaction(self):
         return self.uow.transaction()
+
+    @contextmanager
+    def proposal_source_claim(self, explanation_check_id: str):
+        with self.uow.transaction():
+            self.uow.require_session().execute(
+                select(ExplanationCheckRow.id)
+                .where(ExplanationCheckRow.id == explanation_check_id)
+                .with_for_update()
+            ).all()
+            yield
 
     @contextmanager
     def proposal_claim(self, proposal_id: str):
@@ -418,6 +429,7 @@ class SqlMemoryRepository:
                 ShareGrantRow.resource_id == grant.resource_id,
                 ShareGrantRow.grantee_user_id == grant.grantee_user_id,
                 ShareGrantRow.purpose == grant.purpose,
+                ShareGrantRow.status == ShareGrantStatus.active.value,
             )
         )
         if existing is not None:

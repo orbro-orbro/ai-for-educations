@@ -60,6 +60,35 @@ def test_reverse_lookup_verification_failure_is_audited_and_retryable(memory_fix
     assert completed.status is DeletionStatus.deleted
 
 
+def test_reverse_lookup_detects_unexpected_document_for_same_memory_scope(memory_fixture):
+    memory = create_memory(memory_fixture)
+    rogue = replace(
+        memory,
+        memory_id="rogue-version",
+        index_document_id="rogue-index-document",
+    )
+    memory_fixture["index"].upsert(rogue)
+
+    pending = memory_fixture["deletion"].delete_memory(
+        STUDENT_A,
+        memory.memory_id,
+        request_id="req-delete-rogue",
+        idempotency_key="delete-rogue",
+    )
+
+    assert pending.status is DeletionStatus.deletion_pending
+    assert pending.error_code == "REVERSE_LOOKUP_NOT_EMPTY"
+
+    memory_fixture["index"].delete(rogue.index_document_id)
+    completed = memory_fixture["deletion"].retry(
+        STUDENT_A,
+        pending.deletion_id,
+        request_id="req-retry-rogue",
+        idempotency_key="retry-rogue",
+    )
+    assert completed.status is DeletionStatus.deleted
+
+
 def test_initial_cleanup_cannot_regress_a_completed_retry(memory_fixture, monkeypatch):
     memory = create_memory(memory_fixture)
     deletion = memory_fixture["deletion"]

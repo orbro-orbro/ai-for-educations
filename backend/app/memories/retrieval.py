@@ -32,14 +32,21 @@ class RetrievalIndex(Protocol):
         purpose: str,
     ) -> tuple[str, ...]: ...
     def delete(self, index_document_id: str) -> None: ...
-    def verify_absent(self, index_document_ids: frozenset[str]) -> bool: ...
+    def verify_absent(
+        self,
+        index_document_ids: frozenset[str],
+        *,
+        owner_user_id: str,
+        course_id: str,
+        logical_memory_id: str,
+    ) -> bool: ...
 
 
 class InMemoryRetrievalIndex:
     """Deterministic derived index used by Task 7 tests, never for authorization."""
 
     def __init__(self) -> None:
-        self._documents: dict[str, tuple[str, str, str]] = {}
+        self._documents: dict[str, tuple[str, str, str, str]] = {}
         self._injected_results: tuple[str, ...] | None = None
         self._delete_failures = 0
         self._verification_failures = 0
@@ -53,6 +60,7 @@ class InMemoryRetrievalIndex:
             self._documents[memory.index_document_id] = (
                 memory.owner_user_id,
                 memory.course_id,
+                memory.logical_memory_id,
                 memory.content,
             )
 
@@ -79,7 +87,7 @@ class InMemoryRetrievalIndex:
             lowered = query.casefold()
             return tuple(
                 document_id
-                for document_id, (owner, course, content) in self._documents.items()
+                for document_id, (owner, course, _logical_memory, content) in self._documents.items()
                 if document_id in candidate_document_ids
                 and owner == owner_user_id
                 and course == course_id
@@ -109,12 +117,32 @@ class InMemoryRetrievalIndex:
                 raise RetrievalDeletionError("index deletion failed")
             self._documents.pop(index_document_id, None)
 
-    def verify_absent(self, index_document_ids: frozenset[str]) -> bool:
+    def verify_absent(
+        self,
+        index_document_ids: frozenset[str],
+        *,
+        owner_user_id: str,
+        course_id: str,
+        logical_memory_id: str,
+    ) -> bool:
         with self._lock:
             if self._verification_failures:
                 self._verification_failures -= 1
                 return False
-            return not any(item in self._documents for item in index_document_ids)
+            return not any(
+                document_id in index_document_ids
+                or (
+                    owner == owner_user_id
+                    and course == course_id
+                    and logical_memory == logical_memory_id
+                )
+                for document_id, (
+                    owner,
+                    course,
+                    logical_memory,
+                    _content,
+                ) in self._documents.items()
+            )
 
     def contains(self, index_document_id: str) -> bool:
         with self._lock:

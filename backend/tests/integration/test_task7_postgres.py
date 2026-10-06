@@ -26,7 +26,11 @@ from app.diagnostics.schema import (
     ExplanationCheck,
 )
 from app.knowledge.models import Concept
-from app.memories.models import LearningMemoryStatus, MemoryProposalStatus
+from app.memories.models import (
+    LearningMemoryStatus,
+    MemoryProposalStatus,
+    ShareGrantStatus,
+)
 from app.memories.policy import CourseServiceMemoryAccess, MemoryPolicy
 from app.memories.repository import IdempotencyConflict
 from app.memories.retrieval import InMemoryRetrievalIndex
@@ -319,6 +323,26 @@ def test_postgres_rejects_invalid_states_and_malformed_lineage_roots():
             transaction.rollback()
 
 
+def test_two_repository_instances_concurrently_create_one_proposal():
+    url = _postgres_url()
+    _, seed = _seed(url)
+    barrier = Barrier(2)
+
+    def create(index: int):
+        current = create_sql_repositories(url)
+        barrier.wait()
+        return _service(current).create_proposal(
+            seed.actor,
+            seed.explanation_id,
+            request_id=f"proposal-{seed.suffix}-{index}",
+        )
+
+    with ThreadPoolExecutor(max_workers=2) as pool:
+        proposals = tuple(pool.map(create, (1, 2)))
+
+    assert proposals[0].proposal_id == proposals[1].proposal_id
+
+
 def test_two_repository_instances_concurrently_accept_only_one_memory():
     url = _postgres_url()
     repositories, seed = _seed(url)
@@ -460,6 +484,38 @@ def test_audit_failure_rolls_back_memory_proposal_acceptance():
         restarted.memories.get_proposal(proposal.proposal_id).status
         is MemoryProposalStatus.pending
     )
+
+
+def test_revoked_share_scope_can_be_granted_again_in_postgres():
+    url = _postgres_url()
+    repositories, seed = _seed(url)
+    service = _service(repositories)
+    first = service.create_share_grant(
+        seed.actor,
+        seed.diagnosis_id,
+        seed.reviewer_id,
+        purpose="misconception_review",
+        request_id=f"grant-first-{seed.suffix}",
+        idempotency_key=f"grant-first-{seed.suffix}",
+    )
+    service.revoke_share_grant(
+        seed.actor,
+        first.grant_id,
+        request_id=f"revoke-first-{seed.suffix}",
+        idempotency_key=f"revoke-first-{seed.suffix}",
+    )
+
+    second = service.create_share_grant(
+        seed.actor,
+        seed.diagnosis_id,
+        seed.reviewer_id,
+        purpose="misconception_review",
+        request_id=f"grant-second-{seed.suffix}",
+        idempotency_key=f"grant-second-{seed.suffix}",
+    )
+
+    assert second.grant_id != first.grant_id
+    assert second.status is ShareGrantStatus.active
 
 
 def test_live_student_and_teacher_authorization_revocation_is_immediate():

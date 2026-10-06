@@ -199,44 +199,45 @@ class MemoryService:
         now = self._clock()
         proposal_id = self._id_factory()
         normalized_expiry = _normalize_aware_datetime(expires_at)
-        with self._atomic_mutation():
-            existing = self._repository.get_proposal_for_explanation(
-                explanation_check_id
-            )
-            if existing is not None:
-                return existing
-            proposal = self._repository.add_proposal(
-                MemoryProposal(
-                    proposal_id=proposal_id,
-                    root_proposal_id=proposal_id,
-                    previous_proposal_id=None,
-                    version=1,
-                    owner_user_id=source.owner_user_id,
-                    course_id=source.course_id,
-                    diagnosis_id=source.diagnosis_id,
-                    explanation_check_id=source.explanation_check_id,
-                    content=source.content,
-                    concept_ids=source.concept_ids,
-                    confidence=source.confidence,
-                    status=MemoryProposalStatus.pending,
-                    created_at=now,
-                    expires_at=normalized_expiry or now + self._proposal_ttl,
-                    request_id=request_id,
+        with self._repository.proposal_source_claim(explanation_check_id):
+            with self._atomic_mutation():
+                existing = self._repository.get_proposal_for_explanation(
+                    explanation_check_id
                 )
-            )
-            self._audit.record(
-                event_type="memory_proposal_created",
-                actor=actor,
-                target_type="memory_proposal",
-                target_id=proposal.proposal_id,
-                owner_user_id=proposal.owner_user_id,
-                course_id=proposal.course_id,
-                outcome="created",
-                reason_code="task6_eligible",
-                request_id=request_id,
-                related_id=proposal.diagnosis_id,
-            )
-            return proposal
+                if existing is not None:
+                    return existing
+                proposal = self._repository.add_proposal(
+                    MemoryProposal(
+                        proposal_id=proposal_id,
+                        root_proposal_id=proposal_id,
+                        previous_proposal_id=None,
+                        version=1,
+                        owner_user_id=source.owner_user_id,
+                        course_id=source.course_id,
+                        diagnosis_id=source.diagnosis_id,
+                        explanation_check_id=source.explanation_check_id,
+                        content=source.content,
+                        concept_ids=source.concept_ids,
+                        confidence=source.confidence,
+                        status=MemoryProposalStatus.pending,
+                        created_at=now,
+                        expires_at=normalized_expiry or now + self._proposal_ttl,
+                        request_id=request_id,
+                    )
+                )
+                self._audit.record(
+                    event_type="memory_proposal_created",
+                    actor=actor,
+                    target_type="memory_proposal",
+                    target_id=proposal.proposal_id,
+                    owner_user_id=proposal.owner_user_id,
+                    course_id=proposal.course_id,
+                    outcome="created",
+                    reason_code="task6_eligible",
+                    request_id=request_id,
+                    related_id=proposal.diagnosis_id,
+                )
+                return proposal
 
     def list_proposals(
         self,

@@ -740,12 +740,15 @@ class ShareGrantRow(Base):
             ["diagnoses.id", "diagnoses.course_id", "diagnoses.owner_user_id"],
             ondelete="RESTRICT",
         ),
-        UniqueConstraint(
+        Index(
+            "uq_share_grants_active_scope",
             "owner_user_id",
             "resource_id",
             "grantee_user_id",
             "purpose",
-            name="uq_share_grants_exact_scope",
+            unique=True,
+            postgresql_where=text("status = 'active'"),
+            sqlite_where=text("status = 'active'"),
         ),
         CheckConstraint(
             "resource_type = 'diagnosis_summary'",

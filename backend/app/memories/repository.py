@@ -12,6 +12,7 @@ from app.memories.models import (
     LearningMemoryStatus,
     MemoryProposal,
     ShareGrant,
+    ShareGrantStatus,
 )
 
 
@@ -34,6 +35,9 @@ class IdempotencyReplay:
 
 class MemoryRepository(Protocol):
     def transaction(self) -> ContextManager[None]: ...
+    def proposal_source_claim(
+        self, explanation_check_id: str
+    ) -> ContextManager[None]: ...
     def proposal_claim(self, proposal_id: str) -> ContextManager[None]: ...
     def memory_claim(self, logical_memory_id: str) -> ContextManager[None]: ...
     def deletion_claim(self, deletion_id: str) -> ContextManager[None]: ...
@@ -174,6 +178,11 @@ class InMemoryMemoryRepository:
                     self._idempotency,
                 ) = snapshots
                 raise
+
+    @contextmanager
+    def proposal_source_claim(self, explanation_check_id: str):
+        with self._claim_lock("proposal_source", explanation_check_id):
+            yield
 
     @contextmanager
     def proposal_claim(self, proposal_id: str):
@@ -395,7 +404,8 @@ class InMemoryMemoryRepository:
                     if item.owner_user_id == grant.owner_user_id
                     and item.resource_id == grant.resource_id
                     and item.grantee_user_id == grant.grantee_user_id
-                    and item.request_id == grant.request_id
+                    and item.purpose == grant.purpose
+                    and item.status is ShareGrantStatus.active
                 ),
                 None,
             )

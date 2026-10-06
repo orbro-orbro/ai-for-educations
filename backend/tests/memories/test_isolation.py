@@ -103,6 +103,37 @@ def test_share_grant_is_exact_revocable_and_does_not_expose_memory(memory_fixtur
         service.read_shared_diagnosis(TEACHER_A, grant.grant_id)
 
 
+def test_revoked_scope_can_be_granted_again_with_a_new_record(memory_fixture):
+    service = memory_fixture["service"]
+    first = service.create_share_grant(
+        STUDENT_A,
+        "diagnosis-a",
+        TEACHER_A.user_id,
+        purpose="teacher_support",
+        request_id="req-grant-first",
+        idempotency_key="grant-first",
+    )
+    service.revoke_share_grant(
+        STUDENT_A,
+        first.grant_id,
+        request_id="req-revoke-first",
+        idempotency_key="revoke-first",
+    )
+
+    second = service.create_share_grant(
+        STUDENT_A,
+        "diagnosis-a",
+        TEACHER_A.user_id,
+        purpose="teacher_support",
+        request_id="req-grant-second",
+        idempotency_key="grant-second",
+    )
+
+    assert second.grant_id != first.grant_id
+    assert second.status is ShareGrantStatus.active
+    assert service.read_shared_diagnosis(TEACHER_A, second.grant_id).diagnosis_id == "diagnosis-a"
+
+
 def test_share_grant_cannot_expand_to_another_course_or_diagnosis(memory_fixture):
     service = memory_fixture["service"]
 

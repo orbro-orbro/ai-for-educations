@@ -311,7 +311,12 @@ class DeletionService:
                     return pending
         reverse_lookup_absent = (
             receipt.reverse_lookup_absent
-            or self._index.verify_absent(document_ids)
+            or self._index.verify_absent(
+                document_ids,
+                owner_user_id=receipt.owner_user_id,
+                course_id=receipt.course_id,
+                logical_memory_id=receipt.memory_id,
+            )
         )
         if not reverse_lookup_absent:
             with self._atomic_mutation():
