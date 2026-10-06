@@ -294,7 +294,10 @@ def create_memories_router(
             actor = _actor(authenticator, authorization)
             return _memory(
                 service.accept_proposal(
-                    actor, proposal_id, request_id=request_id_for(request)
+                    actor,
+                    proposal_id,
+                    request_id=request_id_for(request),
+                    idempotency_key=_idempotency_key,
                 )
             )
         except (MemoryConflict, MemoryProposalNotEligible) as error:
@@ -315,7 +318,10 @@ def create_memories_router(
             actor = _actor(authenticator, authorization)
             return _proposal(
                 service.reject_proposal(
-                    actor, proposal_id, request_id=request_id_for(request)
+                    actor,
+                    proposal_id,
+                    request_id=request_id_for(request),
+                    idempotency_key=_idempotency_key,
                 )
             )
         except MemoryConflict as error:
@@ -341,6 +347,7 @@ def create_memories_router(
                     proposal_id,
                     payload.content,
                     request_id=request_id_for(request),
+                    idempotency_key=_idempotency_key,
                 )
             )
         except MemoryConflict as error:
@@ -394,6 +401,7 @@ def create_memories_router(
                     memory_id,
                     payload.content,
                     request_id=request_id_for(request),
+                    idempotency_key=_idempotency_key,
                 )
             )
         except MemoryConflict as error:
@@ -414,7 +422,10 @@ def create_memories_router(
         actor = _actor(authenticator, authorization)
         return _receipt(
             deletion.delete_memory(
-                actor, memory_id, request_id=request_id_for(request)
+                actor,
+                memory_id,
+                request_id=request_id_for(request),
+                idempotency_key=_idempotency_key,
             )
         )
 
@@ -448,7 +459,12 @@ def create_memories_router(
     ):
         actor = _actor(authenticator, authorization)
         return _receipt(
-            deletion.retry(actor, deletion_id, request_id=request_id_for(request))
+            deletion.retry(
+                actor,
+                deletion_id,
+                request_id=request_id_for(request),
+                idempotency_key=_idempotency_key,
+            )
         )
 
     @router.post(
@@ -473,6 +489,7 @@ def create_memories_router(
                 purpose=payload.purpose,
                 expires_at=payload.expires_at,
                 request_id=request_id_for(request),
+                idempotency_key=_idempotency_key,
             )
         )
 
@@ -525,7 +542,10 @@ def create_memories_router(
         actor = _actor(authenticator, authorization)
         return _grant(
             service.revoke_share_grant(
-                actor, grant_id, request_id=request_id_for(request)
+                actor,
+                grant_id,
+                request_id=request_id_for(request),
+                idempotency_key=_idempotency_key,
             )
         )
 

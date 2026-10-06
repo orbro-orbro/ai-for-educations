@@ -65,7 +65,7 @@ class LearningMemory:
     content: str | None
     concept_ids: tuple[str, ...]
     source_diagnosis_id: str
-    source_proposal_id: str
+    source_proposal_id: str | None
     confidence: float
     allowed_purposes: tuple[str, ...]
     status: LearningMemoryStatus

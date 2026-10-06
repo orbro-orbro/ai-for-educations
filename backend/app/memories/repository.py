@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from contextlib import contextmanager
+from dataclasses import dataclass
 from threading import Lock, RLock
 from typing import ContextManager, Protocol
 
@@ -10,6 +11,23 @@ from app.memories.models import (
     MemoryProposal,
     ShareGrant,
 )
+
+
+class IdempotencyConflict(RuntimeError):
+    public_error_code = "IDEMPOTENCY_KEY_REUSED"
+    public_message = "The idempotency key was already used for another request."
+
+
+@dataclass(frozen=True, slots=True)
+class IdempotencyReplay:
+    actor_user_id: str
+    operation: str
+    idempotency_key: str
+    resource_type: str
+    resource_id: str
+    request_fingerprint: str
+    result_type: str
+    result_id: str
 
 
 class MemoryRepository(Protocol):
@@ -69,6 +87,28 @@ class MemoryRepository(Protocol):
         self, logical_memory_id: str
     ) -> DeletionReceipt | None: ...
     def save_deletion(self, receipt: DeletionReceipt) -> DeletionReceipt: ...
+    def claim_idempotency(
+        self,
+        *,
+        actor_user_id: str,
+        operation: str,
+        idempotency_key: str,
+        resource_type: str,
+        resource_id: str,
+        request_fingerprint: str,
+    ) -> IdempotencyReplay | None: ...
+    def remember_idempotency_result(
+        self,
+        *,
+        actor_user_id: str,
+        operation: str,
+        idempotency_key: str,
+        resource_type: str,
+        resource_id: str,
+        request_fingerprint: str,
+        result_type: str,
+        result_id: str,
+    ) -> None: ...
 
 
 class InMemoryMemoryRepository:
@@ -86,6 +126,7 @@ class InMemoryMemoryRepository:
         self._grants: dict[str, ShareGrant] = {}
         self._deletions: dict[str, DeletionReceipt] = {}
         self._deletion_by_logical_memory: dict[str, str] = {}
+        self._idempotency: dict[tuple[str, str, str], IdempotencyReplay] = {}
         self._lock = RLock()
         self._claim_registry_lock = Lock()
         self._claim_locks: dict[tuple[str, str], RLock] = {}
@@ -110,6 +151,7 @@ class InMemoryMemoryRepository:
                 self._grants.copy(),
                 self._deletions.copy(),
                 self._deletion_by_logical_memory.copy(),
+                self._idempotency.copy(),
             )
             try:
                 yield
@@ -126,6 +168,7 @@ class InMemoryMemoryRepository:
                     self._grants,
                     self._deletions,
                     self._deletion_by_logical_memory,
+                    self._idempotency,
                 ) = snapshots
                 raise
 
@@ -400,3 +443,62 @@ class InMemoryMemoryRepository:
     def all_deletions(self) -> tuple[DeletionReceipt, ...]:
         with self._lock:
             return tuple(self._deletions.values())
+
+    def claim_idempotency(
+        self,
+        *,
+        actor_user_id: str,
+        operation: str,
+        idempotency_key: str,
+        resource_type: str,
+        resource_id: str,
+        request_fingerprint: str,
+    ) -> IdempotencyReplay | None:
+        with self._lock:
+            replay = self._idempotency.get(
+                (actor_user_id, operation, idempotency_key)
+            )
+            if replay is None:
+                return None
+            if (
+                replay.resource_type != resource_type
+                or replay.resource_id != resource_id
+                or replay.request_fingerprint != request_fingerprint
+            ):
+                raise IdempotencyConflict(IdempotencyConflict.public_message)
+            return replay
+
+    def remember_idempotency_result(
+        self,
+        *,
+        actor_user_id: str,
+        operation: str,
+        idempotency_key: str,
+        resource_type: str,
+        resource_id: str,
+        request_fingerprint: str,
+        result_type: str,
+        result_id: str,
+    ) -> None:
+        replay = IdempotencyReplay(
+            actor_user_id=actor_user_id,
+            operation=operation,
+            idempotency_key=idempotency_key,
+            resource_type=resource_type,
+            resource_id=resource_id,
+            request_fingerprint=request_fingerprint,
+            result_type=result_type,
+            result_id=result_id,
+        )
+        with self._lock:
+            existing = self.claim_idempotency(
+                actor_user_id=actor_user_id,
+                operation=operation,
+                idempotency_key=idempotency_key,
+                resource_type=resource_type,
+                resource_id=resource_id,
+                request_fingerprint=request_fingerprint,
+            )
+            if existing is not None and existing != replay:
+                raise IdempotencyConflict(IdempotencyConflict.public_message)
+            self._idempotency[(actor_user_id, operation, idempotency_key)] = replay

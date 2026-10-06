@@ -238,4 +238,5 @@ def create_memory(memory_fixture, *, actor=STUDENT_A, check_id="check-a"):
         actor,
         proposal.proposal_id,
         request_id=f"accept-{check_id}",
+        idempotency_key=f"accept-{check_id}",
     )

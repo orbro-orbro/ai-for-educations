@@ -79,6 +79,7 @@ def test_share_grant_is_exact_revocable_and_does_not_expose_memory(memory_fixtur
         TEACHER_A.user_id,
         purpose="student_requested_review",
         request_id="req-grant",
+        idempotency_key="grant-exact",
     )
 
     summary = service.read_shared_diagnosis(TEACHER_A, grant.grant_id)
@@ -92,11 +93,11 @@ def test_share_grant_is_exact_revocable_and_does_not_expose_memory(memory_fixtur
         service.read_shared_diagnosis(TEACHER_B, grant.grant_id)
 
     revoked = service.revoke_share_grant(
-        STUDENT_A, grant.grant_id, request_id="req-revoke"
+        STUDENT_A, grant.grant_id, request_id="req-revoke", idempotency_key="revoke"
     )
     assert revoked.status is ShareGrantStatus.revoked
     assert service.revoke_share_grant(
-        STUDENT_A, grant.grant_id, request_id="req-revoke-again"
+        STUDENT_A, grant.grant_id, request_id="req-revoke-again", idempotency_key="revoke-again"
     ) == revoked
     with pytest.raises(ResourceNotAvailable):
         service.read_shared_diagnosis(TEACHER_A, grant.grant_id)
@@ -112,6 +113,7 @@ def test_share_grant_cannot_expand_to_another_course_or_diagnosis(memory_fixture
             TEACHER_A.user_id,
             purpose="wrong-course-teacher",
             request_id="req-wrong-course",
+            idempotency_key="wrong-course",
         )
 
     grant = service.create_share_grant(
@@ -120,6 +122,7 @@ def test_share_grant_cannot_expand_to_another_course_or_diagnosis(memory_fixture
         TEACHER_A.user_id,
         purpose="one-summary",
         request_id="req-grant",
+        idempotency_key="grant-summary",
     )
     assert service.read_shared_diagnosis(TEACHER_A, grant.grant_id).diagnosis_id == "diagnosis-a"
     with pytest.raises(ResourceNotAvailable):
@@ -135,6 +138,7 @@ def test_expired_share_grant_stops_access_immediately(memory_fixture):
         purpose="short-review",
         expires_at=memory_fixture["clock"]() + timedelta(minutes=1),
         request_id="req-grant",
+        idempotency_key="grant-expiring",
     )
     memory_fixture["clock"].advance(minutes=2)
 
@@ -153,6 +157,7 @@ def test_share_grant_rejects_timezone_free_expiry(memory_fixture):
             purpose="invalid-expiry",
             expires_at=datetime(2026, 10, 7, 8, 0),
             request_id="req-naive-expiry",
+            idempotency_key="grant-naive-expiry",
         )
 
     assert memory_fixture["repository"].list_grants(STUDENT_A.user_id, COURSE_A) == ()
@@ -167,6 +172,7 @@ def test_current_course_membership_is_rechecked_for_owner_and_grantee(memory_fix
         TEACHER_A.user_id,
         purpose="membership-sensitive-review",
         request_id="req-grant",
+        idempotency_key="grant-membership",
     )
 
     memory_fixture["course_access"].students.remove((COURSE_A, STUDENT_A.user_id))
@@ -183,7 +189,12 @@ def test_sensitive_reads_are_metadata_only_audited(memory_fixture):
     proposal = service.create_proposal(STUDENT_A, "check-a", request_id="req-proposal")
     service.list_proposals(STUDENT_A, COURSE_A, request_id="req-list-proposals")
     service.get_proposal(STUDENT_A, proposal.proposal_id, request_id="req-get-proposal")
-    memory = service.accept_proposal(STUDENT_A, proposal.proposal_id, request_id="req-accept")
+    memory = service.accept_proposal(
+        STUDENT_A,
+        proposal.proposal_id,
+        request_id="req-accept",
+        idempotency_key="accept-audited",
+    )
     service.get_memory(STUDENT_A, memory.memory_id, request_id="req-get-memory")
     service.list_memories(STUDENT_A, COURSE_A, request_id="req-list-memories")
     service.search_memories(
@@ -199,6 +210,7 @@ def test_sensitive_reads_are_metadata_only_audited(memory_fixture):
         TEACHER_A.user_id,
         purpose="audited-review",
         request_id="req-grant",
+        idempotency_key="grant-audited",
     )
     service.list_share_grants(STUDENT_A, COURSE_A, request_id="req-list-grants")
     service.get_share_grant(STUDENT_A, grant.grant_id, request_id="req-get-grant")

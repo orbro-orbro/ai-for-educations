@@ -7,6 +7,7 @@ import pytest
 
 from app.courses.service import ResourceNotAvailable
 from app.memories.models import LearningMemoryStatus, MemoryProposalStatus
+from app.memories.repository import IdempotencyConflict
 from app.memories.service import MemoryConflict, MemoryProposalNotEligible
 
 from conftest import (
@@ -87,22 +88,31 @@ def test_other_roles_cannot_reject_correct_or_delete_student_memory(memory_fixtu
 
     for actor in (TEACHER_A, STUDENT_B):
         with pytest.raises(ResourceNotAvailable):
-            service.reject_proposal(actor, proposal.proposal_id, request_id="req-denied")
+            service.reject_proposal(
+                actor,
+                proposal.proposal_id,
+                request_id="req-denied",
+                idempotency_key=f"reject-denied-{actor.user_id}",
+            )
         with pytest.raises(ResourceNotAvailable):
             service.correct_proposal(
                 actor,
                 proposal.proposal_id,
                 "unauthorized replacement",
                 request_id="req-denied",
+                idempotency_key=f"correct-denied-{actor.user_id}",
             )
 
     memory = service.accept_proposal(
-        STUDENT_A, proposal.proposal_id, request_id="req-accept"
+        STUDENT_A, proposal.proposal_id, request_id="req-accept", idempotency_key="accept-owner"
     )
     for actor in (TEACHER_A, STUDENT_B):
         with pytest.raises(ResourceNotAvailable):
             memory_fixture["deletion"].delete_memory(
-                actor, memory.memory_id, request_id="req-denied"
+                actor,
+                memory.memory_id,
+                request_id="req-denied",
+                idempotency_key=f"delete-denied-{actor.user_id}",
             )
 
 
@@ -112,13 +122,18 @@ def test_only_owner_student_can_accept_and_acceptance_is_idempotent(memory_fixtu
 
     for actor in (TEACHER_A, STUDENT_B):
         with pytest.raises(ResourceNotAvailable):
-            service.accept_proposal(actor, proposal.proposal_id, request_id="req-denied")
+            service.accept_proposal(
+                actor,
+                proposal.proposal_id,
+                request_id="req-denied",
+                idempotency_key=f"accept-denied-{actor.user_id}",
+            )
 
     memory = service.accept_proposal(
-        STUDENT_A, proposal.proposal_id, request_id="req-accept"
+        STUDENT_A, proposal.proposal_id, request_id="req-accept", idempotency_key="accept-first"
     )
     repeated = service.accept_proposal(
-        STUDENT_A, proposal.proposal_id, request_id="req-accept-again"
+        STUDENT_A, proposal.proposal_id, request_id="req-accept-again", idempotency_key="accept-again"
     )
 
     assert memory.status is LearningMemoryStatus.active
@@ -132,10 +147,10 @@ def test_student_can_reject_and_repeated_rejection_is_safe(memory_fixture):
     proposal = service.create_proposal(STUDENT_A, "check-a", request_id="req-proposal")
 
     rejected = service.reject_proposal(
-        STUDENT_A, proposal.proposal_id, request_id="req-reject"
+        STUDENT_A, proposal.proposal_id, request_id="req-reject", idempotency_key="reject-first"
     )
     repeated = service.reject_proposal(
-        STUDENT_A, proposal.proposal_id, request_id="req-reject-again"
+        STUDENT_A, proposal.proposal_id, request_id="req-reject-again", idempotency_key="reject-again"
     )
 
     assert rejected.status is MemoryProposalStatus.rejected
@@ -143,7 +158,10 @@ def test_student_can_reject_and_repeated_rejection_is_safe(memory_fixture):
     assert service.list_memories(STUDENT_A, COURSE_A) == ()
     with pytest.raises(MemoryConflict):
         service.accept_proposal(
-            STUDENT_A, proposal.proposal_id, request_id="req-accept-after-reject"
+            STUDENT_A,
+            proposal.proposal_id,
+            request_id="req-accept-after-reject",
+            idempotency_key="accept-after-reject",
         )
 
 
@@ -156,12 +174,14 @@ def test_proposal_correction_creates_audited_immutable_version(memory_fixture):
         proposal.proposal_id,
         "I now distinguish reference and value semantics.",
         request_id="req-correct",
+        idempotency_key="correct-proposal",
     )
     repeated = service.correct_proposal(
         STUDENT_A,
         proposal.proposal_id,
-        "ignored replay content",
+        "I now distinguish reference and value semantics.",
         request_id="req-correct",
+        idempotency_key="correct-proposal",
     )
 
     assert service.get_proposal(STUDENT_A, proposal.proposal_id).status is MemoryProposalStatus.superseded
@@ -174,12 +194,22 @@ def test_proposal_correction_creates_audited_immutable_version(memory_fixture):
     assert PRIVATE_TEXT not in audit_text
     assert corrected.content not in audit_text
 
+    with pytest.raises(IdempotencyConflict):
+        service.correct_proposal(
+            STUDENT_A,
+            proposal.proposal_id,
+            "different content with the same key",
+            request_id="req-correct-reused",
+            idempotency_key="correct-proposal",
+        )
+
     with pytest.raises(MemoryConflict):
         service.correct_proposal(
             STUDENT_A,
             proposal.proposal_id,
             "a distinct edit must not be discarded",
             request_id="req-correct-distinct",
+            idempotency_key="correct-proposal-distinct",
         )
 
 
@@ -195,7 +225,10 @@ def test_expired_proposal_cannot_be_accepted(memory_fixture):
 
     with pytest.raises(MemoryConflict):
         service.accept_proposal(
-            STUDENT_A, proposal.proposal_id, request_id="req-late-accept"
+            STUDENT_A,
+            proposal.proposal_id,
+            request_id="req-late-accept",
+            idempotency_key="late-accept",
         )
 
     assert service.get_proposal(STUDENT_A, proposal.proposal_id).status is MemoryProposalStatus.expired
@@ -210,7 +243,10 @@ def test_concurrent_accept_creates_one_active_memory(memory_fixture):
         results = list(
             pool.map(
                 lambda request_id: service.accept_proposal(
-                    STUDENT_A, proposal.proposal_id, request_id=request_id
+                    STUDENT_A,
+                    proposal.proposal_id,
+                    request_id=request_id,
+                    idempotency_key=request_id,
                 ),
                 ("req-accept-a", "req-accept-b"),
             )
@@ -223,13 +259,19 @@ def test_concurrent_accept_creates_one_active_memory(memory_fixture):
 def test_memory_correction_creates_new_active_version(memory_fixture):
     service = memory_fixture["service"]
     proposal = service.create_proposal(STUDENT_A, "check-a", request_id="req-proposal")
-    original = service.accept_proposal(STUDENT_A, proposal.proposal_id, request_id="req-accept")
+    original = service.accept_proposal(
+        STUDENT_A,
+        proposal.proposal_id,
+        request_id="req-accept",
+        idempotency_key="accept-for-correction",
+    )
 
     corrected = service.correct_memory(
         STUDENT_A,
         original.memory_id,
         "Classes are references; structs have value semantics.",
         request_id="req-memory-correct",
+        idempotency_key="correct-memory",
     )
 
     assert service.get_memory(STUDENT_A, original.memory_id).status is LearningMemoryStatus.superseded
@@ -242,16 +284,18 @@ def test_memory_correction_creates_new_active_version(memory_fixture):
     replayed = service.correct_memory(
         STUDENT_A,
         original.memory_id,
-        "ignored replay content",
+        "Classes are references; structs have value semantics.",
         request_id="req-memory-correct",
+        idempotency_key="correct-memory",
     )
     assert replayed == corrected
-    with pytest.raises(MemoryConflict):
+    with pytest.raises(IdempotencyConflict):
         service.correct_memory(
             STUDENT_A,
             original.memory_id,
-            "a distinct edit must conflict",
-            request_id="req-memory-correct-distinct",
+            "a distinct edit with the same key must conflict",
+            request_id="req-memory-correct-reused",
+            idempotency_key="correct-memory",
         )
 
 
@@ -259,17 +303,21 @@ def test_accept_replay_returns_original_memory_current_state(memory_fixture):
     service = memory_fixture["service"]
     proposal = service.create_proposal(STUDENT_A, "check-a", request_id="req-proposal")
     original = service.accept_proposal(
-        STUDENT_A, proposal.proposal_id, request_id="req-accept"
+        STUDENT_A, proposal.proposal_id, request_id="req-accept", idempotency_key="accept-original"
     )
     service.correct_memory(
         STUDENT_A,
         original.memory_id,
         "A corrected active version.",
         request_id="req-correct",
+        idempotency_key="correct-after-accept",
     )
 
     replayed = service.accept_proposal(
-        STUDENT_A, proposal.proposal_id, request_id="req-accept-replay"
+        STUDENT_A,
+        proposal.proposal_id,
+        request_id="req-accept-replay",
+        idempotency_key="accept-replay",
     )
 
     assert replayed.memory_id == original.memory_id
@@ -287,7 +335,10 @@ def test_audit_failure_rolls_back_acceptance(memory_fixture, monkeypatch):
 
     with pytest.raises(RuntimeError, match="audit unavailable"):
         service.accept_proposal(
-            STUDENT_A, proposal.proposal_id, request_id="req-accept"
+            STUDENT_A,
+            proposal.proposal_id,
+            request_id="req-accept",
+            idempotency_key="accept-audit-failure",
         )
 
     assert memory_fixture["repository"].get_proposal(proposal.proposal_id).status is MemoryProposalStatus.pending

@@ -98,6 +98,7 @@ def test_proposal_and_memory_lineages_are_bound_to_owner_and_course():
         ("root_proposal_id", "owner_user_id", "course_id"),
         ("previous_proposal_id", "owner_user_id", "course_id"),
     } <= _foreign_key_columns(proposal)
+    assert proposal.columns["explanation_check_id"].nullable is True
 
     assert {
         "uq_learning_memories_source_proposal",
@@ -112,6 +113,7 @@ def test_proposal_and_memory_lineages_are_bound_to_owner_and_course():
         ("logical_memory_id", "owner_user_id", "course_id"),
         ("previous_version_id", "owner_user_id", "course_id"),
     } <= _foreign_key_columns(memory)
+    assert memory.columns["source_proposal_id"].nullable is True
 
     active = next(
         index for index in memory.indexes if index.name == "uq_learning_memories_one_active"

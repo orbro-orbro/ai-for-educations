@@ -3,6 +3,8 @@ from __future__ import annotations
 from contextlib import contextmanager
 from dataclasses import replace
 from datetime import UTC, datetime
+import hashlib
+import json
 from typing import Callable
 from uuid import uuid4
 
@@ -22,6 +24,17 @@ from app.memories.retrieval import RetrievalDeletionError, RetrievalIndex
 
 def _utc_now() -> datetime:
     return datetime.now(UTC)
+
+
+def _fingerprint() -> str:
+    return hashlib.sha256(json.dumps({}, separators=(",", ":")).encode()).hexdigest()
+
+
+def _required_key(value: str) -> str:
+    value = value.strip()
+    if not value:
+        raise ValueError("idempotency_key is required")
+    return value
 
 
 class DeletionService:
@@ -49,8 +62,15 @@ class DeletionService:
                 yield
 
     def delete_memory(
-        self, actor: Actor, memory_id: str, *, request_id: str
+        self,
+        actor: Actor,
+        memory_id: str,
+        *,
+        request_id: str,
+        idempotency_key: str,
     ) -> DeletionReceipt:
+        idempotency_key = _required_key(idempotency_key)
+        fingerprint = _fingerprint()
         memory = self._repository.get_memory(memory_id)
         if memory is None:
             raise ResourceNotAvailable()
@@ -62,18 +82,37 @@ class DeletionService:
             self._policy.require_owner(
                 actor, memory.owner_user_id, memory.course_id
             )
-            existing = self._repository.get_deletion_for_memory(
-                memory.logical_memory_id
-            )
-            if existing is not None:
-                return existing
-            deletion_id = self._id_factory()
+            existing = self._repository.get_deletion_for_memory(memory.logical_memory_id)
+            deletion_id = existing.deletion_id if existing else self._id_factory()
             with self._repository.deletion_claim(deletion_id):
                 with self._atomic_mutation():
+                    replay = self._repository.claim_idempotency(
+                        actor_user_id=actor.user_id,
+                        operation="delete_memory",
+                        idempotency_key=idempotency_key,
+                        resource_type="learning_memory",
+                        resource_id=memory_id,
+                        request_fingerprint=fingerprint,
+                    )
+                    if replay is not None:
+                        result = self._repository.get_deletion(replay.result_id)
+                        if result is None:
+                            raise ResourceNotAvailable()
+                        return result
                     existing = self._repository.get_deletion_for_memory(
                         memory.logical_memory_id
                     )
                     if existing is not None:
+                        self._repository.remember_idempotency_result(
+                            actor_user_id=actor.user_id,
+                            operation="delete_memory",
+                            idempotency_key=idempotency_key,
+                            resource_type="learning_memory",
+                            resource_id=memory_id,
+                            request_fingerprint=fingerprint,
+                            result_type="memory_deletion",
+                            result_id=existing.deletion_id,
+                        )
                         return existing
                     now = self._clock()
                     lineage = self._repository.memory_lineage(
@@ -117,6 +156,16 @@ class DeletionService:
                             request_id=request_id,
                         )
                     )
+                    self._repository.remember_idempotency_result(
+                        actor_user_id=actor.user_id,
+                        operation="delete_memory",
+                        idempotency_key=idempotency_key,
+                        resource_type="learning_memory",
+                        resource_id=memory_id,
+                        request_fingerprint=fingerprint,
+                        result_type="memory_deletion",
+                        result_id=receipt.deletion_id,
+                    )
                     self._audit.record(
                         event_type="learning_memory_deletion_requested",
                         actor=actor,
@@ -134,29 +183,70 @@ class DeletionService:
         )
 
     def retry(
-        self, actor: Actor, deletion_id: str, *, request_id: str
+        self,
+        actor: Actor,
+        deletion_id: str,
+        *,
+        request_id: str,
+        idempotency_key: str,
     ) -> DeletionReceipt:
+        idempotency_key = _required_key(idempotency_key)
         receipt = self._repository.get_deletion(deletion_id)
         if receipt is None:
             raise ResourceNotAvailable()
         self._policy.require_owner(
             actor, receipt.owner_user_id, receipt.course_id
         )
-        return self._run_claimed_attempt(actor, deletion_id, request_id=request_id)
+        with self._repository.memory_claim(receipt.memory_id):
+            with self._repository.deletion_claim(deletion_id):
+                with self._atomic_mutation():
+                    replay = self._repository.claim_idempotency(
+                        actor_user_id=actor.user_id,
+                        operation="retry_memory_deletion",
+                        idempotency_key=idempotency_key,
+                        resource_type="memory_deletion",
+                        resource_id=deletion_id,
+                        request_fingerprint=_fingerprint(),
+                    )
+                    if replay is not None:
+                        result = self._repository.get_deletion(replay.result_id)
+                        if result is None:
+                            raise ResourceNotAvailable()
+                        return result
+                    self._repository.remember_idempotency_result(
+                        actor_user_id=actor.user_id,
+                        operation="retry_memory_deletion",
+                        idempotency_key=idempotency_key,
+                        resource_type="memory_deletion",
+                        resource_id=deletion_id,
+                        request_fingerprint=_fingerprint(),
+                        result_type="memory_deletion",
+                        result_id=deletion_id,
+                    )
+                    current = self._repository.get_deletion(deletion_id)
+                    if current is None:
+                        raise ResourceNotAvailable()
+                    if current.status is DeletionStatus.deleted:
+                        return current
+                return self._attempt(actor, current, request_id=request_id)
 
     def _run_claimed_attempt(
         self, actor: Actor, deletion_id: str, *, request_id: str
     ) -> DeletionReceipt:
-        with self._repository.deletion_claim(deletion_id):
-            receipt = self._repository.get_deletion(deletion_id)
-            if receipt is None:
-                raise ResourceNotAvailable()
-            self._policy.require_owner(
-                actor, receipt.owner_user_id, receipt.course_id
-            )
-            if receipt.status is DeletionStatus.deleted:
-                return receipt
-            return self._attempt(actor, receipt, request_id=request_id)
+        receipt = self._repository.get_deletion(deletion_id)
+        if receipt is None:
+            raise ResourceNotAvailable()
+        with self._repository.memory_claim(receipt.memory_id):
+            with self._repository.deletion_claim(deletion_id):
+                receipt = self._repository.get_deletion(deletion_id)
+                if receipt is None:
+                    raise ResourceNotAvailable()
+                self._policy.require_owner(
+                    actor, receipt.owner_user_id, receipt.course_id
+                )
+                if receipt.status is DeletionStatus.deleted:
+                    return receipt
+                return self._attempt(actor, receipt, request_id=request_id)
 
     def get_status(
         self,

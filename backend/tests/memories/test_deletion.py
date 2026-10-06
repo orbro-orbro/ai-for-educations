@@ -22,7 +22,7 @@ def test_index_delete_failure_is_immediately_invisible_and_retry_completes(memor
     memory_fixture["index"].fail_next_deletes(1)
 
     pending = deletion.delete_memory(
-        STUDENT_A, memory.memory_id, request_id="req-delete"
+        STUDENT_A, memory.memory_id, request_id="req-delete", idempotency_key="delete"
     )
 
     assert pending.status is DeletionStatus.deletion_pending
@@ -33,7 +33,7 @@ def test_index_delete_failure_is_immediately_invisible_and_retry_completes(memor
     ) == ()
 
     completed = deletion.retry(
-        STUDENT_A, pending.deletion_id, request_id="req-retry"
+        STUDENT_A, pending.deletion_id, request_id="req-retry", idempotency_key="retry"
     )
 
     assert completed.status is DeletionStatus.deleted
@@ -47,7 +47,7 @@ def test_reverse_lookup_verification_failure_is_audited_and_retryable(memory_fix
     memory_fixture["index"].fail_next_verifications(1)
 
     pending = memory_fixture["deletion"].delete_memory(
-        STUDENT_A, memory.memory_id, request_id="req-delete-verify"
+        STUDENT_A, memory.memory_id, request_id="req-delete-verify", idempotency_key="delete-verify"
     )
 
     assert pending.status is DeletionStatus.deletion_pending
@@ -55,7 +55,7 @@ def test_reverse_lookup_verification_failure_is_audited_and_retryable(memory_fix
     assert memory_fixture["audit"].events()[-1].reason_code == "reverse_lookup_not_empty"
 
     completed = memory_fixture["deletion"].retry(
-        STUDENT_A, pending.deletion_id, request_id="req-retry-verify"
+        STUDENT_A, pending.deletion_id, request_id="req-retry-verify", idempotency_key="retry-verify"
     )
     assert completed.status is DeletionStatus.deleted
 
@@ -89,6 +89,7 @@ def test_initial_cleanup_cannot_regress_a_completed_retry(memory_fixture, monkey
             STUDENT_A,
             memory.memory_id,
             request_id="req-delete",
+            idempotency_key="delete-race",
         )
         assert first_started.wait(timeout=2)
         receipt = memory_fixture["repository"].all_deletions()[0]
@@ -97,6 +98,7 @@ def test_initial_cleanup_cannot_regress_a_completed_retry(memory_fixture, monkey
             STUDENT_A,
             receipt.deletion_id,
             request_id="req-retry",
+            idempotency_key="retry-race",
         )
         try:
             retry.result(timeout=0.2)
@@ -134,6 +136,7 @@ def test_delayed_accept_index_write_cannot_restore_deleted_document(
             STUDENT_A,
             proposal.proposal_id,
             request_id="req-accept",
+            idempotency_key="accept-race",
         )
         assert upsert_started.wait(timeout=2)
         memory = memory_fixture["repository"].all_memories()[0]
@@ -142,6 +145,7 @@ def test_delayed_accept_index_write_cannot_restore_deleted_document(
             STUDENT_A,
             memory.memory_id,
             request_id="req-delete",
+            idempotency_key="delete-delayed-accept",
         )
         try:
             deleted.result(timeout=0.2)
@@ -164,7 +168,7 @@ def test_expiration_cannot_restore_a_deleted_stale_snapshot(memory_fixture, monk
     memory_fixture["repository"].save_memory(expiring)
     memory_fixture["clock"].advance(minutes=2)
     memory_fixture["deletion"].delete_memory(
-        STUDENT_A, memory.memory_id, request_id="req-delete"
+        STUDENT_A, memory.memory_id, request_id="req-delete", idempotency_key="delete-expired"
     )
     monkeypatch.setattr(
         memory_fixture["repository"],
@@ -183,13 +187,13 @@ def test_repeated_delete_and_retry_are_idempotent(memory_fixture):
     deletion = memory_fixture["deletion"]
 
     first = deletion.delete_memory(
-        STUDENT_A, memory.memory_id, request_id="req-delete"
+        STUDENT_A, memory.memory_id, request_id="req-delete", idempotency_key="delete-first"
     )
     repeated = deletion.delete_memory(
-        STUDENT_A, memory.memory_id, request_id="req-delete-again"
+        STUDENT_A, memory.memory_id, request_id="req-delete-again", idempotency_key="delete-again"
     )
     retried = deletion.retry(
-        STUDENT_A, first.deletion_id, request_id="req-retry-after-complete"
+        STUDENT_A, first.deletion_id, request_id="req-retry-after-complete", idempotency_key="retry-complete"
     )
 
     assert first.status is DeletionStatus.deleted
@@ -204,10 +208,10 @@ def test_pending_retries_keep_one_tombstone_and_never_restore_visibility(memory_
     memory_fixture["index"].fail_next_deletes(2)
 
     first = memory_fixture["deletion"].delete_memory(
-        STUDENT_A, memory.memory_id, request_id="req-delete"
+        STUDENT_A, memory.memory_id, request_id="req-delete", idempotency_key="delete-pending"
     )
     second = memory_fixture["deletion"].retry(
-        STUDENT_A, first.deletion_id, request_id="req-retry-pending"
+        STUDENT_A, first.deletion_id, request_id="req-retry-pending", idempotency_key="retry-pending"
     )
 
     assert first.status is second.status is DeletionStatus.deletion_pending
@@ -228,11 +232,12 @@ def test_index_failure_cannot_restore_revoked_share_access(memory_fixture):
         TEACHER_A.user_id,
         purpose="review-before-delete",
         request_id="req-grant",
+        idempotency_key="grant-before-delete",
     )
     memory_fixture["index"].fail_next_deletes(1)
 
     pending = memory_fixture["deletion"].delete_memory(
-        STUDENT_A, memory.memory_id, request_id="req-delete"
+        STUDENT_A, memory.memory_id, request_id="req-delete", idempotency_key="delete-granted"
     )
 
     assert pending.status is DeletionStatus.deletion_pending
@@ -249,6 +254,7 @@ def test_deletion_covers_all_versions_and_revokes_related_share(memory_fixture):
         original.memory_id,
         "Corrected private memory",
         request_id="req-correct",
+        idempotency_key="correct-version",
     )
     grant = service.create_share_grant(
         STUDENT_A,
@@ -256,10 +262,11 @@ def test_deletion_covers_all_versions_and_revokes_related_share(memory_fixture):
         TEACHER_A.user_id,
         purpose="review",
         request_id="req-grant",
+        idempotency_key="grant-review",
     )
 
     receipt = memory_fixture["deletion"].delete_memory(
-        STUDENT_A, corrected.memory_id, request_id="req-delete"
+        STUDENT_A, corrected.memory_id, request_id="req-delete", idempotency_key="delete-lineage"
     )
 
     assert receipt.status is DeletionStatus.deleted
@@ -279,16 +286,18 @@ def test_correction_replay_after_deletion_returns_only_redacted_state(memory_fix
         original.memory_id,
         "Corrected private memory",
         request_id="req-correct",
+        idempotency_key="correct-before-delete",
     )
     memory_fixture["deletion"].delete_memory(
-        STUDENT_A, corrected.memory_id, request_id="req-delete"
+        STUDENT_A, corrected.memory_id, request_id="req-delete", idempotency_key="delete-corrected"
     )
 
     replayed = service.correct_memory(
         STUDENT_A,
         original.memory_id,
-        "ignored replay body",
+        "Corrected private memory",
         request_id="req-correct",
+        idempotency_key="correct-before-delete",
     )
 
     assert replayed.memory_id == corrected.memory_id
@@ -300,7 +309,7 @@ def test_receipt_and_audit_never_contain_private_content(memory_fixture):
     memory = create_memory(memory_fixture)
 
     receipt = memory_fixture["deletion"].delete_memory(
-        STUDENT_A, memory.memory_id, request_id="req-delete"
+        STUDENT_A, memory.memory_id, request_id="req-delete", idempotency_key="delete-private"
     )
     serialized_receipt = json.dumps(receipt.public_dict(), ensure_ascii=False)
     serialized_audit = memory_fixture["audit"].serialized_events()

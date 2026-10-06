@@ -3,6 +3,8 @@ from __future__ import annotations
 from contextlib import contextmanager
 from dataclasses import replace
 from datetime import UTC, datetime, timedelta
+import hashlib
+import json
 from typing import Callable, Protocol
 from uuid import uuid4
 
@@ -49,6 +51,23 @@ def _normalize_aware_datetime(value: datetime | None) -> datetime | None:
     if value.tzinfo is None or value.utcoffset() is None:
         raise ValueError("expires_at must be timezone-aware")
     return value.astimezone(UTC)
+
+
+def _request_fingerprint(value: dict[str, object]) -> str:
+    encoded = json.dumps(
+        value,
+        ensure_ascii=False,
+        separators=(",", ":"),
+        sort_keys=True,
+    ).encode("utf-8")
+    return hashlib.sha256(encoded).hexdigest()
+
+
+def _required_idempotency_key(value: str) -> str:
+    normalized = value.strip()
+    if not normalized:
+        raise ValueError("idempotency_key is required")
+    return normalized
 
 
 class DiagnosticMemorySource:
@@ -270,8 +289,15 @@ class MemoryService:
         return proposal
 
     def accept_proposal(
-        self, actor: Actor, proposal_id: str, *, request_id: str
+        self,
+        actor: Actor,
+        proposal_id: str,
+        *,
+        request_id: str,
+        idempotency_key: str,
     ) -> LearningMemory:
+        idempotency_key = _required_idempotency_key(idempotency_key)
+        fingerprint = _request_fingerprint({})
         with self._repository.proposal_claim(proposal_id):
             with self._atomic_mutation():
                 proposal = self._repository.get_proposal(proposal_id)
@@ -280,11 +306,34 @@ class MemoryService:
                 self._policy.require_owner(
                     actor, proposal.owner_user_id, proposal.course_id
                 )
+                replay = self._repository.claim_idempotency(
+                    actor_user_id=actor.user_id,
+                    operation="accept_proposal",
+                    idempotency_key=idempotency_key,
+                    resource_type="memory_proposal",
+                    resource_id=proposal_id,
+                    request_fingerprint=fingerprint,
+                )
+                if replay is not None:
+                    existing = self._repository.get_memory(replay.result_id)
+                    if existing is None:
+                        raise MemoryConflict(MemoryConflict.public_message)
+                    return existing
                 proposal = self._expire_proposal_claimed(proposal)
                 if proposal.status is MemoryProposalStatus.accepted:
                     existing = self._repository.get_memory_for_proposal(proposal_id)
                     if existing is None:
                         raise MemoryConflict(MemoryConflict.public_message)
+                    self._repository.remember_idempotency_result(
+                        actor_user_id=actor.user_id,
+                        operation="accept_proposal",
+                        idempotency_key=idempotency_key,
+                        resource_type="memory_proposal",
+                        resource_id=proposal_id,
+                        request_fingerprint=fingerprint,
+                        result_type="learning_memory",
+                        result_id=existing.memory_id,
+                    )
                     return existing
                 if proposal.status is not MemoryProposalStatus.pending:
                     raise MemoryConflict(MemoryConflict.public_message)
@@ -321,6 +370,16 @@ class MemoryService:
                         accepted_memory_id=memory.memory_id,
                     )
                 )
+                self._repository.remember_idempotency_result(
+                    actor_user_id=actor.user_id,
+                    operation="accept_proposal",
+                    idempotency_key=idempotency_key,
+                    resource_type="memory_proposal",
+                    resource_id=proposal_id,
+                    request_fingerprint=fingerprint,
+                    result_type="learning_memory",
+                    result_id=memory.memory_id,
+                )
                 self._audit.record(
                     event_type="memory_proposal_accepted",
                     actor=actor,
@@ -342,18 +401,58 @@ class MemoryService:
                 return current
 
     def reject_proposal(
-        self, actor: Actor, proposal_id: str, *, request_id: str
+        self,
+        actor: Actor,
+        proposal_id: str,
+        *,
+        request_id: str,
+        idempotency_key: str,
     ) -> MemoryProposal:
+        idempotency_key = _required_idempotency_key(idempotency_key)
+        fingerprint = _request_fingerprint({})
         with self._repository.proposal_claim(proposal_id):
             with self._atomic_mutation():
                 proposal = self._required_owned_proposal(actor, proposal_id)
+                replay = self._repository.claim_idempotency(
+                    actor_user_id=actor.user_id,
+                    operation="reject_proposal",
+                    idempotency_key=idempotency_key,
+                    resource_type="memory_proposal",
+                    resource_id=proposal_id,
+                    request_fingerprint=fingerprint,
+                )
+                if replay is not None:
+                    result = self._repository.get_proposal(replay.result_id)
+                    if result is None:
+                        raise MemoryConflict(MemoryConflict.public_message)
+                    return result
                 proposal = self._expire_proposal_claimed(proposal)
                 if proposal.status is MemoryProposalStatus.rejected:
+                    self._repository.remember_idempotency_result(
+                        actor_user_id=actor.user_id,
+                        operation="reject_proposal",
+                        idempotency_key=idempotency_key,
+                        resource_type="memory_proposal",
+                        resource_id=proposal_id,
+                        request_fingerprint=fingerprint,
+                        result_type="memory_proposal",
+                        result_id=proposal.proposal_id,
+                    )
                     return proposal
                 if proposal.status is not MemoryProposalStatus.pending:
                     raise MemoryConflict(MemoryConflict.public_message)
                 rejected = self._repository.save_proposal(
                     replace(proposal, status=MemoryProposalStatus.rejected)
+                )
+                self._repository.remember_idempotency_result(
+                    actor_user_id=actor.user_id,
+                    operation="reject_proposal",
+                    idempotency_key=idempotency_key,
+                    resource_type="memory_proposal",
+                    resource_id=proposal_id,
+                    request_fingerprint=fingerprint,
+                    result_type="memory_proposal",
+                    result_id=rejected.proposal_id,
                 )
                 self._audit.record(
                     event_type="memory_proposal_rejected",
@@ -375,17 +474,28 @@ class MemoryService:
         content: str,
         *,
         request_id: str,
+        idempotency_key: str,
     ) -> MemoryProposal:
         if not content.strip():
             raise ValueError("content is required")
+        idempotency_key = _required_idempotency_key(idempotency_key)
+        fingerprint = _request_fingerprint({"content": content.strip()})
         with self._repository.proposal_claim(proposal_id):
             with self._atomic_mutation():
                 proposal = self._required_owned_proposal(actor, proposal_id)
-                replay = self._repository.get_proposal_correction_result(
-                    proposal_id, request_id
+                replay = self._repository.claim_idempotency(
+                    actor_user_id=actor.user_id,
+                    operation="correct_proposal",
+                    idempotency_key=idempotency_key,
+                    resource_type="memory_proposal",
+                    resource_id=proposal_id,
+                    request_fingerprint=fingerprint,
                 )
                 if replay is not None:
-                    return replay
+                    result = self._repository.get_proposal(replay.result_id)
+                    if result is None:
+                        raise MemoryConflict(MemoryConflict.public_message)
+                    return result
                 proposal = self._expire_proposal_claimed(proposal)
                 if proposal.status is not MemoryProposalStatus.pending:
                     raise MemoryConflict(MemoryConflict.public_message)
@@ -404,8 +514,15 @@ class MemoryService:
                 self._repository.save_proposal(
                     replace(proposal, status=MemoryProposalStatus.superseded)
                 )
-                self._repository.remember_proposal_correction_result(
-                    proposal_id, request_id, corrected
+                self._repository.remember_idempotency_result(
+                    actor_user_id=actor.user_id,
+                    operation="correct_proposal",
+                    idempotency_key=idempotency_key,
+                    resource_type="memory_proposal",
+                    resource_id=proposal_id,
+                    request_fingerprint=fingerprint,
+                    result_type="memory_proposal",
+                    result_id=corrected.proposal_id,
                 )
                 self._audit.record(
                     event_type="memory_proposal_corrected",
@@ -537,20 +654,31 @@ class MemoryService:
         content: str,
         *,
         request_id: str,
+        idempotency_key: str,
     ) -> LearningMemory:
         if not content.strip():
             raise ValueError("content is required")
+        idempotency_key = _required_idempotency_key(idempotency_key)
+        fingerprint = _request_fingerprint({"content": content.strip()})
         current = self._repository.get_memory(memory_id)
         if current is None:
             raise ResourceNotAvailable()
         self._policy.require_owner(actor, current.owner_user_id, current.course_id)
         with self._repository.memory_claim(current.logical_memory_id):
             with self._atomic_mutation():
-                replay = self._repository.get_memory_correction_result(
-                    memory_id, request_id
+                replay = self._repository.claim_idempotency(
+                    actor_user_id=actor.user_id,
+                    operation="correct_memory",
+                    idempotency_key=idempotency_key,
+                    resource_type="learning_memory",
+                    resource_id=memory_id,
+                    request_fingerprint=fingerprint,
                 )
                 if replay is not None:
-                    return replay
+                    result = self._repository.get_memory(replay.result_id)
+                    if result is None:
+                        raise MemoryConflict(MemoryConflict.public_message)
+                    return result
                 current = self._repository.get_memory(memory_id)
                 if current is None:
                     raise ResourceNotAvailable()
@@ -559,20 +687,6 @@ class MemoryService:
                     raise MemoryConflict(MemoryConflict.public_message)
                 now = self._clock()
                 new_id = self._id_factory()
-                corrected = self._repository.add_corrected_memory(
-                    replace(
-                        current,
-                        memory_id=new_id,
-                        previous_version_id=current.memory_id,
-                        version=current.version + 1,
-                        content=content.strip(),
-                        status=LearningMemoryStatus.active,
-                        index_document_id=f"memory-index:{new_id}",
-                        created_at=now,
-                        updated_at=now,
-                        request_id=request_id,
-                    )
-                )
                 self._repository.save_memory(
                     replace(
                         current,
@@ -580,8 +694,30 @@ class MemoryService:
                         updated_at=now,
                     )
                 )
-                self._repository.remember_memory_correction_result(
-                    memory_id, request_id, corrected
+                corrected = self._repository.add_corrected_memory(
+                    replace(
+                        current,
+                        memory_id=new_id,
+                        previous_version_id=current.memory_id,
+                        version=current.version + 1,
+                        content=content.strip(),
+                        source_proposal_id=None,
+                        status=LearningMemoryStatus.active,
+                        index_document_id=f"memory-index:{new_id}",
+                        created_at=now,
+                        updated_at=now,
+                        request_id=request_id,
+                    )
+                )
+                self._repository.remember_idempotency_result(
+                    actor_user_id=actor.user_id,
+                    operation="correct_memory",
+                    idempotency_key=idempotency_key,
+                    resource_type="learning_memory",
+                    resource_id=memory_id,
+                    request_fingerprint=fingerprint,
+                    result_type="learning_memory",
+                    result_id=corrected.memory_id,
                 )
                 self._audit.record(
                     event_type="learning_memory_corrected",
@@ -606,15 +742,37 @@ class MemoryService:
         *,
         purpose: str,
         request_id: str,
+        idempotency_key: str,
         expires_at: datetime | None = None,
     ) -> ShareGrant:
         expires_at = _normalize_aware_datetime(expires_at)
+        idempotency_key = _required_idempotency_key(idempotency_key)
+        fingerprint = _request_fingerprint(
+            {
+                "grantee_user_id": grantee_user_id,
+                "purpose": purpose,
+                "expires_at": expires_at.isoformat() if expires_at else None,
+            }
+        )
         summary = self._source.diagnosis_summary(diagnosis_id)
         if summary is None:
             raise ResourceNotAvailable()
         self._policy.require_owner(actor, summary.owner_user_id, summary.course_id)
         self._policy.require_teacher_for_course(grantee_user_id, summary.course_id)
         with self._atomic_mutation():
+            replay = self._repository.claim_idempotency(
+                actor_user_id=actor.user_id,
+                operation="create_share_grant",
+                idempotency_key=idempotency_key,
+                resource_type="diagnosis_summary",
+                resource_id=diagnosis_id,
+                request_fingerprint=fingerprint,
+            )
+            if replay is not None:
+                existing = self._repository.get_grant(replay.result_id)
+                if existing is None:
+                    raise MemoryConflict(MemoryConflict.public_message)
+                return existing
             grant = self._repository.add_grant(
                 ShareGrant(
                     grant_id=self._id_factory(),
@@ -630,6 +788,16 @@ class MemoryService:
                     revoked_at=None,
                     request_id=request_id,
                 )
+            )
+            self._repository.remember_idempotency_result(
+                actor_user_id=actor.user_id,
+                operation="create_share_grant",
+                idempotency_key=idempotency_key,
+                resource_type="diagnosis_summary",
+                resource_id=diagnosis_id,
+                request_fingerprint=fingerprint,
+                result_type="share_grant",
+                result_id=grant.grant_id,
             )
             self._audit.record(
                 event_type="share_grant_created",
@@ -697,8 +865,15 @@ class MemoryService:
         return grant
 
     def revoke_share_grant(
-        self, actor: Actor, grant_id: str, *, request_id: str
+        self,
+        actor: Actor,
+        grant_id: str,
+        *,
+        request_id: str,
+        idempotency_key: str,
     ) -> ShareGrant:
+        idempotency_key = _required_idempotency_key(idempotency_key)
+        fingerprint = _request_fingerprint({})
         with self._repository.grant_claim(grant_id):
             with self._atomic_mutation():
                 grant = self._repository.get_grant(grant_id)
@@ -707,11 +882,34 @@ class MemoryService:
                 self._policy.require_owner(
                     actor, grant.owner_user_id, grant.course_id
                 )
+                replay = self._repository.claim_idempotency(
+                    actor_user_id=actor.user_id,
+                    operation="revoke_share_grant",
+                    idempotency_key=idempotency_key,
+                    resource_type="share_grant",
+                    resource_id=grant_id,
+                    request_fingerprint=fingerprint,
+                )
+                if replay is not None:
+                    result = self._repository.get_grant(replay.result_id)
+                    if result is None:
+                        raise MemoryConflict(MemoryConflict.public_message)
+                    return result
                 grant = self._expire_grant_claimed(grant)
                 if grant.status in {
                     ShareGrantStatus.revoked,
                     ShareGrantStatus.expired,
                 }:
+                    self._repository.remember_idempotency_result(
+                        actor_user_id=actor.user_id,
+                        operation="revoke_share_grant",
+                        idempotency_key=idempotency_key,
+                        resource_type="share_grant",
+                        resource_id=grant_id,
+                        request_fingerprint=fingerprint,
+                        result_type="share_grant",
+                        result_id=grant.grant_id,
+                    )
                     return grant
                 revoked = self._repository.save_grant(
                     replace(
@@ -719,6 +917,16 @@ class MemoryService:
                         status=ShareGrantStatus.revoked,
                         revoked_at=self._clock(),
                     )
+                )
+                self._repository.remember_idempotency_result(
+                    actor_user_id=actor.user_id,
+                    operation="revoke_share_grant",
+                    idempotency_key=idempotency_key,
+                    resource_type="share_grant",
+                    resource_id=grant_id,
+                    request_fingerprint=fingerprint,
+                    result_type="share_grant",
+                    result_id=revoked.grant_id,
                 )
                 self._audit.record(
                     event_type="share_grant_revoked",
