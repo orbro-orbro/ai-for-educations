@@ -35,6 +35,9 @@ def install_error_handling(app: FastAPI) -> None:
     from app.courses.service import ResourceNotAvailable
     from app.diagnostics.repository import DiagnosticPersistenceError
     from app.diagnostics.service import ExecutionEvidenceUnavailable
+    from app.memories.persistence import MemoryPersistenceError
+    from app.memories.repository import IdempotencyConflict
+    from app.memories.service import MemoryConflict, MemoryProposalNotEligible
     from app.submissions.repository import SubmissionPersistenceError
 
     @app.middleware("http")
@@ -69,10 +72,26 @@ def install_error_handling(app: FastAPI) -> None:
 
     @app.exception_handler(DiagnosticPersistenceError)
     @app.exception_handler(SubmissionPersistenceError)
+    @app.exception_handler(MemoryPersistenceError)
     async def handle_storage_unavailable(request: Request, _exc: RuntimeError):
         return error_response(
             request,
             503,
             "STORAGE_UNAVAILABLE",
             "The request could not be persisted safely.",
+        )
+
+    @app.exception_handler(IdempotencyConflict)
+    @app.exception_handler(MemoryConflict)
+    @app.exception_handler(MemoryProposalNotEligible)
+    async def handle_memory_conflict(request: Request, exc: RuntimeError):
+        return error_response(
+            request,
+            409,
+            getattr(exc, "public_error_code", "MEMORY_STATE_CONFLICT"),
+            getattr(
+                exc,
+                "public_message",
+                "The memory state does not allow this operation.",
+            ),
         )

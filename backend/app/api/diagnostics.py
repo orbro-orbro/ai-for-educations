@@ -1,12 +1,13 @@
 from __future__ import annotations
 
-from typing import Annotated
+from typing import Annotated, Callable
 
 from fastapi import APIRouter, Header, Path, Request
 from pydantic import BaseModel, ConfigDict, Field
 
 from app.api.auth import Authenticator
 from app.api.errors import ErrorResponse, error_response
+from app.auth.models import Actor
 from app.diagnostics.hints import HintLadderService, HintLevelExhausted
 from app.diagnostics.schema import Diagnosis, ExplanationCheck, HintEvent
 from app.diagnostics.service import DiagnosisService
@@ -32,6 +33,7 @@ def create_diagnostics_router(
     diagnosis_service: DiagnosisService | None,
     hint_service: HintLadderService | None,
     authenticator: Authenticator | None,
+    proposal_hook: Callable[[Actor, ExplanationCheck, str], object] | None = None,
 ) -> APIRouter:
     router = APIRouter(tags=["diagnostics"])
 
@@ -89,11 +91,14 @@ def create_diagnostics_router(
         authorization: str | None = Header(default=None),
     ):
         actor = authenticator.authenticate_header(authorization)
-        return diagnosis_service.check_explanation(
+        result = diagnosis_service.check_explanation(
             actor,
             diagnosis_id,
             payload.explanation,
             request_id=str(request.state.request_id),
         )
+        if result.memory_proposal_eligible and proposal_hook is not None:
+            proposal_hook(actor, result, str(request.state.request_id))
+        return result
 
     return router

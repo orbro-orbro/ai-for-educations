@@ -9,7 +9,9 @@ from app.api.courses import create_courses_router
 from app.api.diagnostics import create_diagnostics_router
 from app.api.errors import install_error_handling
 from app.api.knowledge import router as knowledge_router
+from app.api.memories import create_memories_router
 from app.api.submissions import create_submissions_router
+from app.audit.service import AuditLog, AuditService
 from app.auth.models import UserRepository
 from app.auth.policy import AuthorizationPolicy
 from app.courses.models import CourseRepository, EnrollmentRepository, ProtectedAnswerLookup
@@ -18,6 +20,11 @@ from app.diagnostics.hints import HintLadderService
 from app.diagnostics.repository import DiagnosticRepository, InMemoryDiagnosticRepository
 from app.diagnostics.service import DiagnosisService
 from app.knowledge.repository import InMemoryKnowledgeRepository, KnowledgeRepository
+from app.memories.deletion import DeletionService
+from app.memories.policy import CourseServiceMemoryAccess, MemoryPolicy
+from app.memories.repository import InMemoryMemoryRepository, MemoryRepository
+from app.memories.retrieval import InMemoryRetrievalIndex, RetrievalIndex
+from app.memories.service import DiagnosticMemorySource, MemoryService, MemorySource
 from app.model_gateway.base import ModelProvider
 from app.model_gateway.config import model_provider_from_config
 from app.submissions.repository import (
@@ -56,13 +63,18 @@ def _submission_service(
     )
 
 
-def _default_dependencies() -> tuple[
+def _default_dependencies(
+    diagnosis_confidence_threshold: float = 0.75,
+) -> tuple[
     Authenticator,
     CourseService,
     KnowledgeRepository,
     SubmissionRepository,
     DiagnosticRepository,
     ProtectedAnswerLookup,
+    MemoryRepository,
+    MemorySource,
+    AuditLog,
 ]:
     environment = os.environ.get("APP_ENV", "development")
     secret = os.environ.get("AUTH_TOKEN_SECRET")
@@ -77,7 +89,10 @@ def _default_dependencies() -> tuple[
     if database_url:
         from app.persistence.repositories import create_sql_repositories
 
-        repositories = create_sql_repositories(database_url)
+        repositories = create_sql_repositories(
+            database_url,
+            diagnosis_confidence_threshold=diagnosis_confidence_threshold,
+        )
         users = repositories.users
         courses = repositories.courses
         enrollments = repositories.enrollments
@@ -85,6 +100,9 @@ def _default_dependencies() -> tuple[
         submissions = repositories.submissions
         diagnostics = repositories.diagnostics
         protected_answers = repositories.courses
+        memories = repositories.memories
+        memory_source = repositories.memory_source
+        memory_audit = repositories.audit
     else:
         if environment not in {"development", "test"}:
             raise RuntimeError("DATABASE_URL must be set outside development and test")
@@ -95,6 +113,13 @@ def _default_dependencies() -> tuple[
         submissions = InMemorySubmissionRepository()
         diagnostics = InMemoryDiagnosticRepository()
         protected_answers = courses
+        memories = InMemoryMemoryRepository()
+        memory_source = DiagnosticMemorySource(
+            diagnostics=diagnostics,
+            submissions=submissions,
+            confidence_threshold=diagnosis_confidence_threshold,
+        )
+        memory_audit = AuditService()
     authenticator = Authenticator(users, TokenCodec(secret))
     course_service = CourseService(users, courses, enrollments, AuthorizationPolicy())
     return (
@@ -104,6 +129,9 @@ def _default_dependencies() -> tuple[
         submissions,
         diagnostics,
         protected_answers,
+        memories,
+        memory_source,
+        memory_audit,
     )
 
 
@@ -120,26 +148,13 @@ def create_app(
     hint_ladder_service: HintLadderService | None = None,
     diagnosis_confidence_threshold: float | None = None,
     submission_service: SubmissionService | None = None,
+    memory_repository: MemoryRepository | None = None,
+    memory_source: MemorySource | None = None,
+    memory_index: RetrievalIndex | None = None,
+    memory_audit: AuditLog | None = None,
+    memory_service: MemoryService | None = None,
+    deletion_service: DeletionService | None = None,
 ) -> FastAPI:
-    if (
-        authenticator is None
-        or course_service is None
-        or knowledge_repository is None
-        or submission_repository is None
-        or diagnostic_repository is None
-        or protected_answer_lookup is None
-    ):
-        defaults = _default_dependencies()
-        authenticator = authenticator or defaults[0]
-        course_service = course_service or defaults[1]
-        knowledge_repository = knowledge_repository or defaults[2]
-        submission_repository = submission_repository or defaults[3]
-        diagnostic_repository = diagnostic_repository or defaults[4]
-        protected_answer_lookup = protected_answer_lookup or defaults[5]
-    provider = model_provider or model_provider_from_config()
-    access = CourseSubmissionAccess(
-        course_service, is_published=lambda exercise: exercise.is_published
-    )
     if diagnosis_confidence_threshold is None:
         try:
             diagnosis_confidence_threshold = float(
@@ -151,6 +166,31 @@ def create_app(
             ) from exc
     if not 0 <= diagnosis_confidence_threshold <= 1:
         raise RuntimeError("DIAGNOSIS_CONFIDENCE_THRESHOLD must be in [0,1]")
+    if (
+        authenticator is None
+        or course_service is None
+        or knowledge_repository is None
+        or submission_repository is None
+        or diagnostic_repository is None
+        or protected_answer_lookup is None
+        or memory_repository is None
+        or memory_source is None
+        or memory_audit is None
+    ):
+        defaults = _default_dependencies(diagnosis_confidence_threshold)
+        authenticator = authenticator or defaults[0]
+        course_service = course_service or defaults[1]
+        knowledge_repository = knowledge_repository or defaults[2]
+        submission_repository = submission_repository or defaults[3]
+        diagnostic_repository = diagnostic_repository or defaults[4]
+        protected_answer_lookup = protected_answer_lookup or defaults[5]
+        memory_repository = memory_repository or defaults[6]
+        memory_source = memory_source or defaults[7]
+        memory_audit = memory_audit or defaults[8]
+    provider = model_provider or model_provider_from_config()
+    access = CourseSubmissionAccess(
+        course_service, is_published=lambda exercise: exercise.is_published
+    )
     if diagnosis_service is None:
         diagnosis_service = DiagnosisService(
             submissions=submission_repository,
@@ -176,6 +216,23 @@ def create_app(
             knowledge=knowledge_repository,
             diagnosis_service=diagnosis_service,
         )
+    memory_index = memory_index or InMemoryRetrievalIndex()
+    memory_policy = MemoryPolicy(CourseServiceMemoryAccess(course_service))
+    if memory_service is None:
+        memory_service = MemoryService(
+            repository=memory_repository,
+            source=memory_source,
+            policy=memory_policy,
+            retrieval_index=memory_index,
+            audit=memory_audit,
+        )
+    if deletion_service is None:
+        deletion_service = DeletionService(
+            repository=memory_repository,
+            policy=memory_policy,
+            retrieval_index=memory_index,
+            audit=memory_audit,
+        )
 
     application = FastAPI(title="KnowBound-CJ", version="0.2.0")
     application.state.authenticator = authenticator
@@ -187,6 +244,12 @@ def create_app(
     application.state.diagnosis_service = diagnosis_service
     application.state.hint_service = hint_ladder_service
     application.state.diagnosis_confidence_threshold = diagnosis_confidence_threshold
+    application.state.memory_repository = memory_repository
+    application.state.memory_source = memory_source
+    application.state.memory_index = memory_index
+    application.state.memory_audit = memory_audit
+    application.state.memory_service = memory_service
+    application.state.deletion_service = deletion_service
     install_error_handling(application)
     application.include_router(create_auth_router(authenticator))
     application.include_router(create_courses_router(course_service, authenticator))
@@ -196,8 +259,18 @@ def create_app(
     )
     application.include_router(
         create_diagnostics_router(
-            diagnosis_service, hint_ladder_service, authenticator
+            diagnosis_service,
+            hint_ladder_service,
+            authenticator,
+            proposal_hook=lambda actor, result, request_id: memory_service.create_proposal(
+                actor,
+                result.explanation_check_id,
+                request_id=request_id,
+            ),
         )
+    )
+    application.include_router(
+        create_memories_router(memory_service, deletion_service, authenticator)
     )
 
     @application.get("/health")
