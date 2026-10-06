@@ -25,7 +25,10 @@ from app.persistence.models import (
 )
 
 if TYPE_CHECKING:
+    from app.audit.persistence import SqlAuditLog
     from app.diagnostics.persistence import SqlDiagnosticRepository
+    from app.memories.persistence import SqlMemoryRepository, SqlMemoryUnitOfWork
+    from app.memories.source import SqlDiagnosticMemorySource
     from app.submissions.persistence import SqlSubmissionRepository
 
 
@@ -270,10 +273,22 @@ class SqlRepositories:
     knowledge: SqlKnowledgeRepository
     submissions: "SqlSubmissionRepository"
     diagnostics: "SqlDiagnosticRepository"
+    memory_uow: "SqlMemoryUnitOfWork"
+    memories: "SqlMemoryRepository"
+    audit: "SqlAuditLog"
+    memory_source: "SqlDiagnosticMemorySource"
 
 
-def create_sql_repositories(database_url: str, *, create_schema: bool = False) -> SqlRepositories:
+def create_sql_repositories(
+    database_url: str,
+    *,
+    create_schema: bool = False,
+    diagnosis_confidence_threshold: float = 0.75,
+) -> SqlRepositories:
+    from app.audit.persistence import SqlAuditLog
     from app.diagnostics.persistence import SqlDiagnosticRepository
+    from app.memories.persistence import SqlMemoryRepository, SqlMemoryUnitOfWork
+    from app.memories.source import SqlDiagnosticMemorySource
     from app.submissions.persistence import SqlSubmissionRepository
 
     engine = create_engine(database_url, pool_pre_ping=True)
@@ -286,6 +301,7 @@ def create_sql_repositories(database_url: str, *, create_schema: bool = False) -
     if create_schema:
         Base.metadata.create_all(engine)
     sessions = sessionmaker(engine, expire_on_commit=False)
+    memory_uow = SqlMemoryUnitOfWork(sessions)
     return SqlRepositories(
         SqlUserRepository(sessions),
         SqlCourseRepository(sessions),
@@ -293,6 +309,13 @@ def create_sql_repositories(database_url: str, *, create_schema: bool = False) -
         SqlKnowledgeRepository(sessions),
         SqlSubmissionRepository(sessions),
         SqlDiagnosticRepository(sessions),
+        memory_uow,
+        SqlMemoryRepository(memory_uow),
+        SqlAuditLog(memory_uow),
+        SqlDiagnosticMemorySource(
+            memory_uow,
+            confidence_threshold=diagnosis_confidence_threshold,
+        ),
     )
 
 

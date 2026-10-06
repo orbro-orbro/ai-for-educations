@@ -3,7 +3,9 @@ from __future__ import annotations
 from pathlib import Path
 
 import yaml
+from fastapi import FastAPI
 
+from app.api.memories import create_memories_router
 from app.main import create_app
 
 
@@ -20,6 +22,18 @@ def _operations(document):
         for method, operation in item.items():
             if method.lower() in {"get", "post", "put", "patch", "delete"}:
                 yield path, method.lower(), operation
+
+
+def _without_generated_titles(value):
+    if isinstance(value, dict):
+        return {
+            key: _without_generated_titles(item)
+            for key, item in value.items()
+            if key != "title"
+        }
+    if isinstance(value, list):
+        return [_without_generated_titles(item) for item in value]
+    return value
 
 
 def test_contract_contains_every_runtime_route_and_unique_operation_ids():
@@ -94,3 +108,47 @@ def test_task6_runtime_documents_stable_error_statuses() -> None:
     ):
         operation = next(iter(runtime["paths"][path].values()))
         assert {"401", "404", "409", "422", "503"} <= set(operation["responses"])
+
+
+def test_task7_runtime_operations_match_the_shared_contract() -> None:
+    shared = _document()
+    runtime_app = FastAPI()
+    runtime_app.include_router(create_memories_router(object(), object(), object()))
+    runtime = runtime_app.openapi()
+
+    for path, path_item in runtime["paths"].items():
+        assert path in shared["paths"]
+        for method, operation in path_item.items():
+            contract = shared["paths"][path][method]
+            assert operation["operationId"] == contract["operationId"]
+            assert set(operation["responses"]) == set(contract["responses"])
+            assert operation.get("security") == contract["security"]
+
+            runtime_parameters = {
+                (item["name"], item["in"], item.get("required", False))
+                for item in operation.get("parameters", [])
+            }
+            contract_parameters = set()
+            for item in contract.get("parameters", []):
+                if "$ref" in item:
+                    item = shared["components"]["parameters"][item["$ref"].rsplit("/", 1)[1]]
+                contract_parameters.add(
+                    (item["name"], item["in"], item.get("required", False))
+                )
+            assert runtime_parameters == contract_parameters
+
+            if "requestBody" in operation:
+                runtime_schema = operation["requestBody"]["content"]["application/json"]["schema"]
+                contract_schema = contract["requestBody"]["content"]["application/json"]["schema"]
+                assert runtime_schema == contract_schema
+
+            success = "202" if method == "delete" and path == "/memories/{memory_id}" else (
+                "201" if path == "/diagnoses/{diagnosis_id}/share-grants" else "200"
+            )
+            runtime_schema = operation["responses"][success]["content"]["application/json"]["schema"]
+            contract_schema = contract["responses"][success]["content"]["application/json"]["schema"]
+            assert _without_generated_titles(runtime_schema) == contract_schema
+
+    assert "/teacher/courses/{course_id}/analytics" not in runtime["paths"]
+    assert "/teacher/courses/{course_id}/review-queue" not in runtime["paths"]
+    assert "/teacher/diagnoses/{diagnosis_id}/review" not in runtime["paths"]
