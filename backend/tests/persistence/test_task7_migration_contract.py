@@ -91,6 +91,7 @@ def test_proposal_and_memory_lineages_are_bound_to_owner_and_course():
         "uq_memory_proposals_root_version",
         "uq_memory_proposals_previous",
         "uq_memory_proposals_id_owner_course",
+        "ck_memory_proposals_lineage_shape",
     } <= _constraint_names(proposal)
     assert {
         ("diagnosis_id", "course_id", "owner_user_id"),
@@ -106,6 +107,7 @@ def test_proposal_and_memory_lineages_are_bound_to_owner_and_course():
         "uq_learning_memories_previous",
         "uq_learning_memories_index_document",
         "uq_learning_memories_id_owner_course",
+        "ck_learning_memories_lineage_shape",
     } <= _constraint_names(memory)
     assert {
         ("source_proposal_id", "owner_user_id", "course_id"),

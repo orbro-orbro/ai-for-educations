@@ -38,6 +38,12 @@ class MemoryPersistenceError(RuntimeError):
     pass
 
 
+def _constraint_name(error: SQLAlchemyError) -> str | None:
+    driver_error = getattr(error, "orig", None)
+    diagnostics = getattr(driver_error, "diag", None)
+    return getattr(diagnostics, "constraint_name", None)
+
+
 def _aware(value: datetime | None) -> datetime | None:
     if value is None:
         return None
@@ -77,6 +83,8 @@ class SqlMemoryUnitOfWork:
                 finally:
                     self._current.reset(token)
         except SQLAlchemyError as error:
+            if _constraint_name(error) == "uq_memory_idempotency_scope":
+                raise IdempotencyConflict(IdempotencyConflict.public_message) from error
             raise MemoryPersistenceError("memory storage operation failed") from error
 
     @contextmanager

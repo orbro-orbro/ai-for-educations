@@ -584,6 +584,13 @@ class MemoryProposalRow(Base):
         ),
         CheckConstraint("version >= 1", name="ck_memory_proposals_version"),
         CheckConstraint(
+            "(id = root_proposal_id AND previous_proposal_id IS NULL "
+            "AND version = 1 AND explanation_check_id IS NOT NULL) OR "
+            "(id <> root_proposal_id AND previous_proposal_id IS NOT NULL "
+            "AND version > 1 AND explanation_check_id IS NULL)",
+            name="ck_memory_proposals_lineage_shape",
+        ),
+        CheckConstraint(
             "confidence >= 0 AND confidence <= 1",
             name="ck_memory_proposals_confidence",
         ),
@@ -671,6 +678,13 @@ class LearningMemoryRow(Base):
             name="uq_learning_memories_id_owner_course",
         ),
         CheckConstraint("version >= 1", name="ck_learning_memories_version"),
+        CheckConstraint(
+            "(id = logical_memory_id AND previous_version_id IS NULL "
+            "AND version = 1 AND source_proposal_id IS NOT NULL) OR "
+            "(id <> logical_memory_id AND previous_version_id IS NOT NULL "
+            "AND version > 1 AND source_proposal_id IS NULL)",
+            name="ck_learning_memories_lineage_shape",
+        ),
         CheckConstraint(
             "confidence >= 0 AND confidence <= 1",
             name="ck_learning_memories_confidence",
