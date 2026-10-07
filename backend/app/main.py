@@ -3,6 +3,7 @@ from __future__ import annotations
 import os
 
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 
 from app.api.auth import Authenticator, TokenCodec, create_auth_router
 from app.api.courses import create_courses_router
@@ -35,6 +36,26 @@ from app.submissions.runner_client import RunnerClient
 from app.submissions.service import CourseSubmissionAccess, SubmissionService
 
 _DEVELOPMENT_TOKEN_SECRET = "development-only-token-secret"
+_DEVELOPMENT_CORS_ORIGINS = (
+    "http://localhost:5173",
+    "http://127.0.0.1:5173",
+)
+
+
+def _cors_origins_from_config() -> tuple[str, ...]:
+    configured = os.environ.get("CORS_ALLOWED_ORIGINS")
+    if configured is not None:
+        origins = tuple(
+            origin.strip().rstrip("/")
+            for origin in configured.split(",")
+            if origin.strip()
+        )
+        if "*" in origins:
+            raise RuntimeError("CORS_ALLOWED_ORIGINS must contain explicit origins")
+        return origins
+    if os.environ.get("APP_ENV", "development") in {"development", "test"}:
+        return _DEVELOPMENT_CORS_ORIGINS
+    return ()
 
 
 def _runner_client_from_config() -> RunnerClient:
@@ -235,6 +256,21 @@ def create_app(
         )
 
     application = FastAPI(title="KnowBound-CJ", version="0.2.0")
+    allowed_origins = _cors_origins_from_config()
+    if allowed_origins:
+        application.add_middleware(
+            CORSMiddleware,
+            allow_origins=list(allowed_origins),
+            allow_credentials=False,
+            allow_methods=["GET", "POST", "PATCH", "DELETE"],
+            allow_headers=[
+                "Authorization",
+                "Content-Type",
+                "Idempotency-Key",
+                "X-Request-ID",
+            ],
+            expose_headers=["X-Request-ID"],
+        )
     application.state.authenticator = authenticator
     application.state.course_service = course_service
     application.state.knowledge_repository = knowledge_repository

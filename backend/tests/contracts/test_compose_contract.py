@@ -56,6 +56,18 @@ def test_environment_example_matches_wave1_compose_contract():
     assert environment["DOCKER_GID"] == "0"
 
 
+def test_compose_passes_the_explicit_cors_allowlist_to_the_api():
+    document = yaml.safe_load((ROOT / "infra/compose/docker-compose.yml").read_text(encoding="utf-8"))
+    environment = _environment_example()
+
+    assert environment["CORS_ALLOWED_ORIGINS"] == (
+        "http://localhost:5173,http://127.0.0.1:5173"
+    )
+    assert document["services"]["api"]["environment"]["CORS_ALLOWED_ORIGINS"] == (
+        "${CORS_ALLOWED_ORIGINS:-http://localhost:5173,http://127.0.0.1:5173}"
+    )
+
+
 def test_docker_build_contexts_exclude_local_artifacts():
     required_patterns = {
         "backend": {".pytest_cache/", "__pycache__/", ".venv/", "*.db", "*.sqlite*"},
