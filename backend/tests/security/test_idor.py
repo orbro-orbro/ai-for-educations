@@ -104,9 +104,9 @@ def test_revoked_course_relation_denies_existing_submission_resources(security_a
 
 
 def test_logout_revokes_old_token_at_the_server_boundary(security_app):
-    security_app.request("POST", "/auth/logout")
+    assert security_app.request("POST", "/auth/logout").status_code == 204
     response = security_app.request("GET", "/courses")
-    assert response.status_code == 401, "Logging out must invalidate the captured old token; current main has no revocation contract"
+    assert response.status_code == 401, "Logging out must invalidate the captured old token"
 
 
 def test_idempotency_key_is_scoped_to_resource_type(security_app):

@@ -285,7 +285,7 @@ class DiagnosisService:
             )
         request = ExplanationCheckRequest(
             category=diagnosis.category.value,
-            root_cause=diagnosis.root_cause,
+            root_cause="\n".join(item.explanation for item in approved),
             diagnosis_concept_ids=diagnosis.concept_ids,
             approved_concept_ids=tuple(sorted(approved_concepts)),
             explanation=explanation,
@@ -444,7 +444,7 @@ class DiagnosisService:
 def _diagnosis_request(submission, execution, rule_matches, approved, exercise_context):
     return DiagnosisRequest(
         source_files=tuple(
-            SourceContext(path=item.path, content=item.content)
+            SourceContext(path=item.path)
             for item in submission.source_files
         ),
         execution=ExecutionContext(
@@ -455,7 +455,7 @@ def _diagnosis_request(submission, execution, rule_matches, approved, exercise_c
             diagnostics=tuple(
                 CompilerDiagnosticContext(
                     severity=item.severity,
-                    message=item.message,
+                    message="Compiler diagnostic; original message retained for local evidence validation.",
                     code=item.code,
                     file=item.file,
                     start_line=item.start_line,
@@ -471,7 +471,7 @@ def _diagnosis_request(submission, execution, rule_matches, approved, exercise_c
                 root_concept_id=item.root_concept_id,
                 related_concept_ids=item.related_concept_ids,
                 diagnostic_indices=item.diagnostic_indices,
-                evidence_summary=item.evidence_summary,
+                evidence_summary="Deterministic rule matched the referenced compiler diagnostic.",
                 source_references=item.source_references,
                 match_strength=item.match_strength,
             )

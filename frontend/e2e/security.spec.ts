@@ -103,7 +103,7 @@ test("sharing grants only one summary and revocation immediately stops access", 
 
 test("logout makes a captured old bearer token unusable", async ({ request }) => {
   const headers = await login(request, "student-a");
-  await request.post("/auth/logout", { headers });
+  expect((await request.post("/auth/logout", { headers })).status()).toBe(204);
   const replay = await request.get("/courses", { headers });
-  expect(replay.status(), "Current main has no server-side logout/revocation contract; preserve this failure").toBe(401);
+  expect(replay.status(), "The captured old token must be rejected after logout").toBe(401);
 });

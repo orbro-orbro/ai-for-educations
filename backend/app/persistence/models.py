@@ -36,6 +36,13 @@ class UserRow(Base):
     __table_args__ = (CheckConstraint("role IN ('student','teacher')", name="ck_users_role"),)
 
 
+class TokenRevocationRow(Base):
+    __tablename__ = "token_revocations"
+    token_digest: Mapped[str] = mapped_column(String(64), primary_key=True)
+    expires_at: Mapped[int] = mapped_column(Integer, nullable=False)
+    __table_args__ = (CheckConstraint("length(token_digest) = 64", name="ck_token_revocation_digest"),)
+
+
 class CourseRow(Base):
     __tablename__ = "courses"
     id: Mapped[str] = mapped_column(String(128), primary_key=True)

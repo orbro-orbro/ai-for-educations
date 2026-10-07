@@ -432,13 +432,9 @@ def test_concurrent_idempotency_key_reuse_is_a_domain_conflict():
 
     def accept(index: int):
         current = create_sql_repositories(url)
-        original = current.memories.remember_idempotency_result
-
-        def synchronized_remember(**kwargs):
-            barrier.wait()
-            return original(**kwargs)
-
-        current.memories.remember_idempotency_result = synchronized_remember
+        # Synchronize callers before their source lock. Waiting inside the
+        # transaction would require two writers to own the same exclusive lock.
+        barrier.wait(timeout=5)
         try:
             result = _service(current).accept_proposal(
                 seed.actor,

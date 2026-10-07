@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from contextlib import contextmanager
+from contextlib import contextmanager, nullcontext
 from dataclasses import replace
 from datetime import UTC, datetime
 import hashlib
@@ -45,6 +45,7 @@ class DeletionService:
         policy: MemoryPolicy,
         retrieval_index: RetrievalIndex,
         audit: AuditLog,
+        source_context=None,
         clock: Callable[[], datetime] = _utc_now,
         id_factory: Callable[[], str] = lambda: str(uuid4()),
     ) -> None:
@@ -52,6 +53,7 @@ class DeletionService:
         self._policy = policy
         self._index = retrieval_index
         self._audit = audit
+        self._source_context = source_context
         self._clock = clock
         self._id_factory = id_factory
 
@@ -59,7 +61,8 @@ class DeletionService:
     def _atomic_mutation(self):
         with self._repository.transaction():
             with self._audit.transaction():
-                yield
+                with self._source_context.private_context_transaction() if self._source_context is not None else nullcontext():
+                    yield
 
     def delete_memory(
         self,
@@ -118,6 +121,10 @@ class DeletionService:
                     lineage = self._repository.memory_lineage(
                         memory.logical_memory_id
                     )
+                    diagnosis_ids = frozenset(version.source_diagnosis_id for version in lineage)
+                    if self._source_context is not None:
+                        self._source_context.erase_private_context(memory.owner_user_id, memory.course_id, diagnosis_ids)
+                    self._repository.erase_proposal_content(memory.owner_user_id, memory.course_id, diagnosis_ids)
                     for version in lineage:
                         self._repository.save_memory(
                             replace(

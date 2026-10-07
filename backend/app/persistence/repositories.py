@@ -8,6 +8,7 @@ from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session, sessionmaker
 
 from app.auth.models import Role, User
+from app.auth.persistence import SqlTokenRevocations
 from app.courses.models import Course, Enrollment, Exercise
 from app.knowledge.models import Concept, ConceptEdge, EdgeType, KnowledgeValidationError, MisconceptionPattern
 from app.knowledge.repository import ApprovedEvidence, KnowledgeGraph
@@ -277,6 +278,7 @@ class SqlRepositories:
     memories: "SqlMemoryRepository"
     audit: "SqlAuditLog"
     memory_source: "SqlDiagnosticMemorySource"
+    token_revocations: SqlTokenRevocations
 
 
 def create_sql_repositories(
@@ -316,6 +318,7 @@ def create_sql_repositories(
             memory_uow,
             confidence_threshold=diagnosis_confidence_threshold,
         ),
+        SqlTokenRevocations(sessions),
     )
 
 

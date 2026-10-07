@@ -7,12 +7,15 @@ import json
 import os
 import time
 from typing import Any
+from uuid import uuid4
 
 from fastapi import APIRouter, Request
 from fastapi.responses import JSONResponse
+from fastapi import Response
 from pydantic import BaseModel, ConfigDict
 
 from app.auth.models import Actor, Role, UserRepository
+from app.auth.revocations import TokenRevocations, InMemoryTokenRevocations
 
 
 class AuthenticationFailed(Exception):
@@ -25,7 +28,12 @@ def _base64url_encode(value: bytes) -> str:
 
 def _base64url_decode(value: str) -> bytes:
     padding = "=" * (-len(value) % 4)
-    return base64.urlsafe_b64decode((value + padding).encode("ascii"))
+    decoded = base64.urlsafe_b64decode((value + padding).encode("ascii"))
+    # A token has exactly one accepted spelling, including unused signature bits.
+    # Otherwise equivalent encodings bypass revocation keyed by the token digest.
+    if _base64url_encode(decoded) != value:
+        raise AuthenticationFailed()
+    return decoded
 
 
 class TokenCodec:
@@ -49,6 +57,7 @@ class TokenCodec:
             "sub": actor.user_id,
             "role": actor.role.value,
             "exp": int(time.time()) + ttl_seconds,
+            "jti": uuid4().hex,
         }
         segments = [
             _base64url_encode(
@@ -86,9 +95,10 @@ class TokenCodec:
 
 
 class Authenticator:
-    def __init__(self, users: UserRepository, tokens: TokenCodec) -> None:
+    def __init__(self, users: UserRepository, tokens: TokenCodec, revocations: TokenRevocations | None = None) -> None:
         self._users = users
         self._tokens = tokens
+        self._revocations = revocations if revocations is not None else InMemoryTokenRevocations()
 
     def login(self, username: str, password: str) -> tuple[str, Actor]:
         user = self._users.find_by_username(username)
@@ -99,6 +109,8 @@ class Authenticator:
 
     def authenticate_token(self, token: str) -> Actor:
         claimed_actor = self._tokens.verify(token)
+        if self._revocations.contains(hashlib.sha256(token.encode()).hexdigest()):
+            raise AuthenticationFailed()
         user = self._users.get(claimed_actor.user_id)
         if user is None or not user.active or user.role is not claimed_actor.role:
             raise AuthenticationFailed()
@@ -111,6 +123,13 @@ class Authenticator:
         if separator != " " or scheme.lower() != "bearer" or not token:
             raise AuthenticationFailed()
         return self.authenticate_token(token)
+
+    def logout(self, authorization: str | None) -> None:
+        self.authenticate_header(authorization)
+        token = authorization.partition(" ")[2]
+        # Signature and expiry were checked above. Store no plaintext credentials.
+        expiration = int(json.loads(_base64url_decode(token.split(".")[1]))["exp"])
+        self._revocations.revoke(hashlib.sha256(token.encode()).hexdigest(), expiration)
 
 
 class _RequestBody(BaseModel):
@@ -152,5 +171,12 @@ def create_auth_router(authenticator: Authenticator) -> APIRouter:
             access_token=token,
             actor=ActorResponse(user_id=actor.user_id, role=actor.role),
         )
+
+    @router.post("/auth/logout", status_code=204, response_class=Response,
+                 operation_id="logout", openapi_extra={"security": [{"bearerAuth": []}]},
+                 responses={401: {"description": "Authentication failed."}, 503: {"description": "Storage unavailable."}})
+    def logout(request: Request):
+        authenticator.logout(request.headers.get("Authorization"))
+        return Response(status_code=204)
 
     return router

@@ -80,8 +80,9 @@ def test_untrusted_channels_cannot_rewrite_evidence_roles_or_memory(channel, pay
         assert secret not in h.state.memory_audit.serialized_events()
     assert payload not in caplog.text
     final_texts = [text for request in captures for text in text_values(request.model_dump())]
-    if channel in {"stdout", "stderr"}:
-        assert all(payload not in text for text in final_texts)
+    if channel in {"stdout", "stderr", "source_comment"}:
+        excluded_payload = payload.replace("\n", " ") if channel == "source_comment" else payload
+        assert all(excluded_payload not in text for text in final_texts)
     else:
         # Test reachability: exercise, knowledge, source and explanation really
         # reached the final request, rather than an unused fixture input.
@@ -148,7 +149,7 @@ def test_provider_failure_does_not_log_sensitive_input_or_return_internal_error(
 def test_raw_source_must_not_enter_final_model_request():
     h = build_harness(provider=DeterministicMockProvider(diagnoses=[model_output()]))
     submitted(h, SOURCE + "\n// RAW_PRIVATE_CODE_SENTINEL")
-    assert "RAW_PRIVATE_CODE_SENTINEL" not in h.provider.diagnosis_requests[0].model_dump_json(), "Task 10 literal source prohibition conflicts with the current diagnosis architecture"
+    assert "RAW_PRIVATE_CODE_SENTINEL" not in h.provider.diagnosis_requests[0].model_dump_json(), "Raw source must remain outside the model gateway"
 
 
 def test_deleted_memory_original_text_cannot_reenter_model_context():
@@ -157,4 +158,4 @@ def test_deleted_memory_original_text_cannot_reenter_model_context():
     h.state.deletion_service.delete_memory(STUDENT_A, old.memory_id, request_id="delete", idempotency_key="delete")
     response = h.request("POST", "/diagnoses/diagnosis-a/hints/next", body={"reason": "new hint after deletion"})
     assert response.status_code == 200
-    assert old.content not in h.provider.hint_requests[0].model_dump_json(), "The retained source diagnosis can still reproduce memory text in a model context"
+    assert old.content not in h.provider.hint_requests[0].model_dump_json(), "Deleted text must not return through source diagnosis context"

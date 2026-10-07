@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from sqlalchemy import select
+from sqlalchemy import select, update
 
 from app.memories.models import DiagnosisSummary, MemoryProposalSource
 from app.memories.persistence import SqlMemoryUnitOfWork
@@ -11,6 +11,10 @@ from app.persistence.models import (
     ExplanationCheckRow,
     SubmissionRow,
     UserRow,
+    HintEventRow,
+    EvidenceBindingRow,
+    LearningMemoryRow,
+    MemoryTombstoneRow,
 )
 
 
@@ -24,6 +28,22 @@ class SqlDiagnosticMemorySource:
             raise ValueError("confidence threshold must be in [0,1]")
         self._uow = uow
         self._threshold = confidence_threshold
+
+    def private_context_transaction(self):
+        return self._uow.transaction()
+
+    def erase_private_context(self, owner_user_id: str, course_id: str, diagnosis_ids: frozenset[str]) -> None:
+        session = self._uow.require_session()
+        ids = session.scalars(select(DiagnosisRow.id).where(DiagnosisRow.owner_user_id == owner_user_id,
+            DiagnosisRow.course_id == course_id, DiagnosisRow.id.in_(diagnosis_ids)).order_by(DiagnosisRow.id).with_for_update(key_share=True)).all()
+        for row in session.scalars(select(DiagnosisRow).where(DiagnosisRow.id.in_(ids))):
+            row.root_cause = "[Deleted by student]"
+        session.execute(update(EvidenceBindingRow).where(EvidenceBindingRow.diagnosis_id.in_(ids)).values(
+            summary="[Deleted by student]"))
+        session.execute(update(HintEventRow).where(HintEventRow.diagnosis_id.in_(ids)).values(
+            reason="[Deleted by student]", content="[Deleted by student]"))
+        session.execute(update(ExplanationCheckRow).where(ExplanationCheckRow.diagnosis_id.in_(ids)).values(
+            evidence_summary="[Deleted by student]", feedback="[Deleted by student]", memory_proposal_eligible=False))
 
     def proposal_source(
         self, explanation_check_id: str
@@ -72,6 +92,9 @@ class SqlDiagnosticMemorySource:
             )
             eligible = (
                 relationships_match
+                and not session.scalar(select(MemoryTombstoneRow.logical_memory_id).join(
+                    LearningMemoryRow, LearningMemoryRow.id == MemoryTombstoneRow.logical_memory_id
+                ).where(LearningMemoryRow.source_diagnosis_id == diagnosis.id).limit(1))
                 and check.memory_proposal_eligible
                 and check.understands
                 and check.confidence >= self._threshold

@@ -5,7 +5,7 @@ from contextvars import ContextVar
 from datetime import UTC, datetime
 from threading import Lock, RLock
 
-from sqlalchemy import func, select
+from sqlalchemy import func, select, inspect
 from sqlalchemy.exc import IntegrityError, SQLAlchemyError
 from sqlalchemy.orm import Session, sessionmaker
 
@@ -33,6 +33,8 @@ from app.persistence.models import (
     ReviewQueueEventRow,
     SubmissionRow,
     SubmissionTransitionRow,
+    LearningMemoryRow,
+    MemoryTombstoneRow,
 )
 from app.submissions.models import SubmissionStatus, utc_now
 
@@ -51,6 +53,18 @@ class SqlDiagnosticRepository:
         with self._lock:
             return collection.setdefault(key, RLock())
 
+    def _context_deleted(self, session: Session, diagnosis_id: str) -> bool:
+        # PostgreSQL FOR NO KEY UPDATE serializes source writers while allowing
+        # unrelated memory-version inserts to validate their diagnosis FK.
+        session.execute(select(DiagnosisRow.id).where(DiagnosisRow.id == diagnosis_id).with_for_update(key_share=True)).all()
+        # Task 6-only migration fixtures predate the memory subsystem. Deployed
+        # Task 7+ schemas must include tombstones; operational errors propagate.
+        if not inspect(session.connection()).has_table("memory_tombstones"):
+            return False
+        return session.scalar(select(MemoryTombstoneRow.logical_memory_id).join(
+            LearningMemoryRow, LearningMemoryRow.id == MemoryTombstoneRow.logical_memory_id
+        ).where(LearningMemoryRow.source_diagnosis_id == diagnosis_id).limit(1)) is not None
+
     @contextmanager
     def diagnosis_claim(self, submission_id: str):
         with self._named_lock(self._diagnosis_locks, submission_id):
@@ -64,7 +78,7 @@ class SqlDiagnosticRepository:
                     row = session.scalar(
                         select(DiagnosisRow)
                         .where(DiagnosisRow.id == diagnosis_id)
-                        .with_for_update()
+                        .with_for_update(key_share=True)
                     )
                     if row is None:
                         yield
@@ -247,14 +261,14 @@ class SqlDiagnosticRepository:
             return tuple(_review(row) for row in rows)
 
     def add_hint_event(self, event: HintEvent) -> HintEvent:
-        existing = next(
-            (item for item in self.hint_events(event.diagnosis_id) if item.request_id == event.request_id),
-            None,
-        )
-        if existing is not None:
-            return existing
         try:
             with self._write() as session:
+                if self._context_deleted(session, event.diagnosis_id):
+                    event = event.model_copy(update={"reason": "[Deleted by student]", "content": "[Deleted by student]"})
+                existing = session.scalar(select(HintEventRow).where(HintEventRow.diagnosis_id == event.diagnosis_id,
+                    HintEventRow.request_id == event.request_id))
+                if existing is not None:
+                    return _hint(existing)
                 session.add(
                     HintEventRow(
                         id=event.hint_event_id,
@@ -331,11 +345,15 @@ class SqlDiagnosticRepository:
             return _explanation(row) if row else None
 
     def add_explanation(self, result: ExplanationCheck) -> ExplanationCheck:
-        existing = self.get_explanation(result.diagnosis_id, result.request_id)
-        if existing is not None:
-            return existing
         try:
             with self._write() as session:
+                if self._context_deleted(session, result.diagnosis_id):
+                    result = result.model_copy(update={"evidence_summary": "[Deleted by student]",
+                        "feedback": "[Deleted by student]", "memory_proposal_eligible": False})
+                existing = session.scalar(select(ExplanationCheckRow).where(ExplanationCheckRow.diagnosis_id == result.diagnosis_id,
+                    ExplanationCheckRow.request_id == result.request_id))
+                if existing is not None:
+                    return _explanation(existing)
                 session.add(
                     ExplanationCheckRow(
                         id=result.explanation_check_id,

@@ -1,5 +1,7 @@
 # Wave 3 Task 10 交接
 
+**历史快照**：本文记录框架提交 `783bd84fddbeb9e0210a40e8e50170a67c5679e9` 时的失败与交付状态。用户随后授权修复；当前修复结果、文件和迁移要求见 [修复交接](task10-repair-handoff.md)。下文历史失败数量不代表修复后的状态。
+
 基线 main：`0598a2ea1d2a5016b94cd6f35a5a0e678b76ee07`（已核对 origin/main）。分支：`codex/wave3-task10-security-eval`。worktree：`C:\Users\lenovo\Desktop\cs competition\.worktrees\wave3-task10-security-eval`。
 
 ## 交付状态

@@ -23,7 +23,7 @@ from app.memories.models import (
 )
 from app.memories.policy import MemoryPolicy
 from app.memories.repository import MemoryRepository
-from app.memories.retrieval import RetrievalIndex
+from app.memories.retrieval import RetrievalIndex, InMemoryRetrievalIndex
 
 
 class MemoryConflict(RuntimeError):
@@ -84,6 +84,12 @@ class DiagnosticMemorySource:
         self._submissions = submissions
         self._threshold = confidence_threshold
 
+    def private_context_transaction(self):
+        return self._diagnostics.private_context_transaction()
+
+    def erase_private_context(self, owner_user_id: str, course_id: str, diagnosis_ids: frozenset[str]) -> None:
+        self._diagnostics.erase_private_context(owner_user_id, course_id, diagnosis_ids)
+
     def proposal_source(self, explanation_check_id: str) -> MemoryProposalSource | None:
         check = next(
             (
@@ -111,6 +117,7 @@ class DiagnosticMemorySource:
             return None
         eligible = (
             check.memory_proposal_eligible
+            and not self._diagnostics.context_deleted(diagnosis.diagnosis_id)
             and check.understands
             and check.confidence >= self._threshold
             and diagnosis.confidence >= self._threshold
@@ -171,6 +178,8 @@ class MemoryService:
         self._source = source
         self._policy = policy
         self._index = retrieval_index
+        if isinstance(retrieval_index, InMemoryRetrievalIndex):
+            retrieval_index.bind_repository(repository)
         self._audit = audit
         self._clock = clock
         self._id_factory = id_factory
@@ -201,6 +210,12 @@ class MemoryService:
         normalized_expiry = _normalize_aware_datetime(expires_at)
         with self._repository.proposal_source_claim(explanation_check_id):
             with self._atomic_mutation():
+                source = self._source.proposal_source(explanation_check_id)
+                if source is None:
+                    raise ResourceNotAvailable()
+                self._policy.require_owner(actor, source.owner_user_id, source.course_id)
+                if not source.eligible:
+                    raise MemoryProposalNotEligible(MemoryProposalNotEligible.public_message)
                 existing = self._repository.get_proposal_for_explanation(
                     explanation_check_id
                 )
@@ -299,7 +314,7 @@ class MemoryService:
     ) -> LearningMemory:
         idempotency_key = _required_idempotency_key(idempotency_key)
         fingerprint = _request_fingerprint({})
-        with self._repository.proposal_claim(proposal_id):
+        with self._proposal_source_and_proposal_claim(actor, proposal_id):
             with self._atomic_mutation():
                 proposal = self._repository.get_proposal(proposal_id)
                 if proposal is None:
@@ -338,6 +353,7 @@ class MemoryService:
                     else:
                         if proposal.status is not MemoryProposalStatus.pending:
                             raise MemoryConflict(MemoryConflict.public_message)
+                        self._require_current_proposal_source(proposal)
                         now = self._clock()
                         memory_id = self._id_factory()
                         memory = self._repository.add_memory(
@@ -481,7 +497,7 @@ class MemoryService:
             raise ValueError("content is required")
         idempotency_key = _required_idempotency_key(idempotency_key)
         fingerprint = _request_fingerprint({"content": content.strip()})
-        with self._repository.proposal_claim(proposal_id):
+        with self._proposal_source_and_proposal_claim(actor, proposal_id):
             with self._atomic_mutation():
                 proposal = self._required_owned_proposal(actor, proposal_id)
                 replay = self._repository.claim_idempotency(
@@ -500,6 +516,7 @@ class MemoryService:
                 proposal = self._expire_proposal_claimed(proposal)
                 if proposal.status is not MemoryProposalStatus.pending:
                     raise MemoryConflict(MemoryConflict.public_message)
+                self._require_current_proposal_source(proposal)
                 corrected = self._repository.add_corrected_proposal(
                     replace(
                         proposal,
@@ -538,6 +555,24 @@ class MemoryService:
                     related_id=proposal.proposal_id,
                 )
                 return corrected
+
+    @contextmanager
+    def _proposal_source_and_proposal_claim(self, actor: Actor, proposal_id: str):
+        proposal = self._required_owned_proposal(actor, proposal_id)
+        # Deletion locks the source before erasing its proposals. All writers
+        # that create a derived row follow that same parent-before-child order.
+        with self._repository.proposal_source_claim(proposal.explanation_check_id):
+            with self._repository.proposal_claim(proposal_id):
+                yield
+
+    def _require_current_proposal_source(self, proposal: MemoryProposal) -> None:
+        source = self._source.proposal_source(proposal.explanation_check_id)
+        if source is None or not source.eligible or (
+            source.diagnosis_id != proposal.diagnosis_id
+            or source.owner_user_id != proposal.owner_user_id
+            or source.course_id != proposal.course_id
+        ):
+            raise MemoryConflict(MemoryConflict.public_message)
 
     def list_memories(
         self,

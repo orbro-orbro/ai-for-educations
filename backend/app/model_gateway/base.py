@@ -11,7 +11,6 @@ class _GatewayModel(BaseModel):
 
 class SourceContext(_GatewayModel):
     path: str
-    content: str
 
 
 class CompilerDiagnosticContext(_GatewayModel):

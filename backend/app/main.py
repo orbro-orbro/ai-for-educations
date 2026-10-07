@@ -14,6 +14,7 @@ from app.api.memories import create_memories_router
 from app.api.submissions import create_submissions_router
 from app.audit.service import AuditLog, AuditService
 from app.auth.models import UserRepository
+from app.auth.revocations import InMemoryTokenRevocations
 from app.auth.policy import AuthorizationPolicy
 from app.courses.models import CourseRepository, EnrollmentRepository, ProtectedAnswerLookup
 from app.courses.service import CourseService
@@ -124,6 +125,7 @@ def _default_dependencies(
         memories = repositories.memories
         memory_source = repositories.memory_source
         memory_audit = repositories.audit
+        token_revocations = repositories.token_revocations
     else:
         if environment not in {"development", "test"}:
             raise RuntimeError("DATABASE_URL must be set outside development and test")
@@ -141,7 +143,8 @@ def _default_dependencies(
             confidence_threshold=diagnosis_confidence_threshold,
         )
         memory_audit = AuditService()
-    authenticator = Authenticator(users, TokenCodec(secret))
+        token_revocations = InMemoryTokenRevocations()
+    authenticator = Authenticator(users, TokenCodec(secret), token_revocations)
     course_service = CourseService(users, courses, enrollments, AuthorizationPolicy())
     return (
         authenticator,
@@ -253,6 +256,7 @@ def create_app(
             policy=memory_policy,
             retrieval_index=memory_index,
             audit=memory_audit,
+            source_context=memory_source,
         )
 
     application = FastAPI(title="KnowBound-CJ", version="0.2.0")

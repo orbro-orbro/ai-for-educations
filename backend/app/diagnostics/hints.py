@@ -126,7 +126,7 @@ class HintLadderService:
         for generation in range(attempts_to_generate):
             request = HintRequest(
                 category=diagnosis.category.value,
-                root_cause=diagnosis.root_cause,
+                root_cause="\n".join(item.explanation for item in approved),
                 concept_ids=diagnosis.concept_ids,
                 level=level,
                 previous_attempt_count=attempts,

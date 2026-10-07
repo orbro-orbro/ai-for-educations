@@ -68,6 +68,12 @@ def test_reverse_lookup_detects_unexpected_document_for_same_memory_scope(memory
         index_document_id="rogue-index-document",
     )
     memory_fixture["index"].upsert(rogue)
+    assert not memory_fixture["index"].contains(rogue.index_document_id)
+    # Simulate corruption below the guarded writer. The reverse lookup must
+    # still detect physically present out-of-line documents, not trust upsert.
+    memory_fixture["index"]._documents[rogue.index_document_id] = (
+        rogue.owner_user_id, rogue.course_id, rogue.logical_memory_id, rogue.content,
+    )
 
     pending = memory_fixture["deletion"].delete_memory(
         STUDENT_A,

@@ -41,6 +41,19 @@ paths:
                 $ref: '#/components/schemas/ErrorResponse'
         '422':
           $ref: '#/components/responses/InvalidRequest'
+  /auth/logout:
+    post:
+      operationId: logout
+      summary: Revoke only the presented bearer token across instances and restarts.
+      security:
+      - bearerAuth: []
+      responses:
+        '204':
+          description: Token revoked. Other login sessions remain valid.
+        '401':
+          $ref: '#/components/responses/AuthenticationFailed'
+        '503':
+          $ref: '#/components/responses/PersistenceUnavailable'
   /courses:
     get:
       operationId: listCourses
