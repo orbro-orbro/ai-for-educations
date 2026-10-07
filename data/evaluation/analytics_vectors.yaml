@@ -1,0 +1,5112 @@
+{
+  "dataset_version": "task10-analytics-v1",
+  "status": "synthetic_planned_vectors_not_runtime_results",
+  "vectors": [
+    {
+      "vector_id": "analytics-none-four-distinct",
+      "filter_combination": "none",
+      "scenario": "four-distinct",
+      "facts": [
+        {
+          "diagnosis_id": "fixture-main-1",
+          "subject_key": "synthetic-subject-1",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-main-2",
+          "subject_key": "synthetic-subject-2",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-main-3",
+          "subject_key": "synthetic-subject-3",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-main-4",
+          "subject_key": "synthetic-subject-4",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        }
+      ],
+      "expected_response": {
+        "status": "insufficient_sample",
+        "course_id": "course-a",
+        "filters": {
+          "concept_id": null,
+          "exercise_id": null,
+          "start_at": null,
+          "end_at": null
+        },
+        "minimum_sample_size": 5
+      }
+    },
+    {
+      "vector_id": "analytics-none-five-distinct",
+      "filter_combination": "none",
+      "scenario": "five-distinct",
+      "facts": [
+        {
+          "diagnosis_id": "fixture-main-1",
+          "subject_key": "synthetic-subject-1",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-main-2",
+          "subject_key": "synthetic-subject-2",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-main-3",
+          "subject_key": "synthetic-subject-3",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-main-4",
+          "subject_key": "synthetic-subject-4",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-main-5",
+          "subject_key": "synthetic-subject-5",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        }
+      ],
+      "expected_response": {
+        "status": "available",
+        "course_id": "course-a",
+        "filters": {
+          "concept_id": null,
+          "exercise_id": null,
+          "start_at": null,
+          "end_at": null
+        },
+        "minimum_sample_size": 5,
+        "sample_size": 5,
+        "groups": [
+          {
+            "concept_id": "cj.pattern-match.exhaustiveness",
+            "exercise_id": "exercise-a",
+            "category": "conceptual",
+            "sample_size": 5,
+            "diagnosis_count": 5,
+            "independent_repair_count": 0
+          }
+        ]
+      }
+    },
+    {
+      "vector_id": "analytics-none-duplicate-student",
+      "filter_combination": "none",
+      "scenario": "duplicate-student",
+      "facts": [
+        {
+          "diagnosis_id": "fixture-main-1",
+          "subject_key": "synthetic-subject-1",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-main-2",
+          "subject_key": "synthetic-subject-2",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-main-3",
+          "subject_key": "synthetic-subject-3",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-main-4",
+          "subject_key": "synthetic-subject-4",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-duplicate-student",
+          "subject_key": "synthetic-subject-1",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        }
+      ],
+      "expected_response": {
+        "status": "insufficient_sample",
+        "course_id": "course-a",
+        "filters": {
+          "concept_id": null,
+          "exercise_id": null,
+          "start_at": null,
+          "end_at": null
+        },
+        "minimum_sample_size": 5
+      }
+    },
+    {
+      "vector_id": "analytics-none-foreign-course",
+      "filter_combination": "none",
+      "scenario": "foreign-course",
+      "facts": [
+        {
+          "diagnosis_id": "fixture-main-1",
+          "subject_key": "synthetic-subject-1",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-main-2",
+          "subject_key": "synthetic-subject-2",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-main-3",
+          "subject_key": "synthetic-subject-3",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-main-4",
+          "subject_key": "synthetic-subject-4",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-foreign",
+          "subject_key": "synthetic-subject-5",
+          "course_id": "course-b",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        }
+      ],
+      "expected_response": {
+        "status": "insufficient_sample",
+        "course_id": "course-a",
+        "filters": {
+          "concept_id": null,
+          "exercise_id": null,
+          "start_at": null,
+          "end_at": null
+        },
+        "minimum_sample_size": 5
+      }
+    },
+    {
+      "vector_id": "analytics-none-small-group",
+      "filter_combination": "none",
+      "scenario": "small-group",
+      "facts": [
+        {
+          "diagnosis_id": "fixture-main-1",
+          "subject_key": "synthetic-subject-1",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-main-2",
+          "subject_key": "synthetic-subject-2",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-main-3",
+          "subject_key": "synthetic-subject-3",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-main-4",
+          "subject_key": "synthetic-subject-4",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-main-5",
+          "subject_key": "synthetic-subject-5",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-small-1",
+          "subject_key": "synthetic-small-1",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.other",
+          "exercise_id": "exercise-small",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-small-2",
+          "subject_key": "synthetic-small-2",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.other",
+          "exercise_id": "exercise-small",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-small-3",
+          "subject_key": "synthetic-small-3",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.other",
+          "exercise_id": "exercise-small",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-small-4",
+          "subject_key": "synthetic-small-4",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.other",
+          "exercise_id": "exercise-small",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        }
+      ],
+      "expected_response": {
+        "status": "available",
+        "course_id": "course-a",
+        "filters": {
+          "concept_id": null,
+          "exercise_id": null,
+          "start_at": null,
+          "end_at": null
+        },
+        "minimum_sample_size": 5,
+        "sample_size": 9,
+        "groups": [
+          {
+            "concept_id": "cj.pattern-match.exhaustiveness",
+            "exercise_id": "exercise-a",
+            "category": "conceptual",
+            "sample_size": 5,
+            "diagnosis_count": 5,
+            "independent_repair_count": 0
+          }
+        ]
+      }
+    },
+    {
+      "vector_id": "analytics-none-suppressed-fields",
+      "filter_combination": "none",
+      "scenario": "suppressed-fields",
+      "facts": [
+        {
+          "diagnosis_id": "fixture-main-1",
+          "subject_key": "synthetic-subject-1",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-main-2",
+          "subject_key": "synthetic-subject-2",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-main-3",
+          "subject_key": "synthetic-subject-3",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-main-4",
+          "subject_key": "synthetic-subject-4",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        }
+      ],
+      "expected_response": {
+        "status": "insufficient_sample",
+        "course_id": "course-a",
+        "filters": {
+          "concept_id": null,
+          "exercise_id": null,
+          "start_at": null,
+          "end_at": null
+        },
+        "minimum_sample_size": 5
+      }
+    },
+    {
+      "vector_id": "analytics-concept-four-distinct",
+      "filter_combination": "concept",
+      "scenario": "four-distinct",
+      "facts": [
+        {
+          "diagnosis_id": "fixture-main-1",
+          "subject_key": "synthetic-subject-1",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-main-2",
+          "subject_key": "synthetic-subject-2",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-main-3",
+          "subject_key": "synthetic-subject-3",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-main-4",
+          "subject_key": "synthetic-subject-4",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-excluded-concept_id",
+          "subject_key": "synthetic-filter-outsider",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.other",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false,
+          "excluded_by": "concept_id"
+        }
+      ],
+      "expected_response": {
+        "status": "insufficient_sample",
+        "course_id": "course-a",
+        "filters": {
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": null,
+          "start_at": null,
+          "end_at": null
+        },
+        "minimum_sample_size": 5
+      }
+    },
+    {
+      "vector_id": "analytics-concept-five-distinct",
+      "filter_combination": "concept",
+      "scenario": "five-distinct",
+      "facts": [
+        {
+          "diagnosis_id": "fixture-main-1",
+          "subject_key": "synthetic-subject-1",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-main-2",
+          "subject_key": "synthetic-subject-2",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-main-3",
+          "subject_key": "synthetic-subject-3",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-main-4",
+          "subject_key": "synthetic-subject-4",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-main-5",
+          "subject_key": "synthetic-subject-5",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-excluded-concept_id",
+          "subject_key": "synthetic-filter-outsider",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.other",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false,
+          "excluded_by": "concept_id"
+        }
+      ],
+      "expected_response": {
+        "status": "available",
+        "course_id": "course-a",
+        "filters": {
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": null,
+          "start_at": null,
+          "end_at": null
+        },
+        "minimum_sample_size": 5,
+        "sample_size": 5,
+        "groups": [
+          {
+            "concept_id": "cj.pattern-match.exhaustiveness",
+            "exercise_id": "exercise-a",
+            "category": "conceptual",
+            "sample_size": 5,
+            "diagnosis_count": 5,
+            "independent_repair_count": 0
+          }
+        ]
+      }
+    },
+    {
+      "vector_id": "analytics-concept-duplicate-student",
+      "filter_combination": "concept",
+      "scenario": "duplicate-student",
+      "facts": [
+        {
+          "diagnosis_id": "fixture-main-1",
+          "subject_key": "synthetic-subject-1",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-main-2",
+          "subject_key": "synthetic-subject-2",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-main-3",
+          "subject_key": "synthetic-subject-3",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-main-4",
+          "subject_key": "synthetic-subject-4",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-duplicate-student",
+          "subject_key": "synthetic-subject-1",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-excluded-concept_id",
+          "subject_key": "synthetic-filter-outsider",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.other",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false,
+          "excluded_by": "concept_id"
+        }
+      ],
+      "expected_response": {
+        "status": "insufficient_sample",
+        "course_id": "course-a",
+        "filters": {
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": null,
+          "start_at": null,
+          "end_at": null
+        },
+        "minimum_sample_size": 5
+      }
+    },
+    {
+      "vector_id": "analytics-concept-foreign-course",
+      "filter_combination": "concept",
+      "scenario": "foreign-course",
+      "facts": [
+        {
+          "diagnosis_id": "fixture-main-1",
+          "subject_key": "synthetic-subject-1",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-main-2",
+          "subject_key": "synthetic-subject-2",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-main-3",
+          "subject_key": "synthetic-subject-3",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-main-4",
+          "subject_key": "synthetic-subject-4",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-foreign",
+          "subject_key": "synthetic-subject-5",
+          "course_id": "course-b",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-excluded-concept_id",
+          "subject_key": "synthetic-filter-outsider",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.other",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false,
+          "excluded_by": "concept_id"
+        }
+      ],
+      "expected_response": {
+        "status": "insufficient_sample",
+        "course_id": "course-a",
+        "filters": {
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": null,
+          "start_at": null,
+          "end_at": null
+        },
+        "minimum_sample_size": 5
+      }
+    },
+    {
+      "vector_id": "analytics-concept-small-group",
+      "filter_combination": "concept",
+      "scenario": "small-group",
+      "facts": [
+        {
+          "diagnosis_id": "fixture-main-1",
+          "subject_key": "synthetic-subject-1",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-main-2",
+          "subject_key": "synthetic-subject-2",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-main-3",
+          "subject_key": "synthetic-subject-3",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-main-4",
+          "subject_key": "synthetic-subject-4",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-main-5",
+          "subject_key": "synthetic-subject-5",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-small-1",
+          "subject_key": "synthetic-small-1",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.other",
+          "exercise_id": "exercise-small",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-small-2",
+          "subject_key": "synthetic-small-2",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.other",
+          "exercise_id": "exercise-small",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-small-3",
+          "subject_key": "synthetic-small-3",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.other",
+          "exercise_id": "exercise-small",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-small-4",
+          "subject_key": "synthetic-small-4",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.other",
+          "exercise_id": "exercise-small",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-excluded-concept_id",
+          "subject_key": "synthetic-filter-outsider",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.other",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false,
+          "excluded_by": "concept_id"
+        }
+      ],
+      "expected_response": {
+        "status": "available",
+        "course_id": "course-a",
+        "filters": {
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": null,
+          "start_at": null,
+          "end_at": null
+        },
+        "minimum_sample_size": 5,
+        "sample_size": 5,
+        "groups": [
+          {
+            "concept_id": "cj.pattern-match.exhaustiveness",
+            "exercise_id": "exercise-a",
+            "category": "conceptual",
+            "sample_size": 5,
+            "diagnosis_count": 5,
+            "independent_repair_count": 0
+          }
+        ]
+      }
+    },
+    {
+      "vector_id": "analytics-concept-suppressed-fields",
+      "filter_combination": "concept",
+      "scenario": "suppressed-fields",
+      "facts": [
+        {
+          "diagnosis_id": "fixture-main-1",
+          "subject_key": "synthetic-subject-1",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-main-2",
+          "subject_key": "synthetic-subject-2",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-main-3",
+          "subject_key": "synthetic-subject-3",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-main-4",
+          "subject_key": "synthetic-subject-4",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-excluded-concept_id",
+          "subject_key": "synthetic-filter-outsider",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.other",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false,
+          "excluded_by": "concept_id"
+        }
+      ],
+      "expected_response": {
+        "status": "insufficient_sample",
+        "course_id": "course-a",
+        "filters": {
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": null,
+          "start_at": null,
+          "end_at": null
+        },
+        "minimum_sample_size": 5
+      }
+    },
+    {
+      "vector_id": "analytics-exercise-four-distinct",
+      "filter_combination": "exercise",
+      "scenario": "four-distinct",
+      "facts": [
+        {
+          "diagnosis_id": "fixture-main-1",
+          "subject_key": "synthetic-subject-1",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-main-2",
+          "subject_key": "synthetic-subject-2",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-main-3",
+          "subject_key": "synthetic-subject-3",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-main-4",
+          "subject_key": "synthetic-subject-4",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-excluded-exercise_id",
+          "subject_key": "synthetic-filter-outsider",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-b",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false,
+          "excluded_by": "exercise_id"
+        }
+      ],
+      "expected_response": {
+        "status": "insufficient_sample",
+        "course_id": "course-a",
+        "filters": {
+          "concept_id": null,
+          "exercise_id": "exercise-a",
+          "start_at": null,
+          "end_at": null
+        },
+        "minimum_sample_size": 5
+      }
+    },
+    {
+      "vector_id": "analytics-exercise-five-distinct",
+      "filter_combination": "exercise",
+      "scenario": "five-distinct",
+      "facts": [
+        {
+          "diagnosis_id": "fixture-main-1",
+          "subject_key": "synthetic-subject-1",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-main-2",
+          "subject_key": "synthetic-subject-2",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-main-3",
+          "subject_key": "synthetic-subject-3",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-main-4",
+          "subject_key": "synthetic-subject-4",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-main-5",
+          "subject_key": "synthetic-subject-5",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-excluded-exercise_id",
+          "subject_key": "synthetic-filter-outsider",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-b",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false,
+          "excluded_by": "exercise_id"
+        }
+      ],
+      "expected_response": {
+        "status": "available",
+        "course_id": "course-a",
+        "filters": {
+          "concept_id": null,
+          "exercise_id": "exercise-a",
+          "start_at": null,
+          "end_at": null
+        },
+        "minimum_sample_size": 5,
+        "sample_size": 5,
+        "groups": [
+          {
+            "concept_id": "cj.pattern-match.exhaustiveness",
+            "exercise_id": "exercise-a",
+            "category": "conceptual",
+            "sample_size": 5,
+            "diagnosis_count": 5,
+            "independent_repair_count": 0
+          }
+        ]
+      }
+    },
+    {
+      "vector_id": "analytics-exercise-duplicate-student",
+      "filter_combination": "exercise",
+      "scenario": "duplicate-student",
+      "facts": [
+        {
+          "diagnosis_id": "fixture-main-1",
+          "subject_key": "synthetic-subject-1",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-main-2",
+          "subject_key": "synthetic-subject-2",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-main-3",
+          "subject_key": "synthetic-subject-3",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-main-4",
+          "subject_key": "synthetic-subject-4",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-duplicate-student",
+          "subject_key": "synthetic-subject-1",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-excluded-exercise_id",
+          "subject_key": "synthetic-filter-outsider",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-b",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false,
+          "excluded_by": "exercise_id"
+        }
+      ],
+      "expected_response": {
+        "status": "insufficient_sample",
+        "course_id": "course-a",
+        "filters": {
+          "concept_id": null,
+          "exercise_id": "exercise-a",
+          "start_at": null,
+          "end_at": null
+        },
+        "minimum_sample_size": 5
+      }
+    },
+    {
+      "vector_id": "analytics-exercise-foreign-course",
+      "filter_combination": "exercise",
+      "scenario": "foreign-course",
+      "facts": [
+        {
+          "diagnosis_id": "fixture-main-1",
+          "subject_key": "synthetic-subject-1",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-main-2",
+          "subject_key": "synthetic-subject-2",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-main-3",
+          "subject_key": "synthetic-subject-3",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-main-4",
+          "subject_key": "synthetic-subject-4",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-foreign",
+          "subject_key": "synthetic-subject-5",
+          "course_id": "course-b",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-excluded-exercise_id",
+          "subject_key": "synthetic-filter-outsider",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-b",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false,
+          "excluded_by": "exercise_id"
+        }
+      ],
+      "expected_response": {
+        "status": "insufficient_sample",
+        "course_id": "course-a",
+        "filters": {
+          "concept_id": null,
+          "exercise_id": "exercise-a",
+          "start_at": null,
+          "end_at": null
+        },
+        "minimum_sample_size": 5
+      }
+    },
+    {
+      "vector_id": "analytics-exercise-small-group",
+      "filter_combination": "exercise",
+      "scenario": "small-group",
+      "facts": [
+        {
+          "diagnosis_id": "fixture-main-1",
+          "subject_key": "synthetic-subject-1",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-main-2",
+          "subject_key": "synthetic-subject-2",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-main-3",
+          "subject_key": "synthetic-subject-3",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-main-4",
+          "subject_key": "synthetic-subject-4",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-main-5",
+          "subject_key": "synthetic-subject-5",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-small-1",
+          "subject_key": "synthetic-small-1",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.other",
+          "exercise_id": "exercise-small",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-small-2",
+          "subject_key": "synthetic-small-2",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.other",
+          "exercise_id": "exercise-small",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-small-3",
+          "subject_key": "synthetic-small-3",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.other",
+          "exercise_id": "exercise-small",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-small-4",
+          "subject_key": "synthetic-small-4",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.other",
+          "exercise_id": "exercise-small",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-excluded-exercise_id",
+          "subject_key": "synthetic-filter-outsider",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-b",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false,
+          "excluded_by": "exercise_id"
+        }
+      ],
+      "expected_response": {
+        "status": "available",
+        "course_id": "course-a",
+        "filters": {
+          "concept_id": null,
+          "exercise_id": "exercise-a",
+          "start_at": null,
+          "end_at": null
+        },
+        "minimum_sample_size": 5,
+        "sample_size": 5,
+        "groups": [
+          {
+            "concept_id": "cj.pattern-match.exhaustiveness",
+            "exercise_id": "exercise-a",
+            "category": "conceptual",
+            "sample_size": 5,
+            "diagnosis_count": 5,
+            "independent_repair_count": 0
+          }
+        ]
+      }
+    },
+    {
+      "vector_id": "analytics-exercise-suppressed-fields",
+      "filter_combination": "exercise",
+      "scenario": "suppressed-fields",
+      "facts": [
+        {
+          "diagnosis_id": "fixture-main-1",
+          "subject_key": "synthetic-subject-1",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-main-2",
+          "subject_key": "synthetic-subject-2",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-main-3",
+          "subject_key": "synthetic-subject-3",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-main-4",
+          "subject_key": "synthetic-subject-4",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-excluded-exercise_id",
+          "subject_key": "synthetic-filter-outsider",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-b",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false,
+          "excluded_by": "exercise_id"
+        }
+      ],
+      "expected_response": {
+        "status": "insufficient_sample",
+        "course_id": "course-a",
+        "filters": {
+          "concept_id": null,
+          "exercise_id": "exercise-a",
+          "start_at": null,
+          "end_at": null
+        },
+        "minimum_sample_size": 5
+      }
+    },
+    {
+      "vector_id": "analytics-start-four-distinct",
+      "filter_combination": "start",
+      "scenario": "four-distinct",
+      "facts": [
+        {
+          "diagnosis_id": "fixture-main-1",
+          "subject_key": "synthetic-subject-1",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-main-2",
+          "subject_key": "synthetic-subject-2",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-main-3",
+          "subject_key": "synthetic-subject-3",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-main-4",
+          "subject_key": "synthetic-subject-4",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-excluded-start_at",
+          "subject_key": "synthetic-filter-outsider",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T00:59:59Z",
+          "independently_repaired": false,
+          "excluded_by": "start_at"
+        }
+      ],
+      "expected_response": {
+        "status": "insufficient_sample",
+        "course_id": "course-a",
+        "filters": {
+          "concept_id": null,
+          "exercise_id": null,
+          "start_at": "2026-10-07T01:00:00Z",
+          "end_at": null
+        },
+        "minimum_sample_size": 5
+      }
+    },
+    {
+      "vector_id": "analytics-start-five-distinct",
+      "filter_combination": "start",
+      "scenario": "five-distinct",
+      "facts": [
+        {
+          "diagnosis_id": "fixture-main-1",
+          "subject_key": "synthetic-subject-1",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-main-2",
+          "subject_key": "synthetic-subject-2",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-main-3",
+          "subject_key": "synthetic-subject-3",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-main-4",
+          "subject_key": "synthetic-subject-4",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-main-5",
+          "subject_key": "synthetic-subject-5",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-excluded-start_at",
+          "subject_key": "synthetic-filter-outsider",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T00:59:59Z",
+          "independently_repaired": false,
+          "excluded_by": "start_at"
+        }
+      ],
+      "expected_response": {
+        "status": "available",
+        "course_id": "course-a",
+        "filters": {
+          "concept_id": null,
+          "exercise_id": null,
+          "start_at": "2026-10-07T01:00:00Z",
+          "end_at": null
+        },
+        "minimum_sample_size": 5,
+        "sample_size": 5,
+        "groups": [
+          {
+            "concept_id": "cj.pattern-match.exhaustiveness",
+            "exercise_id": "exercise-a",
+            "category": "conceptual",
+            "sample_size": 5,
+            "diagnosis_count": 5,
+            "independent_repair_count": 0
+          }
+        ]
+      }
+    },
+    {
+      "vector_id": "analytics-start-duplicate-student",
+      "filter_combination": "start",
+      "scenario": "duplicate-student",
+      "facts": [
+        {
+          "diagnosis_id": "fixture-main-1",
+          "subject_key": "synthetic-subject-1",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-main-2",
+          "subject_key": "synthetic-subject-2",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-main-3",
+          "subject_key": "synthetic-subject-3",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-main-4",
+          "subject_key": "synthetic-subject-4",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-duplicate-student",
+          "subject_key": "synthetic-subject-1",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-excluded-start_at",
+          "subject_key": "synthetic-filter-outsider",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T00:59:59Z",
+          "independently_repaired": false,
+          "excluded_by": "start_at"
+        }
+      ],
+      "expected_response": {
+        "status": "insufficient_sample",
+        "course_id": "course-a",
+        "filters": {
+          "concept_id": null,
+          "exercise_id": null,
+          "start_at": "2026-10-07T01:00:00Z",
+          "end_at": null
+        },
+        "minimum_sample_size": 5
+      }
+    },
+    {
+      "vector_id": "analytics-start-foreign-course",
+      "filter_combination": "start",
+      "scenario": "foreign-course",
+      "facts": [
+        {
+          "diagnosis_id": "fixture-main-1",
+          "subject_key": "synthetic-subject-1",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-main-2",
+          "subject_key": "synthetic-subject-2",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-main-3",
+          "subject_key": "synthetic-subject-3",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-main-4",
+          "subject_key": "synthetic-subject-4",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-foreign",
+          "subject_key": "synthetic-subject-5",
+          "course_id": "course-b",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-excluded-start_at",
+          "subject_key": "synthetic-filter-outsider",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T00:59:59Z",
+          "independently_repaired": false,
+          "excluded_by": "start_at"
+        }
+      ],
+      "expected_response": {
+        "status": "insufficient_sample",
+        "course_id": "course-a",
+        "filters": {
+          "concept_id": null,
+          "exercise_id": null,
+          "start_at": "2026-10-07T01:00:00Z",
+          "end_at": null
+        },
+        "minimum_sample_size": 5
+      }
+    },
+    {
+      "vector_id": "analytics-start-small-group",
+      "filter_combination": "start",
+      "scenario": "small-group",
+      "facts": [
+        {
+          "diagnosis_id": "fixture-main-1",
+          "subject_key": "synthetic-subject-1",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-main-2",
+          "subject_key": "synthetic-subject-2",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-main-3",
+          "subject_key": "synthetic-subject-3",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-main-4",
+          "subject_key": "synthetic-subject-4",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-main-5",
+          "subject_key": "synthetic-subject-5",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-small-1",
+          "subject_key": "synthetic-small-1",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.other",
+          "exercise_id": "exercise-small",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-small-2",
+          "subject_key": "synthetic-small-2",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.other",
+          "exercise_id": "exercise-small",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-small-3",
+          "subject_key": "synthetic-small-3",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.other",
+          "exercise_id": "exercise-small",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-small-4",
+          "subject_key": "synthetic-small-4",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.other",
+          "exercise_id": "exercise-small",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-excluded-start_at",
+          "subject_key": "synthetic-filter-outsider",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T00:59:59Z",
+          "independently_repaired": false,
+          "excluded_by": "start_at"
+        }
+      ],
+      "expected_response": {
+        "status": "available",
+        "course_id": "course-a",
+        "filters": {
+          "concept_id": null,
+          "exercise_id": null,
+          "start_at": "2026-10-07T01:00:00Z",
+          "end_at": null
+        },
+        "minimum_sample_size": 5,
+        "sample_size": 9,
+        "groups": [
+          {
+            "concept_id": "cj.pattern-match.exhaustiveness",
+            "exercise_id": "exercise-a",
+            "category": "conceptual",
+            "sample_size": 5,
+            "diagnosis_count": 5,
+            "independent_repair_count": 0
+          }
+        ]
+      }
+    },
+    {
+      "vector_id": "analytics-start-suppressed-fields",
+      "filter_combination": "start",
+      "scenario": "suppressed-fields",
+      "facts": [
+        {
+          "diagnosis_id": "fixture-main-1",
+          "subject_key": "synthetic-subject-1",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-main-2",
+          "subject_key": "synthetic-subject-2",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-main-3",
+          "subject_key": "synthetic-subject-3",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-main-4",
+          "subject_key": "synthetic-subject-4",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-excluded-start_at",
+          "subject_key": "synthetic-filter-outsider",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T00:59:59Z",
+          "independently_repaired": false,
+          "excluded_by": "start_at"
+        }
+      ],
+      "expected_response": {
+        "status": "insufficient_sample",
+        "course_id": "course-a",
+        "filters": {
+          "concept_id": null,
+          "exercise_id": null,
+          "start_at": "2026-10-07T01:00:00Z",
+          "end_at": null
+        },
+        "minimum_sample_size": 5
+      }
+    },
+    {
+      "vector_id": "analytics-end-four-distinct",
+      "filter_combination": "end",
+      "scenario": "four-distinct",
+      "facts": [
+        {
+          "diagnosis_id": "fixture-main-1",
+          "subject_key": "synthetic-subject-1",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-main-2",
+          "subject_key": "synthetic-subject-2",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-main-3",
+          "subject_key": "synthetic-subject-3",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-main-4",
+          "subject_key": "synthetic-subject-4",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-excluded-end_at",
+          "subject_key": "synthetic-filter-outsider",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-08T01:00:01Z",
+          "independently_repaired": false,
+          "excluded_by": "end_at"
+        }
+      ],
+      "expected_response": {
+        "status": "insufficient_sample",
+        "course_id": "course-a",
+        "filters": {
+          "concept_id": null,
+          "exercise_id": null,
+          "start_at": null,
+          "end_at": "2026-10-08T01:00:00Z"
+        },
+        "minimum_sample_size": 5
+      }
+    },
+    {
+      "vector_id": "analytics-end-five-distinct",
+      "filter_combination": "end",
+      "scenario": "five-distinct",
+      "facts": [
+        {
+          "diagnosis_id": "fixture-main-1",
+          "subject_key": "synthetic-subject-1",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-main-2",
+          "subject_key": "synthetic-subject-2",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-main-3",
+          "subject_key": "synthetic-subject-3",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-main-4",
+          "subject_key": "synthetic-subject-4",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-main-5",
+          "subject_key": "synthetic-subject-5",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-excluded-end_at",
+          "subject_key": "synthetic-filter-outsider",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-08T01:00:01Z",
+          "independently_repaired": false,
+          "excluded_by": "end_at"
+        }
+      ],
+      "expected_response": {
+        "status": "available",
+        "course_id": "course-a",
+        "filters": {
+          "concept_id": null,
+          "exercise_id": null,
+          "start_at": null,
+          "end_at": "2026-10-08T01:00:00Z"
+        },
+        "minimum_sample_size": 5,
+        "sample_size": 5,
+        "groups": [
+          {
+            "concept_id": "cj.pattern-match.exhaustiveness",
+            "exercise_id": "exercise-a",
+            "category": "conceptual",
+            "sample_size": 5,
+            "diagnosis_count": 5,
+            "independent_repair_count": 0
+          }
+        ]
+      }
+    },
+    {
+      "vector_id": "analytics-end-duplicate-student",
+      "filter_combination": "end",
+      "scenario": "duplicate-student",
+      "facts": [
+        {
+          "diagnosis_id": "fixture-main-1",
+          "subject_key": "synthetic-subject-1",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-main-2",
+          "subject_key": "synthetic-subject-2",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-main-3",
+          "subject_key": "synthetic-subject-3",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-main-4",
+          "subject_key": "synthetic-subject-4",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-duplicate-student",
+          "subject_key": "synthetic-subject-1",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-excluded-end_at",
+          "subject_key": "synthetic-filter-outsider",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-08T01:00:01Z",
+          "independently_repaired": false,
+          "excluded_by": "end_at"
+        }
+      ],
+      "expected_response": {
+        "status": "insufficient_sample",
+        "course_id": "course-a",
+        "filters": {
+          "concept_id": null,
+          "exercise_id": null,
+          "start_at": null,
+          "end_at": "2026-10-08T01:00:00Z"
+        },
+        "minimum_sample_size": 5
+      }
+    },
+    {
+      "vector_id": "analytics-end-foreign-course",
+      "filter_combination": "end",
+      "scenario": "foreign-course",
+      "facts": [
+        {
+          "diagnosis_id": "fixture-main-1",
+          "subject_key": "synthetic-subject-1",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-main-2",
+          "subject_key": "synthetic-subject-2",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-main-3",
+          "subject_key": "synthetic-subject-3",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-main-4",
+          "subject_key": "synthetic-subject-4",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-foreign",
+          "subject_key": "synthetic-subject-5",
+          "course_id": "course-b",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-excluded-end_at",
+          "subject_key": "synthetic-filter-outsider",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-08T01:00:01Z",
+          "independently_repaired": false,
+          "excluded_by": "end_at"
+        }
+      ],
+      "expected_response": {
+        "status": "insufficient_sample",
+        "course_id": "course-a",
+        "filters": {
+          "concept_id": null,
+          "exercise_id": null,
+          "start_at": null,
+          "end_at": "2026-10-08T01:00:00Z"
+        },
+        "minimum_sample_size": 5
+      }
+    },
+    {
+      "vector_id": "analytics-end-small-group",
+      "filter_combination": "end",
+      "scenario": "small-group",
+      "facts": [
+        {
+          "diagnosis_id": "fixture-main-1",
+          "subject_key": "synthetic-subject-1",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-main-2",
+          "subject_key": "synthetic-subject-2",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-main-3",
+          "subject_key": "synthetic-subject-3",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-main-4",
+          "subject_key": "synthetic-subject-4",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-main-5",
+          "subject_key": "synthetic-subject-5",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-small-1",
+          "subject_key": "synthetic-small-1",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.other",
+          "exercise_id": "exercise-small",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-small-2",
+          "subject_key": "synthetic-small-2",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.other",
+          "exercise_id": "exercise-small",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-small-3",
+          "subject_key": "synthetic-small-3",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.other",
+          "exercise_id": "exercise-small",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-small-4",
+          "subject_key": "synthetic-small-4",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.other",
+          "exercise_id": "exercise-small",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-excluded-end_at",
+          "subject_key": "synthetic-filter-outsider",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-08T01:00:01Z",
+          "independently_repaired": false,
+          "excluded_by": "end_at"
+        }
+      ],
+      "expected_response": {
+        "status": "available",
+        "course_id": "course-a",
+        "filters": {
+          "concept_id": null,
+          "exercise_id": null,
+          "start_at": null,
+          "end_at": "2026-10-08T01:00:00Z"
+        },
+        "minimum_sample_size": 5,
+        "sample_size": 9,
+        "groups": [
+          {
+            "concept_id": "cj.pattern-match.exhaustiveness",
+            "exercise_id": "exercise-a",
+            "category": "conceptual",
+            "sample_size": 5,
+            "diagnosis_count": 5,
+            "independent_repair_count": 0
+          }
+        ]
+      }
+    },
+    {
+      "vector_id": "analytics-end-suppressed-fields",
+      "filter_combination": "end",
+      "scenario": "suppressed-fields",
+      "facts": [
+        {
+          "diagnosis_id": "fixture-main-1",
+          "subject_key": "synthetic-subject-1",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-main-2",
+          "subject_key": "synthetic-subject-2",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-main-3",
+          "subject_key": "synthetic-subject-3",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-main-4",
+          "subject_key": "synthetic-subject-4",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-excluded-end_at",
+          "subject_key": "synthetic-filter-outsider",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-08T01:00:01Z",
+          "independently_repaired": false,
+          "excluded_by": "end_at"
+        }
+      ],
+      "expected_response": {
+        "status": "insufficient_sample",
+        "course_id": "course-a",
+        "filters": {
+          "concept_id": null,
+          "exercise_id": null,
+          "start_at": null,
+          "end_at": "2026-10-08T01:00:00Z"
+        },
+        "minimum_sample_size": 5
+      }
+    },
+    {
+      "vector_id": "analytics-concept-exercise-four-distinct",
+      "filter_combination": "concept-exercise",
+      "scenario": "four-distinct",
+      "facts": [
+        {
+          "diagnosis_id": "fixture-main-1",
+          "subject_key": "synthetic-subject-1",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-main-2",
+          "subject_key": "synthetic-subject-2",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-main-3",
+          "subject_key": "synthetic-subject-3",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-main-4",
+          "subject_key": "synthetic-subject-4",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-excluded-concept_id",
+          "subject_key": "synthetic-filter-outsider",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.other",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false,
+          "excluded_by": "concept_id"
+        },
+        {
+          "diagnosis_id": "fixture-excluded-exercise_id",
+          "subject_key": "synthetic-filter-outsider",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-b",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false,
+          "excluded_by": "exercise_id"
+        }
+      ],
+      "expected_response": {
+        "status": "insufficient_sample",
+        "course_id": "course-a",
+        "filters": {
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "start_at": null,
+          "end_at": null
+        },
+        "minimum_sample_size": 5
+      }
+    },
+    {
+      "vector_id": "analytics-concept-exercise-five-distinct",
+      "filter_combination": "concept-exercise",
+      "scenario": "five-distinct",
+      "facts": [
+        {
+          "diagnosis_id": "fixture-main-1",
+          "subject_key": "synthetic-subject-1",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-main-2",
+          "subject_key": "synthetic-subject-2",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-main-3",
+          "subject_key": "synthetic-subject-3",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-main-4",
+          "subject_key": "synthetic-subject-4",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-main-5",
+          "subject_key": "synthetic-subject-5",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-excluded-concept_id",
+          "subject_key": "synthetic-filter-outsider",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.other",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false,
+          "excluded_by": "concept_id"
+        },
+        {
+          "diagnosis_id": "fixture-excluded-exercise_id",
+          "subject_key": "synthetic-filter-outsider",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-b",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false,
+          "excluded_by": "exercise_id"
+        }
+      ],
+      "expected_response": {
+        "status": "available",
+        "course_id": "course-a",
+        "filters": {
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "start_at": null,
+          "end_at": null
+        },
+        "minimum_sample_size": 5,
+        "sample_size": 5,
+        "groups": [
+          {
+            "concept_id": "cj.pattern-match.exhaustiveness",
+            "exercise_id": "exercise-a",
+            "category": "conceptual",
+            "sample_size": 5,
+            "diagnosis_count": 5,
+            "independent_repair_count": 0
+          }
+        ]
+      }
+    },
+    {
+      "vector_id": "analytics-concept-exercise-duplicate-student",
+      "filter_combination": "concept-exercise",
+      "scenario": "duplicate-student",
+      "facts": [
+        {
+          "diagnosis_id": "fixture-main-1",
+          "subject_key": "synthetic-subject-1",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-main-2",
+          "subject_key": "synthetic-subject-2",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-main-3",
+          "subject_key": "synthetic-subject-3",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-main-4",
+          "subject_key": "synthetic-subject-4",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-duplicate-student",
+          "subject_key": "synthetic-subject-1",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-excluded-concept_id",
+          "subject_key": "synthetic-filter-outsider",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.other",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false,
+          "excluded_by": "concept_id"
+        },
+        {
+          "diagnosis_id": "fixture-excluded-exercise_id",
+          "subject_key": "synthetic-filter-outsider",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-b",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false,
+          "excluded_by": "exercise_id"
+        }
+      ],
+      "expected_response": {
+        "status": "insufficient_sample",
+        "course_id": "course-a",
+        "filters": {
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "start_at": null,
+          "end_at": null
+        },
+        "minimum_sample_size": 5
+      }
+    },
+    {
+      "vector_id": "analytics-concept-exercise-foreign-course",
+      "filter_combination": "concept-exercise",
+      "scenario": "foreign-course",
+      "facts": [
+        {
+          "diagnosis_id": "fixture-main-1",
+          "subject_key": "synthetic-subject-1",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-main-2",
+          "subject_key": "synthetic-subject-2",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-main-3",
+          "subject_key": "synthetic-subject-3",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-main-4",
+          "subject_key": "synthetic-subject-4",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-foreign",
+          "subject_key": "synthetic-subject-5",
+          "course_id": "course-b",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-excluded-concept_id",
+          "subject_key": "synthetic-filter-outsider",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.other",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false,
+          "excluded_by": "concept_id"
+        },
+        {
+          "diagnosis_id": "fixture-excluded-exercise_id",
+          "subject_key": "synthetic-filter-outsider",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-b",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false,
+          "excluded_by": "exercise_id"
+        }
+      ],
+      "expected_response": {
+        "status": "insufficient_sample",
+        "course_id": "course-a",
+        "filters": {
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "start_at": null,
+          "end_at": null
+        },
+        "minimum_sample_size": 5
+      }
+    },
+    {
+      "vector_id": "analytics-concept-exercise-small-group",
+      "filter_combination": "concept-exercise",
+      "scenario": "small-group",
+      "facts": [
+        {
+          "diagnosis_id": "fixture-main-1",
+          "subject_key": "synthetic-subject-1",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-main-2",
+          "subject_key": "synthetic-subject-2",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-main-3",
+          "subject_key": "synthetic-subject-3",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-main-4",
+          "subject_key": "synthetic-subject-4",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-main-5",
+          "subject_key": "synthetic-subject-5",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-small-1",
+          "subject_key": "synthetic-small-1",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.other",
+          "exercise_id": "exercise-small",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-small-2",
+          "subject_key": "synthetic-small-2",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.other",
+          "exercise_id": "exercise-small",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-small-3",
+          "subject_key": "synthetic-small-3",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.other",
+          "exercise_id": "exercise-small",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-small-4",
+          "subject_key": "synthetic-small-4",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.other",
+          "exercise_id": "exercise-small",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-excluded-concept_id",
+          "subject_key": "synthetic-filter-outsider",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.other",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false,
+          "excluded_by": "concept_id"
+        },
+        {
+          "diagnosis_id": "fixture-excluded-exercise_id",
+          "subject_key": "synthetic-filter-outsider",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-b",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false,
+          "excluded_by": "exercise_id"
+        }
+      ],
+      "expected_response": {
+        "status": "available",
+        "course_id": "course-a",
+        "filters": {
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "start_at": null,
+          "end_at": null
+        },
+        "minimum_sample_size": 5,
+        "sample_size": 5,
+        "groups": [
+          {
+            "concept_id": "cj.pattern-match.exhaustiveness",
+            "exercise_id": "exercise-a",
+            "category": "conceptual",
+            "sample_size": 5,
+            "diagnosis_count": 5,
+            "independent_repair_count": 0
+          }
+        ]
+      }
+    },
+    {
+      "vector_id": "analytics-concept-exercise-suppressed-fields",
+      "filter_combination": "concept-exercise",
+      "scenario": "suppressed-fields",
+      "facts": [
+        {
+          "diagnosis_id": "fixture-main-1",
+          "subject_key": "synthetic-subject-1",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-main-2",
+          "subject_key": "synthetic-subject-2",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-main-3",
+          "subject_key": "synthetic-subject-3",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-main-4",
+          "subject_key": "synthetic-subject-4",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-excluded-concept_id",
+          "subject_key": "synthetic-filter-outsider",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.other",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false,
+          "excluded_by": "concept_id"
+        },
+        {
+          "diagnosis_id": "fixture-excluded-exercise_id",
+          "subject_key": "synthetic-filter-outsider",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-b",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false,
+          "excluded_by": "exercise_id"
+        }
+      ],
+      "expected_response": {
+        "status": "insufficient_sample",
+        "course_id": "course-a",
+        "filters": {
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "start_at": null,
+          "end_at": null
+        },
+        "minimum_sample_size": 5
+      }
+    },
+    {
+      "vector_id": "analytics-concept-time-four-distinct",
+      "filter_combination": "concept-time",
+      "scenario": "four-distinct",
+      "facts": [
+        {
+          "diagnosis_id": "fixture-main-1",
+          "subject_key": "synthetic-subject-1",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-main-2",
+          "subject_key": "synthetic-subject-2",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-main-3",
+          "subject_key": "synthetic-subject-3",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-main-4",
+          "subject_key": "synthetic-subject-4",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-excluded-concept_id",
+          "subject_key": "synthetic-filter-outsider",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.other",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false,
+          "excluded_by": "concept_id"
+        },
+        {
+          "diagnosis_id": "fixture-excluded-start_at",
+          "subject_key": "synthetic-filter-outsider",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T00:59:59Z",
+          "independently_repaired": false,
+          "excluded_by": "start_at"
+        },
+        {
+          "diagnosis_id": "fixture-excluded-end_at",
+          "subject_key": "synthetic-filter-outsider",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-08T01:00:01Z",
+          "independently_repaired": false,
+          "excluded_by": "end_at"
+        }
+      ],
+      "expected_response": {
+        "status": "insufficient_sample",
+        "course_id": "course-a",
+        "filters": {
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": null,
+          "start_at": "2026-10-07T01:00:00Z",
+          "end_at": "2026-10-08T01:00:00Z"
+        },
+        "minimum_sample_size": 5
+      }
+    },
+    {
+      "vector_id": "analytics-concept-time-five-distinct",
+      "filter_combination": "concept-time",
+      "scenario": "five-distinct",
+      "facts": [
+        {
+          "diagnosis_id": "fixture-main-1",
+          "subject_key": "synthetic-subject-1",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-main-2",
+          "subject_key": "synthetic-subject-2",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-main-3",
+          "subject_key": "synthetic-subject-3",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-main-4",
+          "subject_key": "synthetic-subject-4",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-main-5",
+          "subject_key": "synthetic-subject-5",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-excluded-concept_id",
+          "subject_key": "synthetic-filter-outsider",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.other",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false,
+          "excluded_by": "concept_id"
+        },
+        {
+          "diagnosis_id": "fixture-excluded-start_at",
+          "subject_key": "synthetic-filter-outsider",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T00:59:59Z",
+          "independently_repaired": false,
+          "excluded_by": "start_at"
+        },
+        {
+          "diagnosis_id": "fixture-excluded-end_at",
+          "subject_key": "synthetic-filter-outsider",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-08T01:00:01Z",
+          "independently_repaired": false,
+          "excluded_by": "end_at"
+        }
+      ],
+      "expected_response": {
+        "status": "available",
+        "course_id": "course-a",
+        "filters": {
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": null,
+          "start_at": "2026-10-07T01:00:00Z",
+          "end_at": "2026-10-08T01:00:00Z"
+        },
+        "minimum_sample_size": 5,
+        "sample_size": 5,
+        "groups": [
+          {
+            "concept_id": "cj.pattern-match.exhaustiveness",
+            "exercise_id": "exercise-a",
+            "category": "conceptual",
+            "sample_size": 5,
+            "diagnosis_count": 5,
+            "independent_repair_count": 0
+          }
+        ]
+      }
+    },
+    {
+      "vector_id": "analytics-concept-time-duplicate-student",
+      "filter_combination": "concept-time",
+      "scenario": "duplicate-student",
+      "facts": [
+        {
+          "diagnosis_id": "fixture-main-1",
+          "subject_key": "synthetic-subject-1",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-main-2",
+          "subject_key": "synthetic-subject-2",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-main-3",
+          "subject_key": "synthetic-subject-3",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-main-4",
+          "subject_key": "synthetic-subject-4",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-duplicate-student",
+          "subject_key": "synthetic-subject-1",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-excluded-concept_id",
+          "subject_key": "synthetic-filter-outsider",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.other",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false,
+          "excluded_by": "concept_id"
+        },
+        {
+          "diagnosis_id": "fixture-excluded-start_at",
+          "subject_key": "synthetic-filter-outsider",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T00:59:59Z",
+          "independently_repaired": false,
+          "excluded_by": "start_at"
+        },
+        {
+          "diagnosis_id": "fixture-excluded-end_at",
+          "subject_key": "synthetic-filter-outsider",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-08T01:00:01Z",
+          "independently_repaired": false,
+          "excluded_by": "end_at"
+        }
+      ],
+      "expected_response": {
+        "status": "insufficient_sample",
+        "course_id": "course-a",
+        "filters": {
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": null,
+          "start_at": "2026-10-07T01:00:00Z",
+          "end_at": "2026-10-08T01:00:00Z"
+        },
+        "minimum_sample_size": 5
+      }
+    },
+    {
+      "vector_id": "analytics-concept-time-foreign-course",
+      "filter_combination": "concept-time",
+      "scenario": "foreign-course",
+      "facts": [
+        {
+          "diagnosis_id": "fixture-main-1",
+          "subject_key": "synthetic-subject-1",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-main-2",
+          "subject_key": "synthetic-subject-2",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-main-3",
+          "subject_key": "synthetic-subject-3",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-main-4",
+          "subject_key": "synthetic-subject-4",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-foreign",
+          "subject_key": "synthetic-subject-5",
+          "course_id": "course-b",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-excluded-concept_id",
+          "subject_key": "synthetic-filter-outsider",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.other",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false,
+          "excluded_by": "concept_id"
+        },
+        {
+          "diagnosis_id": "fixture-excluded-start_at",
+          "subject_key": "synthetic-filter-outsider",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T00:59:59Z",
+          "independently_repaired": false,
+          "excluded_by": "start_at"
+        },
+        {
+          "diagnosis_id": "fixture-excluded-end_at",
+          "subject_key": "synthetic-filter-outsider",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-08T01:00:01Z",
+          "independently_repaired": false,
+          "excluded_by": "end_at"
+        }
+      ],
+      "expected_response": {
+        "status": "insufficient_sample",
+        "course_id": "course-a",
+        "filters": {
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": null,
+          "start_at": "2026-10-07T01:00:00Z",
+          "end_at": "2026-10-08T01:00:00Z"
+        },
+        "minimum_sample_size": 5
+      }
+    },
+    {
+      "vector_id": "analytics-concept-time-small-group",
+      "filter_combination": "concept-time",
+      "scenario": "small-group",
+      "facts": [
+        {
+          "diagnosis_id": "fixture-main-1",
+          "subject_key": "synthetic-subject-1",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-main-2",
+          "subject_key": "synthetic-subject-2",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-main-3",
+          "subject_key": "synthetic-subject-3",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-main-4",
+          "subject_key": "synthetic-subject-4",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-main-5",
+          "subject_key": "synthetic-subject-5",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-small-1",
+          "subject_key": "synthetic-small-1",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.other",
+          "exercise_id": "exercise-small",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-small-2",
+          "subject_key": "synthetic-small-2",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.other",
+          "exercise_id": "exercise-small",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-small-3",
+          "subject_key": "synthetic-small-3",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.other",
+          "exercise_id": "exercise-small",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-small-4",
+          "subject_key": "synthetic-small-4",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.other",
+          "exercise_id": "exercise-small",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-excluded-concept_id",
+          "subject_key": "synthetic-filter-outsider",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.other",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false,
+          "excluded_by": "concept_id"
+        },
+        {
+          "diagnosis_id": "fixture-excluded-start_at",
+          "subject_key": "synthetic-filter-outsider",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T00:59:59Z",
+          "independently_repaired": false,
+          "excluded_by": "start_at"
+        },
+        {
+          "diagnosis_id": "fixture-excluded-end_at",
+          "subject_key": "synthetic-filter-outsider",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-08T01:00:01Z",
+          "independently_repaired": false,
+          "excluded_by": "end_at"
+        }
+      ],
+      "expected_response": {
+        "status": "available",
+        "course_id": "course-a",
+        "filters": {
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": null,
+          "start_at": "2026-10-07T01:00:00Z",
+          "end_at": "2026-10-08T01:00:00Z"
+        },
+        "minimum_sample_size": 5,
+        "sample_size": 5,
+        "groups": [
+          {
+            "concept_id": "cj.pattern-match.exhaustiveness",
+            "exercise_id": "exercise-a",
+            "category": "conceptual",
+            "sample_size": 5,
+            "diagnosis_count": 5,
+            "independent_repair_count": 0
+          }
+        ]
+      }
+    },
+    {
+      "vector_id": "analytics-concept-time-suppressed-fields",
+      "filter_combination": "concept-time",
+      "scenario": "suppressed-fields",
+      "facts": [
+        {
+          "diagnosis_id": "fixture-main-1",
+          "subject_key": "synthetic-subject-1",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-main-2",
+          "subject_key": "synthetic-subject-2",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-main-3",
+          "subject_key": "synthetic-subject-3",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-main-4",
+          "subject_key": "synthetic-subject-4",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-excluded-concept_id",
+          "subject_key": "synthetic-filter-outsider",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.other",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false,
+          "excluded_by": "concept_id"
+        },
+        {
+          "diagnosis_id": "fixture-excluded-start_at",
+          "subject_key": "synthetic-filter-outsider",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T00:59:59Z",
+          "independently_repaired": false,
+          "excluded_by": "start_at"
+        },
+        {
+          "diagnosis_id": "fixture-excluded-end_at",
+          "subject_key": "synthetic-filter-outsider",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-08T01:00:01Z",
+          "independently_repaired": false,
+          "excluded_by": "end_at"
+        }
+      ],
+      "expected_response": {
+        "status": "insufficient_sample",
+        "course_id": "course-a",
+        "filters": {
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": null,
+          "start_at": "2026-10-07T01:00:00Z",
+          "end_at": "2026-10-08T01:00:00Z"
+        },
+        "minimum_sample_size": 5
+      }
+    },
+    {
+      "vector_id": "analytics-exercise-time-four-distinct",
+      "filter_combination": "exercise-time",
+      "scenario": "four-distinct",
+      "facts": [
+        {
+          "diagnosis_id": "fixture-main-1",
+          "subject_key": "synthetic-subject-1",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-main-2",
+          "subject_key": "synthetic-subject-2",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-main-3",
+          "subject_key": "synthetic-subject-3",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-main-4",
+          "subject_key": "synthetic-subject-4",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-excluded-exercise_id",
+          "subject_key": "synthetic-filter-outsider",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-b",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false,
+          "excluded_by": "exercise_id"
+        },
+        {
+          "diagnosis_id": "fixture-excluded-start_at",
+          "subject_key": "synthetic-filter-outsider",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T00:59:59Z",
+          "independently_repaired": false,
+          "excluded_by": "start_at"
+        },
+        {
+          "diagnosis_id": "fixture-excluded-end_at",
+          "subject_key": "synthetic-filter-outsider",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-08T01:00:01Z",
+          "independently_repaired": false,
+          "excluded_by": "end_at"
+        }
+      ],
+      "expected_response": {
+        "status": "insufficient_sample",
+        "course_id": "course-a",
+        "filters": {
+          "concept_id": null,
+          "exercise_id": "exercise-a",
+          "start_at": "2026-10-07T01:00:00Z",
+          "end_at": "2026-10-08T01:00:00Z"
+        },
+        "minimum_sample_size": 5
+      }
+    },
+    {
+      "vector_id": "analytics-exercise-time-five-distinct",
+      "filter_combination": "exercise-time",
+      "scenario": "five-distinct",
+      "facts": [
+        {
+          "diagnosis_id": "fixture-main-1",
+          "subject_key": "synthetic-subject-1",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-main-2",
+          "subject_key": "synthetic-subject-2",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-main-3",
+          "subject_key": "synthetic-subject-3",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-main-4",
+          "subject_key": "synthetic-subject-4",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-main-5",
+          "subject_key": "synthetic-subject-5",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-excluded-exercise_id",
+          "subject_key": "synthetic-filter-outsider",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-b",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false,
+          "excluded_by": "exercise_id"
+        },
+        {
+          "diagnosis_id": "fixture-excluded-start_at",
+          "subject_key": "synthetic-filter-outsider",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T00:59:59Z",
+          "independently_repaired": false,
+          "excluded_by": "start_at"
+        },
+        {
+          "diagnosis_id": "fixture-excluded-end_at",
+          "subject_key": "synthetic-filter-outsider",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-08T01:00:01Z",
+          "independently_repaired": false,
+          "excluded_by": "end_at"
+        }
+      ],
+      "expected_response": {
+        "status": "available",
+        "course_id": "course-a",
+        "filters": {
+          "concept_id": null,
+          "exercise_id": "exercise-a",
+          "start_at": "2026-10-07T01:00:00Z",
+          "end_at": "2026-10-08T01:00:00Z"
+        },
+        "minimum_sample_size": 5,
+        "sample_size": 5,
+        "groups": [
+          {
+            "concept_id": "cj.pattern-match.exhaustiveness",
+            "exercise_id": "exercise-a",
+            "category": "conceptual",
+            "sample_size": 5,
+            "diagnosis_count": 5,
+            "independent_repair_count": 0
+          }
+        ]
+      }
+    },
+    {
+      "vector_id": "analytics-exercise-time-duplicate-student",
+      "filter_combination": "exercise-time",
+      "scenario": "duplicate-student",
+      "facts": [
+        {
+          "diagnosis_id": "fixture-main-1",
+          "subject_key": "synthetic-subject-1",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-main-2",
+          "subject_key": "synthetic-subject-2",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-main-3",
+          "subject_key": "synthetic-subject-3",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-main-4",
+          "subject_key": "synthetic-subject-4",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-duplicate-student",
+          "subject_key": "synthetic-subject-1",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-excluded-exercise_id",
+          "subject_key": "synthetic-filter-outsider",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-b",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false,
+          "excluded_by": "exercise_id"
+        },
+        {
+          "diagnosis_id": "fixture-excluded-start_at",
+          "subject_key": "synthetic-filter-outsider",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T00:59:59Z",
+          "independently_repaired": false,
+          "excluded_by": "start_at"
+        },
+        {
+          "diagnosis_id": "fixture-excluded-end_at",
+          "subject_key": "synthetic-filter-outsider",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-08T01:00:01Z",
+          "independently_repaired": false,
+          "excluded_by": "end_at"
+        }
+      ],
+      "expected_response": {
+        "status": "insufficient_sample",
+        "course_id": "course-a",
+        "filters": {
+          "concept_id": null,
+          "exercise_id": "exercise-a",
+          "start_at": "2026-10-07T01:00:00Z",
+          "end_at": "2026-10-08T01:00:00Z"
+        },
+        "minimum_sample_size": 5
+      }
+    },
+    {
+      "vector_id": "analytics-exercise-time-foreign-course",
+      "filter_combination": "exercise-time",
+      "scenario": "foreign-course",
+      "facts": [
+        {
+          "diagnosis_id": "fixture-main-1",
+          "subject_key": "synthetic-subject-1",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-main-2",
+          "subject_key": "synthetic-subject-2",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-main-3",
+          "subject_key": "synthetic-subject-3",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-main-4",
+          "subject_key": "synthetic-subject-4",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-foreign",
+          "subject_key": "synthetic-subject-5",
+          "course_id": "course-b",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-excluded-exercise_id",
+          "subject_key": "synthetic-filter-outsider",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-b",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false,
+          "excluded_by": "exercise_id"
+        },
+        {
+          "diagnosis_id": "fixture-excluded-start_at",
+          "subject_key": "synthetic-filter-outsider",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T00:59:59Z",
+          "independently_repaired": false,
+          "excluded_by": "start_at"
+        },
+        {
+          "diagnosis_id": "fixture-excluded-end_at",
+          "subject_key": "synthetic-filter-outsider",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-08T01:00:01Z",
+          "independently_repaired": false,
+          "excluded_by": "end_at"
+        }
+      ],
+      "expected_response": {
+        "status": "insufficient_sample",
+        "course_id": "course-a",
+        "filters": {
+          "concept_id": null,
+          "exercise_id": "exercise-a",
+          "start_at": "2026-10-07T01:00:00Z",
+          "end_at": "2026-10-08T01:00:00Z"
+        },
+        "minimum_sample_size": 5
+      }
+    },
+    {
+      "vector_id": "analytics-exercise-time-small-group",
+      "filter_combination": "exercise-time",
+      "scenario": "small-group",
+      "facts": [
+        {
+          "diagnosis_id": "fixture-main-1",
+          "subject_key": "synthetic-subject-1",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-main-2",
+          "subject_key": "synthetic-subject-2",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-main-3",
+          "subject_key": "synthetic-subject-3",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-main-4",
+          "subject_key": "synthetic-subject-4",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-main-5",
+          "subject_key": "synthetic-subject-5",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-small-1",
+          "subject_key": "synthetic-small-1",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.other",
+          "exercise_id": "exercise-small",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-small-2",
+          "subject_key": "synthetic-small-2",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.other",
+          "exercise_id": "exercise-small",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-small-3",
+          "subject_key": "synthetic-small-3",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.other",
+          "exercise_id": "exercise-small",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-small-4",
+          "subject_key": "synthetic-small-4",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.other",
+          "exercise_id": "exercise-small",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-excluded-exercise_id",
+          "subject_key": "synthetic-filter-outsider",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-b",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false,
+          "excluded_by": "exercise_id"
+        },
+        {
+          "diagnosis_id": "fixture-excluded-start_at",
+          "subject_key": "synthetic-filter-outsider",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T00:59:59Z",
+          "independently_repaired": false,
+          "excluded_by": "start_at"
+        },
+        {
+          "diagnosis_id": "fixture-excluded-end_at",
+          "subject_key": "synthetic-filter-outsider",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-08T01:00:01Z",
+          "independently_repaired": false,
+          "excluded_by": "end_at"
+        }
+      ],
+      "expected_response": {
+        "status": "available",
+        "course_id": "course-a",
+        "filters": {
+          "concept_id": null,
+          "exercise_id": "exercise-a",
+          "start_at": "2026-10-07T01:00:00Z",
+          "end_at": "2026-10-08T01:00:00Z"
+        },
+        "minimum_sample_size": 5,
+        "sample_size": 5,
+        "groups": [
+          {
+            "concept_id": "cj.pattern-match.exhaustiveness",
+            "exercise_id": "exercise-a",
+            "category": "conceptual",
+            "sample_size": 5,
+            "diagnosis_count": 5,
+            "independent_repair_count": 0
+          }
+        ]
+      }
+    },
+    {
+      "vector_id": "analytics-exercise-time-suppressed-fields",
+      "filter_combination": "exercise-time",
+      "scenario": "suppressed-fields",
+      "facts": [
+        {
+          "diagnosis_id": "fixture-main-1",
+          "subject_key": "synthetic-subject-1",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-main-2",
+          "subject_key": "synthetic-subject-2",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-main-3",
+          "subject_key": "synthetic-subject-3",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-main-4",
+          "subject_key": "synthetic-subject-4",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-excluded-exercise_id",
+          "subject_key": "synthetic-filter-outsider",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-b",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false,
+          "excluded_by": "exercise_id"
+        },
+        {
+          "diagnosis_id": "fixture-excluded-start_at",
+          "subject_key": "synthetic-filter-outsider",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T00:59:59Z",
+          "independently_repaired": false,
+          "excluded_by": "start_at"
+        },
+        {
+          "diagnosis_id": "fixture-excluded-end_at",
+          "subject_key": "synthetic-filter-outsider",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-08T01:00:01Z",
+          "independently_repaired": false,
+          "excluded_by": "end_at"
+        }
+      ],
+      "expected_response": {
+        "status": "insufficient_sample",
+        "course_id": "course-a",
+        "filters": {
+          "concept_id": null,
+          "exercise_id": "exercise-a",
+          "start_at": "2026-10-07T01:00:00Z",
+          "end_at": "2026-10-08T01:00:00Z"
+        },
+        "minimum_sample_size": 5
+      }
+    },
+    {
+      "vector_id": "analytics-all-four-distinct",
+      "filter_combination": "all",
+      "scenario": "four-distinct",
+      "facts": [
+        {
+          "diagnosis_id": "fixture-main-1",
+          "subject_key": "synthetic-subject-1",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-main-2",
+          "subject_key": "synthetic-subject-2",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-main-3",
+          "subject_key": "synthetic-subject-3",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-main-4",
+          "subject_key": "synthetic-subject-4",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-excluded-concept_id",
+          "subject_key": "synthetic-filter-outsider",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.other",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false,
+          "excluded_by": "concept_id"
+        },
+        {
+          "diagnosis_id": "fixture-excluded-exercise_id",
+          "subject_key": "synthetic-filter-outsider",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-b",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false,
+          "excluded_by": "exercise_id"
+        },
+        {
+          "diagnosis_id": "fixture-excluded-start_at",
+          "subject_key": "synthetic-filter-outsider",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T00:59:59Z",
+          "independently_repaired": false,
+          "excluded_by": "start_at"
+        },
+        {
+          "diagnosis_id": "fixture-excluded-end_at",
+          "subject_key": "synthetic-filter-outsider",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-08T01:00:01Z",
+          "independently_repaired": false,
+          "excluded_by": "end_at"
+        }
+      ],
+      "expected_response": {
+        "status": "insufficient_sample",
+        "course_id": "course-a",
+        "filters": {
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "start_at": "2026-10-07T01:00:00Z",
+          "end_at": "2026-10-08T01:00:00Z"
+        },
+        "minimum_sample_size": 5
+      }
+    },
+    {
+      "vector_id": "analytics-all-five-distinct",
+      "filter_combination": "all",
+      "scenario": "five-distinct",
+      "facts": [
+        {
+          "diagnosis_id": "fixture-main-1",
+          "subject_key": "synthetic-subject-1",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-main-2",
+          "subject_key": "synthetic-subject-2",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-main-3",
+          "subject_key": "synthetic-subject-3",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-main-4",
+          "subject_key": "synthetic-subject-4",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-main-5",
+          "subject_key": "synthetic-subject-5",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-excluded-concept_id",
+          "subject_key": "synthetic-filter-outsider",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.other",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false,
+          "excluded_by": "concept_id"
+        },
+        {
+          "diagnosis_id": "fixture-excluded-exercise_id",
+          "subject_key": "synthetic-filter-outsider",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-b",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false,
+          "excluded_by": "exercise_id"
+        },
+        {
+          "diagnosis_id": "fixture-excluded-start_at",
+          "subject_key": "synthetic-filter-outsider",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T00:59:59Z",
+          "independently_repaired": false,
+          "excluded_by": "start_at"
+        },
+        {
+          "diagnosis_id": "fixture-excluded-end_at",
+          "subject_key": "synthetic-filter-outsider",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-08T01:00:01Z",
+          "independently_repaired": false,
+          "excluded_by": "end_at"
+        }
+      ],
+      "expected_response": {
+        "status": "available",
+        "course_id": "course-a",
+        "filters": {
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "start_at": "2026-10-07T01:00:00Z",
+          "end_at": "2026-10-08T01:00:00Z"
+        },
+        "minimum_sample_size": 5,
+        "sample_size": 5,
+        "groups": [
+          {
+            "concept_id": "cj.pattern-match.exhaustiveness",
+            "exercise_id": "exercise-a",
+            "category": "conceptual",
+            "sample_size": 5,
+            "diagnosis_count": 5,
+            "independent_repair_count": 0
+          }
+        ]
+      }
+    },
+    {
+      "vector_id": "analytics-all-duplicate-student",
+      "filter_combination": "all",
+      "scenario": "duplicate-student",
+      "facts": [
+        {
+          "diagnosis_id": "fixture-main-1",
+          "subject_key": "synthetic-subject-1",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-main-2",
+          "subject_key": "synthetic-subject-2",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-main-3",
+          "subject_key": "synthetic-subject-3",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-main-4",
+          "subject_key": "synthetic-subject-4",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-duplicate-student",
+          "subject_key": "synthetic-subject-1",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-excluded-concept_id",
+          "subject_key": "synthetic-filter-outsider",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.other",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false,
+          "excluded_by": "concept_id"
+        },
+        {
+          "diagnosis_id": "fixture-excluded-exercise_id",
+          "subject_key": "synthetic-filter-outsider",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-b",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false,
+          "excluded_by": "exercise_id"
+        },
+        {
+          "diagnosis_id": "fixture-excluded-start_at",
+          "subject_key": "synthetic-filter-outsider",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T00:59:59Z",
+          "independently_repaired": false,
+          "excluded_by": "start_at"
+        },
+        {
+          "diagnosis_id": "fixture-excluded-end_at",
+          "subject_key": "synthetic-filter-outsider",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-08T01:00:01Z",
+          "independently_repaired": false,
+          "excluded_by": "end_at"
+        }
+      ],
+      "expected_response": {
+        "status": "insufficient_sample",
+        "course_id": "course-a",
+        "filters": {
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "start_at": "2026-10-07T01:00:00Z",
+          "end_at": "2026-10-08T01:00:00Z"
+        },
+        "minimum_sample_size": 5
+      }
+    },
+    {
+      "vector_id": "analytics-all-foreign-course",
+      "filter_combination": "all",
+      "scenario": "foreign-course",
+      "facts": [
+        {
+          "diagnosis_id": "fixture-main-1",
+          "subject_key": "synthetic-subject-1",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-main-2",
+          "subject_key": "synthetic-subject-2",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-main-3",
+          "subject_key": "synthetic-subject-3",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-main-4",
+          "subject_key": "synthetic-subject-4",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-foreign",
+          "subject_key": "synthetic-subject-5",
+          "course_id": "course-b",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-excluded-concept_id",
+          "subject_key": "synthetic-filter-outsider",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.other",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false,
+          "excluded_by": "concept_id"
+        },
+        {
+          "diagnosis_id": "fixture-excluded-exercise_id",
+          "subject_key": "synthetic-filter-outsider",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-b",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false,
+          "excluded_by": "exercise_id"
+        },
+        {
+          "diagnosis_id": "fixture-excluded-start_at",
+          "subject_key": "synthetic-filter-outsider",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T00:59:59Z",
+          "independently_repaired": false,
+          "excluded_by": "start_at"
+        },
+        {
+          "diagnosis_id": "fixture-excluded-end_at",
+          "subject_key": "synthetic-filter-outsider",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-08T01:00:01Z",
+          "independently_repaired": false,
+          "excluded_by": "end_at"
+        }
+      ],
+      "expected_response": {
+        "status": "insufficient_sample",
+        "course_id": "course-a",
+        "filters": {
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "start_at": "2026-10-07T01:00:00Z",
+          "end_at": "2026-10-08T01:00:00Z"
+        },
+        "minimum_sample_size": 5
+      }
+    },
+    {
+      "vector_id": "analytics-all-small-group",
+      "filter_combination": "all",
+      "scenario": "small-group",
+      "facts": [
+        {
+          "diagnosis_id": "fixture-main-1",
+          "subject_key": "synthetic-subject-1",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-main-2",
+          "subject_key": "synthetic-subject-2",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-main-3",
+          "subject_key": "synthetic-subject-3",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-main-4",
+          "subject_key": "synthetic-subject-4",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-main-5",
+          "subject_key": "synthetic-subject-5",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-small-1",
+          "subject_key": "synthetic-small-1",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.other",
+          "exercise_id": "exercise-small",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-small-2",
+          "subject_key": "synthetic-small-2",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.other",
+          "exercise_id": "exercise-small",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-small-3",
+          "subject_key": "synthetic-small-3",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.other",
+          "exercise_id": "exercise-small",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-small-4",
+          "subject_key": "synthetic-small-4",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.other",
+          "exercise_id": "exercise-small",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-excluded-concept_id",
+          "subject_key": "synthetic-filter-outsider",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.other",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false,
+          "excluded_by": "concept_id"
+        },
+        {
+          "diagnosis_id": "fixture-excluded-exercise_id",
+          "subject_key": "synthetic-filter-outsider",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-b",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false,
+          "excluded_by": "exercise_id"
+        },
+        {
+          "diagnosis_id": "fixture-excluded-start_at",
+          "subject_key": "synthetic-filter-outsider",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T00:59:59Z",
+          "independently_repaired": false,
+          "excluded_by": "start_at"
+        },
+        {
+          "diagnosis_id": "fixture-excluded-end_at",
+          "subject_key": "synthetic-filter-outsider",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-08T01:00:01Z",
+          "independently_repaired": false,
+          "excluded_by": "end_at"
+        }
+      ],
+      "expected_response": {
+        "status": "available",
+        "course_id": "course-a",
+        "filters": {
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "start_at": "2026-10-07T01:00:00Z",
+          "end_at": "2026-10-08T01:00:00Z"
+        },
+        "minimum_sample_size": 5,
+        "sample_size": 5,
+        "groups": [
+          {
+            "concept_id": "cj.pattern-match.exhaustiveness",
+            "exercise_id": "exercise-a",
+            "category": "conceptual",
+            "sample_size": 5,
+            "diagnosis_count": 5,
+            "independent_repair_count": 0
+          }
+        ]
+      }
+    },
+    {
+      "vector_id": "analytics-all-suppressed-fields",
+      "filter_combination": "all",
+      "scenario": "suppressed-fields",
+      "facts": [
+        {
+          "diagnosis_id": "fixture-main-1",
+          "subject_key": "synthetic-subject-1",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-main-2",
+          "subject_key": "synthetic-subject-2",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-main-3",
+          "subject_key": "synthetic-subject-3",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-main-4",
+          "subject_key": "synthetic-subject-4",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false
+        },
+        {
+          "diagnosis_id": "fixture-excluded-concept_id",
+          "subject_key": "synthetic-filter-outsider",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.other",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false,
+          "excluded_by": "concept_id"
+        },
+        {
+          "diagnosis_id": "fixture-excluded-exercise_id",
+          "subject_key": "synthetic-filter-outsider",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-b",
+          "category": "conceptual",
+          "created_at": "2026-10-07T02:00:00Z",
+          "independently_repaired": false,
+          "excluded_by": "exercise_id"
+        },
+        {
+          "diagnosis_id": "fixture-excluded-start_at",
+          "subject_key": "synthetic-filter-outsider",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-07T00:59:59Z",
+          "independently_repaired": false,
+          "excluded_by": "start_at"
+        },
+        {
+          "diagnosis_id": "fixture-excluded-end_at",
+          "subject_key": "synthetic-filter-outsider",
+          "course_id": "course-a",
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "category": "conceptual",
+          "created_at": "2026-10-08T01:00:01Z",
+          "independently_repaired": false,
+          "excluded_by": "end_at"
+        }
+      ],
+      "expected_response": {
+        "status": "insufficient_sample",
+        "course_id": "course-a",
+        "filters": {
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "exercise-a",
+          "start_at": "2026-10-07T01:00:00Z",
+          "end_at": "2026-10-08T01:00:00Z"
+        },
+        "minimum_sample_size": 5
+      }
+    }
+  ]
+}
