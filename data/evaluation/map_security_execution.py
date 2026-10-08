@@ -101,7 +101,12 @@ def build(root=ROOT):
             'boundary':'Synthetic SQL PostgreSQL authority; Mock provider/index where applicable.' if tier=='pg' else 'Actual hardened SDK 1.2.0 container, fixed limits, synthetic source only.' if tier=='container' else 'Real authorization/deletion/model-input code; synthetic in-memory stores/index and deterministic Mock provider; not physical external storage proof.',
             'run':{k:record[k] for k in ('command','cwd','start','end','exit_code')},
             'evidence':[{'path':'docs/experiments/wave3-evidence/'+file,'sha256':digest(root/'docs/experiments/wave3-evidence'/file),'node':node,'duration_seconds':actual['duration_seconds']}]}
-        if cid=='sec-sensitive-logging-008':
+        if cid=='sec-cross-course-006':
+            row.update(status='not_executed',executed_at=None,
+                reason='Independent review confirmed that the executed node revoked student-b in course-a and accessed an already accepted course-a proposal. The planned operation requires student-a with a pending course-b proposal after course-b enrollment revocation. The wrong-scenario observation cannot prove this planned attack passed; product implementation is paused pending user authorization.',
+                blocker='WG-CASE-CROSS-COURSE-006',observation=row['evidence'])
+            row['evidence']=[]
+        elif cid=='sec-sensitive-logging-008':
             row.update(status='not_executed',executed_at=None,
                 reason='The actual observation confirms client-controlled X-Request-ID is echoed. The planned case does not define an admissible correlation format or a denial criterion. No claim of correlation-header sanitization is made; an explicit API/security decision is needed before calling this attack passed.',
                 blocker='WG-CORRELATION-POLICY',observation=row['evidence'])

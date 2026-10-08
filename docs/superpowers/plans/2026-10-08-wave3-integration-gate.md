@@ -389,11 +389,11 @@ def test_vector_through_router_sql_postgres(wave3_pg, vector):
 
 **Interfaces:** 产出Gate结论、完整文件清单、五来源追溯、实际命令和独立审查报告；不产生main合并/远端交付。
 
-- [x] 按下一节矩阵执行全部相关测试，任何变更后重跑受影响范围；最后完整后端、前端、浏览器、Runner、PG迁移回归不能以早期次数替代。
-- [ ] 使用requesting-code-review；全新只读上下文审查，传设计、用户Gate要求、baseline→Gate diff、完整命令证据与已知适配器缺口。审查者不改代码、不接触真实数据/模型、不停止服务。
-- [ ] Critical/Important安全新发现立即停止产品修改并报告；用户授权修复后先RED再最小修复和回归。普通契约/环境/既定SQL缺口按systematic-debugging持续处理，不放宽断言。
+- [ ] 按下一节矩阵执行全部相关测试，任何变更后重跑受影响范围；最后完整后端、前端、浏览器、Runner、PG迁移回归不能以早期次数替代。
+- [x] 使用requesting-code-review；全新只读上下文审查，传设计、用户Gate要求、baseline→Gate diff、完整命令证据与已知适配器缺口。审查者不改代码、不接触真实数据/模型、不停止服务。
+- [x] Critical/Important安全新发现立即停止产品修改并报告；用户授权修复后先RED再最小修复和回归。普通契约/环境/既定SQL缺口按systematic-debugging持续处理，不放宽断言。
 - [ ] 使用verification-before-completion核对最终实际结果、0未解决冲突、来源-x、head/契约、manifest覆盖、无Critical/Important；分类结论见第6节。
-- [ ] 最终交接含用户要求的20项：结论；完成/未完成；5来源；冲突；SQL/事务；ADR；API；迁移回滚；54；220；7；真实学生/教师组合；164映射；全命令；独立审查；真实数据/模型边界；全文件；风险/Wave4依赖；Gate分支/哈希/状态；禁止动作未执行声明。
+- [x] 最终交接含用户要求的20项：结论；完成/未完成；5来源；冲突；SQL/事务；ADR；API；迁移回滚；54；220；7；真实学生/教师组合；164映射；全命令；独立审查；真实数据/模型边界；全文件；风险/Wave4依赖；Gate分支/哈希/状态；禁止动作未执行声明。
 - [x] 将脱敏证据摘要/哈希提交，原临时截图/日志按现有ignore保存本地并给绝对路径；不提交令牌/凭证/原文。
 - [ ] 最终本地提交：`feat: integrate Wave 3 analytics UI and security gate`；`git status --short --branch`干净、`git diff --check`0、`git ls-files -u`空。其他Task worktree/main状态再次比对，不清理任何worktree，不push/PR。
 
@@ -455,3 +455,7 @@ Gate结论：
 - [x] 用户明确确认本文，随后才开始G0及产品集成。
 
 **确认内容：** 采用上述串行实施、五来源顺序、最小SQL/0007、共享事务、契约全量对齐和真实测试矩阵；对尚无外部适配器的边界如实列未验证，绝不默认新增基础设施或声称完全通过。确认前维持只读审计/计划范围。
+
+## 实际停止记录（2026-10-08）
+
+审查固定HEAD 9e1a7b7692857d15bf789eb72d157ba7f28d66c4。独立审查发现Important教师敏感GET审计缺口，按本计划/用户第16节停止产品修改。新增审计6项RED；UI运行中切换两项RED（36pass/2fail）。sec-cross-course-006原参数执行错场景，撤回通过为not_executed，最新manifest162passed/2not_executed，证据工具11项通过。当前Gate未通过；完整后端907与组件36/浏览器26的绿色属于审查前快照，不能覆盖新失败。仅补测试/证据/交接，未实施产品修复；待用户授权后先RED再最小修复、真实PG/完整回归并补核同一次独立审查。

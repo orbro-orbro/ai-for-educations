@@ -907,8 +907,8 @@
       "planned_tier": "local_mock",
       "actual_tier": "local",
       "sensitivity": "high",
-      "status": "automated_passed",
-      "executed_at": "2026-10-08T10:18:40.103298+08:00",
+      "status": "not_executed",
+      "executed_at": null,
       "mapping_basis": "Exact case-ID parameter executes the named operation.",
       "boundary": "Real authorization/deletion/model-input code; synthetic in-memory stores/index and deterministic Mock provider; not physical external storage proof.",
       "run": {
@@ -933,7 +933,10 @@
         "end": "2026-10-08T02:20:20.356719+00:00",
         "exit_code": 0
       },
-      "evidence": [
+      "evidence": [],
+      "reason": "Independent review confirmed that the executed node revoked student-b in course-a and accessed an already accepted course-a proposal. The planned operation requires student-a with a pending course-b proposal after course-b enrollment revocation. The wrong-scenario observation cannot prove this planned attack passed; product implementation is paused pending user authorization.",
+      "blocker": "WG-CASE-CROSS-COURSE-006",
+      "observation": [
         {
           "path": "docs/experiments/wave3-evidence/concrete-local.xml",
           "sha256": "c528b4037c8e776d6a2afb4ffa27f910b2762faff0c11696f9c3720c0b3ab9e7",

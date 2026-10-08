@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="6" skipped="0" tests="6" time="3.058" timestamp="2026-10-08T13:59:45.287688+08:00" hostname="LAPTOP-N3QA8JA6"><testcase classname="tests.security.test_wave3_teacher_read_audit" name="test_sensitive_teacher_read_records_metadata_audit[queue]" file="tests\security\test_wave3_teacher_read_audit.py" line="35" time="0.212"><failure message="AssertionError: Sensitive teacher GET returned without an audit event&#10;assert 0 &gt;= 1&#10; +  where 0 = len(())">tests\security\test_wave3_teacher_read_audit.py:42: in test_sensitive_teacher_read_records_metadata_audit
+    assert len(events) &gt;= 1, "Sensitive teacher GET returned without an audit event"
+E   AssertionError: Sensitive teacher GET returned without an audit event
+E   assert 0 &gt;= 1
+E    +  where 0 = len(())</failure></testcase><testcase classname="tests.security.test_wave3_teacher_read_audit" name="test_sensitive_teacher_read_records_metadata_audit[available_analytics]" file="tests\security\test_wave3_teacher_read_audit.py" line="35" time="0.200"><failure message="AssertionError: Sensitive teacher GET returned without an audit event&#10;assert 0 &gt;= 1&#10; +  where 0 = len(())">tests\security\test_wave3_teacher_read_audit.py:42: in test_sensitive_teacher_read_records_metadata_audit
+    assert len(events) &gt;= 1, "Sensitive teacher GET returned without an audit event"
+E   AssertionError: Sensitive teacher GET returned without an audit event
+E   assert 0 &gt;= 1
+E    +  where 0 = len(())</failure></testcase><testcase classname="tests.security.test_wave3_teacher_read_audit" name="test_sensitive_teacher_read_records_metadata_audit[suppressed_analytics]" file="tests\security\test_wave3_teacher_read_audit.py" line="35" time="0.203"><failure message="AssertionError: Sensitive teacher GET returned without an audit event&#10;assert 0 &gt;= 1&#10; +  where 0 = len(())">tests\security\test_wave3_teacher_read_audit.py:42: in test_sensitive_teacher_read_records_metadata_audit
+    assert len(events) &gt;= 1, "Sensitive teacher GET returned without an audit event"
+E   AssertionError: Sensitive teacher GET returned without an audit event
+E   assert 0 &gt;= 1
+E    +  where 0 = len(())</failure></testcase><testcase classname="tests.security.test_wave3_teacher_read_audit" name="test_sensitive_teacher_read_fails_closed_when_audit_is_unavailable[queue]" file="tests\security\test_wave3_teacher_read_audit.py" line="50" time="0.201"><failure message="Failed: DID NOT RAISE AnalyticsPersistenceError">tests\security\test_wave3_teacher_read_audit.py:54: in test_sensitive_teacher_read_fails_closed_when_audit_is_unavailable
+    with pytest.raises(AnalyticsPersistenceError):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   Failed: DID NOT RAISE AnalyticsPersistenceError</failure></testcase><testcase classname="tests.security.test_wave3_teacher_read_audit" name="test_sensitive_teacher_read_fails_closed_when_audit_is_unavailable[available_analytics]" file="tests\security\test_wave3_teacher_read_audit.py" line="50" time="0.197"><failure message="Failed: DID NOT RAISE AnalyticsPersistenceError">tests\security\test_wave3_teacher_read_audit.py:54: in test_sensitive_teacher_read_fails_closed_when_audit_is_unavailable
+    with pytest.raises(AnalyticsPersistenceError):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   Failed: DID NOT RAISE AnalyticsPersistenceError</failure></testcase><testcase classname="tests.security.test_wave3_teacher_read_audit" name="test_sensitive_teacher_read_fails_closed_when_audit_is_unavailable[suppressed_analytics]" file="tests\security\test_wave3_teacher_read_audit.py" line="50" time="0.199"><failure message="Failed: DID NOT RAISE AnalyticsPersistenceError">tests\security\test_wave3_teacher_read_audit.py:54: in test_sensitive_teacher_read_fails_closed_when_audit_is_unavailable
+    with pytest.raises(AnalyticsPersistenceError):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   Failed: DID NOT RAISE AnalyticsPersistenceError</failure></testcase></testsuite></testsuites>

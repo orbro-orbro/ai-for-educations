@@ -18,6 +18,12 @@ def test_exact_164_execution_claims_are_verified_against_evidence():
     module.validate_manifest(manifest,ROOT)
     assert len(manifest['cases'])==164
 
+def test_reviewed_wrong_scenario_is_not_reported_as_attack_passed():
+    manifest=mapper().build()
+    row=next(row for row in manifest['cases'] if row['case_id']=='sec-cross-course-006')
+    assert row['status']=='not_executed'
+    assert row['blocker']=='WG-CASE-CROSS-COURSE-006'
+
 @pytest.mark.parametrize('mutation',['missing','duplicate','status','evidence','collected','hash','wrong_case','operation','command'])
 def test_mapping_rejects_unverifiable_execution_claims(mutation):
     module=mapper()

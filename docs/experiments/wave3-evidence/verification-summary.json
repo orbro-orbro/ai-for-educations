@@ -37,6 +37,11 @@
       "sha256": "b78fd1149131af9ea7ce927a0da763c50837a31d7d10c82f9bce35813700c1af",
       "test_count": 65,
       "passed": 65
+    },
+    "teacher-read-audit-red.xml": {
+      "sha256": "0a9d4f18ae460b542167128c1fae4177c869ca467fb548adafcb97201b356e88",
+      "test_count": 6,
+      "failed": 6
     }
   },
   "browser": {
@@ -151,8 +156,19 @@
       "normalized_equal_original": true
     }
   },
+  "current_manifest": {
+    "automated_passed": 162,
+    "not_executed": 2
+  },
+  "current_gate_status": "security_stop_waiting_user_authorization",
+  "current_frontend_components": {
+    "failed": 2,
+    "passed": 36,
+    "total": 38,
+    "phase": "G10-review-selection-confirmed-red"
+  },
   "archive": {
-    "commands": 103,
+    "commands": 112,
     "credential_redactions": 1,
     "directory": "docs/experiments/wave3-evidence/command-output"
   }

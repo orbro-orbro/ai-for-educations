@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "status": "validation_passed_review_pending",
+  "status": "security_stop_waiting_user_authorization",
   "commands": [
     {
       "phase": "G0-baseline",
@@ -4360,6 +4360,341 @@
       "archived_evidence_path": "docs/experiments/wave3-evidence/command-output/G10-browser-SQL-proof-final-20261008054549.txt",
       "archived_sha256": "beb28d909bba62d90158a1cdf5ba27fc8921bc115f6d003aee494db1e84a30f1",
       "archive_note": "Actual raw bytes retained locally. Archive redacts credentials, normalizes LF/UTF-8 and trims trailing display whitespace; undecodable child-process bytes use reversible backslash escapes. Original SHA above; archive SHA separate."
+    },
+    {
+      "phase": "G10-committed-evidence-integrity",
+      "command": [
+        "C:/Users/lenovo/Desktop/cs competition/.venv/Scripts/python.exe",
+        "-B",
+        "-c",
+        "from pathlib import Path\nimport hashlib,json,re,subprocess\nroot=Path.cwd()\nledger=json.loads((root/'docs/experiments/wave3-command-results.json').read_text(encoding='utf-8'))\nfor run in ledger['commands']:\n    p=root/run['archived_evidence_path']\n    assert hashlib.sha256(p.read_bytes()).hexdigest()==run['archived_sha256'],run['phase']\n    staged=subprocess.check_output(['git','show','HEAD:'+run['archived_evidence_path']])\n    assert hashlib.sha256(staged).hexdigest()==run['archived_sha256'],run['phase']\n    assert not re.search(rb'eyJ[A-Za-z0-9_-]+\\.[A-Za-z0-9_-]+\\.[A-Za-z0-9_-]+',p.read_bytes())\nmanifest=json.loads((root/'data/evaluation/security_execution_manifest.json').read_text(encoding='utf-8'))\nfor row in manifest['cases']:\n    for e in row['evidence']:\n        assert hashlib.sha256(subprocess.check_output(['git','show','HEAD:'+e['path']])).hexdigest()==e['sha256']\nsummary=json.loads((root/'docs/experiments/wave3-evidence/verification-summary.json').read_text(encoding='utf-8'))\nfor name,info in summary['junit'].items():\n    assert hashlib.sha256(subprocess.check_output(['git','show','HEAD:docs/experiments/wave3-evidence/'+name])).hexdigest()==info['sha256'],name\nassert not subprocess.check_output(['git','ls-files','-u']).strip()\nsubprocess.check_call(['git','diff','--check'])\nprint(json.dumps({'archived_commands_verified':len(ledger['commands']),'case_evidence_in_git_verified':164,'original_security_passed':sum(summary['original_security_220'].values()),'junit_reports_verified':len(summary['junit']),'unresolved_conflicts':0,'jwt_artifacts':0}))"
+      ],
+      "cwd": "C:\\Users\\lenovo\\Desktop\\cs competition\\.worktrees\\wave3-integration-gate",
+      "start": "2026-10-08T05:54:28.790210+00:00",
+      "end": "2026-10-08T05:54:51.559836+00:00",
+      "exit_code": 0,
+      "status": "passed",
+      "environment_names": [
+        "PYTHONDONTWRITEBYTECODE"
+      ],
+      "data": "synthetic only",
+      "evidence_path": ".superpowers\\sdd\\2026-10-08-wave3-integration-gate\\G10-committed-evidence-integrity-20261008055428.log",
+      "sha256": "c75b8c78805533fb6e48b286c9e74b60049313bd266ffd3af3e9c04f36a2a413",
+      "summary": [
+        "Failed to find real location of C:\\Users\\lenovo\\miniconda3\\python.exe",
+        "{\"archived_commands_verified\": 103, \"case_evidence_in_git_verified\": 164, \"original_security_passed\": 220, \"junit_reports_verified\": 7, \"unresolved_conflicts\": 0, \"jwt_artifacts\": 0}"
+      ],
+      "interpretation": "case_evidence_in_git_verified=164 in the actual output denotes all manifest rows traversed, including the one explicitly not_executed row with no evidence. Exact-case evidence exists for 163 rows; no 164/164 attack-pass claim is made.",
+      "archived_evidence_path": "docs/experiments/wave3-evidence/command-output/G10-committed-evidence-integrity-20261008055428.txt",
+      "archived_sha256": "2a4ea408366990b092e11ec6c8015c8a0e74f192f4c392cfdb7a76c8194fbb2b",
+      "archive_note": "Actual raw bytes retained locally. Archive redacts credentials, normalizes LF/UTF-8 and trims trailing display whitespace; undecodable child-process bytes use reversible backslash escapes. Original SHA above; archive SHA separate."
+    },
+    {
+      "phase": "G10-review-selection-red",
+      "command": [
+        "npm.cmd",
+        "test"
+      ],
+      "cwd": "C:\\Users\\lenovo\\Desktop\\cs competition\\.worktrees\\wave3-integration-gate\\frontend",
+      "start": "2026-10-08T05:57:30.395659+00:00",
+      "end": "2026-10-08T05:57:39.269033+00:00",
+      "exit_code": 1,
+      "status": "failed",
+      "environment_names": [
+        "PYTHONDONTWRITEBYTECODE"
+      ],
+      "data": "synthetic only",
+      "evidence_path": ".superpowers\\sdd\\2026-10-08-wave3-integration-gate\\G10-review-selection-red-20261008055730.log",
+      "sha256": "080263211481f222e687568f70cbc6947f61bcd92247c7f30c15bb80c16d0110",
+      "summary": [
+        "       |                                           ^",
+        "    117|     expect(screen.getByRole(\"button\",{name:\"正在隔离执行…\"})).toBeDisabled();",
+        "    118|     fireEvent.change(screen.getByRole(\"combobox\",{name:selection}),{ta…",
+        " ❯ runWithExpensiveErrorDiagnosticsDisabled node_modules/@testing-library/dom/dist/config.js:47:12",
+        " ❯ checkCallback node_modules/@testing-library/dom/dist/wait-for.js:124:77",
+        " ❯ Timeout.checkRealTimersCallback node_modules/@testing-library/dom/dist/wait-for.js:118:16",
+        "",
+        "⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯",
+        "",
+        "",
+        " Test Files  1 failed (1)",
+        "      Tests  2 failed | 36 passed (38)",
+        "   Start at  13:57:31",
+        "   Duration  5.14s (tests 67%, environment 20%, transform 6%, setup 5%, import 1%)",
+        ""
+      ],
+      "archived_evidence_path": "docs/experiments/wave3-evidence/command-output/G10-review-selection-red-20261008055730.txt",
+      "archived_sha256": "9b321cae95a8c775eab1b9070c2e4e4294df0a424cdb21c597674fbe5d2065b7",
+      "archive_note": "Actual raw bytes retained locally. Archive redacts credentials, normalizes LF/UTF-8 and trims trailing display whitespace; undecodable child-process bytes use reversible backslash escapes. Original SHA above; archive SHA separate."
+    },
+    {
+      "phase": "G10-review-audit-red",
+      "command": [
+        "C:/Users/lenovo/Desktop/cs competition/.venv/Scripts/python.exe",
+        "-B",
+        "-m",
+        "pytest",
+        "tests/security/test_wave3_teacher_read_audit.py",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "--tb=short",
+        "-o",
+        "junit_family=xunit1",
+        "--junitxml=../docs/experiments/wave3-evidence/teacher-read-audit-red.xml",
+        "--basetemp",
+        "C:\\Users\\lenovo\\Desktop\\cs competition\\.worktrees\\wave3-integration-gate\\.superpowers\\sdd\\2026-10-08-wave3-integration-gate\\tmp-20261008055943285824"
+      ],
+      "cwd": "C:\\Users\\lenovo\\Desktop\\cs competition\\.worktrees\\wave3-integration-gate\\backend",
+      "start": "2026-10-08T05:59:43.285824+00:00",
+      "end": "2026-10-08T05:59:48.582255+00:00",
+      "exit_code": 1,
+      "status": "failed",
+      "environment_names": [
+        "PYTHONDONTWRITEBYTECODE"
+      ],
+      "data": "synthetic only",
+      "evidence_path": ".superpowers\\sdd\\2026-10-08-wave3-integration-gate\\G10-review-audit-red-20261008055943.log",
+      "sha256": "6ca369e4349c6b217b2ac6ebe97d55b33cf9e0cc4236a93c2f63297b8e162e8b",
+      "summary": [
+        "         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^",
+        "E   Failed: DID NOT RAISE AnalyticsPersistenceError",
+        "_ test_sensitive_teacher_read_fails_closed_when_audit_is_unavailable[suppressed_analytics] _",
+        "tests\\security\\test_wave3_teacher_read_audit.py:54: in test_sensitive_teacher_read_fails_closed_when_audit_is_unavailable",
+        "    with pytest.raises(AnalyticsPersistenceError):",
+        "         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^",
+        "E   Failed: DID NOT RAISE AnalyticsPersistenceError",
+        "=========================== short test summary info ===========================",
+        "FAILED tests/security/test_wave3_teacher_read_audit.py::test_sensitive_teacher_read_records_metadata_audit[queue]",
+        "FAILED tests/security/test_wave3_teacher_read_audit.py::test_sensitive_teacher_read_records_metadata_audit[available_analytics]",
+        "FAILED tests/security/test_wave3_teacher_read_audit.py::test_sensitive_teacher_read_records_metadata_audit[suppressed_analytics]",
+        "FAILED tests/security/test_wave3_teacher_read_audit.py::test_sensitive_teacher_read_fails_closed_when_audit_is_unavailable[queue]",
+        "FAILED tests/security/test_wave3_teacher_read_audit.py::test_sensitive_teacher_read_fails_closed_when_audit_is_unavailable[available_analytics]",
+        "FAILED tests/security/test_wave3_teacher_read_audit.py::test_sensitive_teacher_read_fails_closed_when_audit_is_unavailable[suppressed_analytics]",
+        "6 failed in 3.06s"
+      ],
+      "archived_evidence_path": "docs/experiments/wave3-evidence/command-output/G10-review-audit-red-20261008055943.txt",
+      "archived_sha256": "5ffe46e561c45fda0308b01e2d02edbec7fa904eef763b8d64e82e8eea7317d2",
+      "archive_note": "Actual raw bytes retained locally. Archive redacts credentials, normalizes LF/UTF-8 and trims trailing display whitespace; undecodable child-process bytes use reversible backslash escapes. Original SHA above; archive SHA separate."
+    },
+    {
+      "phase": "G10-review-selection-confirmed-red",
+      "command": [
+        "npm.cmd",
+        "test"
+      ],
+      "cwd": "C:\\Users\\lenovo\\Desktop\\cs competition\\.worktrees\\wave3-integration-gate\\frontend",
+      "start": "2026-10-08T05:59:53.019723+00:00",
+      "end": "2026-10-08T06:00:02.500605+00:00",
+      "exit_code": 1,
+      "status": "failed",
+      "environment_names": [
+        "PYTHONDONTWRITEBYTECODE"
+      ],
+      "data": "synthetic only",
+      "evidence_path": ".superpowers\\sdd\\2026-10-08-wave3-integration-gate\\G10-review-selection-confirmed-red-20261008055953.log",
+      "sha256": "82cbffe1f3ee0af7f4e6ac11e90c504bf51b5fc59bb49b21dbc8c42555564ca3",
+      "summary": [
+        "    118|     fireEvent.change(screen.getByRole(\"combobox\",{name:selection}),{ta…",
+        "    119|     await screen.findByRole(\"option\",{name:selection===\"课程\"?\"Exercise …",
+        "    120|     const next=await screen.findByRole(\"button\",{name:\"提交并运行\"});",
+        "       |                             ^",
+        "    121|     expect(next).toBeEnabled();",
+        "    122|     fireEvent.click(next);",
+        "",
+        "⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯",
+        "",
+        "",
+        " Test Files  1 failed (1)",
+        "      Tests  2 failed | 36 passed (38)",
+        "   Start at  13:59:54",
+        "   Duration  5.30s (tests 67%, environment 20%, transform 7%, setup 5%, import 1%)",
+        ""
+      ],
+      "archived_evidence_path": "docs/experiments/wave3-evidence/command-output/G10-review-selection-confirmed-red-20261008055953.txt",
+      "archived_sha256": "55cf56bd0296e26d8ca0a76ab688c07afee80a3d8021bbbe1d5953256e7a1b6d",
+      "archive_note": "Actual raw bytes retained locally. Archive redacts credentials, normalizes LF/UTF-8 and trims trailing display whitespace; undecodable child-process bytes use reversible backslash escapes. Original SHA above; archive SHA separate."
+    },
+    {
+      "phase": "G10-review-mapping-claim-red",
+      "command": [
+        "C:/Users/lenovo/Desktop/cs competition/.venv/Scripts/python.exe",
+        "-B",
+        "-m",
+        "pytest",
+        "tests/security/test_execution_manifest.py",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "--tb=short",
+        "--basetemp",
+        "C:\\Users\\lenovo\\Desktop\\cs competition\\.worktrees\\wave3-integration-gate\\.superpowers\\sdd\\2026-10-08-wave3-integration-gate\\tmp-20261008060236635795"
+      ],
+      "cwd": "C:\\Users\\lenovo\\Desktop\\cs competition\\.worktrees\\wave3-integration-gate\\backend",
+      "start": "2026-10-08T06:02:36.635795+00:00",
+      "end": "2026-10-08T06:02:42.911131+00:00",
+      "exit_code": 1,
+      "status": "failed",
+      "environment_names": [
+        "PYTHONDONTWRITEBYTECODE"
+      ],
+      "data": "synthetic only",
+      "evidence_path": ".superpowers\\sdd\\2026-10-08-wave3-integration-gate\\G10-review-mapping-claim-red-20261008060236.log",
+      "sha256": "c814ba2bfe8da95856f43e27a63258001ca232c0d85ee5d0bd7cc9e657d9dead",
+      "summary": [
+        "Failed to find real location of C:\\Users\\lenovo\\miniconda3\\python.exe",
+        ".F.........                                                              [100%]",
+        "================================== FAILURES ===================================",
+        "________ test_reviewed_wrong_scenario_is_not_reported_as_attack_passed ________",
+        "tests\\security\\test_execution_manifest.py:24: in test_reviewed_wrong_scenario_is_not_reported_as_attack_passed",
+        "    assert row['status']=='not_executed'",
+        "E   AssertionError: assert 'automated_passed' == 'not_executed'",
+        "E     ",
+        "E     - not_executed",
+        "E     + automated_passed",
+        "=========================== short test summary info ===========================",
+        "FAILED tests/security/test_execution_manifest.py::test_reviewed_wrong_scenario_is_not_reported_as_attack_passed",
+        "1 failed, 10 passed in 3.86s"
+      ],
+      "archived_evidence_path": "docs/experiments/wave3-evidence/command-output/G10-review-mapping-claim-red-20261008060236.txt",
+      "archived_sha256": "4449d904b224617a1ff50b491361448d4ae159a94ac8c9101f9728dca48ce899",
+      "archive_note": "Actual raw bytes retained locally. Archive redacts credentials, normalizes LF/UTF-8 and trims trailing display whitespace; undecodable child-process bytes use reversible backslash escapes. Original SHA above; archive SHA separate."
+    },
+    {
+      "phase": "G10-review-mapping-truthful",
+      "command": [
+        "C:/Users/lenovo/Desktop/cs competition/.venv/Scripts/python.exe",
+        "-B",
+        "data/evaluation/map_security_execution.py",
+        "--build"
+      ],
+      "cwd": "C:\\Users\\lenovo\\Desktop\\cs competition\\.worktrees\\wave3-integration-gate",
+      "start": "2026-10-08T06:02:50.526907+00:00",
+      "end": "2026-10-08T06:02:52.271509+00:00",
+      "exit_code": 0,
+      "status": "passed",
+      "environment_names": [
+        "PYTHONDONTWRITEBYTECODE"
+      ],
+      "data": "synthetic only",
+      "evidence_path": ".superpowers\\sdd\\2026-10-08-wave3-integration-gate\\G10-review-mapping-truthful-20261008060250.log",
+      "sha256": "399242c1dee12091c94511880af421795de530584946ed0eeefd363ecfdb04d1",
+      "summary": [
+        "Failed to find real location of C:\\Users\\lenovo\\miniconda3\\python.exe",
+        "{\"case_count\": 164, \"statuses\": {\"automated_passed\": 162, \"not_executed\": 2}, \"teaching_annotations\": \"unchanged draft\"}"
+      ],
+      "archived_evidence_path": "docs/experiments/wave3-evidence/command-output/G10-review-mapping-truthful-20261008060250.txt",
+      "archived_sha256": "d9b1b900cfcaeca45bf2754e7d21261b5f51b741829b1ad1611d2d38c8a7c0fe",
+      "archive_note": "Actual raw bytes retained locally. Archive redacts credentials, normalizes LF/UTF-8 and trims trailing display whitespace; undecodable child-process bytes use reversible backslash escapes. Original SHA above; archive SHA separate."
+    },
+    {
+      "phase": "G10-review-mapping-claim-confirmed",
+      "command": [
+        "C:/Users/lenovo/Desktop/cs competition/.venv/Scripts/python.exe",
+        "-B",
+        "-m",
+        "pytest",
+        "tests/security/test_execution_manifest.py",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "--tb=short",
+        "--basetemp",
+        "C:\\Users\\lenovo\\Desktop\\cs competition\\.worktrees\\wave3-integration-gate\\.superpowers\\sdd\\2026-10-08-wave3-integration-gate\\tmp-20261008060256774785"
+      ],
+      "cwd": "C:\\Users\\lenovo\\Desktop\\cs competition\\.worktrees\\wave3-integration-gate\\backend",
+      "start": "2026-10-08T06:02:56.774785+00:00",
+      "end": "2026-10-08T06:03:00.957606+00:00",
+      "exit_code": 0,
+      "status": "passed",
+      "environment_names": [
+        "PYTHONDONTWRITEBYTECODE"
+      ],
+      "data": "synthetic only",
+      "evidence_path": ".superpowers\\sdd\\2026-10-08-wave3-integration-gate\\G10-review-mapping-claim-confirmed-20261008060256.log",
+      "sha256": "9c1c08c982c1997cd16e8bf473dc59687486a159f4484a51613e554963ca5612",
+      "summary": [
+        "Failed to find real location of C:\\Users\\lenovo\\miniconda3\\python.exe",
+        "...........                                                              [100%]",
+        "11 passed in 1.76s"
+      ],
+      "archived_evidence_path": "docs/experiments/wave3-evidence/command-output/G10-review-mapping-claim-confirmed-20261008060256.txt",
+      "archived_sha256": "c15b297c2ee733558c6a15e6acf1e3b606c9a86e05cf43ac935419cb982f7306",
+      "archive_note": "Actual raw bytes retained locally. Archive redacts credentials, normalizes LF/UTF-8 and trims trailing display whitespace; undecodable child-process bytes use reversible backslash escapes. Original SHA above; archive SHA separate."
+    },
+    {
+      "phase": "G10-review-test-types",
+      "command": [
+        "npx.cmd",
+        "tsc",
+        "--ignoreConfig",
+        "--noEmit",
+        "--target",
+        "ES2022",
+        "--lib",
+        "ES2022,DOM,DOM.Iterable",
+        "--module",
+        "ESNext",
+        "--moduleResolution",
+        "Bundler",
+        "--jsx",
+        "react-jsx",
+        "--esModuleInterop",
+        "--skipLibCheck",
+        "--strict",
+        "--types",
+        "node,vitest/globals",
+        "src/vite-env.d.ts",
+        "src/test/setup.ts",
+        "tests/all.test.ts"
+      ],
+      "cwd": "C:\\Users\\lenovo\\Desktop\\cs competition\\.worktrees\\wave3-integration-gate\\frontend",
+      "start": "2026-10-08T06:08:57.477811+00:00",
+      "end": "2026-10-08T06:09:01.925275+00:00",
+      "exit_code": 0,
+      "status": "passed",
+      "environment_names": [
+        "PYTHONDONTWRITEBYTECODE"
+      ],
+      "data": "synthetic only",
+      "evidence_path": ".superpowers\\sdd\\2026-10-08-wave3-integration-gate\\G10-review-test-types-20261008060857.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "summary": [],
+      "archived_evidence_path": "docs/experiments/wave3-evidence/command-output/G10-review-test-types-20261008060857.txt",
+      "archived_sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b",
+      "archive_note": "Actual raw bytes retained locally. Archive redacts credentials, normalizes LF/UTF-8 and trims trailing display whitespace; undecodable child-process bytes use reversible backslash escapes. Original SHA above; archive SHA separate."
+    },
+    {
+      "phase": "G10-security-stop-integrity",
+      "command": [
+        "C:/Users/lenovo/Desktop/cs competition/.venv/Scripts/python.exe",
+        "-B",
+        "-c",
+        "from pathlib import Path\nimport collections,hashlib,json,re,subprocess,xml.etree.ElementTree as ET\nroot=Path.cwd()\nledger=json.loads((root/'docs/experiments/wave3-command-results.json').read_text(encoding='utf-8'))\nfor run in ledger['commands']:\n    if 'archived_evidence_path' in run:\n        raw=(root/run['archived_evidence_path']).read_bytes()\n        assert hashlib.sha256(raw).hexdigest()==run['archived_sha256'],run['phase']\n        assert not re.search(rb'eyJ[A-Za-z0-9_-]+\\.[A-Za-z0-9_-]+\\.[A-Za-z0-9_-]+',raw)\nmanifest=json.loads((root/'data/evaluation/security_execution_manifest.json').read_text(encoding='utf-8'))\nstatuses=collections.Counter(row['status'] for row in manifest['cases'])\nassert statuses=={'automated_passed':162,'not_executed':2}\nfor row in manifest['cases']:\n    if row['status']=='not_executed':\n        assert row['executed_at'] is None and not row['evidence'] and row['reason'] and row['blocker']\n    for e in row['evidence']:\n        assert hashlib.sha256((root/e['path']).read_bytes()).hexdigest()==e['sha256']\ncases=ET.parse(root/'docs/experiments/wave3-evidence/teacher-read-audit-red.xml').findall('.//testcase')\nassert len(cases)==6 and all(c.find('failure') is not None for c in cases)\nassert not subprocess.check_output(['git','diff','9e1a7b7692857d15bf789eb72d157ba7f28d66c4','--','backend/app','frontend/src']).strip()\nassert not subprocess.check_output(['git','ls-files','-u']).strip()\nsubprocess.check_call(['git','diff','--check'])\nassert ledger['gate_verdict']=='not_passed'\nassert (root/'docs/experiments/wave3-independent-review.md').is_file()\nprint(json.dumps({'gate':'not_passed','teacher_read_audit_new_failed':6,'manifest':dict(statuses),'runtime_diff_since_security_stop':'empty','unresolved_conflicts':0}))"
+      ],
+      "cwd": "C:\\Users\\lenovo\\Desktop\\cs competition\\.worktrees\\wave3-integration-gate",
+      "start": "2026-10-08T06:09:06.542354+00:00",
+      "end": "2026-10-08T06:09:07.817249+00:00",
+      "exit_code": 0,
+      "status": "passed",
+      "environment_names": [
+        "PYTHONDONTWRITEBYTECODE"
+      ],
+      "data": "synthetic only",
+      "evidence_path": ".superpowers\\sdd\\2026-10-08-wave3-integration-gate\\G10-security-stop-integrity-20261008060906.log",
+      "sha256": "7660f63460bdbb90fae98e915960c59c4b729b75e337da2883740441b1467739",
+      "summary": [
+        "Failed to find real location of C:\\Users\\lenovo\\miniconda3\\python.exe",
+        "warning: in the working copy of 'backend/tests/security/test_execution_manifest.py', LF will be replaced by CRLF the next time Git touches it",
+        "warning: in the working copy of 'data/evaluation/map_security_execution.py', LF will be replaced by CRLF the next time Git touches it",
+        "warning: in the working copy of 'frontend/tests/wave3-integration.test.tsx', LF will be replaced by CRLF the next time Git touches it",
+        "{\"gate\": \"not_passed\", \"teacher_read_audit_new_failed\": 6, \"manifest\": {\"automated_passed\": 162, \"not_executed\": 2}, \"runtime_diff_since_security_stop\": \"empty\", \"unresolved_conflicts\": 0}"
+      ],
+      "archived_evidence_path": "docs/experiments/wave3-evidence/command-output/G10-security-stop-integrity-20261008060906.txt",
+      "archived_sha256": "f3d79971bf91e19dbbad13a3ebf77ac09d6429b3b5f51b9a2ec9b71267ee7ad4",
+      "archive_note": "Actual raw bytes retained locally. Archive redacts credentials, normalizes LF/UTF-8 and trims trailing display whitespace; undecodable child-process bytes use reversible backslash escapes. Original SHA above; archive SHA separate."
     }
-  ]
+  ],
+  "gate_verdict": "not_passed",
+  "stop_reason": "Important independent-review security finding: sensitive teacher GET lacks metadata audit and fail-closed behavior; new6RED tests confirmed. Runtime implementation frozen at9e1a7b7 pending authorization."
 }

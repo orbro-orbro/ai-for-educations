@@ -1,14 +1,14 @@
-# Wave 3 Integration Gate — 最终交接（独立审查前快照）
+# Wave 3 Integration Gate — 最终交接（安全停止，待授权）
 
 ## 1. Gate 结论
 
-当前结论：**验证通过，独立只读审查待完成；预期为条件通过，不能宣布完全通过**。所有必跑测试有实际执行证据；163/164 条计划攻击有通过判定，余下一条未验证需求和外部适配器缺口明确保留。最终结论以第15节独立审查和最后本地提交为准。
+当前结论：**未通过；独立只读审查完成，Important安全问题已触发停止条件，产品修复等待用户授权。**审查前完整验证907/36/26通过不能覆盖新失败。新审计回归6失败；最新组件36通过/2失败；攻击映射已更正为162通过/2未执行。审查0Critical、3Important、2Minor，详见第15节及wave3-independent-review.md。
 
 ## 2. 完成与未完成
 
-已集成 Task 8/9/10 五个来源提交，完成生产 SQL 教师分析、原子复核/审计、正式 Router、40个运行时公开 operations、学生/教师 UI、持久化 logout、迁移往返、真实 PostgreSQL/Runner/浏览器组合和逐案例执行证据。后端907、组件36、浏览器26、隔离 Runner31+12+4均通过，无 skip/xfail。
+已集成 Task 8/9/10 五个来源提交，完成 SQL 教师分析、原子复核/审计、正式 Router、40个运行时公开 operations、学生/教师 UI、持久化 logout、迁移往返和真实 PostgreSQL/Runner/浏览器组合。审查前快照后端907、组件36、浏览器26、隔离 Runner31+12+4通过，无 skip/xfail。审查发现教师敏感GET遗漏审计/失败关闭，因此不能宣称生产安全就绪。
 
-未完成：请求编号信任规则（WG-CORRELATION-POLICY）、未实现的外部向量/缓存/模型引用物理删除（WG-EXTERNAL-ERASURE）、Runner并发负载稳定性。未执行真实教学试点、真实模型比较、生产部署。
+未完成：教师敏感读取审计/失败关闭（WG-TEACHER-READ-AUDIT），运行中切换课程/练习永久busy（WG-STUDENT-RUN-CANCEL），正确course-b pending撤权攻击（WG-CASE-CROSS-COURSE-006），以及多概念趋势计数/加载新队列仍可操作旧条目两项Minor。请求编号信任规则（WG-CORRELATION-POLICY）、外部物理擦除（WG-EXTERNAL-ERASURE）、Runner并发负载稳定性另保留。未执行真实教学试点、真实模型比较、生产部署。
 
 ## 3. 五个来源提交及追溯
 
@@ -64,11 +64,13 @@ Task9 CORS 保留 docs/adr/0005-local-preview-cors-allowlist.md；Task10 安全 
 
 教师真实登录、4人抑制/5人展示、私人/跨课404、过滤422、复核409、双击仅1敏感请求、SQL队列移除与页面更新、logout旧JWT401。学生真实编译失败、诊断/提示/解释（Mock Provider）、本人接受/纠正/删除、实际成功修复、理解验证/拒绝、退出。测试专用SQL写入故障产生真实脱敏503/request ID，失败时旧会话仍有效，普通退出重试成功；生产CORS未加入故障header，故障从测试API context发送，组件另验可见503重试。
 
-最新只读SQL核对：review=1、review audit=1、擦除deleted版本=2、含正文私人版本=0、拒绝proposal=1、完成deletion=1、revoked logins=3。手机390×844和桌面1440×1000无document横向溢出；截图仅合成内容。截图发现课程切换残留loading，新增失败组件测试后最小修复，36组件及最新26浏览器全重跑；更新student-mobile截图复看。
+最新只读SQL核对：review=1、review audit=1、擦除deleted版本=2、含正文私人版本=0、拒绝proposal=1、完成deletion=1、revoked logins=3。手机390×844和桌面1440×1000无document横向溢出；截图仅合成内容。截图发现课程切换残留loading，新增失败组件测试后最小修复，审查前36组件及26浏览器重跑；更新student-mobile截图复看。审查随后发现另一个运行中切换的busy状态问题，新增两个交互测试均失败，未实施修复。
 
 ## 13. 164条攻击执行映射及数据哈希
 
-security_execution_manifest.json 恰好164唯一ID：**163 automated_passed，1 not_executed**。每条保留原case hash/operation、计划tier与真实tier、确切JUnit node/case_id属性、命令/时间/退出码/证据hash及边界；校验器10项负向测试拒绝错case、错operation、借用命令、缺证据等。104本地参数、65 PG参数（3具体+54原向量+8反例）、3实际容器攻击有精确映射，不能整文件pass自动覆盖。
+security_execution_manifest.json 恰好164唯一ID：**162 automated_passed，2 not_executed**。保留原case hash/operation、计划tier与真实tier、确切JUnit node/case_id属性、命令/时间/退出码/证据hash及边界；工具现11项通过，包括撤回已发现错场景的负向回归。104本地参数、65 PG参数（3具体+54原向量+8反例）、3实际容器攻击有执行报告；相同case_id/复制operation本身不能证明前置条件正确，独立审查为此撤回一条旧通过声明，不能整文件pass自动覆盖。
+
+sec-cross-course-006 原节点实际是student-b/course-a/已accepted提议，与计划student-a/course-b/pending撤权不符。其通过已撤回，保留错误观察，不执行产品修复/补造通过。WG-CASE-CROSS-COURSE-006保留具体高敏感未执行原因；正确场景待授权后执行。此前163/1只表示被审查纠正前的快照。
 
 sec-sensitive-logging-008 未判定：已观察到调用方 X-Request-ID 回显，但原计划没有定义可接受格式/替换规则，不能把观察当成功拒绝。阻塞号 WG-CORRELATION-POLICY；待明确规则后补严格判定。五个原 architecture_pending 案例现有本地代码证据，但内存index/cache/model引用不证明外部物理删除；WG-EXTERNAL-ERASURE单独保留。
 
@@ -80,8 +82,9 @@ wave3-command-results.json 记录每次实际完整argv/cwd/UTC起止/退出码/
 
 |最后验证|实际结果|证据/phase|
 |---|---|---|
-|完整 backend pytest tests|907 passed / 0 failed / 0 skipped|backend-final.xml；G10-full-backend-confirmed|
-|npm test|36 passed|G10-student-loading-confirmed|
+|审查前完整 backend pytest tests|907 passed / 0 failed / 0 skipped；非当前安全通过结论|backend-final.xml；G10-full-backend-confirmed|
+|最新新增安全回归|6 failed / 0 skipped；审计/失败关闭缺口未修复|teacher-read-audit-red.xml；G10-review-audit-red|
+|最新npm test|36 passed / 2 failed（38）；切换时永久busy未修复|G10-review-selection-confirmed-red|
 |npm run build；显式全部test/E2E/config tsc|退出0；退出0|G10-frontend-build-final；G10-frontend-all-types-final|
 |npx playwright test|16 passed / 0 skipped / 0 flaky|browser-default-final.json|
 |npx playwright test --config playwright.gate.config.ts|10 passed / 0 skipped / 0 flaky|browser-gate-final.json|
@@ -90,7 +93,7 @@ wave3-command-results.json 记录每次实际完整argv/cwd/UTC起止/退出码/
 |HTTP controller→sandbox|4 passed|controller-topology-final.xml|
 |Task6/7真实PG与closed loop、Task10实际PG、迁移往返|全通过，计入907|backend-final.xml模块计数|
 |Compose解析/结构、运行时合同|退出0；42 passed及其他合同|G10-compose-parse；907中的contracts|
-|evaluate；manifest/hash校验|退出0；163/1；原LF内容相等|G10-evaluation-structure；G10-mapping-final；verification-summary.json|
+|evaluate；最新manifest/hash校验|退出0；162/2；工具11passed；原LF内容相等|G10-evaluation-structure；G10-review-mapping-truthful/claim-confirmed；verification-summary.json|
 |最新浏览器后SQL核对|退出0；上述7项count|G10-browser-SQL-proof-final|
 
 真实服务：Docker独立项目knowbound-wave3-gate，PG127.0.0.1:55430，controller127.0.0.1:8199；浏览器测试启动API8198/UI5199后自行结束。六个库wave3_task6/task7/task10/router/migration/browser均为合成数据。完整后端显式TASK6/7/10_POSTGRES_URL及TASK6/7_RUNNER_ENDPOINT、TASK10_RUNNER_IMAGE；pytest清除DATABASE_URL以避免覆盖隔离迁移；WAVE3_POSTGRES_URL默认仅允许上述Gate router URL。无数据库服务替身；SQLite仅原结构单测，不计真实PG。
@@ -101,7 +104,9 @@ wave3-command-results.json 记录每次实际完整argv/cwd/UTC起止/退出码/
 
 ## 15. 独立审查
 
-待所有验证通过后派发一次全新只读审查；本快照尚未宣称审查通过。审查将读取BASE→固定HEAD完整差异、设计/计划/契约、实际证据及上述条件，不允许修改代码/索引/HEAD或停止服务。最终报告写入wave3-independent-review.md并逐项裁定Declined to judge。若出现新的Critical/Important安全问题，遵循用户停止条件，先报告并保留失败证据，不自行扩大修复权限。
+已完成一次全新上下文只读审查，范围BASE→9e1a7b7692857d15bf789eb72d157ba7f28d66c4，并补核新增失败证据/映射更正。审查者未写代码/索引/HEAD或服务。结果：0Critical、3Important、2Minor；Gate未通过。I1教师GET无审计/故障仍返回（design8.7/ADR0004§13）；I2运行中切换永久busy；I3错课程/提议状态被计为已通过。Minor为多概念趋势重复计数和加载新队列可提交旧条目。
+
+I1/I2已保留6安全RED/2交互RED；I3仅纠正证据为not_executed，正确场景未执行。按用户第16节及已确认计划停止产品实现；backend/app和frontend/src仍为审查HEAD状态。完整报告wave3-independent-review.md逐项接受/裁定五个Declined行为（请求编号政策、外部擦除、Runner根因、真实教学/模型、生产部署），无静默丢弃。具体待授权修复步骤也已写入报告；不是因技能推断新增审批。
 
 ## 16. 真实数据/模型
 
@@ -113,11 +118,13 @@ wave3-command-results.json 记录每次实际完整argv/cwd/UTC起止/退出码/
 
 ## 18. 风险与Wave4/Task11依赖
 
-WG-CORRELATION-POLICY：确定公共correlation header信任与校验规则；WG-EXTERNAL-ERASURE：先ADR/授权外部适配器，再验证物理删除/迟到writer/cache invalidation；Runner并发compile失败根因/可观测性和负载验证待完成。上述均不冒充已验证生产能力。pgvector扩展安装不代表向量适配器实现；本次没有增加外部基础设施。教师gold审核、真实模型对照、教学试点、比赛实验指标依赖后续明确授权。
+当前首要阻塞为WG-TEACHER-READ-AUDIT和WG-STUDENT-RUN-CANCEL；高敏感WG-CASE-CROSS-COURSE-006必须正确执行后才可恢复通过，两项Minor待修。待授权范围：既有metadata-only读取审计+故障503、最小UI修复、正确攻击fixture、完整回归与同一次独立审查补核；不改变权限、公开DTO、迁移或生产依赖。
+
+后续条件：WG-CORRELATION-POLICY确定公共correlation信任规则；WG-EXTERNAL-ERASURE先ADR/授权外部适配器，再验证物理删除/迟到writer/cache invalidation；Runner根因/可观测性和负载验证。pgvector安装不代表适配器，本次没有新增外部设施。教师gold、真实模型、教学试点和比赛指标需要Wave4明确授权。
 
 ## 19. Gate分支、提交与工作区
 
-分支codex/wave3-integration-gate；worktree C:\Users\lenovo\Desktop\cs competition\.worktrees\wave3-integration-gate；基线0598a2ea1d2a5016b94cd6f35a5a0e678b76ee07。G9 HEAD为8f2cf61ec7e4931e4e06de42749e933ea5c63237。本快照将形成固定G10审查commit；最终commit（标题feat: integrate Wave 3 analytics UI and security gate）后准确hash/clean状态在最终消息和Git history提供，文档不伪造自身提交hash。
+分支codex/wave3-integration-gate；worktree C:\Users\lenovo\Desktop\cs competition\.worktrees\wave3-integration-gate；基线0598a2ea1d2a5016b94cd6f35a5a0e678b76ee07。G9 HEAD为8f2cf61ec7e4931e4e06de42749e933ea5c63237；固定G10审查commit为9e1a7b7692857d15bf789eb72d157ba7f28d66c4。当前仅形成安全停止/失败证据本地checkpoint，不创建代表完成集成的feat最终提交。准确checkpoint hash/clean状态在最终消息和Git history提供，文档不伪造自身提交hash。用户授权修复后才继续G10最终提交。
 
 ## 20. 未执行动作
 
@@ -209,7 +216,7 @@ The original 164 planned cases and draft annotations remain unchanged (normalize
 
 Actual case evidence: 104 local parameters passed; 3 concrete PostgreSQL cases plus all original 54 SQL vector parameters and 8 filter-omission checks passed (65); 3 real container attacks passed. Network connection to a documentation-reserved address is denied; PID telemetry reaches exactly 64 and remains within the cap until deadline termination; stdout flood is capped at 65536 and deadline bounded. Initial PID expectation of an exception message was replaced with stronger actual kernel-backed telemetry, because the SDK can block creating runtime threads at the cap. No original Task 10 assertion was relaxed.
 
-The manifest conservatively reports **163 automated_passed, 1 not_executed**. `sec-sensitive-logging-008` has an actual observation: client X-Request-ID is reflected as correlation metadata. Its planned expected denial does not specify whether valid caller-provided correlation is permitted or must be replaced, so an echo observation is not called a successful sanitization attack test. Blocker **WG-CORRELATION-POLICY** requires an explicit API/security decision and a corresponding strict denial criterion. This is a documented unverified requirement, not proof of a cross-user leak, and prevents an unconditional Gate pass.
+The G9 manifest reported **163 automated_passed, 1 not_executed**; independent review later withdrew a wrong-scenario claim, so the current result is **162 automated_passed, 2 not_executed** (see numbered handoff). `sec-sensitive-logging-008` has an actual observation: client X-Request-ID is reflected as correlation metadata. Its planned expected denial does not specify whether valid caller-provided correlation is permitted or must be replaced, so an echo observation is not called a successful sanitization attack test. Blocker **WG-CORRELATION-POLICY** requires an explicit API/security decision and a corresponding strict denial criterion. This is a documented unverified requirement, not proof of a cross-user leak, and prevents an unconditional Gate pass.
 
 Five cases originally labelled architecture_pending now have concrete local implementation evidence (deleted HintRequest context, late in-memory upsert fence, validation-source redaction, raw-source gateway exclusion and logout revocation). Their original planned tier is preserved alongside the actual tier; in-memory index evidence does not prove an external pgvector/cache/model-reference adapter. **WG-EXTERNAL-ERASURE** remains a separate deployment dependency requiring ADR and authorization for those adapters. Installed pgvector alone is not physical erasure evidence. Both blockers must be carried into the final Gate verdict.
 

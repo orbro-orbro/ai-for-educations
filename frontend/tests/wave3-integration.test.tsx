@@ -96,4 +96,30 @@ describe("Wave 3 integration UI",()=>{
     await new Promise(r=>setTimeout(r,20));
     expect(screen.queryByRole("option",{name:"Stale exercise"})).not.toBeInTheDocument();
   });
+  it.each(["课程", "练习"])("allows a new submission after switching %s during a run",async(selection)=>{
+    const submissions:string[]=[];
+    vi.stubGlobal("fetch",vi.fn(async(input:RequestInfo|URL,init:RequestInit={})=>{
+      const u=new URL(String(input));
+      if(u.pathname==="/courses")return json([{course_id:"course-a",title:"Course A"},{course_id:"course-b",title:"Course B"}]);
+      if(u.pathname.includes("course-a/exercises"))return json([{exercise_id:"exercise-a",course_id:"course-a",title:"Exercise A"},{exercise_id:"exercise-next",course_id:"course-a",title:"Exercise Next"}]);
+      if(u.pathname.includes("course-b/exercises"))return json([{exercise_id:"exercise-b",course_id:"course-b",title:"Exercise B"}]);
+      if(u.pathname.startsWith("/me/"))return json([]);
+      if(u.pathname.startsWith("/exercises/") && u.pathname.endsWith("/submissions")){
+        submissions.push(decodeURIComponent(u.pathname.split("/")[2]));
+        return new Promise<Response>((_,reject)=>init.signal!.addEventListener("abort",()=>reject(new DOMException("Cancelled","AbortError")),{once:true}));
+      }
+      throw new Error("Unexpected request "+u.pathname);
+    }));
+    render(<ExercisePage api={new ApiClient("http://localhost:8198",()=>"synthetic-token")}/>);
+    await screen.findByRole("option",{name:"Exercise A"});
+    fireEvent.click(screen.getByRole("button",{name:"提交并运行"}));
+    await waitFor(()=>expect(submissions).toEqual(["exercise-a"]));
+    expect(screen.getByRole("button",{name:"正在隔离执行…"})).toBeDisabled();
+    fireEvent.change(screen.getByRole("combobox",{name:selection}),{target:{value:selection==="课程"?"course-b":"exercise-next"}});
+    await screen.findByRole("option",{name:selection==="课程"?"Exercise B":"Exercise Next"});
+    const next=await screen.findByRole("button",{name:"提交并运行"});
+    expect(next).toBeEnabled();
+    fireEvent.click(next);
+    await waitFor(()=>expect(submissions).toEqual(["exercise-a",selection==="课程"?"exercise-b":"exercise-next"]));
+  });
 });

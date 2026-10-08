@@ -1,0 +1,44 @@
+Failed to find real location of C:\Users\lenovo\miniconda3\python.exe
+FFFFFF                                                                   [100%]
+================================== FAILURES ===================================
+__________ test_sensitive_teacher_read_records_metadata_audit[queue] __________
+tests\security\test_wave3_teacher_read_audit.py:42: in test_sensitive_teacher_read_records_metadata_audit
+    assert len(events) >= 1, "Sensitive teacher GET returned without an audit event"
+E   AssertionError: Sensitive teacher GET returned without an audit event
+E   assert 0 >= 1
+E    +  where 0 = len(())
+___ test_sensitive_teacher_read_records_metadata_audit[available_analytics] ___
+tests\security\test_wave3_teacher_read_audit.py:42: in test_sensitive_teacher_read_records_metadata_audit
+    assert len(events) >= 1, "Sensitive teacher GET returned without an audit event"
+E   AssertionError: Sensitive teacher GET returned without an audit event
+E   assert 0 >= 1
+E    +  where 0 = len(())
+__ test_sensitive_teacher_read_records_metadata_audit[suppressed_analytics] ___
+tests\security\test_wave3_teacher_read_audit.py:42: in test_sensitive_teacher_read_records_metadata_audit
+    assert len(events) >= 1, "Sensitive teacher GET returned without an audit event"
+E   AssertionError: Sensitive teacher GET returned without an audit event
+E   assert 0 >= 1
+E    +  where 0 = len(())
+__ test_sensitive_teacher_read_fails_closed_when_audit_is_unavailable[queue] __
+tests\security\test_wave3_teacher_read_audit.py:54: in test_sensitive_teacher_read_fails_closed_when_audit_is_unavailable
+    with pytest.raises(AnalyticsPersistenceError):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   Failed: DID NOT RAISE AnalyticsPersistenceError
+_ test_sensitive_teacher_read_fails_closed_when_audit_is_unavailable[available_analytics] _
+tests\security\test_wave3_teacher_read_audit.py:54: in test_sensitive_teacher_read_fails_closed_when_audit_is_unavailable
+    with pytest.raises(AnalyticsPersistenceError):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   Failed: DID NOT RAISE AnalyticsPersistenceError
+_ test_sensitive_teacher_read_fails_closed_when_audit_is_unavailable[suppressed_analytics] _
+tests\security\test_wave3_teacher_read_audit.py:54: in test_sensitive_teacher_read_fails_closed_when_audit_is_unavailable
+    with pytest.raises(AnalyticsPersistenceError):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   Failed: DID NOT RAISE AnalyticsPersistenceError
+=========================== short test summary info ===========================
+FAILED tests/security/test_wave3_teacher_read_audit.py::test_sensitive_teacher_read_records_metadata_audit[queue]
+FAILED tests/security/test_wave3_teacher_read_audit.py::test_sensitive_teacher_read_records_metadata_audit[available_analytics]
+FAILED tests/security/test_wave3_teacher_read_audit.py::test_sensitive_teacher_read_records_metadata_audit[suppressed_analytics]
+FAILED tests/security/test_wave3_teacher_read_audit.py::test_sensitive_teacher_read_fails_closed_when_audit_is_unavailable[queue]
+FAILED tests/security/test_wave3_teacher_read_audit.py::test_sensitive_teacher_read_fails_closed_when_audit_is_unavailable[available_analytics]
+FAILED tests/security/test_wave3_teacher_read_audit.py::test_sensitive_teacher_read_fails_closed_when_audit_is_unavailable[suppressed_analytics]
+6 failed in 3.06s
