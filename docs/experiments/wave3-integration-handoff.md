@@ -59,3 +59,8 @@ HTTP 探针确认删除墓碑仍返回既有已脱敏诊断，满足非空公开
 ### G6 — 前端连接与退出
 保留原 UI，增加真实 POST /auth/logout；busy ref 阻止重复请求。204/已失效401才清本地会话，503保留令牌与请求编号，允许重试。结束日期使用下一本地日零时；相邻窗口为 [start-duration,start)，无一毫秒空隙；取消旧课程队列响应后不覆盖新课程。
 原30+新增5项 Vitest 全部通过，构建通过，显式 src/组件测试/E2E/两份配置 TypeScript 检查通过。发现两处旧测试把 Array.some 第二参数（index）误当 init，修正为解构调用元组，严格原断言保留。首次 UI Gate 拒绝文案不一致属 Minor 展示整合缺口，课程列表拒绝用通用文案，已有课程拒绝保留课程文案；无权限/隐私边界变化。
+
+### G7 — 独立迁移往返
+专用 wave3_migration 库中的逐测试可丢弃 synthetic schema，从空 schema 验证0001→0007单head、current、check、full downgrade base→重升；有合成业务行的 schema 仅降0006/0005。10 passed / 0 failed / 0 skip。实际token长度/唯一、review唯一/decision/reason/跨课程复合FK约束拒绝。
+两种历史状态 deleted/deletion_pending 的 proposal、diagnosis、evidence、hint、explanation 原文均清理；live诊断/提交和非目标课程保留，擦除内容不随降级恢复。0007降到0006丢复核而保留token撤销；0006降到0005丢撤销记录，测试先证明原密钥会重新接受旧token，再验证轮换密钥拒绝旧token。
+部署/回滚要求：部署前备份，停止旧写入实例，迁移后全部实例统一切换。擦除不可逆，downgrade不能恢复正文。降级删除token_revocations后必须在恢复认证前轮换AUTH_TOKEN_SECRET；复核结果丢失须单独备份恢复审计与权威结果。这里只验证合成环境，不授权生产部署。
