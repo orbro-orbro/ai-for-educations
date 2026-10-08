@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "status": "validation_passed_review_supplement_pending",
+  "status": "conditional_pass",
   "commands": [
     {
       "phase": "G0-baseline",
@@ -5733,9 +5733,105 @@
       "archived_evidence_path": "docs/experiments/wave3-evidence/command-output/G10-post-review-manifest-check-20261008100436.txt",
       "archived_sha256": "98cab658c922d67bedb1c345b2e2909f898c97a7bfd22ec3698155ad75a56442",
       "archive_note": "Actual raw bytes retained locally. Archive redacts credentials, normalizes LF/UTF-8 and trims trailing display whitespace; undecodable child-process bytes use reversible backslash escapes. Original SHA above; archive SHA separate."
+    },
+    {
+      "phase": "G10-post-review-manifest-rebuilt",
+      "command": [
+        "C:/Users/lenovo/Desktop/cs competition/.venv/Scripts/python.exe",
+        "-B",
+        "data/evaluation/map_security_execution.py",
+        "--build",
+        "--manifest",
+        "data/evaluation/security_execution_manifest.json"
+      ],
+      "cwd": "C:\\Users\\lenovo\\Desktop\\cs competition\\.worktrees\\wave3-integration-gate",
+      "start": "2026-10-08T10:14:16.782756+00:00",
+      "end": "2026-10-08T10:14:19.433667+00:00",
+      "exit_code": 0,
+      "status": "passed",
+      "environment_names": [
+        "PYTHONDONTWRITEBYTECODE"
+      ],
+      "data": "synthetic only",
+      "evidence_path": ".superpowers\\sdd\\2026-10-08-wave3-integration-gate\\G10-post-review-manifest-rebuilt-20261008101416.log",
+      "sha256": "26bcf3610bc03b096ff7f8a96db77bc32f0c615e008a56324354dc60a6f7c36c",
+      "summary": [
+        "{\"case_count\": 164, \"statuses\": {\"automated_passed\": 163, \"not_executed\": 1}, \"teaching_annotations\": \"unchanged draft\"}"
+      ],
+      "archived_evidence_path": "docs/experiments/wave3-evidence/command-output/G10-post-review-manifest-rebuilt-20261008101416.txt",
+      "archived_sha256": "5f56c8f50a1277d82efa1012fadfd2386bb53eddd13eda4494835487d4dce41c",
+      "archive_note": "Actual raw bytes retained locally. Archive redacts credentials, normalizes LF/UTF-8 and trims trailing display whitespace; undecodable child-process bytes use reversible backslash escapes. Original SHA above; archive SHA separate."
+    },
+    {
+      "phase": "G10-post-review-manifest-rebuilt-check",
+      "command": [
+        "C:/Users/lenovo/Desktop/cs competition/.venv/Scripts/python.exe",
+        "-B",
+        "-m",
+        "pytest",
+        "tests/security/test_execution_manifest.py",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "--tb=short",
+        "-o",
+        "junit_family=xunit1",
+        "--junitxml=../docs/experiments/wave3-evidence/manifest-rebuilt-after-review.xml",
+        "--basetemp",
+        "C:\\Users\\lenovo\\Desktop\\cs competition\\.worktrees\\wave3-integration-gate\\.superpowers\\sdd\\2026-10-08-wave3-integration-gate\\tmp-20261008101419710117"
+      ],
+      "cwd": "C:\\Users\\lenovo\\Desktop\\cs competition\\.worktrees\\wave3-integration-gate\\backend",
+      "start": "2026-10-08T10:14:19.710117+00:00",
+      "end": "2026-10-08T10:14:24.320221+00:00",
+      "exit_code": 0,
+      "status": "passed",
+      "environment_names": [
+        "PYTHONDONTWRITEBYTECODE"
+      ],
+      "data": "synthetic only",
+      "evidence_path": ".superpowers\\sdd\\2026-10-08-wave3-integration-gate\\G10-post-review-manifest-rebuilt-check-20261008101419.log",
+      "sha256": "36685de6a1781a09f5a6fd36ac6dbc6c0400a606441fa2d043f43bb50455a091",
+      "summary": [
+        "...........                                                              [100%]",
+        "11 passed in 2.58s"
+      ],
+      "archived_evidence_path": "docs/experiments/wave3-evidence/command-output/G10-post-review-manifest-rebuilt-check-20261008101419.txt",
+      "archived_sha256": "d1a26722c2c0ea0b3284ca2c403c13e48ea3c68a7912f30d0ef72acc493529b9",
+      "archive_note": "Actual raw bytes retained locally. Archive redacts credentials, normalizes LF/UTF-8 and trims trailing display whitespace; undecodable child-process bytes use reversible backslash escapes. Original SHA above; archive SHA separate."
     }
   ],
-  "gate_verdict": "pending_revalidation",
-  "stop_reason": "Important independent-review security finding: sensitive teacher GET lacks metadata audit and fail-closed behavior; new6RED tests confirmed. Runtime implementation frozen at9e1a7b7 pending authorization.",
-  "authorization": "User said 继续 after reviewing concrete I1/I2/I3 and M1/M2 repair scope. Existing role/API/DB/infra limits remain."
+  "gate_verdict": "conditional_pass",
+  "authorization": "User said 继续 after reviewing concrete I1/I2/I3 and M1/M2 repair scope. Existing role/API/DB/infra limits remain.",
+  "historical_security_stop": {
+    "checkpoint": "281b93966d4dd3fec22950ac3d46013709cc44e4",
+    "verdict": "pending_revalidation",
+    "reason": "Important independent-review security finding: sensitive teacher GET lacks metadata audit and fail-closed behavior; new6RED tests confirmed. Runtime implementation frozen at9e1a7b7 pending authorization.",
+    "resolved_by": "User explicitly authorized I1/I2/I3/M1/M2 repairs, full regression and the same review supplement."
+  },
+  "independent_review_supplement": {
+    "fixed_source_head": "f1c684f82e2d6815c5d2ab167cad9cb2cb2e5272",
+    "original_head": "9e1a7b7692857d15bf789eb72d157ba7f28d66c4",
+    "same_review_context": true,
+    "readonly": true,
+    "reviewer_reexecuted_services": false,
+    "unresolved_critical": 0,
+    "unresolved_important": 0,
+    "closed": [
+      "I1",
+      "I2",
+      "I3",
+      "M1",
+      "M2"
+    ],
+    "report": "docs/experiments/wave3-independent-review.md",
+    "conditions": [
+      "WG-CORRELATION-POLICY",
+      "WG-EXTERNAL-ERASURE",
+      "Runner historical failure root cause and concurrent stability"
+    ],
+    "outside_scope": [
+      "Real teaching/model outcomes",
+      "Production deployment"
+    ]
+  }
 }

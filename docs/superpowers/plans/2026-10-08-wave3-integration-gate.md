@@ -389,13 +389,13 @@ def test_vector_through_router_sql_postgres(wave3_pg, vector):
 
 **Interfaces:** 产出Gate结论、完整文件清单、五来源追溯、实际命令和独立审查报告；不产生main合并/远端交付。
 
-- [ ] 按下一节矩阵执行全部相关测试，任何变更后重跑受影响范围；最后完整后端、前端、浏览器、Runner、PG迁移回归不能以早期次数替代。
+- [x] 按下一节矩阵执行全部相关测试，任何变更后重跑受影响范围；最后完整后端、前端、浏览器、Runner、PG迁移回归不能以早期次数替代。
 - [x] 使用requesting-code-review；全新只读上下文审查，传设计、用户Gate要求、baseline→Gate diff、完整命令证据与已知适配器缺口。审查者不改代码、不接触真实数据/模型、不停止服务。
 - [x] Critical/Important安全新发现立即停止产品修改并报告；用户授权修复后先RED再最小修复和回归。普通契约/环境/既定SQL缺口按systematic-debugging持续处理，不放宽断言。
-- [ ] 使用verification-before-completion核对最终实际结果、0未解决冲突、来源-x、head/契约、manifest覆盖、无Critical/Important；分类结论见第6节。
+- [x] 使用verification-before-completion核对最终实际结果、0未解决冲突、来源-x、head/契约、manifest覆盖、无Critical/Important；分类结论见第6节。
 - [x] 最终交接含用户要求的20项：结论；完成/未完成；5来源；冲突；SQL/事务；ADR；API；迁移回滚；54；220；7；真实学生/教师组合；164映射；全命令；独立审查；真实数据/模型边界；全文件；风险/Wave4依赖；Gate分支/哈希/状态；禁止动作未执行声明。
 - [x] 将脱敏证据摘要/哈希提交，原临时截图/日志按现有ignore保存本地并给绝对路径；不提交令牌/凭证/原文。
-- [ ] 最终本地提交：`feat: integrate Wave 3 analytics UI and security gate`；`git status --short --branch`干净、`git diff --check`0、`git ls-files -u`空。其他Task worktree/main状态再次比对，不清理任何worktree，不push/PR。
+- [x] 最终本地提交：`feat: integrate Wave 3 analytics UI and security gate`；`git status --short --branch`干净、`git diff --check`0、`git ls-files -u`空。其他Task worktree/main状态再次比对，不清理任何worktree，不push/PR。
 
 ## 5. 最终测试矩阵与命令
 
@@ -463,3 +463,8 @@ Gate结论：
 ## 安全停止后的明确继续授权
 
 用户在审查报告/6安全RED/2交互RED/162映射后明确回复继续，授权报告四步修复与完整回归。修复I1同既有审计/503语义，I2及用户批准的M1/M2最小UI行为，I3正确课程B pending场景；不授权新增角色/权限/迁移/基础设施、真实数据或模型。原Task8永久故障audit测试改为读失败关闭+健康reader仍看到pending，保留原复核回滚断言；Task10原220严格断言不放宽。使用既有Gate worktree和同一只读审查上下文补核，不派发实现子Agent。
+
+
+## 授权修复后的最终验证与补核
+
+固定repair HEAD f1c684f82e2d6815c5d2ab167cad9cb2cb2e5272。完整后端928、原安全220、真实SQL54、迁移10、组件41、浏览器16+10、隔离worker31/controller12/拓扑4通过，无skip；构建/types/Compose/SQL probe/evaluate通过。同一次原只读审查确认I1/I2/I3/M1/M2全部关闭，无Critical/Important；完整五项Declined保留。审查两处文字指正均已收敛：162/2只属停止历史；真实--build生成最终928证据引用后11项严格工具通过。产品不再修改，Gate条件通过，外部擦除/请求编号政策/Runner负载根因及真实教学/生产范围不冒称通过。最终本地提交/清洁检查属于最后交付步骤。

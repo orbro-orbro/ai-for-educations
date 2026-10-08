@@ -1,8 +1,8 @@
-# Wave 3 Integration Gate — 最终交接（待补核的条件通过草稿）
+# Wave 3 Integration Gate — 最终交接（条件通过）
 
 ## 1. Gate 结论
 
-**拟定条件通过，待原审查者补核；尚不宣称Gate完成。**用户在安全停止报告后明确回复“继续”，授权并完成三项Important、两项Minor修复与完整回归；同一次独立只读审查的补核结果见第15节。最终后端928、组件41、浏览器16+10、隔离Runner31+12+4全部通过，无测试跳过。原220安全、54真实SQL向量、7浏览器Gate均实际执行。
+**条件通过。**用户在安全停止报告后明确回复“继续”，授权并完成三项Important、两项Minor修复与完整回归；同一次独立只读审查的补核结果见第15节。最终后端928、组件41、浏览器16+10、隔离Runner31+12+4全部通过，无测试跳过。原220安全、54真实SQL向量、7浏览器Gate均实际执行。
 
 不能宣布完全通过：sec-sensitive-logging-008缺明确请求编号信任规则，仍未执行严格判定；外部向量/缓存/模型引用物理擦除未实现适配器；历史Runner并发编译失败根因及负载稳定性未证实。上述限制不是实际教学成效。
 
@@ -72,7 +72,7 @@ Task9 CORS 保留 docs/adr/0005-local-preview-cors-allowlist.md；Task10 安全 
 
 ## 13. 164条攻击执行映射及数据哈希
 
-security_execution_manifest.json恰好164唯一原ID：**163 automated_passed、1 not_executed**。原case hash、operation、计划tier、真实tier、确切JUnit node/case_id属性、实际命令/UTC时间/退出码/report hash均保留。最终通过案例引用本次完整928报告的实际节点：104本地参数、65 PG参数（3具体+54原向量+8反例）、3容器攻击；并非164独立无重叠测试。严格映射工具11项通过，拒绝缺失/重复ID、伪hash、未执行/错操作、错场景。
+security_execution_manifest.json恰好164唯一原ID：**163 automated_passed、1 not_executed**。原case hash、operation、计划tier、真实tier、确切JUnit node/case_id属性、实际命令/UTC时间/退出码/report hash均保留。原修复快照的manifest仍引用有效局部报告。审查指出10:04命令只校验而未重建；主Agent实际执行带--build的G10-post-review-manifest-rebuilt并11项严格复验后，最终通过案例才引用本次完整928报告的实际节点：104本地参数、65 PG参数（3具体+54原向量+8反例）、3容器攻击；并非164独立无重叠测试。严格映射工具11项通过，拒绝缺失/重复ID、伪hash、未执行/错操作、错场景。
 
 sec-cross-course-006原student-b/course-a/accepted错误声明曾撤回为未执行，保留停止checkpoint。授权后实际构造student-a/course-b/pending，先验证提议可读取及不存在已激活记忆，再撤销B关系；列表/接受均404，无私密正文泄漏、模型调用或记忆激活，提议仍pending。JUnit前置状态由实际仓库断言导出，映射器强制核对，不仅靠复制operation。新增场景语义RED1→GREEN及105参数回归保留。
 
@@ -95,7 +95,7 @@ wave3-command-results.json保存实际完整argv/cwd/UTC起止/退出码/环境�
 |hardened controller/container pytest|12 passed|G10-post-review-runner-controller|
 |host HTTP→controller→sandbox fixed scenarios|4 passed|G10-post-review-topology；controller-topology-after-review.xml|
 |Compose config --quiet；结构与运行时合同|退出0；结构及42合同测试已包含928|G10-post-review-compose；backend-after-review.xml|
-|evaluate.py；mapper build/strict tests|退出0；163/1；11 passed|G10-post-review-evaluation/manifest/manifest-check|
+|evaluate.py；mapper --build/strict tests|退出0；163/1；11 passed|G10-post-review-evaluation/manifest-rebuilt/manifest-rebuilt-check|
 |browser read-only SQL probe|退出0，上述7项准确count|G10-post-review-browser-SQL-proof|
 
 真实服务：独立Docker项目knowbound-wave3-gate；PG loopback55430、controller8199，浏览器API8198/UI5199按命令启动和结束。六个wave3_task6/task7/task10/router/migration/browser库均合成。完整pytest显式TASK6/7/10_POSTGRES_URL、TASK6/7_RUNNER_ENDPOINT、TASK10_RUNNER_IMAGE并清除DATABASE_URL，隔离迁移与业务库。SQLite仅原结构单测，Mock仅模型响应，未替换SQL授权/JWT/事务/删除边界。
@@ -106,14 +106,14 @@ wave3-command-results.json保存实际完整argv/cwd/UTC起止/退出码/环境�
 
 ## 15. 独立审查发现和修复
 
-全新只读上下文曾审查BASE→9e1a7b7692857d15bf789eb72d157ba7f28d66c4，0Critical/3Important/2Minor，按用户停止条件保存281b93966d4dd3fec22950ac3d46013709cc44e4，未偷偷修复。用户明确继续后修复并完整回归，由同一审查上下文补核固定repair HEAD；实际补核记录、逐项根裁定及五项Declined完整清单见wave3-independent-review.md。
+全新只读上下文曾审查BASE→9e1a7b7692857d15bf789eb72d157ba7f28d66c4，0Critical/3Important/2Minor，按用户停止条件保存281b93966d4dd3fec22950ac3d46013709cc44e4，未偷偷修复。用户明确继续后修复并完整回归，由同一审查上下文补核固定repair HEAD f1c684f82e2d6815c5d2ab167cad9cb2cb2e5272；实际补核记录、逐项主 Agent 裁定及五项Declined完整清单见wave3-independent-review.md。
 
 I1敏感GET读取审计：新增6领域+11实际PG/HTTP先17RED，修复后136相关GREEN及928全回归；success/denied元数据、独立SQL连接可见commit、flush/commit故障503与rollback/健康重试均证明。浏览器发现不存在课程误503，补2项PG RED→只对现有课程持久化拒绝审计→33相关GREEN；保留同一404与外键约束，不建虚构课程或新增迁移。
 I2切换永久busy：两项有效组件RED→清running且旧请求失效→41全绿。
 I3错误攻击声明：先撤回，再实际course-b pending/撤权语义RED→修正唯一场景fixture→105全绿；mapper前置语义防伪11全绿。
 M1概念重复趋势：accurate关联次数标签及说明，保留冻结DTO；M2加载旧队列及迟到POST：清items/禁操作/代际隔离；三项先RED，再41全绿。
 
-补核结论及准确repair提交写入独立报告；请求编号政策、外部擦除、Runner负载根因、真实教学/模型、生产部署五项继续明确暂不判定。审查者未写代码或改变Git/服务，未新增另一审查Agent。
+原审查者确认I1/I2/I3/M1/M2全部关闭，无未解决或新增Critical/Important；准确repair提交和只读补核范围写入独立报告。请求编号政策、外部擦除、Runner负载根因、真实教学/模型、生产部署五项继续明确暂不判定。审查者未写代码或改变Git/服务，未新增另一审查Agent。
 
 ## 16. 真实数据/模型
 
@@ -121,7 +121,7 @@ M1概念重复趋势：accurate关联次数标签及说明，保留冻结DTO；M
 
 ## 17. 全部修改文件
 
-完整BASE→Gate已跟踪差异及新增文件逐行列于wave3-changed-files.txt；包含三来源整合、Gate实现/测试、迁移/配置、ADR、命令、JUnit/JSON及截图，不能只列最后commit。独立审查报告和最终文档补入后再刷新。
+完整BASE→Gate已跟踪差异及新增文件逐行列于wave3-changed-files.txt；包含三来源整合、Gate实现/测试、迁移/配置、ADR、命令、JUnit/JSON及截图，不能只列最后commit。独立审查报告和最终文档已补入，完整清单已刷新。
 
 ## 18. 风险与Wave4/Task11依赖
 
@@ -131,7 +131,7 @@ pgvector扩展可用不代表适配器。本次没有外部新设施/依赖。�
 
 ## 19. Gate分支、提交与工作区
 
-分支codex/wave3-integration-gate；worktree C:\Users\lenovo\Desktop\cs competition\.worktrees\wave3-integration-gate；BASE0598a2ea1d2a5016b94cd6f35a5a0e678b76ee07。G9为8f2cf61ec7e4931e4e06de42749e933ea5c63237；原固定审查HEAD9e1a7b7692857d15bf789eb72d157ba7f28d66c4；停止checkpoint281b93966d4dd3fec22950ac3d46013709cc44e4。修复固定HEAD及原审查者补核写于独立报告。
+分支codex/wave3-integration-gate；worktree C:\Users\lenovo\Desktop\cs competition\.worktrees\wave3-integration-gate；BASE0598a2ea1d2a5016b94cd6f35a5a0e678b76ee07。G9为8f2cf61ec7e4931e4e06de42749e933ea5c63237；原固定审查HEAD9e1a7b7692857d15bf789eb72d157ba7f28d66c4；停止checkpoint281b93966d4dd3fec22950ac3d46013709cc44e4。修复固定HEAD f1c684f82e2d6815c5d2ab167cad9cb2cb2e5272，原审查者补核已完成并写于独立报告。
 
 最终本地提交信息feat: integrate Wave 3 analytics UI and security gate。最终准确HEAD/干净状态由提交后的交付消息与Git history提供，文档不伪造自己的提交hash；完整差异文件见wave3-changed-files.txt，main/来源HEAD及清洁核对见最终仓库证据。
 
@@ -225,7 +225,7 @@ The original 164 planned cases and draft annotations remain unchanged (normalize
 
 Actual case evidence: 104 local parameters passed; 3 concrete PostgreSQL cases plus all original 54 SQL vector parameters and 8 filter-omission checks passed (65); 3 real container attacks passed. Network connection to a documentation-reserved address is denied; PID telemetry reaches exactly 64 and remains within the cap until deadline termination; stdout flood is capped at 65536 and deadline bounded. Initial PID expectation of an exception message was replaced with stronger actual kernel-backed telemetry, because the SDK can block creating runtime threads at the cap. No original Task 10 assertion was relaxed.
 
-The G9 manifest reported **163 automated_passed, 1 not_executed**; independent review later withdrew a wrong-scenario claim, so the current result is **162 automated_passed, 2 not_executed** (see numbered handoff). `sec-sensitive-logging-008` has an actual observation: client X-Request-ID is reflected as correlation metadata. Its planned expected denial does not specify whether valid caller-provided correlation is permitted or must be replaced, so an echo observation is not called a successful sanitization attack test. Blocker **WG-CORRELATION-POLICY** requires an explicit API/security decision and a corresponding strict denial criterion. This is a documented unverified requirement, not proof of a cross-user leak, and prevents an unconditional Gate pass.
+The G9 manifest reported **163 automated_passed, 1 not_executed**. Independent review withdrew the wrong-scenario claim, yielding **162 automated_passed, 2 not_executed at the security-stop checkpoint**. After the user authorized repairs, the correct course-b pending proposal scenario actually passed and the final manifest returned to **163 automated_passed, 1 not_executed**; see the current numbered handoff. Both historical snapshots remain archived. `sec-sensitive-logging-008` has an actual observation: client X-Request-ID is reflected as correlation metadata. Its planned expected denial does not specify whether valid caller-provided correlation is permitted or must be replaced, so an echo observation is not called a successful sanitization attack test. Blocker **WG-CORRELATION-POLICY** requires an explicit API/security decision and a corresponding strict denial criterion. This is a documented unverified requirement, not proof of a cross-user leak, and prevents an unconditional Gate pass.
 
 Five cases originally labelled architecture_pending now have concrete local implementation evidence (deleted HintRequest context, late in-memory upsert fence, validation-source redaction, raw-source gateway exclusion and logout revocation). Their original planned tier is preserved alongside the actual tier; in-memory index evidence does not prove an external pgvector/cache/model-reference adapter. **WG-EXTERNAL-ERASURE** remains a separate deployment dependency requiring ADR and authorization for those adapters. Installed pgvector alone is not physical erasure evidence. Both blockers must be carried into the final Gate verdict.
 

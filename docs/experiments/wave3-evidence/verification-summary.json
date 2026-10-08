@@ -58,6 +58,11 @@
       "test_count": 11,
       "passed": 11
     },
+    "manifest-rebuilt-after-review.xml": {
+      "sha256": "397d99fc2e2d9a5c6ae87803e63dee6f3b955e8bd45400424f427cdc7db37161",
+      "test_count": 11,
+      "passed": 11
+    },
     "postgres-cases.xml": {
       "sha256": "b78fd1149131af9ea7ce927a0da763c50837a31d7d10c82f9bce35813700c1af",
       "test_count": 65,
@@ -235,7 +240,7 @@
     "automated_passed": 163,
     "not_executed": 1
   },
-  "current_gate_status": "validation_passed_review_supplement_pending",
+  "current_gate_status": "conditional_pass",
   "current_frontend_components": {
     "failed": 0,
     "passed": 41,
@@ -243,7 +248,7 @@
     "phase": "G10-repair-UI-confirmed"
   },
   "archive": {
-    "commands": 137,
+    "commands": 139,
     "credential_redactions": 1,
     "directory": "docs/experiments/wave3-evidence/command-output"
   }

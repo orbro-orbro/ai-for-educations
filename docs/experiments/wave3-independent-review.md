@@ -86,7 +86,7 @@ clearLearningResult取消旧resultRequest，但不清running；旧finally因abor
 此授权不包含merge、rebase、push、PR、worktree删除、生产部署、真实学生/模型或新增外部适配器。
 
 
-## 用户授权后的修复证据（主 Agent 提交，待原审查者补核）
+## 用户授权后的修复证据（主 Agent，原审查者已补核）
 
 用户明确“继续”授权原报告四步；没有新增实现或审查 Agent。I1/I2/I3/M1/M2均按失败回归→最小修复实施，没有权限、schema、公开DTO、生产依赖或基础设施变更。
 
@@ -98,4 +98,31 @@ clearLearningResult取消旧resultRequest，但不清running；旧finally因abor
 
 完整后端最终928通过/0失败/0跳过；原220源文件与Task10原commit逐字节一致，54真实SQL向量、10迁移、11+2读取审计、现有并发/恢复/闭环实际执行。组件41；build及all-types退出0；两浏览器16+10、0 skip/unexpected/flaky；隔离worker31/controller12/HTTP拓扑4及Compose、browser SQL proof均通过。中间926和浏览器9/1失败报告单独保留，不能冒充最终快照。
 
-五项Declined裁定继续保留。候选结论为条件通过，等待同一次只读审查补核，不宣称生产、外部擦除、请求编号严格拒绝或并发负载根因已验证。
+五项Declined裁定继续保留。补核已完成，结论为条件通过；不宣称生产、外部擦除、请求编号严格拒绝或并发负载根因已验证。
+
+
+## 同一次独立只读审查补核（审查者实际结果）
+
+固定源码：f1c684f82e2d6815c5d2ab167cad9cb2cb2e5272。沿用原审查上下文，仅只读检查修复、测试和归档；审查者没有重执行数据库、浏览器或隔离器测试。
+
+|原发现|补核结果|审查者关闭依据|
+|---|---|---|
+|I1教师敏感读取缺审计|关闭|analytics/service.py:145返回前完成UOW审计commit；正式Router实际request ID。6领域/13PG覆盖成功、抑制、拒绝、flush/commit脱敏503、rollback及unknown-course404，不制造虚构资源|
+|I2切换永久运行中|关闭|ExercisePage.tsx:44取消时复位running，保留abort保护；课程/练习两类均可重新提交|
+|I3错误场景被计通过|关闭|test_wave3_case_execution.py:69实际student-a/course-b/pending，撤权列表/接受404，无泄漏/激活/模型；mapper核实际前置属性|
+|M1趋势计数|关闭|CourseDashboard.tsx:100准确标概念关联次数并解释多概念分别计入|
+|M2旧队列/迟到响应|关闭|ReviewQueue.tsx:19清items、generation隔离GET/POST、加载禁提交|
+
+**Critical：无。Important：无未解决项，也未发现新的问题。**审查者核实固定快照137条命令归档SHA相符；最终928 XML与16+10浏览器计数/摘要hash相符、无失败/跳过；原八份安全文件与来源字节相同，220实际执行；组件41通过。固定快照manifest严格验证163通过/1未执行。
+
+审查要求两处报告纠正：G9的162/2必须明确为安全停止历史；固定f1 manifest引用的是有效局部报告而非928。主Agent接受，修改历史文字，并发现10:04命令缺--build、只做校验。随后实际执行G10-post-review-manifest-rebuilt（--build）及G10-post-review-manifest-rebuilt-check，11项通过，最终163条通过的证据引用backend-after-review.xml及本次真实完整命令/timing/hash；旧局部版本保留于f1历史。产品/测试代码未改，无额外重执行完整产品测试的必要。新证据引用由主Agent与严格工具验证，不冒称审查者复跑了服务或审核了最终提交。
+
+**审查者继续Declined to judge的完整五项及根裁定：**
+
+1. 请求编号格式/回显/替换规则：接受暂不判定，sec-sensitive-logging-008与WG-CORRELATION-POLICY保留。
+2. 外部向量/缓存/模型引用物理擦除：接受暂不判定，WG-EXTERNAL-ERASURE需ADR/授权真实适配器，内存证据不足。
+3. Runner首次四项compile_failed根因及并发稳定性：接受暂不判定，历史诊断不足，串行重跑不能证明根因修复。
+4. 真实教学效果/模型比较：接受范围外；合成数据/Mock，无gold或试点。
+5. 生产部署/回滚完成：接受范围外；只验证合成迁移，未生产部署。
+
+**审查者结论：在上述边界完整保留、报告引用准确收敛的前提下，Wave3合成环境集成范围条件通过合理。**主Agent接受此结论并完成两处证据文字修正。该结论不包含五项暂不判定行为，不代表生产或真实教学成效。

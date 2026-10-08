@@ -1,5 +1,5 @@
 {
-  "observed_at_utc": "2026-10-08T09:57:34.548993+00:00",
+  "observed_at_utc": "2026-10-08T10:16:34.387106+00:00",
   "scope": "Read-only main/source verification before final Gate commit; final Gate HEAD is delivered after commit.",
   "gate_branch": "codex/wave3-integration-gate",
   "main_and_sources": [

@@ -167,6 +167,8 @@ docs/experiments/wave3-evidence/command-output/G10-post-review-frontend-build-20
 docs/experiments/wave3-evidence/command-output/G10-post-review-frontend-types-20261008094335.txt
 docs/experiments/wave3-evidence/command-output/G10-post-review-manifest-20261008100435.txt
 docs/experiments/wave3-evidence/command-output/G10-post-review-manifest-check-20261008100436.txt
+docs/experiments/wave3-evidence/command-output/G10-post-review-manifest-rebuilt-20261008101416.txt
+docs/experiments/wave3-evidence/command-output/G10-post-review-manifest-rebuilt-check-20261008101419.txt
 docs/experiments/wave3-evidence/command-output/G10-post-review-runner-controller-20261008095503.txt
 docs/experiments/wave3-evidence/command-output/G10-post-review-runner-worker-20261008095459.txt
 docs/experiments/wave3-evidence/command-output/G10-post-review-topology-20261008095547.txt
@@ -261,6 +263,7 @@ docs/experiments/wave3-evidence/container-attacks.xml
 docs/experiments/wave3-evidence/controller-topology-after-review.xml
 docs/experiments/wave3-evidence/controller-topology-final.xml
 docs/experiments/wave3-evidence/manifest-after-review.xml
+docs/experiments/wave3-evidence/manifest-rebuilt-after-review.xml
 docs/experiments/wave3-evidence/postgres-cases.xml
 docs/experiments/wave3-evidence/teacher-read-audit-postgres-red.xml
 docs/experiments/wave3-evidence/teacher-read-audit-red.xml
