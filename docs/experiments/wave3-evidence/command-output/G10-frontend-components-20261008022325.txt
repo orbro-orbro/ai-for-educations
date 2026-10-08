@@ -1,0 +1,47 @@
+
+> knowbound-web@0.1.0 test
+> vitest run --reporter=verbose
+
+
+ RUN  v5.0.3 C:/Users/lenovo/Desktop/cs competition/.worktrees/wave3-integration-gate/frontend
+
+ ✓ tests/all.test.ts > App > identifies the product and its two supported roles 134ms
+ ✓ tests/all.test.ts > App > uses the server-verified role returned by login 40ms
+ ✓ tests/all.test.ts > student learning loop > submits Cangjie source through the selected exercise 47ms
+ ✓ tests/all.test.ts > student learning loop > shows execution unavailable without inventing compiler output 49ms
+ ✓ tests/all.test.ts > student learning loop > keeps real execution feedback when diagnosis fails and retries without resubmitting 62ms
+ ✓ tests/all.test.ts > student learning loop > distinguishes runtime failure and preserves stderr 33ms
+ ✓ tests/all.test.ts > student learning loop > ignores a stale exercise response after the course changes again 83ms
+ ✓ tests/all.test.ts > student learning loop > renders an evidence-bound misconception diagnosis 74ms
+ ✓ tests/all.test.ts > student learning loop > marks a low-confidence diagnosis as waiting for teacher review 79ms
+ ✓ tests/all.test.ts > student learning loop > requests the next hint level and displays its safe content 138ms
+ ✓ tests/all.test.ts > student learning loop > checks the student's explanation and reports memory eligibility 96ms
+ ✓ tests/all.test.ts > student learning loop > accepts a pending memory proposal only after the student acts 132ms
+ ✓ tests/all.test.ts > student learning loop > locks a memory proposal while acceptance is in flight 125ms
+ ✓ tests/all.test.ts > student learning loop > rejects a pending memory proposal without creating a memory 104ms
+ ✓ tests/all.test.ts > student learning loop > requires explicit confirmation before deleting a private memory 76ms
+ ✓ tests/all.test.ts > student learning loop > keeps deletion-pending memories visibly non-retrievable 142ms
+ ✓ tests/all.test.ts > student learning loop > removes all correction and deletion controls after deletion completes 133ms
+ ✓ tests/all.test.ts > student learning loop > shows a recoverable API error with its request ID and retry action 50ms
+ ✓ tests/all.test.ts > student learning loop > uses a non-enumerating denied-access state 24ms
+ ✓ tests/all.test.ts > teacher privacy dashboard > renders anonymous aggregate groups with a tabular alternative 103ms
+ ✓ tests/all.test.ts > teacher privacy dashboard > renders privacy suppression without an exact sample count 36ms
+ ✓ tests/all.test.ts > teacher privacy dashboard > never exposes or requests student private memories 81ms
+ ✓ tests/all.test.ts > teacher privacy dashboard > shows de-identified diagnoses waiting for review 34ms
+ ✓ tests/all.test.ts > teacher privacy dashboard > submits a review decision and reason 88ms
+ ✓ tests/all.test.ts > teacher privacy dashboard > keeps each review form independent and locks the submitted row 93ms
+ ✓ tests/all.test.ts > teacher privacy dashboard > sends date-time filters and renders a privacy-safe adjacent-window trend 140ms
+ ✓ tests/all.test.ts > teacher privacy dashboard > treats a 409 review replay as an idempotent conflict 80ms
+ ✓ tests/all.test.ts > teacher privacy dashboard > uses the same non-enumerating state for denied teacher resources 21ms
+ ✓ tests/all.test.ts > teacher privacy dashboard > renders an empty review queue as an actionable state 24ms
+ ✓ tests/all.test.ts > teacher privacy dashboard > recovers from a review queue loading failure 61ms
+ ✓ tests/all.test.ts > Wave 3 integration UI > revokes the old token once before clearing a busy logout 80ms
+ ✓ tests/all.test.ts > Wave 3 integration UI > keeps the session retryable after logout storage failure 126ms
+ ✓ tests/all.test.ts > Wave 3 integration UI > clears a token already rejected with 401 102ms
+ ✓ tests/all.test.ts > Wave 3 integration UI > uses next local midnight and adjacent half-open time windows 78ms
+ ✓ tests/all.test.ts > Wave 3 integration UI > ignores stale queue responses after switching courses 96ms
+
+ Test Files  1 passed (1)
+      Tests  35 passed (35)
+   Start at  10:23:27
+   Duration  5.51s (tests 54%, environment 26%, transform 11%, setup 5%, import 4%)

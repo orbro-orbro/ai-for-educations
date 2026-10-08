@@ -1,0 +1,9 @@
+F                                                                        [100%]
+================================== FAILURES ===================================
+_ test_development_projection_reads_current_diagnoses_and_safe_course_evidence _
+tests\analytics\test_data_source.py:6: in test_development_projection_reads_current_diagnoses_and_safe_course_evidence
+    from app.analytics.data_source import InMemoryTeacherAnalyticsDataSource
+E   ModuleNotFoundError: No module named 'app.analytics.data_source'
+=========================== short test summary info ===========================
+FAILED tests/analytics/test_data_source.py::test_development_projection_reads_current_diagnoses_and_safe_course_evidence
+1 failed in 8.01s

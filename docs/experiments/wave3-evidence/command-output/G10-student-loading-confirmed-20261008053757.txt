@@ -1,0 +1,12 @@
+
+> knowbound-web@0.1.0 test
+> vitest run
+
+
+ RUN  v5.0.3 C:/Users/lenovo/Desktop/cs competition/.worktrees/wave3-integration-gate/frontend
+
+
+ Test Files  1 passed (1)
+      Tests  36 passed (36)
+   Start at  13:37:58
+   Duration  2.70s (tests 53%, environment 26%, transform 9%, import 6%, setup 5%)

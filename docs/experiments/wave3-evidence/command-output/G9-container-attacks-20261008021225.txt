@@ -1,0 +1,11 @@
+.F.                                                                      [100%]
+================================== FAILURES ===================================
+___________ test_concrete_container_attack[sec-executor-abuse-007] ____________
+tests\security\test_wave3_container_attacks.py:44: in test_concrete_container_attack
+    match=re.search(r'PID_DENIED:(\d+)',result['stdout']);assert match,result
+                                                          ^^^^^^^^^^^^^^^^^^^
+E   AssertionError: {'protocol_version': '2', 'submission_id': 'task10-isolated-test', 'status': 'timed_out', 'phase': 'run', ...}
+E   assert None
+=========================== short test summary info ===========================
+FAILED tests/security/test_wave3_container_attacks.py::test_concrete_container_attack[sec-executor-abuse-007]
+1 failed, 2 passed in 19.62s

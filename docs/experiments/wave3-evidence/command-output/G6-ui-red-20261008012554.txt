@@ -1,0 +1,390 @@
+
+> knowbound-web@0.1.0 test
+> vitest run
+
+
+ RUN  v5.0.3 C:/Users/lenovo/Desktop/cs competition/.worktrees/wave3-integration-gate/frontend
+
+ ❯ tests/all.test.ts (35 tests | 4 failed) 4087ms
+   ❯ Wave 3 integration UI (5)
+     × revokes the old token once before clearing a busy logout 88ms
+     × keeps the session retryable after logout storage failure 1061ms
+     × uses next local midnight and adjacent half-open time windows 82ms
+     × ignores stale queue responses after switching courses 97ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/all.test.ts > Wave 3 integration UI > revokes the old token once before clearing a busy logout
+TestingLibraryElementError: Unable to find an accessible element with the role "button" and name `/退出/`
+
+Here are the accessible roles:
+
+  main:
+
+  Name "":
+  [36m<main[39m
+    [33mclass[39m=[32m"login-page"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  paragraph:
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"brand-mark"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p />[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"privacy-promise"[39m
+  [36m/>[39m
+
+  Name "":
+  [36m<p[39m
+    [33mclass[39m=[32m"section-kicker"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  heading:
+
+  Name "知界·仓颉学伴":
+  [36m<h1 />[39m
+
+  Name "进入课程空间":
+  [36m<h2[39m
+    [33mid[39m=[32m"login-title"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  region:
+
+  Name "进入课程空间":
+  [36m<section[39m
+    [33maria-labelledby[39m=[32m"login-title"[39m
+    [33mclass[39m=[32m"login-panel"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  textbox:
+
+  Name "用户名":
+  [36m<input[39m
+    [33mautocomplete[39m=[32m"username"[39m
+    [33mvalue[39m=[32m""[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+  button:
+
+  Name "登录":
+  [36m<button[39m
+    [33mdisabled[39m=[32m""[39m
+    [33mtype[39m=[32m"button"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<main[39m
+      [33mclass[39m=[32m"login-page"[39m
+    [36m>[39m
+      [36m<section[39m
+        [33mclass[39m=[32m"login-intro"[39m
+      [36m>[39m
+        [36m<p[39m
+          [33mclass[39m=[32m"brand-mark"[39m
+        [36m>[39m
+          [0mKNOWBOUND · CJ[0m
+        [36m</p>[39m
+        [36m<h1>[39m
+          [0m知界·仓颉学伴[0m
+        [36m</h1>[39m
+        [36m<p>[39m
+          [0m面向《仓颉语言设计》的可信概念误区诊断智能体。[0m
+        [36m</p>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"role-statement"[39m
+        [36m>[39m
+          [36m<span>[39m
+            [0m学生端[0m
+          [36m</span>[39m
+          [36m<i[39m
+            [33maria-hidden[39m=[32m"true"[39m
+          [36m/>[39m
+          [36m<span>[39m
+            [0m教师端[0m
+          [36m</span>[39m
+        [36m</div>[39m
+        [36m<p[39m
+          [33mclass[39m=[32m"privacy-promise"[39m
+        [36m>[39m
+          [0m学习证据各归其位：学生掌控私人记忆，教师只看匿名课程信号。[0m
+        [36m</p>[39m
+      [36m</section>[39m
+      [36m<section[39m
+        [33maria-labelledby[39m=[32m"login-title"[39m
+        [33mclass[39m=[32m"login-panel"[39m
+      [36m>[39m
+        [36m<p[39m
+          [33mclass[39m=[32m"section-kicker"[39m
+        [36m>[39m
+          [0mCOURSE ACCESS[0m
+        [36m</p>[39m
+        [36m<h2[39m
+          [33mid[39m=[32m"login-title"[39m
+        [36m>[39m
+          [0m进入课程空间[0m
+        [36m</h2>[39m
+        [36m<label>[39m
+          [0m用户名[0m
+          [36m<input[39m
+            [33mautocomplete[39m=[32m"username"[39m
+            [33mvalue[39m=[32m""[39m
+          [36m/>[39m
+        [36m</label>[39m
+        [36m<label>[39m
+          [0m密码[0m
+          [36m<input[39m
+            [33mautocomplete[39m=[32m"current-password"[39m
+            [33mtype[39m=[32m"password"[39m
+            [33mvalue[39m=[32m""[39m
+          [36m/>[39m
+        [36m</label>[39m
+        [36m<button[39m
+          [33mdisabled[39m=[32m""[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [0m登录[0m
+        [36m</button>[39m
+      [36m</section>[39m
+    [36m</main>[39m
+  [36m</div>[39m
+[36m</body>[39m
+ ❯ Object.getElementError node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ tests/wave3-integration.test.tsx:29:28
+     27|     render(<App/>);await screen.findByText("样本不足");
+     28|     fireEvent.click(screen.getByRole("button",{name:"退出"}));
+     29|     fireEvent.click(screen.getByRole("button",{name:/退出/}));
+       |                            ^
+     30|     expect(localStorage.getItem("knowbound.session")).not.toBeNull();
+     31|     await waitFor(()=>expect(calls.mock.calls.filter(([url])=>String(u…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/4]⎯
+
+ FAIL  tests/all.test.ts > Wave 3 integration UI > keeps the session retryable after logout storage failure
+TestingLibraryElementError: Unable to find an element with the text: /logout-synthetic-id/. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<main[39m
+      [33mclass[39m=[32m"login-page"[39m
+    [36m>[39m
+      [36m<section[39m
+        [33mclass[39m=[32m"login-intro"[39m
+      [36m>[39m
+        [36m<p[39m
+          [33mclass[39m=[32m"brand-mark"[39m
+        [36m>[39m
+          [0mKNOWBOUND · CJ[0m
+        [36m</p>[39m
+        [36m<h1>[39m
+          [0m知界·仓颉学伴[0m
+        [36m</h1>[39m
+        [36m<p>[39m
+          [0m面向《仓颉语言设计》的可信概念误区诊断智能体。[0m
+        [36m</p>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"role-statement"[39m
+        [36m>[39m
+          [36m<span>[39m
+            [0m学生端[0m
+          [36m</span>[39m
+          [36m<i[39m
+            [33maria-hidden[39m=[32m"true"[39m
+          [36m/>[39m
+          [36m<span>[39m
+            [0m教师端[0m
+          [36m</span>[39m
+        [36m</div>[39m
+        [36m<p[39m
+          [33mclass[39m=[32m"privacy-promise"[39m
+        [36m>[39m
+          [0m学习证据各归其位：学生掌控私人记忆，教师只看匿名课程信号。[0m
+        [36m</p>[39m
+      [36m</section>[39m
+      [36m<section[39m
+        [33maria-labelledby[39m=[32m"login-title"[39m
+        [33mclass[39m=[32m"login-panel"[39m
+      [36m>[39m
+        [36m<p[39m
+          [33mclass[39m=[32m"section-kicker"[39m
+        [36m>[39m
+          [0mCOURSE ACCESS[0m
+        [36m</p>[39m
+        [36m<h2[39m
+          [33mid[39m=[32m"login-title"[39m
+        [36m>[39m
+          [0m进入课程空间[0m
+        [36m</h2>[39m
+        [36m<label>[39m
+          [0m用户名[0m
+          [36m<input[39m
+            [33mautocomplete[39m=[32m"username"[39m
+            [33mvalue[39m=[32m""[39m
+          [36m/>[39m
+        [36m</label>[39m
+        [36m<label>[39m
+          [0m密码[0m
+          [36m<input[39m
+            [33mautocomplete[39m=[32m"current-password"[39m
+            [33mtype[39m=[32m"password"[39m
+            [33mvalue[39m=[32m""[39m
+          [36m/>[39m
+        [36m</label>[39m
+        [36m<button[39m
+          [33mdisabled[39m=[32m""[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [0m登录[0m
+        [36m</button>[39m
+      [36m</section>[39m
+    [36m</main>[39m
+  [36m</div>[39m
+[36m</body>[39m
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<main[39m
+      [33mclass[39m=[32m"login-page"[39m
+    [36m>[39m
+      [36m<section[39m
+        [33mclass[39m=[32m"login-intro"[39m
+      [36m>[39m
+        [36m<p[39m
+          [33mclass[39m=[32m"brand-mark"[39m
+        [36m>[39m
+          [0mKNOWBOUND · CJ[0m
+        [36m</p>[39m
+        [36m<h1>[39m
+          [0m知界·仓颉学伴[0m
+        [36m</h1>[39m
+        [36m<p>[39m
+          [0m面向《仓颉语言设计》的可信概念误区诊断智能体。[0m
+        [36m</p>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"role-statement"[39m
+        [36m>[39m
+          [36m<span>[39m
+            [0m学生端[0m
+          [36m</span>[39m
+          [36m<i[39m
+            [33maria-hidden[39m=[32m"true"[39m
+          [36m/>[39m
+          [36m<span>[39m
+            [0m教师端[0m
+          [36m</span>[39m
+        [36m</div>[39m
+        [36m<p[39m
+          [33mclass[39m=[32m"privacy-promise"[39m
+        [36m>[39m
+          [0m学习证据各归其位：学生掌控私人记忆，教师只看匿名课程信号。[0m
+        [36m</p>[39m
+      [36m</section>[39m
+      [36m<section[39m
+        [33maria-labelledby[39m=[32m"login-title"[39m
+        [33mclass[39m=[32m"login-panel"[39m
+      [36m>[39m
+        [36m<p[39m
+          [33mclass[39m=[32m"section-kicker"[39m
+        [36m>[39m
+          [0mCOURSE ACCESS[0m
+        [36m</p>[39m
+        [36m<h2[39m
+          [33mid[39m=[32m"login-title"[39m
+        [36m>[39m
+          [0m进入课程空间[0m
+        [36m</h2>[39m
+        [36m<label>[39m
+          [0m用户名[0m
+          [36m<input[39m
+            [33mautocomplete[39m=[32m"username"[39m
+            [33mvalue[39m=[32m""[39m
+          [36m/>[39m
+        [36m</label>[39m
+        [36m<label>[39m
+          [0m密码[0m
+          [36m<input[39m
+            [33mautocomplete[39m=[32m"current-password"[39m
+            [33mtype[39m=[32m"password"[39m
+            [33mvalue[39m=[32m""[39m
+          [36m/>[39m
+        [36m</label>[39m
+        [36m<button[39m
+          [33mdisabled[39m=[32m""[39m
+          [33mtype[39m=[32m"button"[39m
+        [36m>[39m
+          [0m登录[0m
+        [36m</button>[39m
+      [36m</section>[39m
+    [36m</main>[39m
+  [36m</div>[39m
+[36m</body>[39m
+ ❯ waitForWrapper node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ tests/wave3-integration.test.tsx:41:25
+     39|     install(()=>++attempts===1?json({code:"STORAGE_UNAVAILABLE",messag…
+     40|     render(<App/>);await screen.findByText("样本不足");fireEvent.click(scr…
+     41|     expect(await screen.findByText(/logout-synthetic-id/)).toBeInTheDo…
+       |                         ^
+     42|     fireEvent.click(screen.getByRole("button",{name:"退出"}));await scre…
+     43|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/4]⎯
+
+ FAIL  tests/all.test.ts > Wave 3 integration UI > uses next local midnight and adjacent half-open time windows
+AssertionError: expected '2026-10-07T15:59:59.999Z' to be '2026-10-07T16:00:00.000Z' // Object.is equality
+
+Expected: "2026-10-07T16:00:00.000Z"
+Received: "2026-10-07T15:59:59.999Z"
+
+ ❯ tests/wave3-integration.test.tsx:58:48
+     56|     const urls=calls.mock.calls.map(([url])=>new URL(String(url))).fil…
+     57|     const start=new Date("2026-10-07T00:00:00");const end=new Date("20…
+     58|     expect(urls[0].searchParams.get("end_at")).toBe(end.toISOString());
+       |                                                ^
+     59|     expect(urls[1].searchParams.get("end_at")).toBe(start.toISOString(…
+     60|     expect(urls[1].searchParams.get("start_at")).toBe(new Date(start.g…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/4]⎯
+
+ FAIL  tests/all.test.ts > Wave 3 integration UI > ignores stale queue responses after switching courses
+Error: expect(element).not.toBeInTheDocument()
+
+expected document not to contain element, found <h3>
+  STALE_RESPONSE
+</h3> instead
+ ❯ tests/wave3-integration.test.tsx:76:93
+     74|     await screen.findByText("当前没有待复核诊断");
+     75|     resolveFirst(json({course_id:"course-a",filters,items:[{queue_even…
+     76|     await new Promise(r=>setTimeout(r,20));expect(screen.queryByText("…
+       |                                                                                             ^
+     77|   });
+     78| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/4]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  4 failed | 31 passed (35)
+   Start at  09:25:58
+   Duration  53.60s (environment 74%, setup 15%, tests 8%, transform 2%, import 1%)

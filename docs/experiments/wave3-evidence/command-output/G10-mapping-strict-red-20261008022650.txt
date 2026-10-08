@@ -1,0 +1,16 @@
+........FF                                                               [100%]
+================================== FAILURES ===================================
+________ test_mapping_rejects_unverifiable_execution_claims[operation] ________
+tests\security\test_execution_manifest.py:36: in test_mapping_rejects_unverifiable_execution_claims
+    with pytest.raises(ValueError):module.validate_manifest(changed,ROOT)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^
+E   Failed: DID NOT RAISE ValueError
+_________ test_mapping_rejects_unverifiable_execution_claims[command] _________
+tests\security\test_execution_manifest.py:36: in test_mapping_rejects_unverifiable_execution_claims
+    with pytest.raises(ValueError):module.validate_manifest(changed,ROOT)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^
+E   Failed: DID NOT RAISE ValueError
+=========================== short test summary info ===========================
+FAILED tests/security/test_execution_manifest.py::test_mapping_rejects_unverifiable_execution_claims[operation]
+FAILED tests/security/test_execution_manifest.py::test_mapping_rejects_unverifiable_execution_claims[command]
+2 failed, 8 passed in 15.17s

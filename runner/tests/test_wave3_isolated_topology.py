@@ -12,7 +12,7 @@ import docker
     ("infinite_loop","main() { while (true) {} }","timed_out"),
     ("output_limit",'main() { while (true) { println("0123456789abcdef0123456789abcdef") } }',"timed_out"),
 ])
-def test_real_controller_launches_and_cleans_isolated_job(scenario,source,expected):
+def test_real_controller_launches_and_cleans_isolated_job(scenario,source,expected,record_property):
     client=docker.from_env()
     before={c.id for c in client.containers.list(all=True,filters={"label":"knowbound.component=cangjie-sandbox"})}
     body={"protocol_version":"2","submission_id":"synthetic-gate-"+uuid4().hex,
@@ -22,7 +22,10 @@ def test_real_controller_launches_and_cleans_isolated_job(scenario,source,expect
         assert response.status==200
         result=json.load(response)
     assert result["submission_id"]==body["submission_id"]
-    assert result["status"]==expected
+    record_property('actual_status',result['status'])
+    record_property('phase',result['phase'])
+    record_property('exit_code',result['exit_code'])
+    assert result["status"]==expected, {k:result[k] for k in ('status','phase','exit_code','signal','stderr','diagnostics')}
     assert result["protocol_version"]=="2"
     assert "1.2.0" in result["toolchain"]["cjc"]
     assert result["limits"]["pids"]==64

@@ -1,0 +1,188 @@
+FF.......................                                                [100%]
+================================== FAILURES ===================================
+____________ test_postgres_rejects_cross_course_diagnosis_concept _____________
+..\..\..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1967: in _exec_single_context
+    self.dialect.do_execute(
+..\..\..\.venv\Lib\site-packages\sqlalchemy\engine\default.py:952: in do_execute
+    cursor.execute(statement, parameters)
+..\..\..\.venv\Lib\site-packages\psycopg\cursor.py:117: in execute
+    raise ex.with_traceback(None)
+E   psycopg.errors.UndefinedTable: relation "users" does not exist
+E   LINE 1: INSERT INTO users (id, username, password_hash, role, active...
+E                       ^
+
+The above exception was the direct cause of the following exception:
+tests\integration\test_task6_postgres.py:133: in test_postgres_rejects_cross_course_diagnosis_concept
+    repos_a, _, student, course_a, exercise_a, _, _ = _seed(url, f"a{suffix}")
+                                                      ^^^^^^^^^^^^^^^^^^^^^^^^
+tests\integration\test_task6_postgres.py:40: in _seed
+    repositories.users.add(User.with_password(teacher, teacher, "pw", Role.TEACHER))
+app\persistence\repositories.py:43: in add
+    with self._sessions.begin() as session:
+         ^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\..\..\miniconda3\Lib\contextlib.py:148: in __exit__
+    next(self.gen)
+..\..\..\.venv\Lib\site-packages\sqlalchemy\orm\session.py:1814: in _maker_context_manager
+    with self.begin():
+         ^^^^^^^^^^^^
+..\..\..\.venv\Lib\site-packages\sqlalchemy\engine\util.py:147: in __exit__
+    with util.safe_reraise():
+         ^^^^^^^^^^^^^^^^^^^
+..\..\..\.venv\Lib\site-packages\sqlalchemy\util\langhelpers.py:121: in __exit__
+    raise exc_value.with_traceback(exc_tb)
+..\..\..\.venv\Lib\site-packages\sqlalchemy\engine\util.py:145: in __exit__
+    self.commit()
+<string>:2: in commit
+    ???
+..\..\..\.venv\Lib\site-packages\sqlalchemy\orm\state_changes.py:137: in _go
+    ret_value = fn(self, *arg, **kw)
+                ^^^^^^^^^^^^^^^^^^^^
+..\..\..\.venv\Lib\site-packages\sqlalchemy\orm\session.py:1311: in commit
+    self._prepare_impl()
+<string>:2: in _prepare_impl
+    ???
+..\..\..\.venv\Lib\site-packages\sqlalchemy\orm\state_changes.py:137: in _go
+    ret_value = fn(self, *arg, **kw)
+                ^^^^^^^^^^^^^^^^^^^^
+..\..\..\.venv\Lib\site-packages\sqlalchemy\orm\session.py:1286: in _prepare_impl
+    self.session.flush()
+..\..\..\.venv\Lib\site-packages\sqlalchemy\orm\session.py:4331: in flush
+    self._flush(objects)
+..\..\..\.venv\Lib\site-packages\sqlalchemy\orm\session.py:4466: in _flush
+    with util.safe_reraise():
+         ^^^^^^^^^^^^^^^^^^^
+..\..\..\.venv\Lib\site-packages\sqlalchemy\util\langhelpers.py:121: in __exit__
+    raise exc_value.with_traceback(exc_tb)
+..\..\..\.venv\Lib\site-packages\sqlalchemy\orm\session.py:4427: in _flush
+    flush_context.execute()
+..\..\..\.venv\Lib\site-packages\sqlalchemy\orm\unitofwork.py:466: in execute
+    rec.execute(self)
+..\..\..\.venv\Lib\site-packages\sqlalchemy\orm\unitofwork.py:642: in execute
+    util.preloaded.orm_persistence.save_obj(
+..\..\..\.venv\Lib\site-packages\sqlalchemy\orm\persistence.py:93: in save_obj
+    _emit_insert_statements(
+..\..\..\.venv\Lib\site-packages\sqlalchemy\orm\persistence.py:1048: in _emit_insert_statements
+    result = connection.execute(
+..\..\..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1419: in execute
+    return meth(
+..\..\..\.venv\Lib\site-packages\sqlalchemy\sql\elements.py:527: in _execute_on_connection
+    return connection._execute_clauseelement(
+..\..\..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1641: in _execute_clauseelement
+    ret = self._execute_context(
+..\..\..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1846: in _execute_context
+    return self._exec_single_context(
+..\..\..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1986: in _exec_single_context
+    self._handle_dbapi_exception(
+..\..\..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:2363: in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+..\..\..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1967: in _exec_single_context
+    self.dialect.do_execute(
+..\..\..\.venv\Lib\site-packages\sqlalchemy\engine\default.py:952: in do_execute
+    cursor.execute(statement, parameters)
+..\..\..\.venv\Lib\site-packages\psycopg\cursor.py:117: in execute
+    raise ex.with_traceback(None)
+E   sqlalchemy.exc.ProgrammingError: (psycopg.errors.UndefinedTable) relation "users" does not exist
+E   LINE 1: INSERT INTO users (id, username, password_hash, role, active...
+E                       ^
+E   [SQL: INSERT INTO users (id, username, password_hash, role, active) VALUES (%(id)s::VARCHAR, %(username)s::VARCHAR, %(password_hash)s::VARCHAR, %(role)s::VARCHAR, %(active)s)]
+E   [parameters: {'id': 'teacher-a66b69f6fb7', 'username': 'teacher-a66b69f6fb7', 'password_hash': 'pbkdf2_sha256$210000$7qVHBUfqJhiaa9cvwP3bWg==$iELEze97GWPhpFfX_W97zFUo_E-hf7QtTjIKxeqtns8=', 'role': 'teacher', 'active': True}]
+E   (Background on this error at: https://sqlalche.me/e/20/f405)
+________ test_two_repository_instances_serialize_postgres_hint_levels _________
+..\..\..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1967: in _exec_single_context
+    self.dialect.do_execute(
+..\..\..\.venv\Lib\site-packages\sqlalchemy\engine\default.py:952: in do_execute
+    cursor.execute(statement, parameters)
+..\..\..\.venv\Lib\site-packages\psycopg\cursor.py:117: in execute
+    raise ex.with_traceback(None)
+E   psycopg.errors.UndefinedTable: relation "users" does not exist
+E   LINE 1: INSERT INTO users (id, username, password_hash, role, active...
+E                       ^
+
+The above exception was the direct cause of the following exception:
+tests\integration\test_task6_postgres.py:165: in test_two_repository_instances_serialize_postgres_hint_levels
+    repos, _, student, course, exercise, concept, _ = _seed(url, suffix)
+                                                      ^^^^^^^^^^^^^^^^^^
+tests\integration\test_task6_postgres.py:40: in _seed
+    repositories.users.add(User.with_password(teacher, teacher, "pw", Role.TEACHER))
+app\persistence\repositories.py:43: in add
+    with self._sessions.begin() as session:
+         ^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\..\..\miniconda3\Lib\contextlib.py:148: in __exit__
+    next(self.gen)
+..\..\..\.venv\Lib\site-packages\sqlalchemy\orm\session.py:1814: in _maker_context_manager
+    with self.begin():
+         ^^^^^^^^^^^^
+..\..\..\.venv\Lib\site-packages\sqlalchemy\engine\util.py:147: in __exit__
+    with util.safe_reraise():
+         ^^^^^^^^^^^^^^^^^^^
+..\..\..\.venv\Lib\site-packages\sqlalchemy\util\langhelpers.py:121: in __exit__
+    raise exc_value.with_traceback(exc_tb)
+..\..\..\.venv\Lib\site-packages\sqlalchemy\engine\util.py:145: in __exit__
+    self.commit()
+<string>:2: in commit
+    ???
+..\..\..\.venv\Lib\site-packages\sqlalchemy\orm\state_changes.py:137: in _go
+    ret_value = fn(self, *arg, **kw)
+                ^^^^^^^^^^^^^^^^^^^^
+..\..\..\.venv\Lib\site-packages\sqlalchemy\orm\session.py:1311: in commit
+    self._prepare_impl()
+<string>:2: in _prepare_impl
+    ???
+..\..\..\.venv\Lib\site-packages\sqlalchemy\orm\state_changes.py:137: in _go
+    ret_value = fn(self, *arg, **kw)
+                ^^^^^^^^^^^^^^^^^^^^
+..\..\..\.venv\Lib\site-packages\sqlalchemy\orm\session.py:1286: in _prepare_impl
+    self.session.flush()
+..\..\..\.venv\Lib\site-packages\sqlalchemy\orm\session.py:4331: in flush
+    self._flush(objects)
+..\..\..\.venv\Lib\site-packages\sqlalchemy\orm\session.py:4466: in _flush
+    with util.safe_reraise():
+         ^^^^^^^^^^^^^^^^^^^
+..\..\..\.venv\Lib\site-packages\sqlalchemy\util\langhelpers.py:121: in __exit__
+    raise exc_value.with_traceback(exc_tb)
+..\..\..\.venv\Lib\site-packages\sqlalchemy\orm\session.py:4427: in _flush
+    flush_context.execute()
+..\..\..\.venv\Lib\site-packages\sqlalchemy\orm\unitofwork.py:466: in execute
+    rec.execute(self)
+..\..\..\.venv\Lib\site-packages\sqlalchemy\orm\unitofwork.py:642: in execute
+    util.preloaded.orm_persistence.save_obj(
+..\..\..\.venv\Lib\site-packages\sqlalchemy\orm\persistence.py:93: in save_obj
+    _emit_insert_statements(
+..\..\..\.venv\Lib\site-packages\sqlalchemy\orm\persistence.py:1048: in _emit_insert_statements
+    result = connection.execute(
+..\..\..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1419: in execute
+    return meth(
+..\..\..\.venv\Lib\site-packages\sqlalchemy\sql\elements.py:527: in _execute_on_connection
+    return connection._execute_clauseelement(
+..\..\..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1641: in _execute_clauseelement
+    ret = self._execute_context(
+..\..\..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1846: in _execute_context
+    return self._exec_single_context(
+..\..\..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1986: in _exec_single_context
+    self._handle_dbapi_exception(
+..\..\..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:2363: in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+..\..\..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1967: in _exec_single_context
+    self.dialect.do_execute(
+..\..\..\.venv\Lib\site-packages\sqlalchemy\engine\default.py:952: in do_execute
+    cursor.execute(statement, parameters)
+..\..\..\.venv\Lib\site-packages\psycopg\cursor.py:117: in execute
+    raise ex.with_traceback(None)
+E   sqlalchemy.exc.ProgrammingError: (psycopg.errors.UndefinedTable) relation "users" does not exist
+E   LINE 1: INSERT INTO users (id, username, password_hash, role, active...
+E                       ^
+E   [SQL: INSERT INTO users (id, username, password_hash, role, active) VALUES (%(id)s::VARCHAR, %(username)s::VARCHAR, %(password_hash)s::VARCHAR, %(role)s::VARCHAR, %(active)s)]
+E   [parameters: {'id': 'teacher-77a76e8e94', 'username': 'teacher-77a76e8e94', 'password_hash': 'pbkdf2_sha256$210000$do4Bf4xtdUSHu9JEgSfncg==$ArDjKVhuUOGLCdZlYBK86dHGgBJuM4dTW9_QH7ztoVo=', 'role': 'teacher', 'active': True}]
+E   (Background on this error at: https://sqlalche.me/e/20/f405)
+============================== warnings summary ===============================
+tests/integration/test_task7_postgres.py: 14 warnings
+tests/integration/test_task7_deletion_recovery.py: 4 warnings
+tests/integration/test_task10_security_repairs.py: 14 warnings
+  C:\Users\lenovo\Desktop\cs competition\.venv\Lib\site-packages\alembic\config.py:604: DeprecationWarning: No path_separator found in configuration; falling back to legacy splitting on spaces, commas, and colons for prepend_sys_path.  Consider adding path_separator=os to Alembic config.
+    util.warn_deprecated(
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED tests/integration/test_task6_postgres.py::test_postgres_rejects_cross_course_diagnosis_concept
+FAILED tests/integration/test_task6_postgres.py::test_two_repository_instances_serialize_postgres_hint_levels
+2 failed, 23 passed, 32 warnings in 49.70s

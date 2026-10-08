@@ -18,7 +18,7 @@ def test_exact_164_execution_claims_are_verified_against_evidence():
     module.validate_manifest(manifest,ROOT)
     assert len(manifest['cases'])==164
 
-@pytest.mark.parametrize('mutation',['missing','duplicate','status','evidence','collected','hash'])
+@pytest.mark.parametrize('mutation',['missing','duplicate','status','evidence','collected','hash','wrong_case','operation','command'])
 def test_mapping_rejects_unverifiable_execution_claims(mutation):
     module=mapper()
     manifest=json.loads((ROOT/'data/evaluation/security_execution_manifest.json').read_text(encoding='utf-8'))
@@ -29,5 +29,10 @@ def test_mapping_rejects_unverifiable_execution_claims(mutation):
     elif mutation=='status':passed['status']='collected'
     elif mutation=='evidence':passed['evidence'][0]['path']='nonexistent-wave3-evidence.xml'
     elif mutation=='collected':passed['evidence'][0]['node']='collected-but-never-run'
-    else:passed['evidence'][0]['sha256']='0'*64
+    elif mutation=='hash':passed['evidence'][0]['sha256']='0'*64
+    elif mutation=='wrong_case':
+        other=next(c for c in changed['cases'] if c['status']=='automated_passed' and c['case_id']!=passed['case_id'] and c['evidence'][0]['path']==passed['evidence'][0]['path'])
+        for field in ('evidence','executed_at','run'):passed[field]=copy.deepcopy(other[field])
+    elif mutation=='operation':passed['operation']='different operation never executed'
+    else:passed['run']['command']=['never-executed-command']
     with pytest.raises(ValueError):module.validate_manifest(changed,ROOT)

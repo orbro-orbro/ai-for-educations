@@ -1,0 +1,58 @@
+........................................................................ [ 67%]
+.................................F.                                      [100%]
+================================== FAILURES ===================================
+____________ test_concrete_postgres_operation[sec-cross-role-008] _____________
+..\..\..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1967: in _exec_single_context
+    self.dialect.do_execute(
+..\..\..\.venv\Lib\site-packages\sqlalchemy\engine\default.py:952: in do_execute
+    cursor.execute(statement, parameters)
+..\..\..\.venv\Lib\site-packages\psycopg\cursor.py:117: in execute
+    raise ex.with_traceback(None)
+E   psycopg.errors.UndefinedColumn: column "teacher_user_id" does not exist
+E   LINE 1: ...uthorized_teachers where course_id='course-a' and teacher_us...
+E                                                                ^
+
+The above exception was the direct cause of the following exception:
+tests\integration\test_wave3_security_cases_postgres.py:30: in test_concrete_postgres_operation
+    s.execute(text("delete from course_authorized_teachers where course_id='course-a' and teacher_user_id='teacher-b'"))
+..\..\..\.venv\Lib\site-packages\sqlalchemy\orm\session.py:2351: in execute
+    return self._execute_internal(
+..\..\..\.venv\Lib\site-packages\sqlalchemy\orm\session.py:2258: in _execute_internal
+    result = conn.execute(
+..\..\..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1419: in execute
+    return meth(
+..\..\..\.venv\Lib\site-packages\sqlalchemy\sql\elements.py:527: in _execute_on_connection
+    return connection._execute_clauseelement(
+..\..\..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1641: in _execute_clauseelement
+    ret = self._execute_context(
+..\..\..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1846: in _execute_context
+    return self._exec_single_context(
+..\..\..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1986: in _exec_single_context
+    self._handle_dbapi_exception(
+..\..\..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:2363: in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+..\..\..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1967: in _exec_single_context
+    self.dialect.do_execute(
+..\..\..\.venv\Lib\site-packages\sqlalchemy\engine\default.py:952: in do_execute
+    cursor.execute(statement, parameters)
+..\..\..\.venv\Lib\site-packages\psycopg\cursor.py:117: in execute
+    raise ex.with_traceback(None)
+E   sqlalchemy.exc.ProgrammingError: (psycopg.errors.UndefinedColumn) column "teacher_user_id" does not exist
+E   LINE 1: ...uthorized_teachers where course_id='course-a' and teacher_us...
+E                                                                ^
+E   [SQL: delete from course_authorized_teachers where course_id='course-a' and teacher_user_id='teacher-b']
+E   (Background on this error at: https://sqlalche.me/e/20/f405)
+---------------------------- Captured stderr call -----------------------------
+INFO  [alembic.runtime.migration] Context impl PostgresqlImpl.
+INFO  [alembic.runtime.migration] Will assume transactional DDL.
+============================== warnings summary ===============================
+tests/integration/test_wave3_security_cases_postgres.py::test_concrete_postgres_operation[sec-cross-role-002]
+tests/integration/test_wave3_security_cases_postgres.py::test_concrete_postgres_operation[sec-cross-role-008]
+tests/integration/test_wave3_security_cases_postgres.py::test_concrete_postgres_operation[sec-deletion-recovery-005]
+  C:\Users\lenovo\Desktop\cs competition\.venv\Lib\site-packages\alembic\config.py:604: DeprecationWarning: No path_separator found in configuration; falling back to legacy splitting on spaces, commas, and colons for prepend_sys_path.  Consider adding path_separator=os to Alembic config.
+    util.warn_deprecated(
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED tests/integration/test_wave3_security_cases_postgres.py::test_concrete_postgres_operation[sec-cross-role-008]
+1 failed, 106 passed, 3 warnings in 107.46s (0:01:47)

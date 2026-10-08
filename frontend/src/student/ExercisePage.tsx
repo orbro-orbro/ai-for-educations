@@ -75,7 +75,7 @@ export function ExercisePage({ api }: { api: ApiClient }) {
     const controller = new AbortController();
     courseRequest.current = controller;
     selectedCourse.current = nextCourseId;
-    setCourseId(nextCourseId); setExerciseId(""); setExercises([]); setCourseError(null);
+    setCourseId(nextCourseId); setExerciseId(""); setExercises([]); setCourseError(null); setLoading(true);
     clearLearningResult();
     try {
       const nextExercises = await api.listExercises(nextCourseId, controller.signal);
@@ -83,7 +83,7 @@ export function ExercisePage({ api }: { api: ApiClient }) {
       setExercises(nextExercises); setExerciseId(nextExercises[0]?.exercise_id ?? "");
     } catch (error) {
       if (!(error instanceof DOMException && error.name === "AbortError")) setCourseError(error);
-    }
+    } finally { if (!controller.signal.aborted) setLoading(false); }
   }
 
   async function readDiagnosis(id: string) {

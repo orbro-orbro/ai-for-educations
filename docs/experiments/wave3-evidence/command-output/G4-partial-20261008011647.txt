@@ -1,0 +1,145 @@
+..............FFFFFFFF.F................................................ [ 66%]
+.......FFFFFFFF.....................                                     [100%]
+================================== FAILURES ===================================
+_ test_every_runtime_operation_matches_contract[/teacher/courses/{course_id}/misconceptions-get] _
+tests\contracts\test_wave3_runtime_openapi.py:83: in test_every_runtime_operation_matches_contract
+    assert resolve(actual["responses"],runtime) == resolve(expected["responses"],SHARED)
+E   AssertionError: assert {'200': {'con...uest_id']}}}}} == {'200': {'con...': {...}}}}}}}
+E
+E     Omitting 2 identical items, use -vv to show
+E     Differing items:
+E     {'200': {'content': {'application/json': {'schema': {'type': 'array', 'items': {'properties': {...}, 'additionalProperties': False, 'type': 'object', 'required': [...]}}}}}} != {'200': {'content': {'application/json': {'schema': {'type': 'array', 'items': {'type': 'object', 'additionalProperties': False, 'required': [...], 'properties': {...}}}}}}}
+E     Use -v to get more diff
+_ test_every_runtime_operation_matches_contract[/teacher/courses/{course_id}/misconceptions-post] _
+tests\contracts\test_wave3_runtime_openapi.py:82: in test_every_runtime_operation_matches_contract
+    assert resolve(actual.get("requestBody"),runtime) == resolve(expected.get("requestBody"),SHARED)
+E   AssertionError: assert {'required': ...tle', ...]}}}} == {'required': .....]}, ...}}}}}
+E
+E     Omitting 1 identical items, use -vv to show
+E     Differing items:
+E     {'content': {'application/json': {'schema': {'properties': {'id': {'type': 'string', 'pattern': '^cj(\\.[a-z0-9]+(-[a-...alse, 'type': 'object', 'required': ['explanation', 'hint_ladder', 'id', 'root_concept_id', 'source', 'title', ...]}}}} != {'content': {'application/json': {'schema': {'type': 'object', 'additionalProperties': False, 'required': ['explanatio...}, 'root_concept_id': {'type': 'string', 'pattern': '^cj(\\.[a-z0-9]+(-[a-z0-9]+)*){2,}$', 'examples': [...]}, ...}}}}}
+E     Use -v to get more diff
+_ test_every_runtime_operation_matches_contract[/teacher/courses/{course_id}/misconceptions/{misconception_id}-patch] _
+tests\contracts\test_wave3_runtime_openapi.py:82: in test_every_runtime_operation_matches_contract
+    assert resolve(actual.get("requestBody"),runtime) == resolve(expected.get("requestBody"),SHARED)
+E   AssertionError: assert {'required': ...erties': 1}}}} == {'required': .....}}, ...}}}}}
+E
+E     Omitting 1 identical items, use -vv to show
+E     Differing items:
+E     {'content': {'application/json': {'schema': {'properties': {'topic': {'type': 'string', 'enum': [...]}, 'title': {'typ..._ids': {'items': {...}, 'type': 'array'}, ...}, 'additionalProperties': False, 'type': 'object', 'minProperties': 1}}}} != {'content': {'application/json': {'schema': {'type': 'object', 'additionalProperties': False, 'minProperties': 1, 'pro...\.[a-z0-9]+(-[a-z0-9]+)*){2,}$', 'examples': [...]}, 'related_concept_ids': {'type': 'array', 'items': {...}}, ...}}}}}
+E     Use -v to get more diff
+_ test_every_runtime_operation_matches_contract[/teacher/courses/{course_id}/misconceptions/{misconception_id}/review-post] _
+tests\contracts\test_wave3_runtime_openapi.py:83: in test_every_runtime_operation_matches_contract
+    assert resolve(actual["responses"],runtime) == resolve(expected["responses"],SHARED)
+E   AssertionError: assert {'200': {'con...id']}}}}, ...} == {'200': {'con.....}}}}}}, ...}
+E
+E     Omitting 4 identical items, use -vv to show
+E     Differing items:
+E     {'200': {'content': {'application/json': {'schema': {'properties': {'id': {...}, 'topic': {...}, 'title': {...}, 'root...pe': 'object', 'required': ['explanation', 'hint_ladder', 'id', 'review_status', 'root_concept_id', 'source', ...]}}}}} != {'200': {'content': {'application/json': {'schema': {'type': 'object', 'additionalProperties': False, 'required': ['ex...pt_id', 'source', ...], 'properties': {'id': {...}, 'topic': {...}, 'title': {...}, 'root_concept_id': {...}, ...}}}}}}
+E     Use -v to get more diff
+_ test_every_runtime_operation_matches_contract[/exercises/{exercise_id}/submissions-post] _
+tests\contracts\test_wave3_runtime_openapi.py:83: in test_every_runtime_operation_matches_contract
+    assert resolve(actual["responses"],runtime) == resolve(expected["responses"],SHARED)
+E   AssertionError: assert {'201': {'con...id']}}}}, ...} == {'201': {'con.....}}}}}}, ...}
+E
+E     Omitting 5 identical items, use -vv to show
+E     Differing items:
+E     {'201': {'content': {'application/json': {'schema': {'properties': {'submission_id': {...}, 'course_id': {...}, 'exerc... 'object', 'required': ['course_id', 'created_at', 'entrypoint', 'exercise_id', 'is_formal', 'owner_user_id', ...]}}}}} != {'201': {'content': {'application/json': {'schema': {'type': 'object', 'additionalProperties': False, 'required': ['co.....], 'properties': {'submission_id': {...}, 'course_id': {...}, 'exercise_id': {...}, 'owner_user_id': {...}, ...}}}}}}
+E     Use -v to get more diff
+_ test_every_runtime_operation_matches_contract[/submissions/{submission_id}-get] _
+tests\contracts\test_wave3_runtime_openapi.py:83: in test_every_runtime_operation_matches_contract
+    assert resolve(actual["responses"],runtime) == resolve(expected["responses"],SHARED)
+E   AssertionError: assert {'200': {'con...id']}}}}, ...} == {'200': {'con.....}}}}}}, ...}
+E
+E     Omitting 5 identical items, use -vv to show
+E     Differing items:
+E     {'200': {'content': {'application/json': {'schema': {'properties': {'submission_id': {...}, 'course_id': {...}, 'exerc... 'object', 'required': ['course_id', 'created_at', 'entrypoint', 'exercise_id', 'is_formal', 'owner_user_id', ...]}}}}} != {'200': {'content': {'application/json': {'schema': {'type': 'object', 'additionalProperties': False, 'required': ['co.....], 'properties': {'submission_id': {...}, 'course_id': {...}, 'exercise_id': {...}, 'owner_user_id': {...}, ...}}}}}}
+E     Use -v to get more diff
+_ test_every_runtime_operation_matches_contract[/submissions/{submission_id}/execution-result-get] _
+tests\contracts\test_wave3_runtime_openapi.py:83: in test_every_runtime_operation_matches_contract
+    assert resolve(actual["responses"],runtime) == resolve(expected["responses"],SHARED)
+E   AssertionError: assert {'200': {'con...id']}}}}, ...} == {'200': {'con.....}}}}}}, ...}
+E
+E     Omitting 5 identical items, use -vv to show
+E     Differing items:
+E     {'200': {'content': {'application/json': {'schema': {'properties': {'submission_id': {...}, 'protocol_version': {...},...type': 'object', 'required': ['command_summary', 'created_at', 'diagnostics', 'exit_code', 'limits', 'phase', ...]}}}}} != {'200': {'content': {'application/json': {'schema': {'type': 'object', 'additionalProperties': False, 'required': ['co...se', ...], 'properties': {'submission_id': {...}, 'protocol_version': {...}, 'status': {...}, 'phase': {...}, ...}}}}}}
+E     Use -v to get more diff
+_ test_every_runtime_operation_matches_contract[/submissions/{submission_id}/diagnosis-get] _
+tests\contracts\test_wave3_runtime_openapi.py:83: in test_every_runtime_operation_matches_contract
+    assert resolve(actual["responses"],runtime) == resolve(expected["responses"],SHARED)
+E   AssertionError: assert {'200': {'con...id']}}}}, ...} == {'200': {'con.....}}}}}}, ...}
+E
+E     Omitting 5 identical items, use -vv to show
+E     Differing items:
+E     {'200': {'content': {'application/json': {'schema': {'properties': {'diagnosis_id': {...}, 'submission_id': {...}, 'co...': 'object', 'required': ['category', 'concept_ids', 'confidence', 'course_id', 'created_at', 'diagnosis_id', ...]}}}}} != {'200': {'content': {'application/json': {'schema': {'type': 'object', 'additionalProperties': False, 'required': ['ca....], 'properties': {'diagnosis_id': {...}, 'submission_id': {...}, 'course_id': {...}, 'owner_user_id': {...}, ...}}}}}}
+E     Use -v to get more diff
+_ test_every_runtime_operation_matches_contract[/diagnoses/{diagnosis_id}/explanation-check-post] _
+tests\contracts\test_wave3_runtime_openapi.py:83: in test_every_runtime_operation_matches_contract
+    assert resolve(actual["responses"],runtime) == resolve(expected["responses"],SHARED)
+E   AssertionError: assert {'200': {'con...id']}}}}, ...} == {'200': {'con.....}}}}}}, ...}
+E
+E     Omitting 5 identical items, use -vv to show
+E     Differing items:
+E     {'200': {'content': {'application/json': {'schema': {'properties': {'explanation_check_id': {...}, 'diagnosis_id': {.....red': ['concept_ids', 'confidence', 'created_at', 'diagnosis_id', 'evidence_summary', 'explanation_check_id', ...]}}}}} != {'200': {'content': {'application/json': {'schema': {'type': 'object', 'additionalProperties': False, 'required': ['co...operties': {'explanation_check_id': {...}, 'diagnosis_id': {...}, 'understands': {...}, 'concept_ids': {...}, ...}}}}}}
+E     Use -v to get more diff
+________________ test_api_create_concept_starts_pending_review ________________
+tests\knowledge\test_graph.py:387: in test_api_create_concept_starts_pending_review
+    assert response.status_code == 201
+E   assert 422 == 201
+E    +  where 422 = <Response [422 Unprocessable Entity]>.status_code
+______ test_api_rejects_client_supplied_review_status_and_missing_source ______
+tests\knowledge\test_graph.py:396: in test_api_rejects_client_supplied_review_status_and_missing_source
+    assert call(app, "POST", f"{BASE}/concepts", payload).json()["code"] == "VALIDATION_ERROR"
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   KeyError: 'code'
+____________________ test_api_duplicate_concept_conflicts _____________________
+tests\knowledge\test_graph.py:408: in test_api_duplicate_concept_conflicts
+    assert response.status_code == 409
+E   assert 422 == 409
+E    +  where 422 = <Response [422 Unprocessable Entity]>.status_code
+_________________ test_api_review_then_update_resets_approval _________________
+tests\knowledge\test_graph.py:416: in test_api_review_then_update_resets_approval
+    assert reviewed.status_code == 200
+E   assert 404 == 200
+E    +  where 404 = <Response [404 Not Found]>.status_code
+__________________ test_api_rejects_unknown_review_decision ___________________
+tests\knowledge\test_graph.py:429: in test_api_rejects_unknown_review_decision
+    assert response.json()["code"] == "UNKNOWN_REVIEW_STATUS"
+           ^^^^^^^^^^^^^^^^^^^^^^^
+E   KeyError: 'code'
+_ test_api_misconception_lifecycle_feeds_approved_evidence_only_after_review __
+tests\knowledge\test_graph.py:436: in test_api_misconception_lifecycle_feeds_approved_evidence_only_after_review
+    assert created.status_code == 201
+E   assert 422 == 201
+E    +  where 422 = <Response [422 Unprocessable Entity]>.status_code
+____________ test_api_misconception_with_unknown_root_is_rejected _____________
+tests\knowledge\test_graph.py:457: in test_api_misconception_with_unknown_root_is_rejected
+    assert response.json()["code"] == "UNKNOWN_NODE"
+E   AssertionError: assert 'MISSING_SOURCE' == 'UNKNOWN_NODE'
+E
+E     - UNKNOWN_NODE
+E     + MISSING_SOURCE
+_____________________________ test_api_edge_rules _____________________________
+tests\knowledge\test_graph.py:465: in test_api_edge_rules
+    assert ok.status_code == 201
+E   assert 422 == 201
+E    +  where 422 = <Response [422 Unprocessable Entity]>.status_code
+=========================== short test summary info ===========================
+FAILED tests/contracts/test_wave3_runtime_openapi.py::test_every_runtime_operation_matches_contract[/teacher/courses/{course_id}/misconceptions-get]
+FAILED tests/contracts/test_wave3_runtime_openapi.py::test_every_runtime_operation_matches_contract[/teacher/courses/{course_id}/misconceptions-post]
+FAILED tests/contracts/test_wave3_runtime_openapi.py::test_every_runtime_operation_matches_contract[/teacher/courses/{course_id}/misconceptions/{misconception_id}-patch]
+FAILED tests/contracts/test_wave3_runtime_openapi.py::test_every_runtime_operation_matches_contract[/teacher/courses/{course_id}/misconceptions/{misconception_id}/review-post]
+FAILED tests/contracts/test_wave3_runtime_openapi.py::test_every_runtime_operation_matches_contract[/exercises/{exercise_id}/submissions-post]
+FAILED tests/contracts/test_wave3_runtime_openapi.py::test_every_runtime_operation_matches_contract[/submissions/{submission_id}-get]
+FAILED tests/contracts/test_wave3_runtime_openapi.py::test_every_runtime_operation_matches_contract[/submissions/{submission_id}/execution-result-get]
+FAILED tests/contracts/test_wave3_runtime_openapi.py::test_every_runtime_operation_matches_contract[/submissions/{submission_id}/diagnosis-get]
+FAILED tests/contracts/test_wave3_runtime_openapi.py::test_every_runtime_operation_matches_contract[/diagnoses/{diagnosis_id}/explanation-check-post]
+FAILED tests/knowledge/test_graph.py::test_api_create_concept_starts_pending_review
+FAILED tests/knowledge/test_graph.py::test_api_rejects_client_supplied_review_status_and_missing_source
+FAILED tests/knowledge/test_graph.py::test_api_duplicate_concept_conflicts - ...
+FAILED tests/knowledge/test_graph.py::test_api_review_then_update_resets_approval
+FAILED tests/knowledge/test_graph.py::test_api_rejects_unknown_review_decision
+FAILED tests/knowledge/test_graph.py::test_api_misconception_lifecycle_feeds_approved_evidence_only_after_review
+FAILED tests/knowledge/test_graph.py::test_api_misconception_with_unknown_root_is_rejected
+FAILED tests/knowledge/test_graph.py::test_api_edge_rules - assert 422 == 201
+17 failed, 91 passed in 57.32s

@@ -1,0 +1,109 @@
+FFFFFFF                                                                  [100%]
+================================== FAILURES ===================================
+________ test_exact_164_execution_claims_are_verified_against_evidence ________
+tests\security\test_execution_manifest.py:16: in test_exact_164_execution_claims_are_verified_against_evidence
+    module=mapper()
+           ^^^^^^^^
+tests\security\test_execution_manifest.py:12: in mapper
+    module=importlib.util.module_from_spec(spec);spec.loader.exec_module(module)
+                                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap_external>:755: in exec_module
+    ???
+<frozen importlib._bootstrap_external>:892: in get_code
+    ???
+<frozen importlib._bootstrap_external>:950: in get_data
+    ???
+E   FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\lenovo\\Desktop\\cs competition\\.worktrees\\wave3-integration-gate\\data\\evaluation\\map_security_execution.py'
+_________ test_mapping_rejects_unverifiable_execution_claims[missing] _________
+tests\security\test_execution_manifest.py:23: in test_mapping_rejects_unverifiable_execution_claims
+    module=mapper()
+           ^^^^^^^^
+tests\security\test_execution_manifest.py:12: in mapper
+    module=importlib.util.module_from_spec(spec);spec.loader.exec_module(module)
+                                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap_external>:755: in exec_module
+    ???
+<frozen importlib._bootstrap_external>:892: in get_code
+    ???
+<frozen importlib._bootstrap_external>:950: in get_data
+    ???
+E   FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\lenovo\\Desktop\\cs competition\\.worktrees\\wave3-integration-gate\\data\\evaluation\\map_security_execution.py'
+________ test_mapping_rejects_unverifiable_execution_claims[duplicate] ________
+tests\security\test_execution_manifest.py:23: in test_mapping_rejects_unverifiable_execution_claims
+    module=mapper()
+           ^^^^^^^^
+tests\security\test_execution_manifest.py:12: in mapper
+    module=importlib.util.module_from_spec(spec);spec.loader.exec_module(module)
+                                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap_external>:755: in exec_module
+    ???
+<frozen importlib._bootstrap_external>:892: in get_code
+    ???
+<frozen importlib._bootstrap_external>:950: in get_data
+    ???
+E   FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\lenovo\\Desktop\\cs competition\\.worktrees\\wave3-integration-gate\\data\\evaluation\\map_security_execution.py'
+_________ test_mapping_rejects_unverifiable_execution_claims[status] __________
+tests\security\test_execution_manifest.py:23: in test_mapping_rejects_unverifiable_execution_claims
+    module=mapper()
+           ^^^^^^^^
+tests\security\test_execution_manifest.py:12: in mapper
+    module=importlib.util.module_from_spec(spec);spec.loader.exec_module(module)
+                                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap_external>:755: in exec_module
+    ???
+<frozen importlib._bootstrap_external>:892: in get_code
+    ???
+<frozen importlib._bootstrap_external>:950: in get_data
+    ???
+E   FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\lenovo\\Desktop\\cs competition\\.worktrees\\wave3-integration-gate\\data\\evaluation\\map_security_execution.py'
+________ test_mapping_rejects_unverifiable_execution_claims[evidence] _________
+tests\security\test_execution_manifest.py:23: in test_mapping_rejects_unverifiable_execution_claims
+    module=mapper()
+           ^^^^^^^^
+tests\security\test_execution_manifest.py:12: in mapper
+    module=importlib.util.module_from_spec(spec);spec.loader.exec_module(module)
+                                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap_external>:755: in exec_module
+    ???
+<frozen importlib._bootstrap_external>:892: in get_code
+    ???
+<frozen importlib._bootstrap_external>:950: in get_data
+    ???
+E   FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\lenovo\\Desktop\\cs competition\\.worktrees\\wave3-integration-gate\\data\\evaluation\\map_security_execution.py'
+________ test_mapping_rejects_unverifiable_execution_claims[collected] ________
+tests\security\test_execution_manifest.py:23: in test_mapping_rejects_unverifiable_execution_claims
+    module=mapper()
+           ^^^^^^^^
+tests\security\test_execution_manifest.py:12: in mapper
+    module=importlib.util.module_from_spec(spec);spec.loader.exec_module(module)
+                                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap_external>:755: in exec_module
+    ???
+<frozen importlib._bootstrap_external>:892: in get_code
+    ???
+<frozen importlib._bootstrap_external>:950: in get_data
+    ???
+E   FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\lenovo\\Desktop\\cs competition\\.worktrees\\wave3-integration-gate\\data\\evaluation\\map_security_execution.py'
+__________ test_mapping_rejects_unverifiable_execution_claims[hash] ___________
+tests\security\test_execution_manifest.py:23: in test_mapping_rejects_unverifiable_execution_claims
+    module=mapper()
+           ^^^^^^^^
+tests\security\test_execution_manifest.py:12: in mapper
+    module=importlib.util.module_from_spec(spec);spec.loader.exec_module(module)
+                                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+<frozen importlib._bootstrap_external>:755: in exec_module
+    ???
+<frozen importlib._bootstrap_external>:892: in get_code
+    ???
+<frozen importlib._bootstrap_external>:950: in get_data
+    ???
+E   FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\lenovo\\Desktop\\cs competition\\.worktrees\\wave3-integration-gate\\data\\evaluation\\map_security_execution.py'
+=========================== short test summary info ===========================
+FAILED tests/security/test_execution_manifest.py::test_exact_164_execution_claims_are_verified_against_evidence
+FAILED tests/security/test_execution_manifest.py::test_mapping_rejects_unverifiable_execution_claims[missing]
+FAILED tests/security/test_execution_manifest.py::test_mapping_rejects_unverifiable_execution_claims[duplicate]
+FAILED tests/security/test_execution_manifest.py::test_mapping_rejects_unverifiable_execution_claims[status]
+FAILED tests/security/test_execution_manifest.py::test_mapping_rejects_unverifiable_execution_claims[evidence]
+FAILED tests/security/test_execution_manifest.py::test_mapping_rejects_unverifiable_execution_claims[collected]
+FAILED tests/security/test_execution_manifest.py::test_mapping_rejects_unverifiable_execution_claims[hash]
+7 failed in 5.26s

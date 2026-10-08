@@ -173,20 +173,20 @@ Python测试在 Gate/backend，使用根已有解释器；pytest加 `-p no:cache
 
 **Interfaces:** 消费核实后的main/五来源提交；产出唯一Gate目录、基线哈希和每命令执行记录。
 
-- [ ] 使用 using-git-worktrees、executing-plans 技能；再次核对main远端、来源父关系、任务worktree状态和`.worktrees`忽略规则。变化立即报告。
-- [ ] 仅确认后运行：
+- [x] 使用 using-git-worktrees、executing-plans 技能；再次核对main远端、来源父关系、任务worktree状态和`.worktrees`忽略规则。变化立即报告。
+- [x] 仅确认后运行：
 
 ```powershell
 git check-ignore .worktrees
 git worktree add '.worktrees/wave3-integration-gate' -b codex/wave3-integration-gate 0598a2ea1d2a5016b94cd6f35a5a0e678b76ee07
 ```
 
-- [ ] 将根未跟踪计划复制到Gate同相对路径、核对SHA-256，然后移除根未跟踪副本，保持main产品与历史不变；不能覆盖用户新增改动。计划在Gate首次文档提交中跟踪。
-- [ ] 日志每行包含command、cwd、start/end实际时间、exit_code、passed/failed/skipped/not_executed、测试计数、环境变量名和合成配置、服务类型、证据路径/哈希。真实令牌/密码/密钥不写日志。
-- [ ] 先写环境契约RED：override端口必须loopback、不覆盖日常项目卷、sandbox无网络/无socket；初始化器拒绝非Gate资源和非wave3_库。实现最小测试override/初始化器后观察GREEN，再创建上述独立PG容器/六个空测试库和受信controller（仅既有拓扑的隔离测试副本）。不启动API/UI，待G8。Task10安全容器测试沿用已存在授权镜像，设置TASK10_RUNNER_IMAGE。
-- [ ] 实际启动命令为root的 `docker compose -p knowbound-wave3-gate -f infra/compose/docker-compose.yml -f infra/compose/docker-compose.wave3-gate.yml up -d postgres runner-controller`；override的PG发布55430、controller发布8199，初始化器通过Gate标签核对后创建专用空库和vector扩展。源runner未被Task8/9/10改动，仍需G8真实验证；API镜像必须在来源集成后构建。
-- [ ] 基线运行局部auth/contracts/persistence和前端既有单测；将发现与本轮只读差异区分，不能先行修生产。
-- [ ] 提交仅计划与初始化记录：`docs: record Wave 3 integration plan and baseline`。
+- [x] 将根未跟踪计划复制到Gate同相对路径、核对SHA-256，然后移除根未跟踪副本，保持main产品与历史不变；不能覆盖用户新增改动。计划在Gate首次文档提交中跟踪。
+- [x] 日志每行包含command、cwd、start/end实际时间、exit_code、passed/failed/skipped/not_executed、测试计数、环境变量名和合成配置、服务类型、证据路径/哈希。真实令牌/密码/密钥不写日志。
+- [x] 先写环境契约RED：override端口必须loopback、不覆盖日常项目卷、sandbox无网络/无socket；初始化器拒绝非Gate资源和非wave3_库。实现最小测试override/初始化器后观察GREEN，再创建上述独立PG容器/六个空测试库和受信controller（仅既有拓扑的隔离测试副本）。不启动API/UI，待G8。Task10安全容器测试沿用已存在授权镜像，设置TASK10_RUNNER_IMAGE。
+- [x] 实际启动命令为root的 `docker compose -p knowbound-wave3-gate -f infra/compose/docker-compose.yml -f infra/compose/docker-compose.wave3-gate.yml up -d postgres runner-controller`；override的PG发布55430、controller发布8199，初始化器通过Gate标签核对后创建专用空库和vector扩展。源runner未被Task8/9/10改动，仍需G8真实验证；API镜像必须在来源集成后构建。
+- [x] 基线运行局部auth/contracts/persistence和前端既有单测；将发现与本轮只读差异区分，不能先行修生产。
+- [x] 提交仅计划与初始化记录：`docs: record Wave 3 integration plan and baseline`。
 
 ### G1：按五提交串行集成并解决共享配置
 
@@ -194,7 +194,7 @@ git worktree add '.worktrees/wave3-integration-gate' -b codex/wave3-integration-
 
 **Interfaces:** 产出既有Task8领域Router、Task9 UI、Task10修复和测试，尚不代表SQL Gate通过。
 
-- [ ] 依次cherry-pick（每次完成验证再开始下一次）：
+- [x] 依次cherry-pick（每次完成验证再开始下一次）：
 
 ```powershell
 git cherry-pick -x 988cc2c49265667a7ddeba8d50a92269467c0407
@@ -204,13 +204,13 @@ git cherry-pick -x 783bd84fddbeb9e0210a40e8e50170a67c5679e9
 git cherry-pick -x e39f0df42e5fb17fc60e84f92db8051fb0d3a726
 ```
 
-- [ ] Task8后：`& $gatePython -B -m pytest tests/analytics tests/contracts/test_wave3_openapi.py -q -p no:cacheprovider`。
-- [ ] Task9 UI后：frontend `npm test`、`npm run build`、原配置 `npx playwright test`（此时仅learning-loop）；Task10配置合并后才使用 `--project learning-ui`。CORS后backend `pytest tests/test_cors.py tests/contracts/test_compose_contract.py`。
-- [ ] Task10框架提交可能重现已记录的历史安全RED：封存并核对是否精确属于下一修复提交，不改断言，随后应用已授权的e39f0df。新的Critical/Important失败必须停止；不能把框架RED当最终允许失败。
-- [ ] Task10修复后：`pytest tests/security -q`，显式TASK10_RUNNER_IMAGE；观察220项全部执行。每次cherry-pick后 `git diff --check`、`git ls-files -u`；冲突逐块合并并记录来源。
-- [ ] Playwright默认配置各project独立匹配：learning-ui只learning-loop.spec.ts；security-request只security.spec.ts。Vitest仅tests/all.test.ts；新增测试必须导入聚合入口。
-- [ ] 将安全ADR重命名 `0006-task10-security-findings.md`，标题改ADR0006；`rg -n '0005-task10|ADR 0005' docs data`逐处区分CORS与安全，更新安全引用，不误改CORS。
-- [ ] 来源cherry-pick保留自己的-x提交；共享配置/ADR收尾单独提交 `chore: reconcile Wave 3 test configuration and ADR references`。
+- [x] Task8后：`& $gatePython -B -m pytest tests/analytics tests/contracts/test_wave3_openapi.py -q -p no:cacheprovider`。
+- [x] Task9 UI后：frontend `npm test`、`npm run build`、原配置 `npx playwright test`（此时仅learning-loop）；Task10配置合并后才使用 `--project learning-ui`。CORS后backend `pytest tests/test_cors.py tests/contracts/test_compose_contract.py`。
+- [x] Task10框架提交可能重现已记录的历史安全RED：封存并核对是否精确属于下一修复提交，不改断言，随后应用已授权的e39f0df。新的Critical/Important失败必须停止；不能把框架RED当最终允许失败。
+- [x] Task10修复后：`pytest tests/security -q`，显式TASK10_RUNNER_IMAGE；观察220项全部执行。每次cherry-pick后 `git diff --check`、`git ls-files -u`；冲突逐块合并并记录来源。
+- [x] Playwright默认配置各project独立匹配：learning-ui只learning-loop.spec.ts；security-request只security.spec.ts。Vitest仅tests/all.test.ts；新增测试必须导入聚合入口。
+- [x] 将安全ADR重命名 `0006-task10-security-findings.md`，标题改ADR0006；`rg -n '0005-task10|ADR 0005' docs data`逐处区分CORS与安全，更新安全引用，不误改CORS。
+- [x] 来源cherry-pick保留自己的-x提交；共享配置/ADR收尾单独提交 `chore: reconcile Wave 3 test configuration and ADR references`。
 
 ### G2：真实SQL匿名事实和安全队列投影
 
@@ -218,7 +218,7 @@ git cherry-pick -x e39f0df42e5fb17fc60e84f92db8051fb0d3a726
 
 **Interfaces:** 实现现有TeacherAnalyticsRepository的 `list_facts(course_id)`、`list_candidates(course_id)`、`get_candidate(diagnosis_id)`；返回现有AnalyticsDiagnosisFact/TeacherReviewCandidate。SQL仓库名 `SqlTeacherAnalyticsRepository(uow)`；内存动态源 `InMemoryTeacherAnalyticsDataSource(submissions, diagnostics, knowledge)`。
 
-- [ ] 先写PG失败测试：真实已迁移数据库创建课程、用户、练习、提交、诊断、概念、理解检查；构造4/5学生、同学生重复、多概念、多理解检查、异课程、边界时间。通过真实服务/Router取JSON，而非直接返回expected_response。
+- [x] 先写PG失败测试：真实已迁移数据库创建课程、用户、练习、提交、诊断、概念、理解检查；构造4/5学生、同学生重复、多概念、多理解检查、异课程、边界时间。通过真实服务/Router取JSON，而非直接返回expected_response。
 
 ```python
 @pytest.mark.parametrize("students,status", [(4, "insufficient_sample"), (5, "available")])
@@ -235,15 +235,15 @@ def test_distinct_students_at_sql_boundary(wave3_pg, students, status):
 
 `wave3_pg`为wave3_support定义的测试fixture端口：seed_diagnoses、get_analytics使用实际数据库行与登录Router；不得用内存facts替代。G2/G3先在独立FastAPI测试应用挂载原create_teacher_router并注入真实SQL服务，以完成局部RED/GREEN；G4才验证正式create_app组合根，G5再次使用正式组合根。G0已准备空库，fixture以当时Gate实际head迁移，不能等待G7才建立数据库。
 
-- [ ] 运行上述文件观察RED，记录缺SQL适配器/Router的失败；禁止用SQLite验证此任务。
-- [ ] 最小SQL SELECT只取DiagnosisRow.id/course/category/created_at、SubmissionRow.id/exercise/owner作为内部键、DiagnosisConceptRow.concept_id和理解验证布尔事实；不取source_files、个人root_cause、feedback、memory正文。每诊断一条事实，concept去重，检查多子行JOIN不放大。
-- [ ] subject_key用课程+owner经现有AUTH_TOKEN_SECRET派生HMAC-SHA256（固定teacher-analytics用途前缀）；只在内部DTO，不能进API/log/audit。数据库不新增subject映射表，不暴露跨课相同key。
-- [ ] `independent_repaired`使用保守可证明证据：同诊断存在`understands=true`且confidence达到课程阈值的ExplanationCheck，并存在DiagnosisAttemptRow明确关联的retry SubmissionRow；retry必须与原诊断同owner/course/exercise、created_at晚于原提交、ExecutionResultRow.status=succeeded，且修复成功前无level4 HintEvent。用EXISTS避免多个理解/attempt倍增；仅理解通过、没有明确retry关联、低置信度或失败执行均为false。向量true事实通过这些关系行表达，不能直接写一个模拟布尔列。这是应用行为指标，不是预注册30分钟/3次教学实验率；不能称真实自主修复成效。增加上述正反例SQL测试；不把同练习的任意后续提交猜成原诊断的独立修复。
-- [ ] 队列重连queue→diagnosis→submission验证ID/course一致，diagnosis为空或关系不匹配不产生可复核候选；课程以诊断/提交权威关系重新解析。
-- [ ] root_cause/evidence_summaries由关联concept的已审核MisconceptionPattern/ApprovedEvidence生成；compiler evidence仅固定脱敏说明，不读取compiler源码回显；review_reason使用稳定reason code。缺已审核文本用稳定“证据不足”说明，不伪造课程结论。
-- [ ] 在实际SQL query hook记录仅表名/列名，禁止analytics访问memories/conversations正文；把私人sentinel种入提交、诊断正文和现有记忆，通过API/log/audit验证零回显。
-- [ ] 内存开发模式从现有提交/诊断/知识仓库动态投影，不能只注入永远空的repository；仍沿用原Task8内存repo测试。
-- [ ] GREEN：PG数据源测试、Task8全部领域测试通过，提交 `feat: derive teacher analytics from authoritative SQL facts`。
+- [x] 运行上述文件观察RED，记录缺SQL适配器/Router的失败；禁止用SQLite验证此任务。
+- [x] 最小SQL SELECT只取DiagnosisRow.id/course/category/created_at、SubmissionRow.id/exercise/owner作为内部键、DiagnosisConceptRow.concept_id和理解验证布尔事实；不取source_files、个人root_cause、feedback、memory正文。每诊断一条事实，concept去重，检查多子行JOIN不放大。
+- [x] subject_key用课程+owner经现有AUTH_TOKEN_SECRET派生HMAC-SHA256（固定teacher-analytics用途前缀）；只在内部DTO，不能进API/log/audit。数据库不新增subject映射表，不暴露跨课相同key。
+- [x] `independent_repaired`使用保守可证明证据：同诊断存在`understands=true`且confidence达到课程阈值的ExplanationCheck，并存在DiagnosisAttemptRow明确关联的retry SubmissionRow；retry必须与原诊断同owner/course/exercise、created_at晚于原提交、ExecutionResultRow.status=succeeded，且修复成功前无level4 HintEvent。用EXISTS避免多个理解/attempt倍增；仅理解通过、没有明确retry关联、低置信度或失败执行均为false。向量true事实通过这些关系行表达，不能直接写一个模拟布尔列。这是应用行为指标，不是预注册30分钟/3次教学实验率；不能称真实自主修复成效。增加上述正反例SQL测试；不把同练习的任意后续提交猜成原诊断的独立修复。
+- [x] 队列重连queue→diagnosis→submission验证ID/course一致，diagnosis为空或关系不匹配不产生可复核候选；课程以诊断/提交权威关系重新解析。
+- [x] root_cause/evidence_summaries由关联concept的已审核MisconceptionPattern/ApprovedEvidence生成；compiler evidence仅固定脱敏说明，不读取compiler源码回显；review_reason使用稳定reason code。缺已审核文本用稳定“证据不足”说明，不伪造课程结论。
+- [x] 在实际SQL query hook记录仅表名/列名，禁止analytics访问memories/conversations正文；把私人sentinel种入提交、诊断正文和现有记忆，通过API/log/audit验证零回显。
+- [x] 内存开发模式从现有提交/诊断/知识仓库动态投影，不能只注入永远空的repository；仍沿用原Task8内存repo测试。
+- [x] GREEN：PG数据源测试、Task8全部领域测试通过，提交 `feat: derive teacher analytics from authoritative SQL facts`。
 
 ### G3：最小0007和教师复核原子事务
 
@@ -251,11 +251,11 @@ def test_distinct_students_at_sql_boundary(wave3_pg, students, status):
 
 **Interfaces:** SQL仓库补齐get_review/save_review/transaction/review_claim；原服务函数签名和TeacherDiagnosisReviewDTO不变。SqlRepositories新增analytics字段，SQL analytics与audit使用同一memory_uow。
 
-- [ ] 先写PG RED：同决定/trim理由重放等于首次结果；改决定或理由409；两teacher两repository同时复核只有一个权威结果/成功审计；审计失败无review，review失败无audit；权限撤销/未知统一404；真实memory状态/版本/行数完全不变。
-- [ ] TeacherDiagnosisReviewRow最小字段：diagnosis_id（PK）、course_id、reviewer_user_id、decision、reason、reviewed_at。复合FK(diagnosis_id,course_id)→diagnoses(id,course_id)，reviewer→users；decision check；reason非空且≤2000；必要course索引。无需复制候选/学生数据。
-- [ ] 0007 revision=`0007_teacher_analytics_reviews`，down_revision=`0006_token_revocations`，只有该表/约束/索引；downgrade仅移除新表。
-- [ ] review_claim进入共享UOW并先锁diagnosis父行（保持Task10 FOR NO KEY UPDATE锁序）；锁内重新读候选及当前教师权限、再检查已有review。相同重放不新增审计，不同409；最后事务唯一约束仍保护跨实例。
-- [ ] save_review在当前Session flush；SqlAuditLog.record在同Session flush；外层唯一commit。禁止各repository私有session独立commit或“补偿删除”冒充原子性。
+- [x] 先写PG RED：同决定/trim理由重放等于首次结果；改决定或理由409；两teacher两repository同时复核只有一个权威结果/成功审计；审计失败无review，review失败无audit；权限撤销/未知统一404；真实memory状态/版本/行数完全不变。
+- [x] TeacherDiagnosisReviewRow最小字段：diagnosis_id（PK）、course_id、reviewer_user_id、decision、reason、reviewed_at。复合FK(diagnosis_id,course_id)→diagnoses(id,course_id)，reviewer→users；decision check；reason非空且≤2000；必要course索引。无需复制候选/学生数据。
+- [x] 0007 revision=`0007_teacher_analytics_reviews`，down_revision=`0006_token_revocations`，只有该表/约束/索引；downgrade仅移除新表。
+- [x] review_claim进入共享UOW并先锁diagnosis父行（保持Task10 FOR NO KEY UPDATE锁序）；锁内重新读候选及当前教师权限、再检查已有review。相同重放不新增审计，不同409；最后事务唯一约束仍保护跨实例。
+- [x] save_review在当前Session flush；SqlAuditLog.record在同Session flush；外层唯一commit。禁止各repository私有session独立commit或“补偿删除”冒充原子性。
 
 ```python
 def test_review_and_audit_use_one_commit_boundary(wave3_pg):
@@ -270,8 +270,8 @@ def test_review_and_audit_use_one_commit_boundary(wave3_pg):
 
 上述方法归wave3_support；失败注入只在审计存储flush，真实授权/复核写入保持，不替换为mock成功。
 
-- [ ] 用Barrier放在请求开始前，Future.result(timeout=10)、SQL lock_timeout限制挂起；同请求和不同请求竞争分别执行，不能在持锁事务内等待双writer Barrier。
-- [ ] PG GREEN后，运行Task10删除/迟到写入/父子锁回归，检查只有一个head，提交 `feat: persist atomic teacher diagnosis reviews`。
+- [x] 用Barrier放在请求开始前，Future.result(timeout=10)、SQL lock_timeout限制挂起；同请求和不同请求竞争分别执行，不能在持锁事务内等待双writer Barrier。
+- [x] PG GREEN后，运行Task10删除/迟到写入/父子锁回归，检查只有一个head，提交 `feat: persist atomic teacher diagnosis reviews`。
 
 ### G4：组合根、三个Router和全部运行时契约
 
@@ -279,13 +279,13 @@ def test_review_and_audit_use_one_commit_boundary(wave3_pg):
 
 **Interfaces:** create_app新增可选teacher_analytics_repository/service注入；application.state保留全部既有对象，新增teacher_analytics_service/repository；公开paths/operationId来自共享契约。
 
-- [ ] RED：create_app的runtime必须含3教师接口和logout；DATABASE_URL模式为SQL，不配置时仅development/test可用内存；analytics/audit共享UOW；Task7 source_context、TokenRevocations、CORS均存在。
-- [ ] 全量共享/runtime比较先失败：paths/method精确集合、operationId、parameters位置/required/schema、body严格字段、response状态/字段、Bearer、统一错误信封。解析$ref和path-level parameters；只忽略生成title/description和等价nullable表示，不忽略required、enum、oneOf、minimum或额外字段。
-- [ ] 原Task7 isolated memories router的“无teacher路径”断言仍保留（该测试只装memory router）；Wave3旧测试名可以改为集成语义并增加真实runtime断言，冻结状态/字段/阈值断言全部保留。
-- [ ] 最小补齐FastAPI声明与response_model字段元数据；教师analytics使用status discriminated union；readOnly/writeOnly按shared对齐。旧接口用共享operationId、隐藏手动Authorization参数、声明bearerAuth和稳定错误模型。不能把application.openapi直接替换成静态shared文件来隐藏实际漂移。
-- [ ] health明确operation_id=getHealth；不改既有业务请求语义或冻结接口名称。未预料的契约矛盾不能通过放宽比较器解决。
-- [ ] 真实HTTP合同探针验证错误/边界响应，与声明比较共同成立；CORS本地预检、未列源拒绝、禁止*、非开发默认空均测试。
-- [ ] GREEN后提交 `fix: wire Wave 3 services and align runtime API contracts`。
+- [x] RED：create_app的runtime必须含3教师接口和logout；DATABASE_URL模式为SQL，不配置时仅development/test可用内存；analytics/audit共享UOW；Task7 source_context、TokenRevocations、CORS均存在。
+- [x] 全量共享/runtime比较先失败：paths/method精确集合、operationId、parameters位置/required/schema、body严格字段、response状态/字段、Bearer、统一错误信封。解析$ref和path-level parameters；只忽略生成title/description和等价nullable表示，不忽略required、enum、oneOf、minimum或额外字段。
+- [x] 原Task7 isolated memories router的“无teacher路径”断言仍保留（该测试只装memory router）；Wave3旧测试名可以改为集成语义并增加真实runtime断言，冻结状态/字段/阈值断言全部保留。
+- [x] 最小补齐FastAPI声明与response_model字段元数据；教师analytics使用status discriminated union；readOnly/writeOnly按shared对齐。旧接口用共享operationId、隐藏手动Authorization参数、声明bearerAuth和稳定错误模型。不能把application.openapi直接替换成静态shared文件来隐藏实际漂移。
+- [x] health明确operation_id=getHealth；不改既有业务请求语义或冻结接口名称。未预料的契约矛盾不能通过放宽比较器解决。
+- [x] 真实HTTP合同探针验证错误/边界响应，与声明比较共同成立；CORS本地预检、未列源拒绝、禁止*、非开发默认空均测试。
+- [x] GREEN后提交 `fix: wire Wave 3 services and align runtime API contracts`。
 
 ### G5：54组向量真正进入Router/SQL/PostgreSQL
 
@@ -293,8 +293,8 @@ def test_review_and_audit_use_one_commit_boundary(wave3_pg):
 
 **Interfaces:** 每vector全部facts→合成关系行→真实Router query filters→assert_analytics，param ID为vector_id。
 
-- [ ] 先写54参数化RED；fixture将(subject_key,course_id)映射为合成学生，diagnosis_id/submission/concept/exercise完整存入真实PG；包括异课程和excluded_by标记的全部反例。
-- [ ] 只在完成fixture事实解析之后丢弃非数据库元数据excluded_by，绝不根据它预过滤；created_at对应DiagnosisRow.created_at，independently_repaired通过G2真实理解/执行证据行表达。
+- [x] 先写54参数化RED；fixture将(subject_key,course_id)映射为合成学生，diagnosis_id/submission/concept/exercise完整存入真实PG；包括异课程和excluded_by标记的全部反例。
+- [x] 只在完成fixture事实解析之后丢弃非数据库元数据excluded_by，绝不根据它预过滤；created_at对应DiagnosisRow.created_at，independently_repaired通过G2真实理解/执行证据行表达。
 
 ```python
 @pytest.mark.parametrize("vector", vectors(), ids=lambda v: v["vector_id"])
@@ -306,10 +306,10 @@ def test_vector_through_router_sql_postgres(wave3_pg, vector):
     assert_analytics(vector, response.json())
 ```
 
-- [ ] 除原assert_analytics外，比较实际payload与手算expected完整字段值；不能仅检status或用expected_response当API结果。
-- [ ] 额外测试去掉任一有效过滤后四人反例变五人；SQL正常保留所有反例，start相等包含/end相等排除，group独立阈值，多概念/重复diagnosis不倍增。
-- [ ] JUnit记录54条唯一node ID、PG server/version、请求路径与脱敏响应证据；不是expected DTO schema验证数。
-- [ ] GREEN：54/54 executed/passed、0skip，提交 `test: execute anonymity vectors through SQL teacher routes`。
+- [x] 除原assert_analytics外，比较实际payload与手算expected完整字段值；不能仅检status或用expected_response当API结果。
+- [x] 额外测试去掉任一有效过滤后四人反例变五人；SQL正常保留所有反例，start相等包含/end相等排除，group独立阈值，多概念/重复diagnosis不倍增。
+- [x] JUnit记录54条唯一node ID、PG server/version、请求路径与脱敏响应证据；不是expected DTO schema验证数。
+- [x] GREEN：54/54 executed/passed、0skip，提交 `test: execute anonymity vectors through SQL teacher routes`。
 
 ### G6：前端真实连接与服务端logout
 
@@ -317,12 +317,12 @@ def test_vector_through_router_sql_postgres(wave3_pg, vector):
 
 **Interfaces:** ApiClient.logout(): Promise<void>消费POST/auth/logout；仍只消费OpenAPI DTO。前端页面布局/视觉保留。
 
-- [ ] RED：点击退出调用旧token一次、204后清会话；延迟响应重复点击不重复；503显示request ID和重试，不显示“服务端已失效”；401已失效可清本地会话。
-- [ ] 最小实现logout busy锁，调用时保留accessToken至请求结束；成功/已失效才清session。未知错误保留可重试状态，不能用finally无条件宣称撤销成功。
-- [ ] RED：日期end转次日零时、相邻窗口[start-duration,start)；UTC转换、边界24:00和夏令时日期使用日历天；取消旧请求后不覆盖新课程/队列。
-- [ ] 如真实组合发现loading/empty/404/409/422/503缺口，先补组件RED再最小修；已处理复核从待处理UI去除或真实刷新队列，保存原409刷新操作。
-- [ ] 无私人入口/不调用me/memories等教师断言保留；真实401不会靠改localStorage角色获得权限。
-- [ ] `npm test`覆盖旧30项及新增项，`npm run build`、显式E2E/config类型检查通过，提交 `fix: connect UI logout and teacher review to Gate APIs`。
+- [x] RED：点击退出调用旧token一次、204后清会话；延迟响应重复点击不重复；503显示request ID和重试，不显示“服务端已失效”；401已失效可清本地会话。
+- [x] 最小实现logout busy锁，调用时保留accessToken至请求结束；成功/已失效才清session。未知错误保留可重试状态，不能用finally无条件宣称撤销成功。
+- [x] RED：日期end转次日零时、相邻窗口[start-duration,start)；UTC转换、边界24:00和夏令时日期使用日历天；取消旧请求后不覆盖新课程/队列。
+- [x] 如真实组合发现loading/empty/404/409/422/503缺口，先补组件RED再最小修；已处理复核从待处理UI去除或真实刷新队列，保存原409刷新操作。
+- [x] 无私人入口/不调用me/memories等教师断言保留；真实401不会靠改localStorage角色获得权限。
+- [x] `npm test`覆盖旧30项及新增项，`npm run build`、显式E2E/config类型检查通过，提交 `fix: connect UI logout and teacher review to Gate APIs`。
 
 ### G7：独立迁移库完整往返和安全语义
 
@@ -330,8 +330,8 @@ def test_vector_through_router_sql_postgres(wave3_pg, vector):
 
 **Interfaces:** Gate override只调整loopback端口、测试项目资源和来源白名单；初始化器拒绝非Gate标签容器/非wave3_数据库，产出PG/pgvector版本、revision链和迁移前后行数证据。
 
-- [ ] 核对G0独立项目/测试数据库和实际vector安装，不读日常学生数据；专用迁移库查询extversion。按实际image digest和版本记录，不引用历史值当本次证据。
-- [ ] 避免Alembic配置被进程DATABASE_URL覆盖；迁移进程明确设置wave3_migration，运行：
+- [x] 核对G0独立项目/测试数据库和实际vector安装，不读日常学生数据；专用迁移库查询extversion。按实际image digest和版本记录，不引用历史值当本次证据。
+- [x] 避免Alembic配置被进程DATABASE_URL覆盖；迁移进程明确设置wave3_migration，运行：
 
 ```powershell
 & $gatePython -B -m alembic heads
@@ -344,12 +344,12 @@ def test_vector_through_router_sql_postgres(wave3_pg, vector):
 & $gatePython -B -m alembic upgrade head
 ```
 
-- [ ] 从空库upgrade→0007单head；0007降到0006只丢教师复核，token状态保留；降到0005会丢token撤销，先证明旧token失效不能凭空维持，再模拟AUTH_TOKEN_SECRET轮换后旧token401。重升0006不恢复擦除文本。
-- [ ] 种入deleted/deletion_pending历史链、live链、非目标诊断/课程/提交；比较历史proposal/diagnosis/evidence/hint/explanation正文擦除，live及非目标行保留；不用日志输出正文。
-- [ ] 验证token digest长度/主键、review唯一/复合FK/check、非法跨课程review被数据库拒绝；review/audit失败事务回滚。
-- [ ] full downgrade base仅在另一个空的可丢弃迁移测试schema/库执行，不删除已有非目标数据来“证明保留”。保留Task7既有往返回归的独立库。
-- [ ] 文档：部署前备份、停旧写入实例、迁移后全实例切换；擦除不可逆，downgrade不能恢复；丢revocation表时重开认证前轮换密钥。本文不授权生产部署。
-- [ ] GREEN提交 `test: verify Wave 3 PostgreSQL migrations and rollback semantics`。
+- [x] 从空库upgrade→0007单head；0007降到0006只丢教师复核，token状态保留；降到0005会丢token撤销，先证明旧token失效不能凭空维持，再模拟AUTH_TOKEN_SECRET轮换后旧token401。重升0006不恢复擦除文本。
+- [x] 种入deleted/deletion_pending历史链、live链、非目标诊断/课程/提交；比较历史proposal/diagnosis/evidence/hint/explanation正文擦除，live及非目标行保留；不用日志输出正文。
+- [x] 验证token digest长度/主键、review唯一/复合FK/check、非法跨课程review被数据库拒绝；review/audit失败事务回滚。
+- [x] full downgrade base仅在另一个空的可丢弃迁移测试schema/库执行，不删除已有非目标数据来“证明保留”。保留Task7既有往返回归的独立库。
+- [x] 文档：部署前备份、停旧写入实例、迁移后全实例切换；擦除不可逆，downgrade不能恢复；丢revocation表时重开认证前轮换密钥。本文不授权生产部署。
+- [x] GREEN提交 `test: verify Wave 3 PostgreSQL migrations and rollback semantics`。
 
 ### G8：真实前后端/PG/Runner浏览器与全部Runner验证
 
@@ -357,16 +357,16 @@ def test_vector_through_router_sql_postgres(wave3_pg, vector):
 
 **Interfaces:** Browser fixture=create_app实际组合根+wave3_browser SQL+Mock Provider+真实RunnerClient；真实UI用VITE_API_BASE_URL=http://127.0.0.1:8198，CORS显式允许5199。
 
-- [ ] 先RED验证真实浏览器启动/登录/SQL教师API，不使用page.route拦截。新fixture的fail/delay控制仅test进程可启用，不能成为生产debug API。
-- [ ] 默认命令实际运行原learning-loop 2场景、security-request 14场景；Gate命令实际运行原security-ui.gate 7场景与新增real-ui场景。每项目独立计数，原projection结果明确标记网络模拟。
-- [ ] 新real-ui覆盖学生/教师真实登录；直接角色URL/私有资源404；4人全抑制和5人边界；教师无私人入口；复核后SQL结果/审计及队列刷新；学生提交→真实编译失败→诊断→提示→修复重提→理解验证→建议本人确认→纠正/拒绝/删除；旧token退出后401；重复点击只有一次敏感HTTP请求及一次SQL结果。
-- [ ] 真实错误404/409/422/503及request ID由API产生；403/404投影一致保持原7测试，真实后端资源仍统一404。存储不可用/延迟测试在隔离fixture端口注入，核心授权/删除边界不能Mock。
-- [ ] 390×844手机关键按钮可达，无document/table横向溢出；桌面1440×1000；产出脱敏截图/trace和请求计数，不保存访问令牌。
-- [ ] 使用cangjie-coding批量查询本次实际用到的match/无限循环/文件或网络攻击API；知识缺口在真实隔离容器最小验证，不在宿主猜测/执行。
-- [ ] 真实sandbox内读取cjc/cjpm -v并实际编译/运行；固定image digest、network none/read-only/user10001/cap-drop/no-new-privileges/CPU/memory/PID/tmpfs。控制面只接受结构化请求，不允许用户覆盖这些参数。
-- [ ] Runner原worker/executor/parser/cli/protocol测试在含1.2.0工具链的测试sandbox运行；controller/docker_engine测试在受信测试控制面环境运行。测试依赖沿用现有pytest/docker，不加生产依赖；不得把Docker socket挂给不可信worker。测试源码可在构建时COPY，不给学生job挂宿主项目目录。
-- [ ] Task10容器6项在真实镜像执行；真实controller→新sandbox的HTTP闭环至少验证成功、编译失败、无限循环、输出限制和任务清理。Windows应用控制/符号链接skip不能替代Linux隔离验证。
-- [ ] GREEN提交 `test: verify real Wave 3 browser and isolated runner flows`。
+- [x] 先RED验证真实浏览器启动/登录/SQL教师API，不使用page.route拦截。新fixture的fail/delay控制仅test进程可启用，不能成为生产debug API。
+- [x] 默认命令实际运行原learning-loop 2场景、security-request 14场景；Gate命令实际运行原security-ui.gate 7场景与新增real-ui场景。每项目独立计数，原projection结果明确标记网络模拟。
+- [x] 新real-ui覆盖学生/教师真实登录；直接角色URL/私有资源404；4人全抑制和5人边界；教师无私人入口；复核后SQL结果/审计及队列刷新；学生提交→真实编译失败→诊断→提示→修复重提→理解验证→建议本人确认→纠正/拒绝/删除；旧token退出后401；重复点击只有一次敏感HTTP请求及一次SQL结果。
+- [x] 真实错误404/409/422/503及request ID由API产生；403/404投影一致保持原7测试，真实后端资源仍统一404。存储不可用/延迟测试在隔离fixture端口注入，核心授权/删除边界不能Mock。
+- [x] 390×844手机关键按钮可达，无document/table横向溢出；桌面1440×1000；产出脱敏截图/trace和请求计数，不保存访问令牌。
+- [x] 使用cangjie-coding批量查询本次实际用到的match/无限循环/文件或网络攻击API；知识缺口在真实隔离容器最小验证，不在宿主猜测/执行。
+- [x] 真实sandbox内读取cjc/cjpm -v并实际编译/运行；固定image digest、network none/read-only/user10001/cap-drop/no-new-privileges/CPU/memory/PID/tmpfs。控制面只接受结构化请求，不允许用户覆盖这些参数。
+- [x] Runner原worker/executor/parser/cli/protocol测试在含1.2.0工具链的测试sandbox运行；controller/docker_engine测试在受信测试控制面环境运行。测试依赖沿用现有pytest/docker，不加生产依赖；不得把Docker socket挂给不可信worker。测试源码可在构建时COPY，不给学生job挂宿主项目目录。
+- [x] Task10容器6项在真实镜像执行；真实controller→新sandbox的HTTP闭环至少验证成功、编译失败、无限循环、输出限制和任务清理。Windows应用控制/符号链接skip不能替代Linux隔离验证。
+- [x] GREEN提交 `test: verify real Wave 3 browser and isolated runner flows`。
 
 ### G9：164条攻击逐条可追溯映射
 
@@ -374,14 +374,14 @@ def test_vector_through_router_sql_postgres(wave3_pg, vector):
 
 **Interfaces:** 不给严格case schema增加未知字段；独立manifest以case_id连接原164案例，记录case哈希、确切测试参数/node ID/操作、映射依据、敏感分级、status、运行时间、命令退出码、证据文件SHA-256和执行边界。
 
-- [ ] RED校验manifest恰好164个唯一ID，缺ID/重复/非法status/不存在证据/把collected当pass均失败。
-- [ ] status只允许automated_passed/automated_failed/manual_passed/manual_failed/not_executed；尚未运行初始均not_executed并写原因，无伪时间。
-- [ ] 小样本54条逐个映射到G5参数node；提示注入30条逐payload×channel；文件级test_reference不足时补确切case操作测试，不能整文件pass自动覆盖所有案例。
-- [ ] executor_abuse 8条逐条分清protocol拒绝和真实容器执行；计划没有实际网络/文件逃逸证据时不得用普通compile成功代替。
-- [ ] architecture_pending 5条分别核对是否有真实适配器；未实现外部缓存/向量/模型引用的条目注明边界与后续ADR/授权依赖，不能造mock服务让其通过。Critical/高敏感未执行必须有具体理由并进入Gate阻塞清单。
-- [ ] 每个失败加入Gate blocker；运行map_security_execution读取JUnit/浏览器报告及哈希，不根据日志字符串“passed”猜案例结果。映射工具不改变教学draft/verified标记。
-- [ ] 对原数据重算上述三哈希与evaluate结构；recompute用既有测试中的合成观察验证逻辑，不填真实教学observations/results。
-- [ ] 提交 `test: record traceable execution of planned security cases`。
+- [x] RED校验manifest恰好164个唯一ID，缺ID/重复/非法status/不存在证据/把collected当pass均失败。
+- [x] status只允许automated_passed/automated_failed/manual_passed/manual_failed/not_executed；尚未运行初始均not_executed并写原因，无伪时间。
+- [x] 小样本54条逐个映射到G5参数node；提示注入30条逐payload×channel；文件级test_reference不足时补确切case操作测试，不能整文件pass自动覆盖所有案例。
+- [x] executor_abuse 8条逐条分清protocol拒绝和真实容器执行；计划没有实际网络/文件逃逸证据时不得用普通compile成功代替。
+- [x] architecture_pending 5条分别核对是否有真实适配器；未实现外部缓存/向量/模型引用的条目注明边界与后续ADR/授权依赖，不能造mock服务让其通过。Critical/高敏感未执行必须有具体理由并进入Gate阻塞清单。
+- [x] 每个失败加入Gate blocker；运行map_security_execution读取JUnit/浏览器报告及哈希，不根据日志字符串“passed”猜案例结果。映射工具不改变教学draft/verified标记。
+- [x] 对原数据重算上述三哈希与evaluate结构；recompute用既有测试中的合成观察验证逻辑，不填真实教学observations/results。
+- [x] 提交 `test: record traceable execution of planned security cases`。
 
 ### G10：全量回归、全新只读审查和最终提交
 
@@ -389,12 +389,12 @@ def test_vector_through_router_sql_postgres(wave3_pg, vector):
 
 **Interfaces:** 产出Gate结论、完整文件清单、五来源追溯、实际命令和独立审查报告；不产生main合并/远端交付。
 
-- [ ] 按下一节矩阵执行全部相关测试，任何变更后重跑受影响范围；最后完整后端、前端、浏览器、Runner、PG迁移回归不能以早期次数替代。
+- [x] 按下一节矩阵执行全部相关测试，任何变更后重跑受影响范围；最后完整后端、前端、浏览器、Runner、PG迁移回归不能以早期次数替代。
 - [ ] 使用requesting-code-review；全新只读上下文审查，传设计、用户Gate要求、baseline→Gate diff、完整命令证据与已知适配器缺口。审查者不改代码、不接触真实数据/模型、不停止服务。
 - [ ] Critical/Important安全新发现立即停止产品修改并报告；用户授权修复后先RED再最小修复和回归。普通契约/环境/既定SQL缺口按systematic-debugging持续处理，不放宽断言。
 - [ ] 使用verification-before-completion核对最终实际结果、0未解决冲突、来源-x、head/契约、manifest覆盖、无Critical/Important；分类结论见第6节。
 - [ ] 最终交接含用户要求的20项：结论；完成/未完成；5来源；冲突；SQL/事务；ADR；API；迁移回滚；54；220；7；真实学生/教师组合；164映射；全命令；独立审查；真实数据/模型边界；全文件；风险/Wave4依赖；Gate分支/哈希/状态；禁止动作未执行声明。
-- [ ] 将脱敏证据摘要/哈希提交，原临时截图/日志按现有ignore保存本地并给绝对路径；不提交令牌/凭证/原文。
+- [x] 将脱敏证据摘要/哈希提交，原临时截图/日志按现有ignore保存本地并给绝对路径；不提交令牌/凭证/原文。
 - [ ] 最终本地提交：`feat: integrate Wave 3 analytics UI and security gate`；`git status --short --branch`干净、`git diff --check`0、`git ls-files -u`空。其他Task worktree/main状态再次比对，不清理任何worktree，不push/PR。
 
 ## 5. 最终测试矩阵与命令
@@ -452,6 +452,6 @@ Gate结论：
 - [x] 停止条件不被“先补测试再修”覆盖；新增Critical/Important先报告授权。
 - [x] 全新只读审查安排在全部测试后；最终只本地提交，不执行用户禁止动作。
 - [x] 再次依赖自查：PG/controller准备前移G0；G2/G3局部Router与G4正式装配区分；Task9局部浏览器使用其当时配置，不引用尚未建立的project。
-- [ ] 用户明确确认本文，随后才开始G0及产品集成。
+- [x] 用户明确确认本文，随后才开始G0及产品集成。
 
 **确认内容：** 采用上述串行实施、五来源顺序、最小SQL/0007、共享事务、契约全量对齐和真实测试矩阵；对尚无外部适配器的边界如实列未验证，绝不默认新增基础设施或声称完全通过。确认前维持只读审计/计划范围。

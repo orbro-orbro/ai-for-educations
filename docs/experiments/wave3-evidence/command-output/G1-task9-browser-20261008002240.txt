@@ -1,0 +1,11 @@
+[WebServer] (node:37632) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 2 tests using 1 worker
+
+(node:14652) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 1 e2e\learning-loop.spec.ts:49:1 › student completes the evidence, understanding, and memory path on desktop (2.9s)
+  ok 2 e2e\learning-loop.spec.ts:80:1 › teacher sees only anonymous signals on a phone viewport (1.1s)
+
+  2 passed (15.3s)

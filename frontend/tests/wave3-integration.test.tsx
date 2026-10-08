@@ -2,6 +2,7 @@ import { cleanup, fireEvent, render, screen, waitFor } from "@testing-library/re
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { App } from "../src/App";
 import { CourseDashboard } from "../src/teacher/CourseDashboard";
+import { ExercisePage } from "../src/student/ExercisePage";
 import { ApiClient } from "../src/api/client";
 
 const filters = {concept_id:null, exercise_id:null, start_at:null, end_at:null};
@@ -74,5 +75,25 @@ describe("Wave 3 integration UI",()=>{
     await screen.findByText("当前没有待复核诊断");
     resolveFirst(json({course_id:"course-a",filters,items:[{queue_event_id:"stale",diagnosis_id:"stale",root_cause:"STALE_RESPONSE",concept_ids:[],evidence_summaries:[],confidence:.5}]}));
     await new Promise(r=>setTimeout(r,20));expect(screen.queryByText("STALE_RESPONSE")).not.toBeInTheDocument();
+  });
+  it("finishes student loading after a course switch aborts the initial request",async()=>{
+    let first!:(value:Response)=>void;
+    vi.stubGlobal("fetch",vi.fn(async(input:RequestInfo|URL)=>{
+      const u=new URL(String(input));
+      if(u.pathname==="/courses")return json([{course_id:"course-a",title:"Course A"},{course_id:"course-b",title:"Course B"}]);
+      if(u.pathname.includes("course-a/exercises"))return new Promise<Response>(r=>{first=r;});
+      if(u.pathname.includes("course-b/exercises"))return json([{exercise_id:"exercise-b",course_id:"course-b",title:"Exercise B"}]);
+      if(u.pathname.startsWith("/me/"))return json([]);
+      throw new Error("Unexpected request "+u.pathname);
+    }));
+    render(<ExercisePage api={new ApiClient("http://localhost:8198",()=>"synthetic-token")}/>);
+    await waitFor(()=>expect(first).toBeDefined());
+    expect(screen.getByText("正在准备课程与练习…")).toBeInTheDocument();
+    fireEvent.change(screen.getByRole("combobox",{name:"课程"}),{target:{value:"course-b"}});
+    await screen.findByRole("option",{name:"Exercise B"});
+    await waitFor(()=>expect(screen.queryByText("正在准备课程与练习…")).not.toBeInTheDocument());
+    first(json([{exercise_id:"stale",course_id:"course-a",title:"Stale exercise"}]));
+    await new Promise(r=>setTimeout(r,20));
+    expect(screen.queryByRole("option",{name:"Stale exercise"})).not.toBeInTheDocument();
   });
 });

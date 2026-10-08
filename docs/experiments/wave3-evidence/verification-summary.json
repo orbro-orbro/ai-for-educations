@@ -1,0 +1,159 @@
+{
+  "data": "synthetic only; no real learner or model",
+  "junit": {
+    "backend-final.xml": {
+      "sha256": "63e709a6b21d9e4fc87b657170b6195f57608fd0c99859ef9b7ad39c19447776",
+      "test_count": 907,
+      "passed": 907
+    },
+    "backend-first-full.xml": {
+      "sha256": "2b1f9b705e3ee950e510a5b0137c6e57884bb274744894b9ebdfb69599a859d4",
+      "test_count": 903,
+      "passed": 899,
+      "failed": 4
+    },
+    "concrete-cases.xml": {
+      "sha256": "3609f3a52fbc817899ae577dc0d43455178ad127d5f9a010c6fb132a2eac23a0",
+      "test_count": 107,
+      "passed": 106,
+      "failed": 1
+    },
+    "concrete-local.xml": {
+      "sha256": "c528b4037c8e776d6a2afb4ffa27f910b2762faff0c11696f9c3720c0b3ab9e7",
+      "test_count": 104,
+      "passed": 104
+    },
+    "container-attacks.xml": {
+      "sha256": "0579477cbeee359973d97180a74b6256f0b15ebdf1d1b2197b1700e26e75616b",
+      "test_count": 3,
+      "passed": 3
+    },
+    "controller-topology-final.xml": {
+      "sha256": "a119b0afb3fad52f80312541427bc4b8a17bfc1ee5ab6549841af7bb75770b1c",
+      "test_count": 4,
+      "passed": 4
+    },
+    "postgres-cases.xml": {
+      "sha256": "b78fd1149131af9ea7ce927a0da763c50837a31d7d10c82f9bce35813700c1af",
+      "test_count": 65,
+      "passed": 65
+    }
+  },
+  "browser": {
+    "browser-default-final.json": {
+      "sha256": "ebc6535beb9fe76399b8669121bf047d949b2092824d5d1dadc0fdc8df60e20f",
+      "startTime": "2026-10-08T05:39:33.874Z",
+      "duration": 10088.544,
+      "expected": 16,
+      "skipped": 0,
+      "unexpected": 0,
+      "flaky": 0
+    },
+    "browser-gate-final.json": {
+      "sha256": "0cdfd7ed795d62a0f8a317d9acd9f2ad79cffbb39e770fb26afba2fddce2d9a3",
+      "startTime": "2026-10-08T05:40:32.105Z",
+      "duration": 22193.285,
+      "expected": 10,
+      "skipped": 0,
+      "unexpected": 0,
+      "flaky": 0
+    }
+  },
+  "original_security_220": {
+    "tests.security.test_cross_course_memory": 9,
+    "tests.security.test_evaluation_datasets": 9,
+    "tests.security.test_idor": 65,
+    "tests.security.test_isolated_runner": 6,
+    "tests.security.test_prompt_injection": 41,
+    "tests.security.test_recompute": 13,
+    "tests.security.test_security_repairs": 15,
+    "tests.security.test_small_sample_contract": 62
+  },
+  "backend_by_module": {
+    "tests.analytics.test_api": 18,
+    "tests.analytics.test_data_source": 2,
+    "tests.analytics.test_review_queue": 21,
+    "tests.analytics.test_threshold": 29,
+    "tests.auth.test_policy": 19,
+    "tests.contracts.test_compose_contract": 6,
+    "tests.contracts.test_openapi_runtime": 7,
+    "tests.contracts.test_task6_openapi": 2,
+    "tests.contracts.test_task7_openapi": 4,
+    "tests.contracts.test_wave3_environment": 11,
+    "tests.contracts.test_wave3_http_contract": 2,
+    "tests.contracts.test_wave3_openapi": 5,
+    "tests.contracts.test_wave3_runtime_openapi": 42,
+    "tests.courses.test_course_access": 14,
+    "tests.diagnostics.test_hints": 17,
+    "tests.diagnostics.test_rules": 2,
+    "tests.diagnostics.test_schema": 17,
+    "tests.diagnostics.test_service": 22,
+    "tests.integration.test_app_permissions": 6,
+    "tests.integration.test_task10_security_repairs": 10,
+    "tests.integration.test_task5_gate": 5,
+    "tests.integration.test_task6_closed_loop": 1,
+    "tests.integration.test_task6_gate": 3,
+    "tests.integration.test_task6_postgres": 2,
+    "tests.integration.test_task7_closed_loop": 1,
+    "tests.integration.test_task7_deletion_recovery": 4,
+    "tests.integration.test_task7_gate": 5,
+    "tests.integration.test_task7_postgres": 9,
+    "tests.integration.test_wave3_analytics_postgres": 13,
+    "tests.integration.test_wave3_analytics_vectors_postgres": 62,
+    "tests.integration.test_wave3_gate": 2,
+    "tests.integration.test_wave3_migration_logging_postgres": 1,
+    "tests.integration.test_wave3_migrations_postgres": 10,
+    "tests.integration.test_wave3_reviews_postgres": 7,
+    "tests.integration.test_wave3_security_cases_postgres": 3,
+    "tests.knowledge.test_graph": 46,
+    "tests.knowledge.test_seed": 21,
+    "tests.memories.test_api": 6,
+    "tests.memories.test_deletion": 12,
+    "tests.memories.test_isolation": 11,
+    "tests.memories.test_lifecycle": 12,
+    "tests.model_gateway.test_openai_responses": 11,
+    "tests.persistence.test_diagnostic_repository": 3,
+    "tests.persistence.test_memory_repository": 6,
+    "tests.persistence.test_migration_contract": 11,
+    "tests.persistence.test_task7_migration_contract": 7,
+    "tests.security.test_cross_course_memory": 9,
+    "tests.security.test_evaluation_datasets": 9,
+    "tests.security.test_execution_manifest": 10,
+    "tests.security.test_idor": 65,
+    "tests.security.test_isolated_runner": 6,
+    "tests.security.test_prompt_injection": 41,
+    "tests.security.test_recompute": 13,
+    "tests.security.test_security_repairs": 15,
+    "tests.security.test_small_sample_contract": 62,
+    "tests.security.test_wave3_case_execution": 104,
+    "tests.security.test_wave3_container_attacks": 3,
+    "tests.submissions.test_contract": 2,
+    "tests.submissions.test_permissions": 8,
+    "tests.submissions.test_pipeline": 17,
+    "tests.submissions.test_runner_client": 9,
+    "tests.test_cors": 3,
+    "tests.test_health": 1
+  },
+  "datasets": {
+    "security_cases.yaml": {
+      "worktree_raw_sha256": "6c7afbaf60af1b06f16bedb2c7cb66c7b50b16012af27be7ce72d38276732483",
+      "original_git_blob_lf_sha256": "a5a33c34cc95887988972dd094d4743d14bd8c5e31df501f71c2d21fff36e34e",
+      "normalized_equal_original": true
+    },
+    "analytics_vectors.yaml": {
+      "worktree_raw_sha256": "dbef2c0beb43de36faac58fbd9eb4b3277b039c046c9e607435be25d1a8ba2b5",
+      "original_git_blob_lf_sha256": "ccb7d5c512137d6f4eb2cbc74cef9684847d953a0f72c7142c9d74c805eb032d",
+      "normalized_equal_original": true
+    },
+    "diagnosis_cases.yaml": {
+      "worktree_raw_sha256": "76c0f880a54243b18a1c098013ee161b3a1921ced93a2225625435ac4bd58c4a",
+      "original_git_blob_lf_sha256": "96ace03aab66ca806e5e56152d1fe939cf8701c6d3b31c6422e95c84d49d4410",
+      "normalized_equal_original": true
+    }
+  },
+  "archive": {
+    "commands": 103,
+    "credential_redactions": 1,
+    "directory": "docs/experiments/wave3-evidence/command-output"
+  }
+}

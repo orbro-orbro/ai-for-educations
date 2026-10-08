@@ -72,6 +72,11 @@ def test_full_runtime_operation_set_matches_frozen_shared_contract():
     assert set(operations(create_app().openapi())) == set(operations(SHARED))
 
 
+def test_runtime_bearer_scheme_matches_frozen_contract():
+    runtime=create_app().openapi()
+    assert resolve(runtime['components']['securitySchemes'],runtime)==resolve(SHARED['components']['securitySchemes'],SHARED)
+
+
 @pytest.mark.parametrize("path,method", list(operations(SHARED)), ids=lambda x:x)
 def test_every_runtime_operation_matches_contract(path, method):
     runtime = create_app().openapi()

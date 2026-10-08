@@ -39,10 +39,15 @@ def validate_manifest(manifest,root=ROOT):
     rows=manifest['cases'];ids=[r['case_id'] for r in rows]
     if len(ids)!=164 or len(set(ids))!=164 or set(ids)!=set(by_id):raise ValueError('Exactly the original 164 unique case IDs required')
     for filename,sha in manifest['datasets'].items():
-        if digest(safe_path(root,filename))!=sha:raise ValueError('Frozen dataset changed: '+filename)
+        path=safe_path(root,filename)
+        normalized=hashlib.sha256(path.read_bytes().replace(b'\r\n',b'\n')).hexdigest()
+        if normalized!=manifest['dataset_lf_sha256'][filename]:raise ValueError('Frozen dataset changed: '+filename)
+    commands=json.loads((root/'docs/experiments/wave3-command-results.json').read_text(encoding='utf-8'))['commands']
+    runs=[{k:r[k] for k in ('command','cwd','start','end','exit_code')} for r in commands]
     cached={}
     for row in rows:
         if row['case_sha256']!=case_hash(by_id[row['case_id']]):raise ValueError('Planned case drift')
+        if row['operation']!=by_id[row['case_id']]['input']['operation']:raise ValueError('Operation differs from planned case')
         if row['status'] not in STATUSES:raise ValueError('Invalid execution status')
         if row['status']=='not_executed':
             if not row.get('reason') or not row.get('blocker'):raise ValueError('Unexecuted sensitive case requires concrete blocker/reason')
@@ -56,8 +61,15 @@ def validate_manifest(manifest,root=ROOT):
             if str(path) not in cached:cached[str(path)]=junit(path)
             actual=cached[str(path)].get(evidence['node'])
             if not actual or actual['status']!=row['status']:raise ValueError('Case not executed with claimed result')
+            if by_id[row['case_id']]['input']['attack_category']=='small_sample':
+                wanted='backend/tests/integration/test_wave3_analytics_vectors_postgres.py::test_vector_through_official_router_sql_postgres[analytics-'+row['case_id'].removeprefix('sec-small-sample-')+']'
+                if evidence['node']!=wanted:raise ValueError('Wrong original SQL vector operation')
+            elif actual['properties'].get('case_id')!=row['case_id']:raise ValueError('Evidence belongs to another attack case')
             if actual['timestamp']!=row['executed_at'] or actual['duration_seconds']!=evidence['duration_seconds']:raise ValueError('Timing differs from executed node')
             run=row['run']
+            if run not in runs:raise ValueError('Command not present in actual execution ledger')
+            xml_arguments=[arg.split('=',1)[1].replace('\\','/') for arg in run['command'] if arg.startswith('--junitxml=')]
+            if not any(arg.endswith('/'+path.name) for arg in xml_arguments):raise ValueError('Command did not produce this report')
             if not run.get('command') or not run.get('cwd') or not run.get('start') or not run.get('end'):raise ValueError('Actual command metadata required')
             if run['exit_code']!=0 and row['status']=='automated_passed':raise ValueError('Passing claim cannot use a failed command')
     return dict(Counter(r['status'] for r in rows))
@@ -97,6 +109,7 @@ def build(root=ROOT):
         rows.append(row)
     result={'version':'wave3-gate-executed-v1','data':'synthetic only; no real models or learners',
         'datasets':{p:digest(root/p) for p in ['data/evaluation/security_cases.yaml','data/evaluation/analytics_vectors.yaml','data/evaluation/diagnosis_cases.yaml']},
+        'dataset_lf_sha256':{p:hashlib.sha256((root/p).read_bytes().replace(b'\r\n',b'\n')).hexdigest() for p in ['data/evaluation/security_cases.yaml','data/evaluation/analytics_vectors.yaml','data/evaluation/diagnosis_cases.yaml']},
         'external_adapter_gaps':[
             {'id':'WG-EXTERNAL-ERASURE','reason':'Retrieval/cache/model-reference adapters are in-memory. Installed pgvector is not an implemented persistent vector adapter; physical external erasure, late external writers and cache invalidation are not proven. Require ADR and authorized adapter scope before production.'}
         ],'cases':rows}

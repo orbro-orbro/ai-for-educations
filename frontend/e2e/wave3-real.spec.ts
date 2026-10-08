@@ -48,6 +48,7 @@ test("real student learning, compiler, hints and owned memory lifecycle",async({
   await page.goto("/teacher/courses/course-a");await expect(page.getByRole("heading",{name:"课程诊断台"})).toHaveCount(0);
   expect((await authenticated(page,"/teacher/courses/course-a/analytics")).status).toBe(404);
   await page.getByRole("combobox",{name:"课程",exact:true}).selectOption("course-a");
+  await expect(page.getByText("正在准备课程与练习…",{exact:true})).toHaveCount(0);
   await page.getByLabel("仓颉源码").fill("enum Choice { A | B }\nmain() {\n  match (Choice.A) { case A => 1 }\n}");
   await page.getByRole("button",{name:"提交并运行"}).click();await expect(page.getByText("编译未通过",{exact:true})).toBeVisible({timeout:30_000});
   await expect(page.getByRole("heading",{name:"结构化误区诊断"})).toBeVisible();

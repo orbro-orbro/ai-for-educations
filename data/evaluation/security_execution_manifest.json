@@ -6,6 +6,11 @@
     "data/evaluation/analytics_vectors.yaml": "dbef2c0beb43de36faac58fbd9eb4b3277b039c046c9e607435be25d1a8ba2b5",
     "data/evaluation/diagnosis_cases.yaml": "76c0f880a54243b18a1c098013ee161b3a1921ced93a2225625435ac4bd58c4a"
   },
+  "dataset_lf_sha256": {
+    "data/evaluation/security_cases.yaml": "a5a33c34cc95887988972dd094d4743d14bd8c5e31df501f71c2d21fff36e34e",
+    "data/evaluation/analytics_vectors.yaml": "ccb7d5c512137d6f4eb2cbc74cef9684847d953a0f72c7142c9d74c805eb032d",
+    "data/evaluation/diagnosis_cases.yaml": "96ace03aab66ca806e5e56152d1fe939cf8701c6d3b31c6422e95c84d49d4410"
+  },
   "external_adapter_gaps": [
     {
       "id": "WG-EXTERNAL-ERASURE",

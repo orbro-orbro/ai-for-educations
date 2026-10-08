@@ -1,0 +1,2 @@
+tests/student-flow.test.tsx(160,127): error TS2339: Property 'method' does not exist on type 'number'.
+tests/student-flow.test.tsx(342,107): error TS2339: Property 'method' does not exist on type 'number'.

@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "status": "in_progress",
+  "status": "validation_passed_review_pending",
   "commands": [
     {
       "phase": "G0-baseline",
@@ -33,7 +33,10 @@
         "........................................................................ [ 91%]",
         ".......                                                                  [100%]",
         "79 passed in 20.16s"
-      ]
+      ],
+      "archived_evidence_path": "docs/experiments/wave3-evidence/command-output/G0-baseline-20261008001312.txt",
+      "archived_sha256": "406bef9745b4e7d2629b21857275dae2f932c05dfdc57bda94e40984ea8bea26",
+      "archive_note": "Actual raw bytes retained locally. Archive redacts credentials, normalizes LF/UTF-8 and trims trailing display whitespace; undecodable child-process bytes use reversible backslash escapes. Original SHA above; archive SHA separate."
     },
     {
       "phase": "G0-ports-red",
@@ -76,7 +79,10 @@
         "=========================== short test summary info ===========================",
         "FAILED tests/contracts/test_wave3_environment.py::test_gate_services_are_reachable_over_loopback",
         "1 failed, 10 passed in 7.04s"
-      ]
+      ],
+      "archived_evidence_path": "docs/experiments/wave3-evidence/command-output/G0-ports-red-20261008001653.txt",
+      "archived_sha256": "ceec0f85620c505eafd0409c2bab9d66d21d109ec3ec48dc74bfa380793e872e",
+      "archive_note": "Actual raw bytes retained locally. Archive redacts credentials, normalizes LF/UTF-8 and trims trailing display whitespace; undecodable child-process bytes use reversible backslash escapes. Original SHA above; archive SHA separate."
     },
     {
       "phase": "G0-environment-green",
@@ -107,7 +113,10 @@
       "summary": [
         "...........                                                              [100%]",
         "11 passed in 0.55s"
-      ]
+      ],
+      "archived_evidence_path": "docs/experiments/wave3-evidence/command-output/G0-environment-green-20261008001809.txt",
+      "archived_sha256": "d6cff2f2925132c630ef376a17a4aa2060357c2db6186ec0463be31304c90104",
+      "archive_note": "Actual raw bytes retained locally. Archive redacts credentials, normalizes LF/UTF-8 and trims trailing display whitespace; undecodable child-process bytes use reversible backslash escapes. Original SHA above; archive SHA separate."
     },
     {
       "phase": "G1-task8",
@@ -139,7 +148,10 @@
         "........................................................................ [ 98%]",
         ".                                                                        [100%]",
         "73 passed in 28.71s"
-      ]
+      ],
+      "archived_evidence_path": "docs/experiments/wave3-evidence/command-output/G1-task8-20261008001853.txt",
+      "archived_sha256": "d5853343f1b21a4c68b3ba426683d84be9157bb6e49b0f2455e2740b3c2b73bc",
+      "archive_note": "Actual raw bytes retained locally. Archive redacts credentials, normalizes LF/UTF-8 and trims trailing display whitespace; undecodable child-process bytes use reversible backslash escapes. Original SHA above; archive SHA separate."
     },
     {
       "phase": "G1-task9-components",
@@ -172,7 +184,10 @@
         "   Start at  08:21:04",
         "   Duration  47.27s (environment 73%, setup 18%, tests 4%, import 2%, transform 2%)",
         ""
-      ]
+      ],
+      "archived_evidence_path": "docs/experiments/wave3-evidence/command-output/G1-task9-components-20261008002059.txt",
+      "archived_sha256": "feb1a2483b4340809fc95752347e9f5cc9350e647801f09b10f1c736dbe3cf01",
+      "archive_note": "Actual raw bytes retained locally. Archive redacts credentials, normalizes LF/UTF-8 and trims trailing display whitespace; undecodable child-process bytes use reversible backslash escapes. Original SHA above; archive SHA separate."
     },
     {
       "phase": "G1-task9-build",
@@ -207,7 +222,10 @@
         "dist/assets/index-XSzbZvCK.js   257.41 kB │ gzip: 79.31 kB",
         "",
         "✓ built in 739ms"
-      ]
+      ],
+      "archived_evidence_path": "docs/experiments/wave3-evidence/command-output/G1-task9-build-20261008002153.txt",
+      "archived_sha256": "65886add03ff84cb9e0c1170739b5835ef5c64055a39cb3f352565156db85c4e",
+      "archive_note": "Actual raw bytes retained locally. Archive redacts credentials, normalizes LF/UTF-8 and trims trailing display whitespace; undecodable child-process bytes use reversible backslash escapes. Original SHA above; archive SHA separate."
     },
     {
       "phase": "G1-task9-browser",
@@ -239,7 +257,10 @@
         "  ok 2 e2e\\learning-loop.spec.ts:80:1 › teacher sees only anonymous signals on a phone viewport (1.1s)",
         "",
         "  2 passed (15.3s)"
-      ]
+      ],
+      "archived_evidence_path": "docs/experiments/wave3-evidence/command-output/G1-task9-browser-20261008002240.txt",
+      "archived_sha256": "75b895a86ecbdb36684c6154fd94e3039d7f485962c56606734657fa7d399c80",
+      "archive_note": "Actual raw bytes retained locally. Archive redacts credentials, normalizes LF/UTF-8 and trims trailing display whitespace; undecodable child-process bytes use reversible backslash escapes. Original SHA above; archive SHA separate."
     },
     {
       "phase": "G1-task9-cors",
@@ -270,7 +291,10 @@
       "summary": [
         ".........                                                                [100%]",
         "9 passed in 2.33s"
-      ]
+      ],
+      "archived_evidence_path": "docs/experiments/wave3-evidence/command-output/G1-task9-cors-20261008002333.txt",
+      "archived_sha256": "1dd711c9bb807fa33efd62c429924dc2301b286237c14c314c6539e55049101e",
+      "archive_note": "Actual raw bytes retained locally. Archive redacts credentials, normalizes LF/UTF-8 and trims trailing display whitespace; undecodable child-process bytes use reversible backslash escapes. Original SHA above; archive SHA separate."
     },
     {
       "phase": "G1-task10-historical-red",
@@ -315,7 +339,10 @@
         "FAILED tests/security/test_prompt_injection.py::test_raw_source_must_not_enter_final_model_request",
         "FAILED tests/security/test_prompt_injection.py::test_deleted_memory_original_text_cannot_reenter_model_context",
         "9 failed, 196 passed in 132.29s (0:02:12)"
-      ]
+      ],
+      "archived_evidence_path": "docs/experiments/wave3-evidence/command-output/G1-task10-historical-red-20261008002530.txt",
+      "archived_sha256": "32d478aa4d43efeeee207ec3cccc03c530cc97d79b38476b8e316e102002e1f8",
+      "archive_note": "Actual raw bytes retained locally. Archive redacts credentials, normalizes LF/UTF-8 and trims trailing display whitespace; undecodable child-process bytes use reversible backslash escapes. Original SHA above; archive SHA separate."
     },
     {
       "phase": "G1-front-config",
@@ -348,7 +375,10 @@
         "   Start at  08:29:41",
         "   Duration  5.69s (tests 35%, environment 32%, transform 13%, setup 13%, import 7%)",
         ""
-      ]
+      ],
+      "archived_evidence_path": "docs/experiments/wave3-evidence/command-output/G1-front-config-20261008002939.txt",
+      "archived_sha256": "393be9930163a8aeaffaee38162de354678c2006b0bcdef22a8d78f7b06e84a3",
+      "archive_note": "Actual raw bytes retained locally. Archive redacts credentials, normalizes LF/UTF-8 and trims trailing display whitespace; undecodable child-process bytes use reversible backslash escapes. Original SHA above; archive SHA separate."
     },
     {
       "phase": "G1-front-build",
@@ -383,7 +413,10 @@
         "dist/assets/index-XSzbZvCK.js   257.41 kB │ gzip: 79.31 kB",
         "",
         "✓ built in 418ms"
-      ]
+      ],
+      "archived_evidence_path": "docs/experiments/wave3-evidence/command-output/G1-front-build-20261008002947.txt",
+      "archived_sha256": "c8515cfbd0e03d32546d51a82e72436b33f56e969750743956392b76fa264895",
+      "archive_note": "Actual raw bytes retained locally. Archive redacts credentials, normalizes LF/UTF-8 and trims trailing display whitespace; undecodable child-process bytes use reversible backslash escapes. Original SHA above; archive SHA separate."
     },
     {
       "phase": "G1-config-types",
@@ -421,7 +454,10 @@
         "error TS2688: Cannot find type definition file for 'node'.",
         "  The file is in the program because:",
         "    Entry point of type library 'node' specified in compilerOptions"
-      ]
+      ],
+      "archived_evidence_path": "docs/experiments/wave3-evidence/command-output/G1-config-types-20261008003046.txt",
+      "archived_sha256": "22d754e33e5e414d820e237c9e477c81ec8db495c45ab51f7665351a89a3c783",
+      "archive_note": "Actual raw bytes retained locally. Archive redacts credentials, normalizes LF/UTF-8 and trims trailing display whitespace; undecodable child-process bytes use reversible backslash escapes. Original SHA above; archive SHA separate."
     },
     {
       "phase": "G1-shared-root",
@@ -454,7 +490,10 @@
       "summary": [
         "............................                                             [100%]",
         "28 passed in 5.04s"
-      ]
+      ],
+      "archived_evidence_path": "docs/experiments/wave3-evidence/command-output/G1-shared-root-20261008003049.txt",
+      "archived_sha256": "cdd447c800677979a5874adf16305b7309c2e4a7af711716375dc321ae617e50",
+      "archive_note": "Actual raw bytes retained locally. Archive redacts credentials, normalizes LF/UTF-8 and trims trailing display whitespace; undecodable child-process bytes use reversible backslash escapes. Original SHA above; archive SHA separate."
     },
     {
       "phase": "G1-task10-repairs-green",
@@ -490,7 +529,10 @@
         "........................................................................ [ 98%]",
         "....                                                                     [100%]",
         "220 passed in 186.54s (0:03:06)"
-      ]
+      ],
+      "archived_evidence_path": "docs/experiments/wave3-evidence/command-output/G1-task10-repairs-green-20261008002839.txt",
+      "archived_sha256": "84e233eabc8e99f484f4639311848af0c00b8bdb9498dcb97c574a5c708d2a6d",
+      "archive_note": "Actual raw bytes retained locally. Archive redacts credentials, normalizes LF/UTF-8 and trims trailing display whitespace; undecodable child-process bytes use reversible backslash escapes. Original SHA above; archive SHA separate."
     },
     {
       "phase": "G1-config-types-green",
@@ -524,7 +566,10 @@
       "data": "synthetic only",
       "evidence_path": ".superpowers\\sdd\\2026-10-08-wave3-integration-gate\\G1-config-types-green-20261008003228.log",
       "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-      "summary": []
+      "summary": [],
+      "archived_evidence_path": "docs/experiments/wave3-evidence/command-output/G1-config-types-green-20261008003228.txt",
+      "archived_sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b",
+      "archive_note": "Actual raw bytes retained locally. Archive redacts credentials, normalizes LF/UTF-8 and trims trailing display whitespace; undecodable child-process bytes use reversible backslash escapes. Original SHA above; archive SHA separate."
     },
     {
       "phase": "G2-sql-red",
@@ -569,7 +614,10 @@
         "FAILED tests/integration/test_wave3_analytics_postgres.py::test_distinct_students_at_sql_boundary[4-insufficient_sample]",
         "!!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!",
         "1 failed, 1 warning in 13.20s"
-      ]
+      ],
+      "archived_evidence_path": "docs/experiments/wave3-evidence/command-output/G2-sql-red-20261008003427.txt",
+      "archived_sha256": "c3392100d81babafc24336e47a88cd6f278e63faf9bf2d9340bb7fb9c530dd91",
+      "archive_note": "Actual raw bytes retained locally. Archive redacts credentials, normalizes LF/UTF-8 and trims trailing display whitespace; undecodable child-process bytes use reversible backslash escapes. Original SHA above; archive SHA separate."
     },
     {
       "phase": "G2-course-seed-red",
@@ -613,7 +661,10 @@
         "=========================== short test summary info ===========================",
         "FAILED tests/integration/test_wave3_analytics_postgres.py::test_course_and_authorized_teacher_are_persisted_in_foreign_key_order",
         "1 failed, 1 warning in 15.13s"
-      ]
+      ],
+      "archived_evidence_path": "docs/experiments/wave3-evidence/command-output/G2-course-seed-red-20261008003558.txt",
+      "archived_sha256": "615278aa6350ccf0bcdaed7d34c195fba7300a437381c1d42415607598b6245c",
+      "archive_note": "Actual raw bytes retained locally. Archive redacts credentials, normalizes LF/UTF-8 and trims trailing display whitespace; undecodable child-process bytes use reversible backslash escapes. Original SHA above; archive SHA separate."
     },
     {
       "phase": "G2-data-source-red",
@@ -658,7 +709,10 @@
         "FAILED tests/integration/test_wave3_analytics_postgres.py::test_distinct_students_at_sql_boundary[4-insufficient_sample]",
         "!!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!",
         "1 failed, 1 passed, 2 warnings in 9.67s"
-      ]
+      ],
+      "archived_evidence_path": "docs/experiments/wave3-evidence/command-output/G2-data-source-red-20261008003659.txt",
+      "archived_sha256": "668d333ad6d2923570cd1135d6c6852a44fb4d0be2de741491ec9f99e615c57f",
+      "archive_note": "Actual raw bytes retained locally. Archive redacts credentials, normalizes LF/UTF-8 and trims trailing display whitespace; undecodable child-process bytes use reversible backslash escapes. Original SHA above; archive SHA separate."
     },
     {
       "phase": "G2-sql-green",
@@ -702,7 +756,10 @@
         "=========================== short test summary info ===========================",
         "FAILED tests/integration/test_wave3_analytics_postgres.py::test_sql_queue_projects_course_evidence_without_private_text",
         "1 failed, 10 passed, 11 warnings in 29.64s"
-      ]
+      ],
+      "archived_evidence_path": "docs/experiments/wave3-evidence/command-output/G2-sql-green-20261008003900.txt",
+      "archived_sha256": "e8442aaeaa831cd3e4c8ca89ec39cf247e2544693904c3e5f7dab39df6f6f7d4",
+      "archive_note": "Actual raw bytes retained locally. Archive redacts credentials, normalizes LF/UTF-8 and trims trailing display whitespace; undecodable child-process bytes use reversible backslash escapes. Original SHA above; archive SHA separate."
     },
     {
       "phase": "G2-development-red",
@@ -740,7 +797,10 @@
         "=========================== short test summary info ===========================",
         "FAILED tests/analytics/test_data_source.py::test_development_projection_reads_current_diagnoses_and_safe_course_evidence",
         "1 failed in 8.01s"
-      ]
+      ],
+      "archived_evidence_path": "docs/experiments/wave3-evidence/command-output/G2-development-red-20261008004109.txt",
+      "archived_sha256": "fa91980d84fcc2f9bc9cbef28cd525413832d5854110ef620c5ce001efaadad8",
+      "archive_note": "Actual raw bytes retained locally. Archive redacts credentials, normalizes LF/UTF-8 and trims trailing display whitespace; undecodable child-process bytes use reversible backslash escapes. Original SHA above; archive SHA separate."
     },
     {
       "phase": "G2-development-repair-red",
@@ -783,7 +843,10 @@
         "FAILED tests/analytics/test_data_source.py::test_development_projection_reads_current_diagnoses_and_safe_course_evidence",
         "FAILED tests/analytics/test_data_source.py::test_development_repair_requires_an_explicit_link_to_the_successful_retry",
         "2 failed in 6.28s"
-      ]
+      ],
+      "archived_evidence_path": "docs/experiments/wave3-evidence/command-output/G2-development-repair-red-20261008004221.txt",
+      "archived_sha256": "e42cc5dcd251d7a0827ff37e50efa279b7ee97bfe7b95fc072fe1d005ae53fd8",
+      "archive_note": "Actual raw bytes retained locally. Archive redacts credentials, normalizes LF/UTF-8 and trims trailing display whitespace; undecodable child-process bytes use reversible backslash escapes. Original SHA above; archive SHA separate."
     },
     {
       "phase": "G2-all-green",
@@ -822,7 +885,10 @@
         "",
         "-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html",
         "81 passed, 11 warnings in 52.40s"
-      ]
+      ],
+      "archived_evidence_path": "docs/experiments/wave3-evidence/command-output/G2-all-green-20261008004329.txt",
+      "archived_sha256": "6edcead2841d2dea6cf4853de4be4ca73fc9923b0e144d2aab02c308bc5fd64a",
+      "archive_note": "Actual raw bytes retained locally. Archive redacts credentials, normalizes LF/UTF-8 and trims trailing display whitespace; undecodable child-process bytes use reversible backslash escapes. Original SHA above; archive SHA separate."
     },
     {
       "phase": "G2-projection-evidence",
@@ -859,7 +925,10 @@
         "",
         "-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html",
         "12 passed, 12 warnings in 24.42s"
-      ]
+      ],
+      "archived_evidence_path": "docs/experiments/wave3-evidence/command-output/G2-projection-evidence-20261008004558.txt",
+      "archived_sha256": "dc7ef8c2b788c94c36f5ec57becfdaba78073ce1a6a6485632a279ed08e05409",
+      "archive_note": "Actual raw bytes retained locally. Archive redacts credentials, normalizes LF/UTF-8 and trims trailing display whitespace; undecodable child-process bytes use reversible backslash escapes. Original SHA above; archive SHA separate."
     },
     {
       "phase": "G2-final",
@@ -898,7 +967,10 @@
         "",
         "-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html",
         "83 passed, 13 warnings in 61.34s (0:01:01)"
-      ]
+      ],
+      "archived_evidence_path": "docs/experiments/wave3-evidence/command-output/G2-final-20261008004727.txt",
+      "archived_sha256": "e7204b7924364508b10046b50c2f1f89ae15aacce8b4a86398676b65844864ff",
+      "archive_note": "Actual raw bytes retained locally. Archive redacts credentials, normalizes LF/UTF-8 and trims trailing display whitespace; undecodable child-process bytes use reversible backslash escapes. Original SHA above; archive SHA separate."
     },
     {
       "phase": "G3-reviews-red",
@@ -943,7 +1015,10 @@
         "FAILED tests/integration/test_wave3_reviews_postgres.py::test_review_replays_only_identical_trimmed_decision_and_never_changes_private_memory",
         "!!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!",
         "1 failed, 1 warning in 9.17s"
-      ]
+      ],
+      "archived_evidence_path": "docs/experiments/wave3-evidence/command-output/G3-reviews-red-20261008005039.txt",
+      "archived_sha256": "e9d83674ab4cb7725a6682da3007aa94ef77b6640f527b8b1d37db3dcabb9d30",
+      "archive_note": "Actual raw bytes retained locally. Archive redacts credentials, normalizes LF/UTF-8 and trims trailing display whitespace; undecodable child-process bytes use reversible backslash escapes. Original SHA above; archive SHA separate."
     },
     {
       "phase": "G3-reviews-green",
@@ -984,7 +1059,10 @@
         "",
         "-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html",
         "89 passed, 19 warnings in 62.28s (0:01:02)"
-      ]
+      ],
+      "archived_evidence_path": "docs/experiments/wave3-evidence/command-output/G3-reviews-green-20261008005211.txt",
+      "archived_sha256": "481775853eeb293ec2a95a34609fac03f1f939afc432e04f86489f14b1b910f3",
+      "archive_note": "Actual raw bytes retained locally. Archive redacts credentials, normalizes LF/UTF-8 and trims trailing display whitespace; undecodable child-process bytes use reversible backslash escapes. Original SHA above; archive SHA separate."
     },
     {
       "phase": "G3-legacy-postgres",
@@ -1034,7 +1112,10 @@
         "FAILED tests/integration/test_task6_postgres.py::test_postgres_rejects_cross_course_diagnosis_concept",
         "FAILED tests/integration/test_task6_postgres.py::test_two_repository_instances_serialize_postgres_hint_levels",
         "2 failed, 23 passed, 32 warnings in 49.70s"
-      ]
+      ],
+      "archived_evidence_path": "docs/experiments/wave3-evidence/command-output/G3-legacy-postgres-20261008005305.txt",
+      "archived_sha256": "f92036e46559f02964f295139946d47102146ef1b003c5c9063dce4626d927b7",
+      "archive_note": "Actual raw bytes retained locally. Archive redacts credentials, normalizes LF/UTF-8 and trims trailing display whitespace; undecodable child-process bytes use reversible backslash escapes. Original SHA above; archive SHA separate."
     },
     {
       "phase": "G3-legacy-postgres-green",
@@ -1079,7 +1160,10 @@
         "",
         "-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html",
         "25 passed, 32 warnings in 31.51s"
-      ]
+      ],
+      "archived_evidence_path": "docs/experiments/wave3-evidence/command-output/G3-legacy-postgres-green-20261008005519.txt",
+      "archived_sha256": "a952ee75339a81eb9aa84b23020098f56bee21f2ee9bc01a00dd3746c82b1ce2",
+      "archive_note": "Actual raw bytes retained locally. Archive redacts credentials, normalizes LF/UTF-8 and trims trailing display whitespace; undecodable child-process bytes use reversible backslash escapes. Original SHA above; archive SHA separate."
     },
     {
       "phase": "G3-final-reviews",
@@ -1122,7 +1206,10 @@
         "",
         "-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html",
         "7 passed, 7 warnings in 14.45s"
-      ]
+      ],
+      "archived_evidence_path": "docs/experiments/wave3-evidence/command-output/G3-final-reviews-20261008005616.txt",
+      "archived_sha256": "47adc3ea2a2c44f1d9b895f0e8a7718c4d6cbc0dc287e9735ada13d1233263a6",
+      "archive_note": "Actual raw bytes retained locally. Archive redacts credentials, normalizes LF/UTF-8 and trims trailing display whitespace; undecodable child-process bytes use reversible backslash escapes. Original SHA above; archive SHA separate."
     },
     {
       "phase": "G4-runtime-red",
@@ -1167,7 +1254,10 @@
         "FAILED tests/integration/test_wave3_gate.py::test_default_sql_application_mounts_teacher_routes_and_preserves_security_dependencies",
         "FAILED tests/integration/test_wave3_gate.py::test_development_application_uses_dynamic_domain_projection",
         "43 failed, 1 warning in 30.94s"
-      ]
+      ],
+      "archived_evidence_path": "docs/experiments/wave3-evidence/command-output/G4-runtime-red-20261008010030.txt",
+      "archived_sha256": "8bc876e87e4422cc8c430e3a1d4212d88c4b9f9eb5c2c327a44d0a724d838453",
+      "archive_note": "Actual raw bytes retained locally. Archive redacts credentials, normalizes LF/UTF-8 and trims trailing display whitespace; undecodable child-process bytes use reversible backslash escapes. Original SHA above; archive SHA separate."
     },
     {
       "phase": "G4-mount",
@@ -1204,7 +1294,10 @@
         "",
         "-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html",
         "2 passed, 1 warning in 4.35s"
-      ]
+      ],
+      "archived_evidence_path": "docs/experiments/wave3-evidence/command-output/G4-mount-20261008011026.txt",
+      "archived_sha256": "ae919452c9128f811b559bffd02a1eb70fde138edb22abace0eca80deb79ee9f",
+      "archive_note": "Actual raw bytes retained locally. Archive redacts credentials, normalizes LF/UTF-8 and trims trailing display whitespace; undecodable child-process bytes use reversible backslash escapes. Original SHA above; archive SHA separate."
     },
     {
       "phase": "G4-partial",
@@ -1249,7 +1342,10 @@
         "FAILED tests/knowledge/test_graph.py::test_api_misconception_with_unknown_root_is_rejected",
         "FAILED tests/knowledge/test_graph.py::test_api_edge_rules - assert 422 == 201",
         "17 failed, 91 passed in 57.32s"
-      ]
+      ],
+      "archived_evidence_path": "docs/experiments/wave3-evidence/command-output/G4-partial-20261008011647.txt",
+      "archived_sha256": "9ceeecdbc62481c6f98c47bb9931d27f8cd7b4998657b98ae7c999a8f8c91bdb",
+      "archive_note": "Actual raw bytes retained locally. Archive redacts credentials, normalizes LF/UTF-8 and trims trailing display whitespace; undecodable child-process bytes use reversible backslash escapes. Original SHA above; archive SHA separate."
     },
     {
       "phase": "G4-http-red",
@@ -1288,7 +1384,10 @@
         "=========================== short test summary info ===========================",
         "FAILED tests/contracts/test_wave3_http_contract.py::test_deleted_diagnosis_is_unavailable_instead_of_invalid_empty_success",
         "1 failed, 1 passed in 7.78s"
-      ]
+      ],
+      "archived_evidence_path": "docs/experiments/wave3-evidence/command-output/G4-http-red-20261008011813.txt",
+      "archived_sha256": "d6159ef04a2900c7204f71744d1d85c4c2edb1e3f50005d8e1eb181846b62041",
+      "archive_note": "Actual raw bytes retained locally. Archive redacts credentials, normalizes LF/UTF-8 and trims trailing display whitespace; undecodable child-process bytes use reversible backslash escapes. Original SHA above; archive SHA separate."
     },
     {
       "phase": "G4-green",
@@ -1325,7 +1424,10 @@
         "",
         "",
         "no tests ran in 0.00s"
-      ]
+      ],
+      "archived_evidence_path": "docs/experiments/wave3-evidence/command-output/G4-green-20261008012137.txt",
+      "archived_sha256": "8c24aa59b02ce4b883a4dd7a127fd222ff8145e99616b7d13063c86fee765bf7",
+      "archive_note": "Actual raw bytes retained locally. Archive redacts credentials, normalizes LF/UTF-8 and trims trailing display whitespace; undecodable child-process bytes use reversible backslash escapes. Original SHA above; archive SHA separate."
     },
     {
       "phase": "G4-green-correct-path",
@@ -1362,7 +1464,10 @@
         "",
         "",
         "no tests ran in 0.00s"
-      ]
+      ],
+      "archived_evidence_path": "docs/experiments/wave3-evidence/command-output/G4-green-correct-path-20261008012156.txt",
+      "archived_sha256": "a58b7db4a6f97a441ebc51f57d06bee1a40d10856316c45e6ee8cd22ab39263e",
+      "archive_note": "Actual raw bytes retained locally. Archive redacts credentials, normalizes LF/UTF-8 and trims trailing display whitespace; undecodable child-process bytes use reversible backslash escapes. Original SHA above; archive SHA separate."
     },
     {
       "phase": "G4-green-verified-paths",
@@ -1410,7 +1515,10 @@
         "FAILED tests/contracts/test_wave3_http_contract.py::test_deleted_diagnosis_is_unavailable_instead_of_invalid_empty_success",
         "FAILED tests/integration/test_wave3_gate.py::test_default_sql_application_mounts_teacher_routes_and_preserves_security_dependencies",
         "2 failed, 218 passed, 1 warning in 106.80s (0:01:46)"
-      ]
+      ],
+      "archived_evidence_path": "docs/experiments/wave3-evidence/command-output/G4-green-verified-paths-20261008012216.txt",
+      "archived_sha256": "280980a3fb67772ab26363692859d020110b76129b32b93b40f2ee0eba6cb73b",
+      "archive_note": "Actual raw bytes retained locally. Archive redacts credentials, normalizes LF/UTF-8 and trims trailing display whitespace; undecodable child-process bytes use reversible backslash escapes. Original SHA above; archive SHA separate."
     },
     {
       "phase": "G5-vectors",
@@ -1455,7 +1563,10 @@
         "FAILED tests/integration/test_wave3_analytics_vectors_postgres.py::test_each_filter_counterexample_remains_in_sql[analytics-concept-time-four-distinct]",
         "FAILED tests/integration/test_wave3_analytics_vectors_postgres.py::test_each_filter_counterexample_remains_in_sql[analytics-all-four-distinct]",
         "39 failed, 23 passed, 116 warnings in 88.84s (0:01:28)"
-      ]
+      ],
+      "archived_evidence_path": "docs/experiments/wave3-evidence/command-output/G5-vectors-20261008012313.txt",
+      "archived_sha256": "0a5fed88a046ed7e146c977de8a6abd3a063fb7d809c1792a0232e6466d03ccc",
+      "archive_note": "Actual raw bytes retained locally. Archive redacts credentials, normalizes LF/UTF-8 and trims trailing display whitespace; undecodable child-process bytes use reversible backslash escapes. Original SHA above; archive SHA separate."
     },
     {
       "phase": "G6-ui-red",
@@ -1490,7 +1601,10 @@
         "   Start at  09:25:58",
         "   Duration  53.60s (environment 74%, setup 15%, tests 8%, transform 2%, import 1%)",
         ""
-      ]
+      ],
+      "archived_evidence_path": "docs/experiments/wave3-evidence/command-output/G6-ui-red-20261008012554.txt",
+      "archived_sha256": "c957006328e39180128425423f1352b8582034d8ea82701b35c6d43553fe237c",
+      "archive_note": "Actual raw bytes retained locally. Archive redacts credentials, normalizes LF/UTF-8 and trims trailing display whitespace; undecodable child-process bytes use reversible backslash escapes. Original SHA above; archive SHA separate."
     },
     {
       "phase": "G6-ui-green",
@@ -1523,7 +1637,10 @@
         "   Start at  09:28:43",
         "   Duration  4.59s (tests 53%, environment 25%, transform 10%, setup 6%, import 6%)",
         ""
-      ]
+      ],
+      "archived_evidence_path": "docs/experiments/wave3-evidence/command-output/G6-ui-green-20261008012842.txt",
+      "archived_sha256": "ee24de880c265a035549ad31075c980bc8e0279507d505dad6b434973b6effbd",
+      "archive_note": "Actual raw bytes retained locally. Archive redacts credentials, normalizes LF/UTF-8 and trims trailing display whitespace; undecodable child-process bytes use reversible backslash escapes. Original SHA above; archive SHA separate."
     },
     {
       "phase": "G4-final",
@@ -1571,7 +1688,10 @@
         "",
         "-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html",
         "240 passed, 21 warnings in 123.69s (0:02:03)"
-      ]
+      ],
+      "archived_evidence_path": "docs/experiments/wave3-evidence/command-output/G4-final-20261008012736.txt",
+      "archived_sha256": "67896ae5ac4219a5720820261197ee3d0e00099cecf7ceb2cf584b7cb1f17be2",
+      "archive_note": "Actual raw bytes retained locally. Archive redacts credentials, normalizes LF/UTF-8 and trims trailing display whitespace; undecodable child-process bytes use reversible backslash escapes. Original SHA above; archive SHA separate."
     },
     {
       "phase": "G6-build",
@@ -1606,7 +1726,10 @@
         "dist/assets/index-CaShwWOu.js   257.86 kB │ gzip: 79.44 kB",
         "",
         "✓ built in 488ms"
-      ]
+      ],
+      "archived_evidence_path": "docs/experiments/wave3-evidence/command-output/G6-build-20261008013104.txt",
+      "archived_sha256": "60eccc144a99b660089418c0060112ce6992e0296cec4f90e2d056a4d1b35c5a",
+      "archive_note": "Actual raw bytes retained locally. Archive redacts credentials, normalizes LF/UTF-8 and trims trailing display whitespace; undecodable child-process bytes use reversible backslash escapes. Original SHA above; archive SHA separate."
     },
     {
       "phase": "G5-vectors-green",
@@ -1653,7 +1776,10 @@
         "FAILED tests/integration/test_wave3_analytics_vectors_postgres.py::test_vector_through_official_router_sql_postgres[analytics-exercise-time-foreign-course]",
         "FAILED tests/integration/test_wave3_analytics_vectors_postgres.py::test_vector_through_official_router_sql_postgres[analytics-all-foreign-course]",
         "9 failed, 53 passed, 62 warnings in 129.33s (0:02:09)"
-      ]
+      ],
+      "archived_evidence_path": "docs/experiments/wave3-evidence/command-output/G5-vectors-green-20261008013046.txt",
+      "archived_sha256": "2ea8ee992a57ae8133d5612d0cedf523e50e39a8f18bc77bc9a541f14f333d4d",
+      "archive_note": "Actual raw bytes retained locally. Archive redacts credentials, normalizes LF/UTF-8 and trims trailing display whitespace; undecodable child-process bytes use reversible backslash escapes. Original SHA above; archive SHA separate."
     },
     {
       "phase": "G7-migrations",
@@ -1700,7 +1826,10 @@
         "ERROR tests/integration/test_wave3_migrations_postgres.py::test_actual_migrated_constraints[foreign_course]",
         "ERROR tests/integration/test_wave3_migrations_postgres.py::test_actual_migrated_constraints[duplicate_review]",
         "9 errors in 10.77s"
-      ]
+      ],
+      "archived_evidence_path": "docs/experiments/wave3-evidence/command-output/G7-migrations-20261008013252.txt",
+      "archived_sha256": "66c2541b815178a1daadecdb6c5626bab8bcdc74530e9e11ec3afbc8f07ff379",
+      "archive_note": "Actual raw bytes retained locally. Archive redacts credentials, normalizes LF/UTF-8 and trims trailing display whitespace; undecodable child-process bytes use reversible backslash escapes. Original SHA above; archive SHA separate."
     },
     {
       "phase": "G7-migrations-correct-fixture",
@@ -1747,7 +1876,10 @@
         "FAILED tests/integration/test_wave3_migrations_postgres.py::test_actual_migrated_constraints[foreign_course]",
         "FAILED tests/integration/test_wave3_migrations_postgres.py::test_actual_migrated_constraints[duplicate_review]",
         "8 failed, 1 passed, 15 warnings in 20.20s"
-      ]
+      ],
+      "archived_evidence_path": "docs/experiments/wave3-evidence/command-output/G7-migrations-correct-fixture-20261008013452.txt",
+      "archived_sha256": "ac6ecb6979c2adc0226010479d9834b5d164ae62181a10de7ecdfd9310b89c76",
+      "archive_note": "Actual raw bytes retained locally. Archive redacts credentials, normalizes LF/UTF-8 and trims trailing display whitespace; undecodable child-process bytes use reversible backslash escapes. Original SHA above; archive SHA separate."
     },
     {
       "phase": "G5-vectors-final",
@@ -1787,7 +1919,10 @@
         "",
         "-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html",
         "62 passed, 62 warnings in 128.33s (0:02:08)"
-      ]
+      ],
+      "archived_evidence_path": "docs/experiments/wave3-evidence/command-output/G5-vectors-final-20261008013430.txt",
+      "archived_sha256": "2d54402d3ede1e46a12f39c29c549e001768c7264836836be92f999caff9e0fe",
+      "archive_note": "Actual raw bytes retained locally. Archive redacts credentials, normalizes LF/UTF-8 and trims trailing display whitespace; undecodable child-process bytes use reversible backslash escapes. Original SHA above; archive SHA separate."
     },
     {
       "phase": "G7-migrations-final",
@@ -1827,7 +1962,10 @@
         "",
         "-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html",
         "10 passed, 28 warnings in 18.12s"
-      ]
+      ],
+      "archived_evidence_path": "docs/experiments/wave3-evidence/command-output/G7-migrations-final-20261008013826.txt",
+      "archived_sha256": "8ff70fc21141ae7625eff1f5b78cd8f1c49a6ac7b4799e316c69eca1372cc4e1",
+      "archive_note": "Actual raw bytes retained locally. Archive redacts credentials, normalizes LF/UTF-8 and trims trailing display whitespace; undecodable child-process bytes use reversible backslash escapes. Original SHA above; archive SHA separate."
     },
     {
       "phase": "G6-types",
@@ -1870,7 +2008,10 @@
       "sha256": "5b766b55df5bc15c215149742c8fe88d72a584cb45f5422c7edca1594b6d0cb5",
       "summary": [
         "error TS5112: tsconfig.json is present but will not be loaded if files are specified on commandline. Use '--ignoreConfig' to skip this error."
-      ]
+      ],
+      "archived_evidence_path": "docs/experiments/wave3-evidence/command-output/G6-types-20261008013927.txt",
+      "archived_sha256": "5b766b55df5bc15c215149742c8fe88d72a584cb45f5422c7edca1594b6d0cb5",
+      "archive_note": "Actual raw bytes retained locally. Archive redacts credentials, normalizes LF/UTF-8 and trims trailing display whitespace; undecodable child-process bytes use reversible backslash escapes. Original SHA above; archive SHA separate."
     },
     {
       "phase": "G6-types-explicit",
@@ -1929,7 +2070,10 @@
         "tests/teacher-privacy.test.tsx(193,63): error TS2339: Property 'toBeInTheDocument' does not exist on type 'Assertion<void, HTMLElement>'.",
         "tests/wave3-integration.test.tsx(41,60): error TS2339: Property 'toBeInTheDocument' does not exist on type 'Assertion<void, HTMLElement>'.",
         "tests/wave3-integration.test.tsx(76,93): error TS2339: Property 'toBeInTheDocument' does not exist on type 'Assertion<void, HTMLElement | null>'."
-      ]
+      ],
+      "archived_evidence_path": "docs/experiments/wave3-evidence/command-output/G6-types-explicit-20261008014012.txt",
+      "archived_sha256": "b4c6b465783be9892437da2bbd99bf8c1869e077f683c2f5c757829d49d8864d",
+      "archive_note": "Actual raw bytes retained locally. Archive redacts credentials, normalizes LF/UTF-8 and trims trailing display whitespace; undecodable child-process bytes use reversible backslash escapes. Original SHA above; archive SHA separate."
     },
     {
       "phase": "G8-original-browser",
@@ -1965,7 +2109,10 @@
         "  ok 16 [security-request] › e2e\\security.spec.ts:104:1 › logout makes a captured old bearer token unusable (85ms)",
         "",
         "  16 passed (14.2s)"
-      ]
+      ],
+      "archived_evidence_path": "docs/experiments/wave3-evidence/command-output/G8-original-browser-20261008014033.txt",
+      "archived_sha256": "dc53f6be0ca9f70119df01a2464d224f8f18a07d98d33773af824850b1d6077c",
+      "archive_note": "Actual raw bytes retained locally. Archive redacts credentials, normalizes LF/UTF-8 and trims trailing display whitespace; undecodable child-process bytes use reversible backslash escapes. Original SHA above; archive SHA separate."
     },
     {
       "phase": "G6-types-setup",
@@ -2013,7 +2160,10 @@
       "summary": [
         "tests/student-flow.test.tsx(160,127): error TS2339: Property 'method' does not exist on type 'number'.",
         "tests/student-flow.test.tsx(342,107): error TS2339: Property 'method' does not exist on type 'number'."
-      ]
+      ],
+      "archived_evidence_path": "docs/experiments/wave3-evidence/command-output/G6-types-setup-20261008014230.txt",
+      "archived_sha256": "27e029f2c0f3f887c09af35f1ae3d4027abe2e9515bd222c7e0d665a5e4fa87f",
+      "archive_note": "Actual raw bytes retained locally. Archive redacts credentials, normalizes LF/UTF-8 and trims trailing display whitespace; undecodable child-process bytes use reversible backslash escapes. Original SHA above; archive SHA separate."
     },
     {
       "phase": "G6-types-final",
@@ -2061,7 +2211,10 @@
       "summary": [
         "tests/student-flow.test.tsx(160,127): error TS2339: Property 'method' does not exist on type 'number'.",
         "tests/student-flow.test.tsx(342,107): error TS2339: Property 'method' does not exist on type 'number'."
-      ]
+      ],
+      "archived_evidence_path": "docs/experiments/wave3-evidence/command-output/G6-types-final-20261008014355.txt",
+      "archived_sha256": "27e029f2c0f3f887c09af35f1ae3d4027abe2e9515bd222c7e0d665a5e4fa87f",
+      "archive_note": "Actual raw bytes retained locally. Archive redacts credentials, normalizes LF/UTF-8 and trims trailing display whitespace; undecodable child-process bytes use reversible backslash escapes. Original SHA above; archive SHA separate."
     },
     {
       "phase": "G6-ui-assertion-final",
@@ -2094,7 +2247,10 @@
         "   Start at  09:44:11",
         "   Duration  6.47s (tests 54%, environment 22%, transform 12%, setup 7%, import 5%)",
         ""
-      ]
+      ],
+      "archived_evidence_path": "docs/experiments/wave3-evidence/command-output/G6-ui-assertion-final-20261008014410.txt",
+      "archived_sha256": "614cf686bf8488b54937462d753c6fdbe1d75db9c1b938519045b36a78443e25",
+      "archive_note": "Actual raw bytes retained locally. Archive redacts credentials, normalizes LF/UTF-8 and trims trailing display whitespace; undecodable child-process bytes use reversible backslash escapes. Original SHA above; archive SHA separate."
     },
     {
       "phase": "G8-ui-gate-red",
@@ -2132,7 +2288,10 @@
         "    [wave3-real-ui] › e2e\\wave3-real.spec.ts:17:1 › real teacher SQL threshold, denial, authoritative review and logout ",
         "    [wave3-real-ui] › e2e\\wave3-real.spec.ts:45:1 › real student learning, compiler, hints and owned memory lifecycle ",
         "  5 passed (2.5m)"
-      ]
+      ],
+      "archived_evidence_path": "docs/experiments/wave3-evidence/command-output/G8-ui-gate-red-20261008014303.txt",
+      "archived_sha256": "3d4061736b3e19f1caff1ccb07f46614d354c47397412d056bd30909a02fd1c2",
+      "archive_note": "Actual raw bytes retained locally. Archive redacts credentials, normalizes LF/UTF-8 and trims trailing display whitespace; undecodable child-process bytes use reversible backslash escapes. Original SHA above; archive SHA separate."
     },
     {
       "phase": "G6-types-confirmed",
@@ -2177,7 +2336,10 @@
       "data": "synthetic only",
       "evidence_path": ".superpowers\\sdd\\2026-10-08-wave3-integration-gate\\G6-types-confirmed-20261008014703.log",
       "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-      "summary": []
+      "summary": [],
+      "archived_evidence_path": "docs/experiments/wave3-evidence/command-output/G6-types-confirmed-20261008014703.txt",
+      "archived_sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b",
+      "archive_note": "Actual raw bytes retained locally. Archive redacts credentials, normalizes LF/UTF-8 and trims trailing display whitespace; undecodable child-process bytes use reversible backslash escapes. Original SHA above; archive SHA separate."
     },
     {
       "phase": "G8-ui-gate-retry",
@@ -2215,7 +2377,10 @@
         "  ok 9 [wave3-real-ui] › e2e\\wave3-real.spec.ts:45:1 › real student learning, compiler, hints and owned memory lifecycle (8.3s)",
         "",
         "  9 passed (29.7s)"
-      ]
+      ],
+      "archived_evidence_path": "docs/experiments/wave3-evidence/command-output/G8-ui-gate-retry-20261008014645.txt",
+      "archived_sha256": "39dcb89c1c4de9749111f48edbd3716d5dd45d959ee09ebb1915a7239beec2b7",
+      "archive_note": "Actual raw bytes retained locally. Archive redacts credentials, normalizes LF/UTF-8 and trims trailing display whitespace; undecodable child-process bytes use reversible backslash escapes. Original SHA above; archive SHA separate."
     },
     {
       "phase": "G6-final",
@@ -2248,7 +2413,10 @@
         "   Start at  09:47:33",
         "   Duration  4.50s (tests 54%, environment 25%, transform 10%, setup 7%, import 5%)",
         ""
-      ]
+      ],
+      "archived_evidence_path": "docs/experiments/wave3-evidence/command-output/G6-final-20261008014731.txt",
+      "archived_sha256": "ebc2b5d1d4fae9a82121cecb20807ceb01aaf162633bef30e8e8c93c0089e70b",
+      "archive_note": "Actual raw bytes retained locally. Archive redacts credentials, normalizes LF/UTF-8 and trims trailing display whitespace; undecodable child-process bytes use reversible backslash escapes. Original SHA above; archive SHA separate."
     },
     {
       "phase": "G8-controller-tests",
@@ -2308,7 +2476,10 @@
         "  File \"/opt/wave3-test-deps/_pytest/compat.py\", line 20, in <module>",
         "    import py",
         "ModuleNotFoundError: No module named 'py'"
-      ]
+      ],
+      "archived_evidence_path": "docs/experiments/wave3-evidence/command-output/G8-controller-tests-20261008015521.txt",
+      "archived_sha256": "06f02ab2d950d5b833331c0ab63b41dbbfb7518474441652e48b295f49d4ee2f",
+      "archive_note": "Actual raw bytes retained locally. Archive redacts credentials, normalizes LF/UTF-8 and trims trailing display whitespace; undecodable child-process bytes use reversible backslash escapes. Original SHA above; archive SHA separate."
     },
     {
       "phase": "G8-real-browser-final",
@@ -2346,7 +2517,10 @@
         "  ok 10 [wave3-real-ui] › e2e\\wave3-real.spec.ts:72:1 › real SQL logout failure is sanitized and remains retryable (1.2s)",
         "",
         "  10 passed (35.5s)"
-      ]
+      ],
+      "archived_evidence_path": "docs/experiments/wave3-evidence/command-output/G8-real-browser-final-20261008015608.txt",
+      "archived_sha256": "acad159bf02d9f4e32c8d2a9f1cab7b4bfdc5a14d089ad428cba2c4cecb502d0",
+      "archive_note": "Actual raw bytes retained locally. Archive redacts credentials, normalizes LF/UTF-8 and trims trailing display whitespace; undecodable child-process bytes use reversible backslash escapes. Original SHA above; archive SHA separate."
     },
     {
       "phase": "G8-controller-tests",
@@ -2393,7 +2567,10 @@
       "summary": [
         "............                                                             [100%]",
         "12 passed in 0.64s"
-      ]
+      ],
+      "archived_evidence_path": "docs/experiments/wave3-evidence/command-output/G8-controller-tests-20261008015749.txt",
+      "archived_sha256": "9e54890e1442bd5cf7bcdfa22f226721993c297cd88bc59cd922a457b6fafe64",
+      "archive_note": "Actual raw bytes retained locally. Archive redacts credentials, normalizes LF/UTF-8 and trims trailing display whitespace; undecodable child-process bytes use reversible backslash escapes. Original SHA above; archive SHA separate."
     },
     {
       "phase": "G8-worker-tests",
@@ -2442,7 +2619,10 @@
       "summary": [
         "...............................                                          [100%]",
         "31 passed in 3.74s"
-      ]
+      ],
+      "archived_evidence_path": "docs/experiments/wave3-evidence/command-output/G8-worker-tests-20261008015829.txt",
+      "archived_sha256": "2a5bba4253dc67ad1963172a0819d9793fa53dd133f39a1566119cf80fe3dc89",
+      "archive_note": "Actual raw bytes retained locally. Archive redacts credentials, normalizes LF/UTF-8 and trims trailing display whitespace; undecodable child-process bytes use reversible backslash escapes. Original SHA above; archive SHA separate."
     },
     {
       "phase": "G8-real-controller-topology",
@@ -2473,7 +2653,10 @@
       "summary": [
         "....                                                                     [100%]",
         "4 passed in 7.88s"
-      ]
+      ],
+      "archived_evidence_path": "docs/experiments/wave3-evidence/command-output/G8-real-controller-topology-20261008015903.txt",
+      "archived_sha256": "1a6cf72324f84e95873fd450f85a27f4bd744bd8d0ef9dbc627a885db352a735",
+      "archive_note": "Actual raw bytes retained locally. Archive redacts credentials, normalizes LF/UTF-8 and trims trailing display whitespace; undecodable child-process bytes use reversible backslash escapes. Original SHA above; archive SHA separate."
     },
     {
       "phase": "G8-types",
@@ -2508,7 +2691,10 @@
       "data": "synthetic only",
       "evidence_path": ".superpowers\\sdd\\2026-10-08-wave3-integration-gate\\G8-types-20261008020003.log",
       "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-      "summary": []
+      "summary": [],
+      "archived_evidence_path": "docs/experiments/wave3-evidence/command-output/G8-types-20261008020003.txt",
+      "archived_sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b",
+      "archive_note": "Actual raw bytes retained locally. Archive redacts credentials, normalizes LF/UTF-8 and trims trailing display whitespace; undecodable child-process bytes use reversible backslash escapes. Original SHA above; archive SHA separate."
     },
     {
       "phase": "G8-browser-SQL-proof",
@@ -2530,7 +2716,10 @@
       "sha256": "15d501e32916d2e84b004cc931b30d65c9415280dde3c5f2e224af324d3c8c6c",
       "summary": [
         "{\"database\": \"wave3_browser\", \"synthetic_only\": true, \"counts\": {\"authoritative_reviews\": 1, \"review_audits\": 1, \"deleted_versions\": 2, \"remaining_private_versions\": 0, \"rejected_proposals\": 1, \"completed_deletions\": 1, \"revoked_logins\": 3}}"
-      ]
+      ],
+      "archived_evidence_path": "docs/experiments/wave3-evidence/command-output/G8-browser-SQL-proof-20261008020120.txt",
+      "archived_sha256": "beb28d909bba62d90158a1cdf5ba27fc8921bc115f6d003aee494db1e84a30f1",
+      "archive_note": "Actual raw bytes retained locally. Archive redacts credentials, normalizes LF/UTF-8 and trims trailing display whitespace; undecodable child-process bytes use reversible backslash escapes. Original SHA above; archive SHA separate."
     },
     {
       "phase": "G8-toolchain-cjc",
@@ -2572,7 +2761,10 @@
       "summary": [
         "Cangjie Compiler: 1.2.0 (cjnative)",
         "Target: x86_64-unknown-linux-gnu"
-      ]
+      ],
+      "archived_evidence_path": "docs/experiments/wave3-evidence/command-output/G8-toolchain-cjc-20261008020314.txt",
+      "archived_sha256": "4eaba42334a04cb16bb8d4cf8b68d2bd7810723bc23d40338b8507a5ddda892c",
+      "archive_note": "Actual raw bytes retained locally. Archive redacts credentials, normalizes LF/UTF-8 and trims trailing display whitespace; undecodable child-process bytes use reversible backslash escapes. Original SHA above; archive SHA separate."
     },
     {
       "phase": "G8-toolchain-cjpm",
@@ -2613,7 +2805,10 @@
       "sha256": "ada9097c78c13232bea46dfc84558073aba921f010cc023addc0deec8791fe98",
       "summary": [
         "Cangjie Project Manager: 1.2.0"
-      ]
+      ],
+      "archived_evidence_path": "docs/experiments/wave3-evidence/command-output/G8-toolchain-cjpm-20261008020326.txt",
+      "archived_sha256": "ada9097c78c13232bea46dfc84558073aba921f010cc023addc0deec8791fe98",
+      "archive_note": "Actual raw bytes retained locally. Archive redacts credentials, normalizes LF/UTF-8 and trims trailing display whitespace; undecodable child-process bytes use reversible backslash escapes. Original SHA above; archive SHA separate."
     },
     {
       "phase": "G9-manifest-red",
@@ -2657,7 +2852,10 @@
         "FAILED tests/security/test_execution_manifest.py::test_mapping_rejects_unverifiable_execution_claims[collected]",
         "FAILED tests/security/test_execution_manifest.py::test_mapping_rejects_unverifiable_execution_claims[hash]",
         "7 failed in 5.26s"
-      ]
+      ],
+      "archived_evidence_path": "docs/experiments/wave3-evidence/command-output/G9-manifest-red-20261008020546.txt",
+      "archived_sha256": "677ce8dc100e90bb58de73a7bd8ec8f16212aa9831ebc738fd7b14f52ef26259",
+      "archive_note": "Actual raw bytes retained locally. Archive redacts credentials, normalizes LF/UTF-8 and trims trailing display whitespace; undecodable child-process bytes use reversible backslash escapes. Original SHA above; archive SHA separate."
     },
     {
       "phase": "G9-concrete-cases",
@@ -2702,7 +2900,10 @@
         "FAILED tests/security/test_wave3_case_execution.py::test_planned_operation[sec-share-bypass-003]",
         "FAILED tests/security/test_wave3_case_execution.py::test_planned_operation[sec-share-bypass-006]",
         "3 failed, 101 passed, 104 warnings in 100.52s (0:01:40)"
-      ]
+      ],
+      "archived_evidence_path": "docs/experiments/wave3-evidence/command-output/G9-concrete-cases-20261008020928.txt",
+      "archived_sha256": "3f6dd13156b3a6e3077d436f8af247f3a4e58960ba3be502226c67d59417cebf",
+      "archive_note": "Actual raw bytes retained locally. Archive redacts credentials, normalizes LF/UTF-8 and trims trailing display whitespace; undecodable child-process bytes use reversible backslash escapes. Original SHA above; archive SHA separate."
     },
     {
       "phase": "G9-container-attacks",
@@ -2746,7 +2947,10 @@
         "=========================== short test summary info ===========================",
         "FAILED tests/security/test_wave3_container_attacks.py::test_concrete_container_attack[sec-executor-abuse-007]",
         "1 failed, 2 passed in 19.62s"
-      ]
+      ],
+      "archived_evidence_path": "docs/experiments/wave3-evidence/command-output/G9-container-attacks-20261008021225.txt",
+      "archived_sha256": "20def9adbc4ce29a6a87649215f454ecc5248c14c5b47f322e44bad219109ad3",
+      "archive_note": "Actual raw bytes retained locally. Archive redacts credentials, normalizes LF/UTF-8 and trims trailing display whitespace; undecodable child-process bytes use reversible backslash escapes. Original SHA above; archive SHA separate."
     },
     {
       "phase": "G9-container-attacks-confirmed",
@@ -2781,7 +2985,10 @@
       "summary": [
         "...                                                                      [100%]",
         "3 passed in 19.69s"
-      ]
+      ],
+      "archived_evidence_path": "docs/experiments/wave3-evidence/command-output/G9-container-attacks-confirmed-20261008021449.txt",
+      "archived_sha256": "b2544cbc0cc0a370acdacd480739a2c4d55aac546da2bac5f592d0e3c8235859",
+      "archive_note": "Actual raw bytes retained locally. Archive redacts credentials, normalizes LF/UTF-8 and trims trailing display whitespace; undecodable child-process bytes use reversible backslash escapes. Original SHA above; archive SHA separate."
     },
     {
       "phase": "G9-cases-confirmed",
@@ -2830,7 +3037,10 @@
         "=========================== short test summary info ===========================",
         "FAILED tests/integration/test_wave3_security_cases_postgres.py::test_concrete_postgres_operation[sec-cross-role-008]",
         "1 failed, 106 passed, 3 warnings in 107.46s (0:01:47)"
-      ]
+      ],
+      "archived_evidence_path": "docs/experiments/wave3-evidence/command-output/G9-cases-confirmed-20261008021330.txt",
+      "archived_sha256": "c26c98910459fd4ef5ba39edafe3543c081c41391c824d3ce5a595410933f81c",
+      "archive_note": "Actual raw bytes retained locally. Archive redacts credentials, normalizes LF/UTF-8 and trims trailing display whitespace; undecodable child-process bytes use reversible backslash escapes. Original SHA above; archive SHA separate."
     },
     {
       "phase": "G9-PG-parameters-final",
@@ -2872,7 +3082,10 @@
         "",
         "-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html",
         "65 passed, 65 warnings in 135.87s (0:02:15)"
-      ]
+      ],
+      "archived_evidence_path": "docs/experiments/wave3-evidence/command-output/G9-PG-parameters-final-20261008021644.txt",
+      "archived_sha256": "b16d63d040c150e1721727f4e67e8bd7685430eef261a0e16c79076b85116d99",
+      "archive_note": "Actual raw bytes retained locally. Archive redacts credentials, normalizes LF/UTF-8 and trims trailing display whitespace; undecodable child-process bytes use reversible backslash escapes. Original SHA above; archive SHA separate."
     },
     {
       "phase": "G10-bearer-contract",
@@ -2903,7 +3116,10 @@
       "summary": [
         "..........................................                               [100%]",
         "42 passed in 43.34s"
-      ]
+      ],
+      "archived_evidence_path": "docs/experiments/wave3-evidence/command-output/G10-bearer-contract-20261008021928.txt",
+      "archived_sha256": "5c7865fd8061bf73435e47b219f1a05c3f719f307e1c68c7ee84cd53da689453",
+      "archive_note": "Actual raw bytes retained locally. Archive redacts credentials, normalizes LF/UTF-8 and trims trailing display whitespace; undecodable child-process bytes use reversible backslash escapes. Original SHA above; archive SHA separate."
     },
     {
       "phase": "G9-local-final",
@@ -2938,7 +3154,10 @@
         "........................................................................ [ 69%]",
         "................................                                         [100%]",
         "104 passed in 98.88s (0:01:38)"
-      ]
+      ],
+      "archived_evidence_path": "docs/experiments/wave3-evidence/command-output/G9-local-final-20261008021837.txt",
+      "archived_sha256": "34df34c8cc701e21adba779208b4a2eb1879dc29e9bc386cd931ba6b236dea5f",
+      "archive_note": "Actual raw bytes retained locally. Archive redacts credentials, normalizes LF/UTF-8 and trims trailing display whitespace; undecodable child-process bytes use reversible backslash escapes. Original SHA above; archive SHA separate."
     },
     {
       "phase": "G9-mapping-build",
@@ -2961,7 +3180,10 @@
       "sha256": "26bcf3610bc03b096ff7f8a96db77bc32f0c615e008a56324354dc60a6f7c36c",
       "summary": [
         "{\"case_count\": 164, \"statuses\": {\"automated_passed\": 163, \"not_executed\": 1}, \"teaching_annotations\": \"unchanged draft\"}"
-      ]
+      ],
+      "archived_evidence_path": "docs/experiments/wave3-evidence/command-output/G9-mapping-build-20261008022100.txt",
+      "archived_sha256": "5f56c8f50a1277d82efa1012fadfd2386bb53eddd13eda4494835487d4dce41c",
+      "archive_note": "Actual raw bytes retained locally. Archive redacts credentials, normalizes LF/UTF-8 and trims trailing display whitespace; undecodable child-process bytes use reversible backslash escapes. Original SHA above; archive SHA separate."
     },
     {
       "phase": "G9-manifest-confirmed",
@@ -2992,7 +3214,10 @@
       "summary": [
         ".......                                                                  [100%]",
         "7 passed in 2.29s"
-      ]
+      ],
+      "archived_evidence_path": "docs/experiments/wave3-evidence/command-output/G9-manifest-confirmed-20261008022117.txt",
+      "archived_sha256": "92cd6aeeace1c6b74ac1784b1b54fc0e657e1f7c9b036ffc75c7511c447295f9",
+      "archive_note": "Actual raw bytes retained locally. Archive redacts credentials, normalizes LF/UTF-8 and trims trailing display whitespace; undecodable child-process bytes use reversible backslash escapes. Original SHA above; archive SHA separate."
     },
     {
       "phase": "G10-frontend-components",
@@ -3029,7 +3254,10 @@
         "   Start at  10:23:27",
         "   Duration  5.51s (tests 54%, environment 26%, transform 11%, setup 5%, import 4%)",
         ""
-      ]
+      ],
+      "archived_evidence_path": "docs/experiments/wave3-evidence/command-output/G10-frontend-components-20261008022325.txt",
+      "archived_sha256": "a5af316bffe96fd69325e5b5d8c282581669a671b952fd98df19cecad63f8aa3",
+      "archive_note": "Actual raw bytes retained locally. Archive redacts credentials, normalizes LF/UTF-8 and trims trailing display whitespace; undecodable child-process bytes use reversible backslash escapes. Original SHA above; archive SHA separate."
     },
     {
       "phase": "G10-frontend-build",
@@ -3064,7 +3292,1074 @@
         "dist/assets/index-CadZlEPk.js   257.90 kB │ gzip: 79.45 kB",
         "",
         "✓ built in 352ms"
-      ]
+      ],
+      "archived_evidence_path": "docs/experiments/wave3-evidence/command-output/G10-frontend-build-20261008022344.txt",
+      "archived_sha256": "009f8c6cf52cb46d64751a203b314f236cf1852e3f714adbbd19974a7651135c",
+      "archive_note": "Actual raw bytes retained locally. Archive redacts credentials, normalizes LF/UTF-8 and trims trailing display whitespace; undecodable child-process bytes use reversible backslash escapes. Original SHA above; archive SHA separate."
+    },
+    {
+      "phase": "G10-browser-default",
+      "command": [
+        "npx.cmd",
+        "playwright",
+        "test",
+        "--reporter=line,json"
+      ],
+      "cwd": "C:\\Users\\lenovo\\Desktop\\cs competition\\.worktrees\\wave3-integration-gate\\frontend",
+      "start": "2026-10-08T02:24:49.082030+00:00",
+      "end": "2026-10-08T02:25:08.899834+00:00",
+      "exit_code": 0,
+      "status": "passed",
+      "environment_names": [
+        "PYTHONDONTWRITEBYTECODE"
+      ],
+      "data": "synthetic only",
+      "evidence_path": ".superpowers\\sdd\\2026-10-08-wave3-integration-gate\\G10-browser-default-20261008022449.log",
+      "sha256": "244c8a0f09b6f4a680c56ebb8be9e3c418e1f0ddd69e69e520f09e08a30a1245",
+      "summary": [
+        "          \"column\": 1",
+        "        }",
+        "      ]",
+        "    }",
+        "  ],",
+        "  \"errors\": [],",
+        "  \"stats\": {",
+        "    \"startTime\": \"2026-10-08T02:24:51.042Z\",",
+        "    \"duration\": 17734.781,",
+        "    \"expected\": 16,",
+        "    \"skipped\": 0,",
+        "    \"unexpected\": 0,",
+        "    \"flaky\": 0",
+        "  }",
+        "}"
+      ],
+      "archived_evidence_path": "docs/experiments/wave3-evidence/command-output/G10-browser-default-20261008022449.txt",
+      "archived_sha256": "517438a2263896a000cbb8380477ebfe642910912cd3c424a80e53481c4d6ae2",
+      "archive_note": "Actual raw bytes retained locally. Archive redacts credentials, normalizes LF/UTF-8 and trims trailing display whitespace; undecodable child-process bytes use reversible backslash escapes. Original SHA above; archive SHA separate."
+    },
+    {
+      "phase": "G10-browser-gate",
+      "command": [
+        "npx.cmd",
+        "playwright",
+        "test",
+        "--config",
+        "playwright.gate.config.ts",
+        "--reporter=list,json"
+      ],
+      "cwd": "C:\\Users\\lenovo\\Desktop\\cs competition\\.worktrees\\wave3-integration-gate\\frontend",
+      "start": "2026-10-08T02:25:50.858868+00:00",
+      "end": "2026-10-08T02:26:26.851525+00:00",
+      "exit_code": 0,
+      "status": "passed",
+      "environment_names": [
+        "PYTHONDONTWRITEBYTECODE"
+      ],
+      "data": "synthetic only",
+      "evidence_path": ".superpowers\\sdd\\2026-10-08-wave3-integration-gate\\G10-browser-gate-20261008022550.log",
+      "sha256": "7db47cad06e1e20c3db40a7f5ab2dff507bf3efe78c03928a10f16d2edebe071",
+      "summary": [
+        "(Use `node --trace-warnings ...` to show where the warning was created)",
+        "  ok  1 [security-ui-projection] › e2e\\security-ui.gate.ts:51:1 › student entering a teacher URL never renders teacher controls (827ms)",
+        "  ok  2 [security-ui-projection] › e2e\\security-ui.gate.ts:60:1 › teacher entering a private memory URL never requests or displays private content (599ms)",
+        "  ok  3 [security-ui-projection] › e2e\\security-ui.gate.ts:69:1 › suppressed analytics shows no exact learner count or private conversation (760ms)",
+        "  ok  4 [security-ui-projection] › e2e\\security-ui.gate.ts:79:1 › 403 and 404 render the same public denial without server details (881ms)",
+        "  ok  5 [security-ui-projection] › e2e\\security-ui.gate.ts:92:1 › error page hides sensitive service internals (960ms)",
+        "  ok  6 [security-ui-projection] › e2e\\security-ui.gate.ts:102:1 › logout clears persisted session and protected-page access (1.1s)",
+        "  ok  7 [security-ui-projection] › e2e\\security-ui.gate.ts:113:1 › repeated acceptance clicks send one pending sensitive request (1.1s)",
+        "(node:26164) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.",
+        "(Use `node --trace-warnings ...` to show where the warning was created)",
+        "  ok  8 [wave3-real-ui] › e2e\\wave3-real.spec.ts:17:1 › real teacher SQL threshold, denial, authoritative review and logout (3.3s)",
+        "  ok  9 [wave3-real-ui] › e2e\\wave3-real.spec.ts:45:1 › real student learning, compiler, hints and owned memory lifecycle (9.9s)",
+        "  ok 10 [wave3-real-ui] › e2e\\wave3-real.spec.ts:72:1 › real SQL logout failure is sanitized and remains retryable (1.1s)",
+        "",
+        "  10 passed (34.2s)"
+      ],
+      "archived_evidence_path": "docs/experiments/wave3-evidence/command-output/G10-browser-gate-20261008022550.txt",
+      "archived_sha256": "af26eeb9c384378dd21d1649a79114cab6a36759025c70270ae0096f5bd8ceaf",
+      "archive_note": "Actual raw bytes retained locally. Archive redacts credentials, normalizes LF/UTF-8 and trims trailing display whitespace; undecodable child-process bytes use reversible backslash escapes. Original SHA above; archive SHA separate."
+    },
+    {
+      "phase": "G10-mapping-strict-red",
+      "command": [
+        "C:/Users/lenovo/Desktop/cs competition/.venv/Scripts/python.exe",
+        "-B",
+        "-m",
+        "pytest",
+        "tests/security/test_execution_manifest.py",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "--tb=short",
+        "--basetemp",
+        "C:\\Users\\lenovo\\Desktop\\cs competition\\.worktrees\\wave3-integration-gate\\.superpowers\\sdd\\2026-10-08-wave3-integration-gate\\tmp-20261008022650050453"
+      ],
+      "cwd": "C:\\Users\\lenovo\\Desktop\\cs competition\\.worktrees\\wave3-integration-gate\\backend",
+      "start": "2026-10-08T02:26:50.050453+00:00",
+      "end": "2026-10-08T02:27:08.904790+00:00",
+      "exit_code": 1,
+      "status": "failed",
+      "environment_names": [
+        "PYTHONDONTWRITEBYTECODE"
+      ],
+      "data": "synthetic only",
+      "evidence_path": ".superpowers\\sdd\\2026-10-08-wave3-integration-gate\\G10-mapping-strict-red-20261008022650.log",
+      "sha256": "ad25ecb4bb1fcbea13c8e951d967bf699bd4f8217506de015306b81dfc1a6dc1",
+      "summary": [
+        "================================== FAILURES ===================================",
+        "________ test_mapping_rejects_unverifiable_execution_claims[operation] ________",
+        "tests\\security\\test_execution_manifest.py:36: in test_mapping_rejects_unverifiable_execution_claims",
+        "    with pytest.raises(ValueError):module.validate_manifest(changed,ROOT)",
+        "         ^^^^^^^^^^^^^^^^^^^^^^^^^",
+        "E   Failed: DID NOT RAISE ValueError",
+        "_________ test_mapping_rejects_unverifiable_execution_claims[command] _________",
+        "tests\\security\\test_execution_manifest.py:36: in test_mapping_rejects_unverifiable_execution_claims",
+        "    with pytest.raises(ValueError):module.validate_manifest(changed,ROOT)",
+        "         ^^^^^^^^^^^^^^^^^^^^^^^^^",
+        "E   Failed: DID NOT RAISE ValueError",
+        "=========================== short test summary info ===========================",
+        "FAILED tests/security/test_execution_manifest.py::test_mapping_rejects_unverifiable_execution_claims[operation]",
+        "FAILED tests/security/test_execution_manifest.py::test_mapping_rejects_unverifiable_execution_claims[command]",
+        "2 failed, 8 passed in 15.17s"
+      ],
+      "archived_evidence_path": "docs/experiments/wave3-evidence/command-output/G10-mapping-strict-red-20261008022650.txt",
+      "archived_sha256": "c8bd4b8a99f8d3f86398d4fa1dd96f5260df94310efa6c5b330355996a949fc6",
+      "archive_note": "Actual raw bytes retained locally. Archive redacts credentials, normalizes LF/UTF-8 and trims trailing display whitespace; undecodable child-process bytes use reversible backslash escapes. Original SHA above; archive SHA separate."
+    },
+    {
+      "phase": "G10-mapping-swapped-node-red",
+      "command": [
+        "C:/Users/lenovo/Desktop/cs competition/.venv/Scripts/python.exe",
+        "-B",
+        "-m",
+        "pytest",
+        "tests/security/test_execution_manifest.py",
+        "-k",
+        "wrong_case",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "--tb=short",
+        "--basetemp",
+        "C:\\Users\\lenovo\\Desktop\\cs competition\\.worktrees\\wave3-integration-gate\\.superpowers\\sdd\\2026-10-08-wave3-integration-gate\\tmp-20261008022812616115"
+      ],
+      "cwd": "C:\\Users\\lenovo\\Desktop\\cs competition\\.worktrees\\wave3-integration-gate\\backend",
+      "start": "2026-10-08T02:28:12.616115+00:00",
+      "end": "2026-10-08T02:28:28.217279+00:00",
+      "exit_code": 1,
+      "status": "failed",
+      "environment_names": [
+        "PYTHONDONTWRITEBYTECODE"
+      ],
+      "data": "synthetic only",
+      "evidence_path": ".superpowers\\sdd\\2026-10-08-wave3-integration-gate\\G10-mapping-swapped-node-red-20261008022812.log",
+      "sha256": "052374d4fdcad8ead78e4ddf67ff12e959ed6fac514b4961999c40901e2084f2",
+      "summary": [
+        "F                                                                        [100%]",
+        "================================== FAILURES ===================================",
+        "_______ test_mapping_rejects_unverifiable_execution_claims[wrong_case] ________",
+        "tests\\security\\test_execution_manifest.py:38: in test_mapping_rejects_unverifiable_execution_claims",
+        "    with pytest.raises(ValueError):module.validate_manifest(changed,ROOT)",
+        "         ^^^^^^^^^^^^^^^^^^^^^^^^^",
+        "E   Failed: DID NOT RAISE ValueError",
+        "=========================== short test summary info ===========================",
+        "FAILED tests/security/test_execution_manifest.py::test_mapping_rejects_unverifiable_execution_claims[wrong_case]",
+        "1 failed, 9 deselected in 11.50s"
+      ],
+      "archived_evidence_path": "docs/experiments/wave3-evidence/command-output/G10-mapping-swapped-node-red-20261008022812.txt",
+      "archived_sha256": "c4316ffb799b78ce0cd4d4961e5f17628763f2ceaac008ffac4d4760d288701f",
+      "archive_note": "Actual raw bytes retained locally. Archive redacts credentials, normalizes LF/UTF-8 and trims trailing display whitespace; undecodable child-process bytes use reversible backslash escapes. Original SHA above; archive SHA separate."
+    },
+    {
+      "phase": "G10-mapping-strict-confirmed",
+      "command": [
+        "C:/Users/lenovo/Desktop/cs competition/.venv/Scripts/python.exe",
+        "-B",
+        "-m",
+        "pytest",
+        "tests/security/test_execution_manifest.py",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "--tb=short",
+        "--basetemp",
+        "C:\\Users\\lenovo\\Desktop\\cs competition\\.worktrees\\wave3-integration-gate\\.superpowers\\sdd\\2026-10-08-wave3-integration-gate\\tmp-20261008022919676679"
+      ],
+      "cwd": "C:\\Users\\lenovo\\Desktop\\cs competition\\.worktrees\\wave3-integration-gate\\backend",
+      "start": "2026-10-08T02:29:19.676679+00:00",
+      "end": "2026-10-08T02:29:28.150891+00:00",
+      "exit_code": 0,
+      "status": "passed",
+      "environment_names": [
+        "PYTHONDONTWRITEBYTECODE"
+      ],
+      "data": "synthetic only",
+      "evidence_path": ".superpowers\\sdd\\2026-10-08-wave3-integration-gate\\G10-mapping-strict-confirmed-20261008022919.log",
+      "sha256": "16c81cc779f19766d7f4443979cc70a6617aa37b0a27ec7ff02f9a02da3cb252",
+      "summary": [
+        "..........                                                               [100%]",
+        "10 passed in 4.65s"
+      ],
+      "archived_evidence_path": "docs/experiments/wave3-evidence/command-output/G10-mapping-strict-confirmed-20261008022919.txt",
+      "archived_sha256": "bef3d9e3a4e2329b2b0d86a5c83fe960bc7927bab8e1943d4af6d65aa5fd3c23",
+      "archive_note": "Actual raw bytes retained locally. Archive redacts credentials, normalizes LF/UTF-8 and trims trailing display whitespace; undecodable child-process bytes use reversible backslash escapes. Original SHA above; archive SHA separate."
+    },
+    {
+      "phase": "G10-runner-worker",
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "--network",
+        "none",
+        "--read-only",
+        "--user",
+        "10001:10001",
+        "--cap-drop",
+        "ALL",
+        "--security-opt",
+        "no-new-privileges:true",
+        "--pids-limit",
+        "64",
+        "--memory",
+        "512m",
+        "--cpus",
+        "1",
+        "--tmpfs",
+        "/work:rw,nosuid,nodev,exec,size=64m,mode=0700,uid=10001,gid=10001",
+        "knowbound-wave3-gate-worker-tests:local",
+        "/app/runner/tests/test_executor.py",
+        "/app/runner/tests/test_parser.py",
+        "/app/runner/tests/test_cli.py",
+        "/app/runner/tests/test_protocol.py",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "--basetemp=/work/pytest-temp"
+      ],
+      "cwd": "C:\\Users\\lenovo\\Desktop\\cs competition\\.worktrees\\wave3-integration-gate",
+      "start": "2026-10-08T02:30:34.562999+00:00",
+      "end": "2026-10-08T02:30:38.998066+00:00",
+      "exit_code": 0,
+      "status": "passed",
+      "environment_names": [
+        "PYTHONDONTWRITEBYTECODE"
+      ],
+      "data": "synthetic only",
+      "evidence_path": ".superpowers\\sdd\\2026-10-08-wave3-integration-gate\\G10-runner-worker-20261008023034.log",
+      "sha256": "91daae17ad09065bdeff33ac9d51e138dadd333dcf7ae68496ab3b425a5ce7bb",
+      "summary": [
+        "...............................                                          [100%]",
+        "31 passed in 3.37s"
+      ],
+      "archived_evidence_path": "docs/experiments/wave3-evidence/command-output/G10-runner-worker-20261008023034.txt",
+      "archived_sha256": "91daae17ad09065bdeff33ac9d51e138dadd333dcf7ae68496ab3b425a5ce7bb",
+      "archive_note": "Actual raw bytes retained locally. Archive redacts credentials, normalizes LF/UTF-8 and trims trailing display whitespace; undecodable child-process bytes use reversible backslash escapes. Original SHA above; archive SHA separate."
+    },
+    {
+      "phase": "G10-compose-parse",
+      "command": [
+        "docker",
+        "compose",
+        "-p",
+        "knowbound-wave3-gate",
+        "-f",
+        "infra/compose/docker-compose.yml",
+        "-f",
+        "infra/compose/docker-compose.wave3-gate.yml",
+        "config",
+        "--quiet"
+      ],
+      "cwd": "C:\\Users\\lenovo\\Desktop\\cs competition\\.worktrees\\wave3-integration-gate",
+      "start": "2026-10-08T02:30:13.665337+00:00",
+      "end": "2026-10-08T02:30:54.948152+00:00",
+      "exit_code": 0,
+      "status": "passed",
+      "environment_names": [
+        "PYTHONDONTWRITEBYTECODE"
+      ],
+      "data": "synthetic only",
+      "evidence_path": ".superpowers\\sdd\\2026-10-08-wave3-integration-gate\\G10-compose-parse-20261008023013.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "summary": [],
+      "archived_evidence_path": "docs/experiments/wave3-evidence/command-output/G10-compose-parse-20261008023013.txt",
+      "archived_sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b",
+      "archive_note": "Actual raw bytes retained locally. Archive redacts credentials, normalizes LF/UTF-8 and trims trailing display whitespace; undecodable child-process bytes use reversible backslash escapes. Original SHA above; archive SHA separate."
+    },
+    {
+      "phase": "G10-runner-controller",
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "--network",
+        "none",
+        "--read-only",
+        "--user",
+        "10001:10001",
+        "--cap-drop",
+        "ALL",
+        "--security-opt",
+        "no-new-privileges:true",
+        "--pids-limit",
+        "64",
+        "--memory",
+        "512m",
+        "--cpus",
+        "1",
+        "--tmpfs",
+        "/work:rw,nosuid,nodev,exec,size=64m,mode=0700,uid=10001,gid=10001",
+        "knowbound-wave3-gate-controller-tests:local",
+        "/app/runner/tests/test_controller.py",
+        "/app/runner/tests/test_docker_engine.py",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "--basetemp=/work/pytest-temp"
+      ],
+      "cwd": "C:\\Users\\lenovo\\Desktop\\cs competition\\.worktrees\\wave3-integration-gate",
+      "start": "2026-10-08T02:31:38.537508+00:00",
+      "end": "2026-10-08T02:31:40.357054+00:00",
+      "exit_code": 0,
+      "status": "passed",
+      "environment_names": [
+        "PYTHONDONTWRITEBYTECODE"
+      ],
+      "data": "synthetic only",
+      "evidence_path": ".superpowers\\sdd\\2026-10-08-wave3-integration-gate\\G10-runner-controller-20261008023138.log",
+      "sha256": "b3e7eba178c09c282e1dc25ffbf8b9b9fb8a36f891c9c8e1c72e0003878e3a9d",
+      "summary": [
+        "............                                                             [100%]",
+        "12 passed in 0.49s"
+      ],
+      "archived_evidence_path": "docs/experiments/wave3-evidence/command-output/G10-runner-controller-20261008023138.txt",
+      "archived_sha256": "b3e7eba178c09c282e1dc25ffbf8b9b9fb8a36f891c9c8e1c72e0003878e3a9d",
+      "archive_note": "Actual raw bytes retained locally. Archive redacts credentials, normalizes LF/UTF-8 and trims trailing display whitespace; undecodable child-process bytes use reversible backslash escapes. Original SHA above; archive SHA separate."
+    },
+    {
+      "phase": "G10-real-topology",
+      "command": [
+        "C:/Users/lenovo/Desktop/cs competition/.venv/Scripts/python.exe",
+        "-B",
+        "-m",
+        "pytest",
+        "runner/tests/test_wave3_isolated_topology.py",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "--tb=short",
+        "--basetemp",
+        "C:\\Users\\lenovo\\Desktop\\cs competition\\.worktrees\\wave3-integration-gate\\.superpowers\\sdd\\2026-10-08-wave3-integration-gate\\tmp-20261008023207894236"
+      ],
+      "cwd": "C:\\Users\\lenovo\\Desktop\\cs competition\\.worktrees\\wave3-integration-gate",
+      "start": "2026-10-08T02:32:07.894236+00:00",
+      "end": "2026-10-08T02:32:12.950501+00:00",
+      "exit_code": 1,
+      "status": "failed",
+      "environment_names": [
+        "PYTHONDONTWRITEBYTECODE"
+      ],
+      "data": "synthetic only",
+      "evidence_path": ".superpowers\\sdd\\2026-10-08-wave3-integration-gate\\G10-real-topology-20261008023207.log",
+      "sha256": "bec5693623fb2ac6627f1002ac70f49601a046ed1068ad148e4c7f2425ebc56e",
+      "summary": [
+        "E     - timed_out",
+        "E     + compile_failed",
+        "_ test_real_controller_launches_and_cleans_isolated_job[output_limit-main() { while (true) { println(\"0123456789abcdef0123456789abcdef\") } }-timed_out] _",
+        "runner\\tests\\test_wave3_isolated_topology.py:25: in test_real_controller_launches_and_cleans_isolated_job",
+        "    assert result[\"status\"]==expected",
+        "E   AssertionError: assert 'compile_failed' == 'timed_out'",
+        "E     ",
+        "E     - timed_out",
+        "E     + compile_failed",
+        "=========================== short test summary info ===========================",
+        "FAILED runner/tests/test_wave3_isolated_topology.py::test_real_controller_launches_and_cleans_isolated_job[success-main() { println(\"synthetic gate hello\") }-succeeded]",
+        "FAILED runner/tests/test_wave3_isolated_topology.py::test_real_controller_launches_and_cleans_isolated_job[compiler_failure-main() { let x: Int64 = true }-compile_failed]",
+        "FAILED runner/tests/test_wave3_isolated_topology.py::test_real_controller_launches_and_cleans_isolated_job[infinite_loop-main() { while (true) {} }-timed_out]",
+        "FAILED runner/tests/test_wave3_isolated_topology.py::test_real_controller_launches_and_cleans_isolated_job[output_limit-main() { while (true) { println(\"0123456789abcdef0123456789abcdef\") } }-timed_out]",
+        "4 failed in 4.15s"
+      ],
+      "archived_evidence_path": "docs/experiments/wave3-evidence/command-output/G10-real-topology-20261008023207.txt",
+      "archived_sha256": "def66bc1f312826732f933427e1884be0213d6bf602783d12598c4d436e8ed1e",
+      "archive_note": "Actual raw bytes retained locally. Archive redacts credentials, normalizes LF/UTF-8 and trims trailing display whitespace; undecodable child-process bytes use reversible backslash escapes. Original SHA above; archive SHA separate."
+    },
+    {
+      "phase": "G10-evaluation-structure",
+      "command": [
+        "C:/Users/lenovo/Desktop/cs competition/.venv/Scripts/python.exe",
+        "-B",
+        "data/evaluation/evaluate.py"
+      ],
+      "cwd": "C:\\Users\\lenovo\\Desktop\\cs competition\\.worktrees\\wave3-integration-gate",
+      "start": "2026-10-08T02:32:24.723583+00:00",
+      "end": "2026-10-08T02:32:25.460524+00:00",
+      "exit_code": 0,
+      "status": "passed",
+      "environment_names": [
+        "PYTHONDONTWRITEBYTECODE"
+      ],
+      "data": "synthetic only",
+      "evidence_path": ".superpowers\\sdd\\2026-10-08-wave3-integration-gate\\G10-evaluation-structure-20261008023224.log",
+      "sha256": "008cffa0ee45a670df0a70d24241a46ceff6c939ccd67fa97fb6e9290910839f",
+      "summary": [
+        "      \"version\": \"task10-security-v1\",",
+        "      \"sha256\": \"6c7afbaf60af1b06f16bedb2c7cb66c7b50b16012af27be7ce72d38276732483\",",
+        "      \"cases\": 164,",
+        "      \"draft\": 164,",
+        "      \"verified\": 0",
+        "    },",
+        "    \"diagnosis_cases.yaml\": {",
+        "      \"version\": \"task10-diagnosis-draft-v1\",",
+        "      \"sha256\": \"76c0f880a54243b18a1c098013ee161b3a1921ced93a2225625435ac4bd58c4a\",",
+        "      \"cases\": 4,",
+        "      \"draft\": 4,",
+        "      \"verified\": 0",
+        "    }",
+        "  }",
+        "}"
+      ],
+      "archived_evidence_path": "docs/experiments/wave3-evidence/command-output/G10-evaluation-structure-20261008023224.txt",
+      "archived_sha256": "ec8fdb3368b1aa755d16b001a0e55b16e97c0e793693de26346542ea61288cc7",
+      "archive_note": "Actual raw bytes retained locally. Archive redacts credentials, normalizes LF/UTF-8 and trims trailing display whitespace; undecodable child-process bytes use reversible backslash escapes. Original SHA above; archive SHA separate."
+    },
+    {
+      "phase": "G10-full-backend",
+      "command": [
+        "C:/Users/lenovo/Desktop/cs competition/.venv/Scripts/python.exe",
+        "-B",
+        "-m",
+        "pytest",
+        "tests",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "--tb=short",
+        "-o",
+        "junit_family=xunit1",
+        "--junitxml=../docs/experiments/wave3-evidence/backend-final.xml",
+        "--basetemp",
+        "C:\\Users\\lenovo\\Desktop\\cs competition\\.worktrees\\wave3-integration-gate\\.superpowers\\sdd\\2026-10-08-wave3-integration-gate\\tmp-20261008022228932201"
+      ],
+      "cwd": "C:\\Users\\lenovo\\Desktop\\cs competition\\.worktrees\\wave3-integration-gate\\backend",
+      "start": "2026-10-08T02:22:28.932201+00:00",
+      "end": "2026-10-08T02:32:31.515114+00:00",
+      "exit_code": 1,
+      "status": "failed",
+      "environment_names": [
+        "PYTHONDONTWRITEBYTECODE",
+        "TASK10_POSTGRES_URL",
+        "TASK10_RUNNER_IMAGE",
+        "TASK6_POSTGRES_URL",
+        "TASK6_RUNNER_ENDPOINT",
+        "TASK7_POSTGRES_URL",
+        "TASK7_RUNNER_ENDPOINT"
+      ],
+      "data": "synthetic only",
+      "evidence_path": ".superpowers\\sdd\\2026-10-08-wave3-integration-gate\\G10-full-backend-20261008022228.log",
+      "sha256": "2045864541a4fe8a4faaca5f958db11bedd854e4d44738efb9971c8ab0b2a8d3",
+      "summary": [
+        "tests/integration/test_wave3_analytics_vectors_postgres.py: 62 warnings",
+        "tests/integration/test_wave3_gate.py: 1 warning",
+        "tests/integration/test_wave3_migrations_postgres.py: 28 warnings",
+        "tests/integration/test_wave3_reviews_postgres.py: 7 warnings",
+        "tests/integration/test_wave3_security_cases_postgres.py: 3 warnings",
+        "  C:\\Users\\lenovo\\Desktop\\cs competition\\.venv\\Lib\\site-packages\\alembic\\config.py:604: DeprecationWarning: No path_separator found in configuration; falling back to legacy splitting on spaces, commas, and colons for prepend_sys_path.  Consider adding path_separator=os to Alembic config.",
+        "    util.warn_deprecated(",
+        "",
+        "-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html",
+        "=========================== short test summary info ===========================",
+        "FAILED tests/model_gateway/test_openai_responses.py::test_http_errors_are_sanitized_provider_failures[400]",
+        "FAILED tests/model_gateway/test_openai_responses.py::test_http_errors_are_sanitized_provider_failures[429]",
+        "FAILED tests/model_gateway/test_openai_responses.py::test_http_errors_are_sanitized_provider_failures[500]",
+        "FAILED tests/model_gateway/test_openai_responses.py::test_untrusted_provider_request_id_is_redacted",
+        "4 failed, 899 passed, 147 warnings in 599.50s (0:09:59)"
+      ],
+      "archived_evidence_path": "docs/experiments/wave3-evidence/command-output/G10-full-backend-20261008022228.txt",
+      "archived_sha256": "c26b96fc80dcc00381cc323f1001055f1c911502df6cb35e0b1484141b7f5423",
+      "archive_note": "Actual raw bytes retained locally. Archive redacts credentials, normalizes LF/UTF-8 and trims trailing display whitespace; undecodable child-process bytes use reversible backslash escapes. Original SHA above; archive SHA separate."
+    },
+    {
+      "phase": "G10-logging-isolated-check",
+      "command": [
+        "C:/Users/lenovo/Desktop/cs competition/.venv/Scripts/python.exe",
+        "-B",
+        "-m",
+        "pytest",
+        "tests/model_gateway/test_openai_responses.py",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "--tb=short",
+        "--basetemp",
+        "C:\\Users\\lenovo\\Desktop\\cs competition\\.worktrees\\wave3-integration-gate\\.superpowers\\sdd\\2026-10-08-wave3-integration-gate\\tmp-20261008023348027208"
+      ],
+      "cwd": "C:\\Users\\lenovo\\Desktop\\cs competition\\.worktrees\\wave3-integration-gate\\backend",
+      "start": "2026-10-08T02:33:48.027208+00:00",
+      "end": "2026-10-08T02:33:49.422721+00:00",
+      "exit_code": 0,
+      "status": "passed",
+      "environment_names": [
+        "PYTHONDONTWRITEBYTECODE"
+      ],
+      "data": "synthetic only",
+      "evidence_path": ".superpowers\\sdd\\2026-10-08-wave3-integration-gate\\G10-logging-isolated-check-20261008023348.log",
+      "sha256": "20f8c9d387c9b22475cb25b599a530e12819265f6d6f2ada508ad8656863a339",
+      "summary": [
+        "...........                                                              [100%]",
+        "11 passed in 0.22s"
+      ],
+      "archived_evidence_path": "docs/experiments/wave3-evidence/command-output/G10-logging-isolated-check-20261008023348.txt",
+      "archived_sha256": "22bd0602e485e21676279c5aedc8d008bea4469ff3deb2b3a7f910f429e6b2dd",
+      "archive_note": "Actual raw bytes retained locally. Archive redacts credentials, normalizes LF/UTF-8 and trims trailing display whitespace; undecodable child-process bytes use reversible backslash escapes. Original SHA above; archive SHA separate."
+    },
+    {
+      "phase": "G10-migration-logging-red",
+      "command": [
+        "C:/Users/lenovo/Desktop/cs competition/.venv/Scripts/python.exe",
+        "-B",
+        "-m",
+        "pytest",
+        "tests/integration/test_wave3_migration_logging_postgres.py",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "--tb=short",
+        "--basetemp",
+        "C:\\Users\\lenovo\\Desktop\\cs competition\\.worktrees\\wave3-integration-gate\\.superpowers\\sdd\\2026-10-08-wave3-integration-gate\\tmp-20261008023525098930"
+      ],
+      "cwd": "C:\\Users\\lenovo\\Desktop\\cs competition\\.worktrees\\wave3-integration-gate\\backend",
+      "start": "2026-10-08T02:35:25.098930+00:00",
+      "end": "2026-10-08T02:35:30.646879+00:00",
+      "exit_code": 1,
+      "status": "failed",
+      "environment_names": [
+        "PYTHONDONTWRITEBYTECODE"
+      ],
+      "data": "synthetic only",
+      "evidence_path": ".superpowers\\sdd\\2026-10-08-wave3-integration-gate\\G10-migration-logging-red-20261008023525.log",
+      "sha256": "c4c7e500a927a2f8a910815a3d4b08ffa01807ef23efd2326cc5bf9d918bfdab",
+      "summary": [
+        "    assert \"request_id=unavailable\" in caplog.text",
+        "E   AssertionError: assert 'request_id=unavailable' in ''",
+        "E    +  where '' = <_pytest.logging.LogCaptureFixture object at 0x0000023DB1F4D400>.text",
+        "---------------------------- Captured stderr call -----------------------------",
+        "INFO  [alembic.runtime.migration] Context impl PostgresqlImpl.",
+        "INFO  [alembic.runtime.migration] Will assume transactional DDL.",
+        "============================== warnings summary ===============================",
+        "tests/integration/test_wave3_migration_logging_postgres.py::test_migration_preserves_sanitized_provider_failure_logging",
+        "  C:\\Users\\lenovo\\Desktop\\cs competition\\.venv\\Lib\\site-packages\\alembic\\config.py:604: DeprecationWarning: No path_separator found in configuration; falling back to legacy splitting on spaces, commas, and colons for prepend_sys_path.  Consider adding path_separator=os to Alembic config.",
+        "    util.warn_deprecated(",
+        "",
+        "-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html",
+        "=========================== short test summary info ===========================",
+        "FAILED tests/integration/test_wave3_migration_logging_postgres.py::test_migration_preserves_sanitized_provider_failure_logging",
+        "1 failed, 1 warning in 4.42s"
+      ],
+      "archived_evidence_path": "docs/experiments/wave3-evidence/command-output/G10-migration-logging-red-20261008023525.txt",
+      "archived_sha256": "9f61d1ad8396eb4c80540827e164ad0f02c7305daa95b42838884583153c3a15",
+      "archive_note": "Actual raw bytes retained locally. Archive redacts credentials, normalizes LF/UTF-8 and trims trailing display whitespace; undecodable child-process bytes use reversible backslash escapes. Original SHA above; archive SHA separate."
+    },
+    {
+      "phase": "G10-migration-logging-confirmed",
+      "command": [
+        "C:/Users/lenovo/Desktop/cs competition/.venv/Scripts/python.exe",
+        "-B",
+        "-m",
+        "pytest",
+        "tests/integration/test_wave3_migration_logging_postgres.py",
+        "tests/model_gateway/test_openai_responses.py",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "--tb=short",
+        "--basetemp",
+        "C:\\Users\\lenovo\\Desktop\\cs competition\\.worktrees\\wave3-integration-gate\\.superpowers\\sdd\\2026-10-08-wave3-integration-gate\\tmp-20261008023620531719"
+      ],
+      "cwd": "C:\\Users\\lenovo\\Desktop\\cs competition\\.worktrees\\wave3-integration-gate\\backend",
+      "start": "2026-10-08T02:36:20.531719+00:00",
+      "end": "2026-10-08T02:36:22.911979+00:00",
+      "exit_code": 0,
+      "status": "passed",
+      "environment_names": [
+        "PYTHONDONTWRITEBYTECODE"
+      ],
+      "data": "synthetic only",
+      "evidence_path": ".superpowers\\sdd\\2026-10-08-wave3-integration-gate\\G10-migration-logging-confirmed-20261008023620.log",
+      "sha256": "15ce19d0baee5b60afa9c4b26f3f3d5c91e382c550fa0c8fbef7e8eb06a7a888",
+      "summary": [
+        "............                                                             [100%]",
+        "============================== warnings summary ===============================",
+        "tests/integration/test_wave3_migration_logging_postgres.py::test_migration_preserves_sanitized_provider_failure_logging",
+        "  C:\\Users\\lenovo\\Desktop\\cs competition\\.venv\\Lib\\site-packages\\alembic\\config.py:604: DeprecationWarning: No path_separator found in configuration; falling back to legacy splitting on spaces, commas, and colons for prepend_sys_path.  Consider adding path_separator=os to Alembic config.",
+        "    util.warn_deprecated(",
+        "",
+        "-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html",
+        "12 passed, 1 warning in 1.39s"
+      ],
+      "archived_evidence_path": "docs/experiments/wave3-evidence/command-output/G10-migration-logging-confirmed-20261008023620.txt",
+      "archived_sha256": "0adf42875bf26ad69d02d1fda7664ddf1ff29ef4c572602677dc361d482aef7e",
+      "archive_note": "Actual raw bytes retained locally. Archive redacts credentials, normalizes LF/UTF-8 and trims trailing display whitespace; undecodable child-process bytes use reversible backslash escapes. Original SHA above; archive SHA separate."
+    },
+    {
+      "phase": "G10-mapping-final",
+      "command": [
+        "C:/Users/lenovo/Desktop/cs competition/.venv/Scripts/python.exe",
+        "-B",
+        "data/evaluation/map_security_execution.py",
+        "--build"
+      ],
+      "cwd": "C:\\Users\\lenovo\\Desktop\\cs competition\\.worktrees\\wave3-integration-gate",
+      "start": "2026-10-08T02:36:35.539014+00:00",
+      "end": "2026-10-08T02:36:37.676881+00:00",
+      "exit_code": 0,
+      "status": "passed",
+      "environment_names": [
+        "PYTHONDONTWRITEBYTECODE"
+      ],
+      "data": "synthetic only",
+      "evidence_path": ".superpowers\\sdd\\2026-10-08-wave3-integration-gate\\G10-mapping-final-20261008023635.log",
+      "sha256": "26bcf3610bc03b096ff7f8a96db77bc32f0c615e008a56324354dc60a6f7c36c",
+      "summary": [
+        "{\"case_count\": 164, \"statuses\": {\"automated_passed\": 163, \"not_executed\": 1}, \"teaching_annotations\": \"unchanged draft\"}"
+      ],
+      "archived_evidence_path": "docs/experiments/wave3-evidence/command-output/G10-mapping-final-20261008023635.txt",
+      "archived_sha256": "5f56c8f50a1277d82efa1012fadfd2386bb53eddd13eda4494835487d4dce41c",
+      "archive_note": "Actual raw bytes retained locally. Archive redacts credentials, normalizes LF/UTF-8 and trims trailing display whitespace; undecodable child-process bytes use reversible backslash escapes. Original SHA above; archive SHA separate."
+    },
+    {
+      "phase": "G10-real-topology-confirmed",
+      "command": [
+        "C:/Users/lenovo/Desktop/cs competition/.venv/Scripts/python.exe",
+        "-B",
+        "-m",
+        "pytest",
+        "runner/tests/test_wave3_isolated_topology.py",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "--tb=short",
+        "-o",
+        "junit_family=xunit1",
+        "--junitxml=docs/experiments/wave3-evidence/controller-topology-final.xml",
+        "--basetemp",
+        "C:\\Users\\lenovo\\Desktop\\cs competition\\.worktrees\\wave3-integration-gate\\.superpowers\\sdd\\2026-10-08-wave3-integration-gate\\tmp-20261008023855664541"
+      ],
+      "cwd": "C:\\Users\\lenovo\\Desktop\\cs competition\\.worktrees\\wave3-integration-gate",
+      "start": "2026-10-08T02:38:55.664541+00:00",
+      "end": "2026-10-08T02:39:03.543650+00:00",
+      "exit_code": 0,
+      "status": "passed",
+      "environment_names": [
+        "PYTHONDONTWRITEBYTECODE"
+      ],
+      "data": "synthetic only",
+      "evidence_path": ".superpowers\\sdd\\2026-10-08-wave3-integration-gate\\G10-real-topology-confirmed-20261008023855.log",
+      "sha256": "193b9fd49f087ef2a077ab3d38fe69d1dfb15b01e2c373db8bde0784b80bcf64",
+      "summary": [
+        "....                                                                     [100%]",
+        "4 passed in 7.09s"
+      ],
+      "archived_evidence_path": "docs/experiments/wave3-evidence/command-output/G10-real-topology-confirmed-20261008023855.txt",
+      "archived_sha256": "514a1315dabc4c948442da0d2db52d85b72e487f163fca39e0593b123814996e",
+      "archive_note": "Actual raw bytes retained locally. Archive redacts credentials, normalizes LF/UTF-8 and trims trailing display whitespace; undecodable child-process bytes use reversible backslash escapes. Original SHA above; archive SHA separate."
+    },
+    {
+      "phase": "G10-browser-SQL-proof",
+      "command": [
+        "C:/Users/lenovo/Desktop/cs competition/.venv/Scripts/python.exe",
+        "-B",
+        "-m",
+        "tests.integration.wave3_browser_sql_probe"
+      ],
+      "cwd": "C:\\Users\\lenovo\\Desktop\\cs competition\\.worktrees\\wave3-integration-gate\\backend",
+      "start": "2026-10-08T02:42:08.273276+00:00",
+      "end": "2026-10-08T02:42:10.301868+00:00",
+      "exit_code": 0,
+      "status": "passed",
+      "environment_names": [
+        "PYTHONDONTWRITEBYTECODE"
+      ],
+      "data": "synthetic only",
+      "evidence_path": ".superpowers\\sdd\\2026-10-08-wave3-integration-gate\\G10-browser-SQL-proof-20261008024208.log",
+      "sha256": "15d501e32916d2e84b004cc931b30d65c9415280dde3c5f2e224af324d3c8c6c",
+      "summary": [
+        "{\"database\": \"wave3_browser\", \"synthetic_only\": true, \"counts\": {\"authoritative_reviews\": 1, \"review_audits\": 1, \"deleted_versions\": 2, \"remaining_private_versions\": 0, \"rejected_proposals\": 1, \"completed_deletions\": 1, \"revoked_logins\": 3}}"
+      ],
+      "archived_evidence_path": "docs/experiments/wave3-evidence/command-output/G10-browser-SQL-proof-20261008024208.txt",
+      "archived_sha256": "beb28d909bba62d90158a1cdf5ba27fc8921bc115f6d003aee494db1e84a30f1",
+      "archive_note": "Actual raw bytes retained locally. Archive redacts credentials, normalizes LF/UTF-8 and trims trailing display whitespace; undecodable child-process bytes use reversible backslash escapes. Original SHA above; archive SHA separate."
+    },
+    {
+      "phase": "G10-frontend-all-types",
+      "command": [
+        "npx.cmd",
+        "tsc",
+        "--ignoreConfig",
+        "--noEmit",
+        "--target",
+        "ES2022",
+        "--lib",
+        "ES2022,DOM,DOM.Iterable",
+        "--module",
+        "ESNext",
+        "--moduleResolution",
+        "Bundler",
+        "--jsx",
+        "react-jsx",
+        "--esModuleInterop",
+        "--skipLibCheck",
+        "--strict",
+        "--types",
+        "node,vitest/globals",
+        "src/vite-env.d.ts",
+        "src/test/setup.ts",
+        "tests/all.test.ts",
+        "playwright.config.ts",
+        "playwright.gate.config.ts",
+        "e2e/learning-loop.spec.ts",
+        "e2e/security.spec.ts",
+        "e2e/security-ui.gate.ts",
+        "e2e/wave3-real.spec.ts"
+      ],
+      "cwd": "C:\\Users\\lenovo\\Desktop\\cs competition\\.worktrees\\wave3-integration-gate\\frontend",
+      "start": "2026-10-08T02:42:20.573284+00:00",
+      "end": "2026-10-08T02:42:21.917920+00:00",
+      "exit_code": 0,
+      "status": "passed",
+      "environment_names": [
+        "PYTHONDONTWRITEBYTECODE"
+      ],
+      "data": "synthetic only",
+      "evidence_path": ".superpowers\\sdd\\2026-10-08-wave3-integration-gate\\G10-frontend-all-types-20261008024220.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "summary": [],
+      "archived_evidence_path": "docs/experiments/wave3-evidence/command-output/G10-frontend-all-types-20261008024220.txt",
+      "archived_sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b",
+      "archive_note": "Actual raw bytes retained locally. Archive redacts credentials, normalizes LF/UTF-8 and trims trailing display whitespace; undecodable child-process bytes use reversible backslash escapes. Original SHA above; archive SHA separate."
+    },
+    {
+      "phase": "G10-full-backend-confirmed",
+      "command": [
+        "C:/Users/lenovo/Desktop/cs competition/.venv/Scripts/python.exe",
+        "-B",
+        "-m",
+        "pytest",
+        "tests",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "--tb=short",
+        "-o",
+        "junit_family=xunit1",
+        "--junitxml=../docs/experiments/wave3-evidence/backend-final.xml",
+        "--basetemp",
+        "C:\\Users\\lenovo\\Desktop\\cs competition\\.worktrees\\wave3-integration-gate\\.superpowers\\sdd\\2026-10-08-wave3-integration-gate\\tmp-20261008023750455786"
+      ],
+      "cwd": "C:\\Users\\lenovo\\Desktop\\cs competition\\.worktrees\\wave3-integration-gate\\backend",
+      "start": "2026-10-08T02:37:50.455786+00:00",
+      "end": "2026-10-08T02:43:43.104218+00:00",
+      "exit_code": 0,
+      "status": "passed",
+      "environment_names": [
+        "PYTHONDONTWRITEBYTECODE",
+        "TASK10_POSTGRES_URL",
+        "TASK10_RUNNER_IMAGE",
+        "TASK6_POSTGRES_URL",
+        "TASK6_RUNNER_ENDPOINT",
+        "TASK7_POSTGRES_URL",
+        "TASK7_RUNNER_ENDPOINT"
+      ],
+      "data": "synthetic only",
+      "evidence_path": ".superpowers\\sdd\\2026-10-08-wave3-integration-gate\\G10-full-backend-confirmed-20261008023750.log",
+      "sha256": "e265cf1d186d5fe03442e74a63ad8b6c737cc6e3af572c50545f118d89dedb08",
+      "summary": [
+        "tests/integration/test_task7_closed_loop.py: 1 warning",
+        "tests/integration/test_task7_deletion_recovery.py: 4 warnings",
+        "tests/integration/test_task7_postgres.py: 14 warnings",
+        "tests/integration/test_wave3_analytics_postgres.py: 13 warnings",
+        "tests/integration/test_wave3_analytics_vectors_postgres.py: 62 warnings",
+        "tests/integration/test_wave3_gate.py: 1 warning",
+        "tests/integration/test_wave3_migration_logging_postgres.py: 1 warning",
+        "tests/integration/test_wave3_migrations_postgres.py: 28 warnings",
+        "tests/integration/test_wave3_reviews_postgres.py: 7 warnings",
+        "tests/integration/test_wave3_security_cases_postgres.py: 3 warnings",
+        "  C:\\Users\\lenovo\\Desktop\\cs competition\\.venv\\Lib\\site-packages\\alembic\\config.py:604: DeprecationWarning: No path_separator found in configuration; falling back to legacy splitting on spaces, commas, and colons for prepend_sys_path.  Consider adding path_separator=os to Alembic config.",
+        "    util.warn_deprecated(",
+        "",
+        "-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html",
+        "907 passed, 148 warnings in 350.14s (0:05:50)"
+      ],
+      "archived_evidence_path": "docs/experiments/wave3-evidence/command-output/G10-full-backend-confirmed-20261008023750.txt",
+      "archived_sha256": "0c9f053b063dcb964846a9475802892a9a54f3c02330936e80efd2af3d2c1184",
+      "archive_note": "Actual raw bytes retained locally. Archive redacts credentials, normalizes LF/UTF-8 and trims trailing display whitespace; undecodable child-process bytes use reversible backslash escapes. Original SHA above; archive SHA separate."
+    },
+    {
+      "phase": "G10-student-loading-red",
+      "command": [
+        "npm.cmd",
+        "test"
+      ],
+      "cwd": "C:\\Users\\lenovo\\Desktop\\cs competition\\.worktrees\\wave3-integration-gate\\frontend",
+      "start": "2026-10-08T05:37:14.362460+00:00",
+      "end": "2026-10-08T05:37:20.662073+00:00",
+      "exit_code": 1,
+      "status": "failed",
+      "environment_names": [
+        "PYTHONDONTWRITEBYTECODE"
+      ],
+      "data": "synthetic only",
+      "evidence_path": ".superpowers\\sdd\\2026-10-08-wave3-integration-gate\\G10-student-loading-red-20261008053714.log",
+      "sha256": "1e4f161b7ff52852ae1568a948fb16c5b10141587aa22504856a95d1afb94560",
+      "summary": [
+        "       |                                                                    ^",
+        "     95|     first(json([{exercise_id:\"stale\",course_id:\"course-a\",title:\"Stale…",
+        "     96|     await new Promise(r=>setTimeout(r,20));",
+        " ❯ runWithExpensiveErrorDiagnosticsDisabled node_modules/@testing-library/dom/dist/config.js:47:12",
+        " ❯ checkCallback node_modules/@testing-library/dom/dist/wait-for.js:124:77",
+        " ❯ Timeout.checkRealTimersCallback node_modules/@testing-library/dom/dist/wait-for.js:118:16",
+        "",
+        "⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯",
+        "",
+        "",
+        " Test Files  1 failed (1)",
+        "      Tests  1 failed | 35 passed (36)",
+        "   Start at  13:37:15",
+        "   Duration  4.66s (tests 53%, environment 30%, setup 8%, transform 6%, import 3%)",
+        ""
+      ],
+      "archived_evidence_path": "docs/experiments/wave3-evidence/command-output/G10-student-loading-red-20261008053714.txt",
+      "archived_sha256": "9b2d2d2668202658ed5d58d08b70aac3b03b908447ba69237e13d65e5de4824a",
+      "archive_note": "Actual raw bytes retained locally. Archive redacts credentials, normalizes LF/UTF-8 and trims trailing display whitespace; undecodable child-process bytes use reversible backslash escapes. Original SHA above; archive SHA separate."
+    },
+    {
+      "phase": "G10-student-loading-confirmed",
+      "command": [
+        "npm.cmd",
+        "test"
+      ],
+      "cwd": "C:\\Users\\lenovo\\Desktop\\cs competition\\.worktrees\\wave3-integration-gate\\frontend",
+      "start": "2026-10-08T05:37:57.128824+00:00",
+      "end": "2026-10-08T05:38:00.887062+00:00",
+      "exit_code": 0,
+      "status": "passed",
+      "environment_names": [
+        "PYTHONDONTWRITEBYTECODE"
+      ],
+      "data": "synthetic only",
+      "evidence_path": ".superpowers\\sdd\\2026-10-08-wave3-integration-gate\\G10-student-loading-confirmed-20261008053757.log",
+      "sha256": "356bfc3ed2c9fe9da3baf91791e1695e28ff351e6514090b5b1c23a7a01fe85b",
+      "summary": [
+        "",
+        "> knowbound-web@0.1.0 test",
+        "> vitest run",
+        "",
+        "",
+        " RUN  v5.0.3 C:/Users/lenovo/Desktop/cs competition/.worktrees/wave3-integration-gate/frontend",
+        "",
+        "",
+        " Test Files  1 passed (1)",
+        "      Tests  36 passed (36)",
+        "   Start at  13:37:58",
+        "   Duration  2.70s (tests 53%, environment 26%, transform 9%, import 6%, setup 5%)",
+        ""
+      ],
+      "archived_evidence_path": "docs/experiments/wave3-evidence/command-output/G10-student-loading-confirmed-20261008053757.txt",
+      "archived_sha256": "6275a2f453a9585fd3659e75713889a862c5a4571838480227b2f619d886690a",
+      "archive_note": "Actual raw bytes retained locally. Archive redacts credentials, normalizes LF/UTF-8 and trims trailing display whitespace; undecodable child-process bytes use reversible backslash escapes. Original SHA above; archive SHA separate."
+    },
+    {
+      "phase": "G10-frontend-build-final",
+      "command": [
+        "npm.cmd",
+        "run",
+        "build"
+      ],
+      "cwd": "C:\\Users\\lenovo\\Desktop\\cs competition\\.worktrees\\wave3-integration-gate\\frontend",
+      "start": "2026-10-08T05:38:45.607021+00:00",
+      "end": "2026-10-08T05:39:27.519975+00:00",
+      "exit_code": 0,
+      "status": "passed",
+      "environment_names": [
+        "PYTHONDONTWRITEBYTECODE"
+      ],
+      "data": "synthetic only",
+      "evidence_path": ".superpowers\\sdd\\2026-10-08-wave3-integration-gate\\G10-frontend-build-final-20261008053845.log",
+      "sha256": "49f831549bc10047dde73a074dedcb134c248e54415a4bfe29ba96b0a8d8255b",
+      "summary": [
+        "",
+        "> knowbound-web@0.1.0 build",
+        "> tsc -b && vite build",
+        "",
+        "vite v8.3.1 building client environment for production...",
+        "transforming...",
+        "✓ 26 modules transformed.",
+        "rendering chunks...",
+        "computing gzip size...",
+        "dist/index.html                   0.42 kB │ gzip:  0.31 kB",
+        "dist/assets/index-Dfr-RlyW.css   14.89 kB │ gzip:  3.97 kB",
+        "dist/assets/index-Cwfs7bFP.js   257.93 kB │ gzip: 79.45 kB",
+        "",
+        "✓ built in 315ms"
+      ],
+      "archived_evidence_path": "docs/experiments/wave3-evidence/command-output/G10-frontend-build-final-20261008053845.txt",
+      "archived_sha256": "49f831549bc10047dde73a074dedcb134c248e54415a4bfe29ba96b0a8d8255b",
+      "archive_note": "Actual raw bytes retained locally. Archive redacts credentials, normalizes LF/UTF-8 and trims trailing display whitespace; undecodable child-process bytes use reversible backslash escapes. Original SHA above; archive SHA separate."
+    },
+    {
+      "phase": "G10-browser-default-final",
+      "command": [
+        "npx.cmd",
+        "playwright",
+        "test",
+        "--reporter=list,json"
+      ],
+      "cwd": "C:\\Users\\lenovo\\Desktop\\cs competition\\.worktrees\\wave3-integration-gate\\frontend",
+      "start": "2026-10-08T05:39:32.154922+00:00",
+      "end": "2026-10-08T05:39:44.008779+00:00",
+      "exit_code": 0,
+      "status": "passed",
+      "environment_names": [
+        "PYTHONDONTWRITEBYTECODE"
+      ],
+      "data": "synthetic only",
+      "evidence_path": ".superpowers\\sdd\\2026-10-08-wave3-integration-gate\\G10-browser-default-final-20261008053932.log",
+      "sha256": "5e5d90b9f2ff40bf5f20df8024dd7766d8fe422b889ae61fb56a52fc13efda99",
+      "summary": [
+        "  ok  4 [security-request] › e2e\\security.spec.ts:29:1 › teacher cannot list private student memories (46ms)",
+        "  ok  5 [security-request] › e2e\\security.spec.ts:35:3 › student A cannot enumerate student B submissions (51ms)",
+        "  ok  6 [security-request] › e2e\\security.spec.ts:35:3 › student A cannot enumerate student B submissions/execution-result (51ms)",
+        "  ok  7 [security-request] › e2e\\security.spec.ts:35:3 › student A cannot enumerate student B submissions/diagnosis (51ms)",
+        "  ok  8 [security-request] › e2e\\security.spec.ts:42:1 › direct protected URL without a token returns authentication failure (5ms)",
+        "  ok  9 [security-request] › e2e\\security.spec.ts:50:5 › student-b cannot PATCH another student's memory (95ms)",
+        "  ok 10 [security-request] › e2e\\security.spec.ts:50:5 › student-b cannot DELETE another student's memory (89ms)",
+        "  ok 11 [security-request] › e2e\\security.spec.ts:50:5 › teacher-a cannot PATCH another student's memory (87ms)",
+        "  ok 12 [security-request] › e2e\\security.spec.ts:50:5 › teacher-a cannot DELETE another student's memory (96ms)",
+        "  ok 13 [security-request] › e2e\\security.spec.ts:61:1 › malformed sensitive input never appears in the public error (48ms)",
+        "  ok 14 [security-request] › e2e\\security.spec.ts:74:1 › repeated concurrent acceptance produces one state change (51ms)",
+        "  ok 15 [security-request] › e2e\\security.spec.ts:87:1 › sharing grants only one summary and revocation immediately stops access (97ms)",
+        "  ok 16 [security-request] › e2e\\security.spec.ts:104:1 › logout makes a captured old bearer token unusable (45ms)",
+        "",
+        "  16 passed (10.1s)"
+      ],
+      "archived_evidence_path": "docs/experiments/wave3-evidence/command-output/G10-browser-default-final-20261008053932.txt",
+      "archived_sha256": "4d86159fa9060d9be4d1eb1e5079a2610e4eeb4c538f8ea87e711c95d5f7a208",
+      "archive_note": "Actual raw bytes retained locally. Archive redacts credentials, normalizes LF/UTF-8 and trims trailing display whitespace; undecodable child-process bytes use reversible backslash escapes. Original SHA above; archive SHA separate."
+    },
+    {
+      "phase": "G10-frontend-all-types-final",
+      "command": [
+        "npx.cmd",
+        "tsc",
+        "--ignoreConfig",
+        "--noEmit",
+        "--target",
+        "ES2022",
+        "--lib",
+        "ES2022,DOM,DOM.Iterable",
+        "--module",
+        "ESNext",
+        "--moduleResolution",
+        "Bundler",
+        "--jsx",
+        "react-jsx",
+        "--esModuleInterop",
+        "--skipLibCheck",
+        "--strict",
+        "--types",
+        "node,vitest/globals",
+        "src/vite-env.d.ts",
+        "src/test/setup.ts",
+        "tests/all.test.ts",
+        "playwright.config.ts",
+        "playwright.gate.config.ts",
+        "e2e/learning-loop.spec.ts",
+        "e2e/security.spec.ts",
+        "e2e/security-ui.gate.ts",
+        "e2e/wave3-real.spec.ts"
+      ],
+      "cwd": "C:\\Users\\lenovo\\Desktop\\cs competition\\.worktrees\\wave3-integration-gate\\frontend",
+      "start": "2026-10-08T05:39:08.227445+00:00",
+      "end": "2026-10-08T05:39:51.269616+00:00",
+      "exit_code": 0,
+      "status": "passed",
+      "environment_names": [
+        "PYTHONDONTWRITEBYTECODE"
+      ],
+      "data": "synthetic only",
+      "evidence_path": ".superpowers\\sdd\\2026-10-08-wave3-integration-gate\\G10-frontend-all-types-final-20261008053908.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "summary": [],
+      "archived_evidence_path": "docs/experiments/wave3-evidence/command-output/G10-frontend-all-types-final-20261008053908.txt",
+      "archived_sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b",
+      "archive_note": "Actual raw bytes retained locally. Archive redacts credentials, normalizes LF/UTF-8 and trims trailing display whitespace; undecodable child-process bytes use reversible backslash escapes. Original SHA above; archive SHA separate."
+    },
+    {
+      "phase": "G10-browser-gate-final",
+      "command": [
+        "npx.cmd",
+        "playwright",
+        "test",
+        "--config",
+        "playwright.gate.config.ts",
+        "--reporter=list,json"
+      ],
+      "cwd": "C:\\Users\\lenovo\\Desktop\\cs competition\\.worktrees\\wave3-integration-gate\\frontend",
+      "start": "2026-10-08T05:40:30.348723+00:00",
+      "end": "2026-10-08T05:40:54.328285+00:00",
+      "exit_code": 0,
+      "status": "passed",
+      "environment_names": [
+        "PYTHONDONTWRITEBYTECODE"
+      ],
+      "data": "synthetic only",
+      "evidence_path": ".superpowers\\sdd\\2026-10-08-wave3-integration-gate\\G10-browser-gate-final-20261008054030.log",
+      "sha256": "b09977b373a900e46dd70605f4d6f5ef802b678f2f702e5a25ede581a54232b8",
+      "summary": [
+        "(Use `node --trace-warnings ...` to show where the warning was created)",
+        "  ok  1 [security-ui-projection] › e2e\\security-ui.gate.ts:51:1 › student entering a teacher URL never renders teacher controls (465ms)",
+        "  ok  2 [security-ui-projection] › e2e\\security-ui.gate.ts:60:1 › teacher entering a private memory URL never requests or displays private content (360ms)",
+        "  ok  3 [security-ui-projection] › e2e\\security-ui.gate.ts:69:1 › suppressed analytics shows no exact learner count or private conversation (395ms)",
+        "  ok  4 [security-ui-projection] › e2e\\security-ui.gate.ts:79:1 › 403 and 404 render the same public denial without server details (443ms)",
+        "  ok  5 [security-ui-projection] › e2e\\security-ui.gate.ts:92:1 › error page hides sensitive service internals (418ms)",
+        "  ok  6 [security-ui-projection] › e2e\\security-ui.gate.ts:102:1 › logout clears persisted session and protected-page access (487ms)",
+        "  ok  7 [security-ui-projection] › e2e\\security-ui.gate.ts:113:1 › repeated acceptance clicks send one pending sensitive request (723ms)",
+        "(node:37604) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.",
+        "(Use `node --trace-warnings ...` to show where the warning was created)",
+        "  ok  8 [wave3-real-ui] › e2e\\wave3-real.spec.ts:17:1 › real teacher SQL threshold, denial, authoritative review and logout (1.8s)",
+        "  ok  9 [wave3-real-ui] › e2e\\wave3-real.spec.ts:45:1 › real student learning, compiler, hints and owned memory lifecycle (8.8s)",
+        "  ok 10 [wave3-real-ui] › e2e\\wave3-real.spec.ts:73:1 › real SQL logout failure is sanitized and remains retryable (619ms)",
+        "",
+        "  10 passed (22.2s)"
+      ],
+      "archived_evidence_path": "docs/experiments/wave3-evidence/command-output/G10-browser-gate-final-20261008054030.txt",
+      "archived_sha256": "4ed601561640c5a4c74bf6b79858cf379d8c36561a12408dc12cb47fd23d53be",
+      "archive_note": "Actual raw bytes retained locally. Archive redacts credentials, normalizes LF/UTF-8 and trims trailing display whitespace; undecodable child-process bytes use reversible backslash escapes. Original SHA above; archive SHA separate."
+    },
+    {
+      "phase": "G10-browser-SQL-proof-final",
+      "command": [
+        "C:/Users/lenovo/Desktop/cs competition/.venv/Scripts/python.exe",
+        "-B",
+        "-m",
+        "tests.integration.wave3_browser_sql_probe"
+      ],
+      "cwd": "C:\\Users\\lenovo\\Desktop\\cs competition\\.worktrees\\wave3-integration-gate\\backend",
+      "start": "2026-10-08T05:45:49.448408+00:00",
+      "end": "2026-10-08T05:45:51.235530+00:00",
+      "exit_code": 0,
+      "status": "passed",
+      "environment_names": [
+        "PYTHONDONTWRITEBYTECODE"
+      ],
+      "data": "synthetic only",
+      "evidence_path": ".superpowers\\sdd\\2026-10-08-wave3-integration-gate\\G10-browser-SQL-proof-final-20261008054549.log",
+      "sha256": "15d501e32916d2e84b004cc931b30d65c9415280dde3c5f2e224af324d3c8c6c",
+      "summary": [
+        "{\"database\": \"wave3_browser\", \"synthetic_only\": true, \"counts\": {\"authoritative_reviews\": 1, \"review_audits\": 1, \"deleted_versions\": 2, \"remaining_private_versions\": 0, \"rejected_proposals\": 1, \"completed_deletions\": 1, \"revoked_logins\": 3}}"
+      ],
+      "archived_evidence_path": "docs/experiments/wave3-evidence/command-output/G10-browser-SQL-proof-final-20261008054549.txt",
+      "archived_sha256": "beb28d909bba62d90158a1cdf5ba27fc8921bc115f6d003aee494db1e84a30f1",
+      "archive_note": "Actual raw bytes retained locally. Archive redacts credentials, normalizes LF/UTF-8 and trims trailing display whitespace; undecodable child-process bytes use reversible backslash escapes. Original SHA above; archive SHA separate."
     }
   ]
 }

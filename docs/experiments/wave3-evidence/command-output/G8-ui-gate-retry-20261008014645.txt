@@ -1,0 +1,22 @@
+[WebServer] (node:16468) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] INFO  [alembic.runtime.migration] Context impl PostgresqlImpl.
+[WebServer] INFO  [alembic.runtime.migration] Will assume transactional DDL.
+
+Running 9 tests using 1 worker
+
+(node:38436) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 1 [security-ui-projection] › e2e\security-ui.gate.ts:51:1 › student entering a teacher URL never renders teacher controls (789ms)
+  ok 2 [security-ui-projection] › e2e\security-ui.gate.ts:60:1 › teacher entering a private memory URL never requests or displays private content (545ms)
+  ok 3 [security-ui-projection] › e2e\security-ui.gate.ts:69:1 › suppressed analytics shows no exact learner count or private conversation (674ms)
+  ok 4 [security-ui-projection] › e2e\security-ui.gate.ts:79:1 › 403 and 404 render the same public denial without server details (757ms)
+  ok 5 [security-ui-projection] › e2e\security-ui.gate.ts:92:1 › error page hides sensitive service internals (647ms)
+  ok 6 [security-ui-projection] › e2e\security-ui.gate.ts:102:1 › logout clears persisted session and protected-page access (1.2s)
+  ok 7 [security-ui-projection] › e2e\security-ui.gate.ts:113:1 › repeated acceptance clicks send one pending sensitive request (1.0s)
+(node:40688) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 8 [wave3-real-ui] › e2e\wave3-real.spec.ts:17:1 › real teacher SQL threshold, denial, authoritative review and logout (2.9s)
+  ok 9 [wave3-real-ui] › e2e\wave3-real.spec.ts:45:1 › real student learning, compiler, hints and owned memory lifecycle (8.3s)
+
+  9 passed (29.7s)
