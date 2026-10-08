@@ -2,7 +2,7 @@ import { defineConfig } from "@playwright/test";
 import { existsSync } from "node:fs";
 import { resolve } from "node:path";
 
-const python = process.env.TASK10_PYTHON ?? [
+export const python = process.env.TASK10_PYTHON ?? [
   resolve(import.meta.dirname, "../.venv/Scripts/python.exe"),
   resolve(import.meta.dirname, "../../../.venv/Scripts/python.exe"),
   resolve(import.meta.dirname, "../.venv/bin/python"),

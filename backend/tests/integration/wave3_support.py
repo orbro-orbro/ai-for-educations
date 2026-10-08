@@ -31,6 +31,8 @@ PRIVATE = "PRIVATE_WAVE3_SENTINEL_DO_NOT_PROJECT"
 
 
 def postgres_url(database="wave3_router"):
+    if database not in {"wave3_router","wave3_browser","wave3_migration","wave3_task6","wave3_task7","wave3_task10"}:
+        raise ValueError("Unknown Gate synthetic database")
     value = os.environ.get("WAVE3_POSTGRES_URL", "postgresql+psycopg://knowbound:change-me@127.0.0.1:55430/wave3_router")
     url = make_url(value)
     if url.host != "127.0.0.1" or url.port != 55430 or url.database != "wave3_router" or not url.drivername.startswith("postgresql"):
@@ -49,9 +51,9 @@ def upgrade(database="wave3_router", revision="head"):
 
 
 class Wave3PG:
-    def __init__(self):
-        upgrade()
-        self.repos = create_sql_repositories(postgres_url())
+    def __init__(self, database="wave3_router"):
+        upgrade(database)
+        self.repos = create_sql_repositories(postgres_url(database))
         self.sessions = self.repos.memory_uow.sessions
         with self.sessions.begin() as session:
             # This database contains synthetic Gate fixtures only; never daily data.

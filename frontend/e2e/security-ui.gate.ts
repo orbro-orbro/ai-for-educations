@@ -23,6 +23,7 @@ async function contractApi(page: Page, options: { courseError?: number; detail?:
     if (req.resourceType() !== "fetch") return route.continue();
     const path = new URL(req.url()).pathname;
     calls.push(path);
+    if (path === "/auth/logout" && req.method() === "POST") return route.fulfill({status:204});
     const unavailable = { code: "RESOURCE_NOT_AVAILABLE", message: options.detail ?? "Resource is not available.", request_id: "req-ui-synthetic" };
     if (path === "/courses") return options.courseError
       ? route.fulfill({ status: options.courseError, json: unavailable })
