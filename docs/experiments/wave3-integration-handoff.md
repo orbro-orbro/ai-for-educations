@@ -51,3 +51,7 @@ Status: in progress. No Gate success is claimed. Daily services and source workt
 全部 40 operations 精确比较 paths/methods/operationId/parameters/body/status/security/response；240 项相关回归执行通过，0 skip。比较器保留名为 title/description 的业务字段，仅忽略 schema 注释；nullable enum 合并 null 是表达等价转换，未放宽 enum。
 新增 api/contract.py 只从实际 routes/models 生成 OpenAPI，移除无法失败的无请求体/无约束 string 路径自动 422；不读取共享 YAML。知识接口用实际有效 Annotated + SkipValidation 保留原业务校验和错误码，随后各 handler 仍调用严格模型；SourceMetadata 未提供 note 时省略，显式 null 拒绝。公开 DTO 独立于内部 Runner DTO，保留公开字段约束。
 HTTP 探针确认删除墓碑仍返回既有已脱敏诊断，满足非空公开约束且无原文；初始新增测试要求 404 属于错误假设，已撤回该额外权限行为。两组重置 wave3_router 的测试误并发引发测试数据 FK/唯一冲突，已改串行，全部重跑通过。共享 OpenAPI 本身未修改。
+
+### G5 — 原始匿名向量真实执行
+原 54 组向量通过正式 create_app / SQL / PostgreSQL，附加 8 组逐个移除过滤条件的反例检查，共 62 passed / 0 failed / 0 skipped。JUnit 含唯一 vector node、真实请求 URL、响应、总入库事实数及 excluded_by 反例数；原 YAML 与哈希未变。
+测试映射说明：源向量用课程内 exercise-a 名称，数据库已存在全局 Exercise PK + course 复合 FK。course-a 保留公开 ID；其他课程的练习使用 course_id--exercise_id，保持全部 diagnosis/owner/course/concept/time/repair 事实与反例入库，不绕过或降低 SQL 约束。跨课程排除另由 G2 真实 SQL 课程隔离测试佐证。多概念逐一构造独立已审核证据后一起装载；不依据 excluded_by 预过滤。

@@ -92,17 +92,23 @@ class Wave3PG:
 
     def seed_vector_facts(self, facts):
         courses = {f["course_id"] for f in facts}
+        # Vectors use course-local exercise names; SQL uses global IDs plus a
+        # composite course FK. Preserve every fact using a stable foreign-course
+        # namespace; the requested course retains the frozen public IDs.
+        exercise_ids = {(f["course_id"], f["exercise_id"]):
+            f["exercise_id"] if f["course_id"] == "course-a" else f["course_id"] + "--" + f["exercise_id"]
+            for f in facts if f["exercise_id"]}
         for course in sorted(courses):
             self.repos.courses.add(Course(course, "Synthetic 仓颉语言设计", "teacher-a", frozenset({"teacher-b"})))
             for exercise in sorted({f["exercise_id"] for f in facts if f["course_id"] == course and f["exercise_id"]}):
-                self.repos.courses.add_exercise(Exercise(exercise, course, "Synthetic exercise", True))
+                self.repos.courses.add_exercise(Exercise(exercise_ids[course,exercise], course, "Synthetic exercise", True))
             concepts = {f["concept_id"] for f in facts if f["course_id"] == course}
             # Every concept has separately approved synthetic course evidence.
             from app.knowledge.models import Concept, MisconceptionPattern
             from app.knowledge.repository import InMemoryKnowledgeRepository
-            temporary = InMemoryKnowledgeRepository()
             concept_models, misconception_models = [], []
             for concept in sorted(concepts):
+                temporary = InMemoryKnowledgeRepository()
                 knowledge_for(temporary, course, concept=concept)
                 graph = temporary.graph(course)
                 concept_models.extend(graph.concepts.values())
@@ -120,6 +126,8 @@ class Wave3PG:
             at = datetime.fromisoformat(f["created_at"].replace("Z", "+00:00"))
             did, course, owner = f["diagnosis_id"], f["course_id"], mapping[f["subject_key"]]
             exercise = f["exercise_id"]
+            if exercise is not None:
+                exercise = exercise_ids[course,exercise]
             if exercise is None:
                 exercise = "synthetic-unassigned-" + course
                 if exercise not in {e.exercise_id for e in self.repos.courses.list_exercises(course)}:
