@@ -4,6 +4,7 @@ from contextlib import ExitStack
 from dataclasses import dataclass, field
 from datetime import UTC, datetime
 from typing import Callable
+from uuid import uuid4
 
 from app.analytics.models import AnalyticsDiagnosisFact, TeacherReviewCandidate
 from app.analytics.repository import AnalyticsPersistenceError, TeacherAnalyticsRepository
@@ -62,10 +63,10 @@ class TeacherAnalyticsService:
         self._clock = clock
 
     def course_analytics(
-        self, actor: Actor, course_id: str, filters: AnalyticsFilters
+        self, actor: Actor, course_id: str, filters: AnalyticsFilters, *, request_id: str | None = None
     ) -> TeacherAnalyticsAvailable | TeacherAnalyticsSuppressed:
         filters = _validated_filters(filters)
-        self._courses.require_teacher_access(actor, course_id)
+        self._authorize_read(actor, course_id, "teacher_course_analytics_read", request_id)
         facts = tuple(
             item
             for item in self._repository.list_facts(course_id)
@@ -73,6 +74,7 @@ class TeacherAnalyticsService:
         )
         subject_keys = {item.subject_key for item in facts}
         if len(subject_keys) < MINIMUM_SAMPLE_SIZE:
+            self._audit_read(actor, course_id, "teacher_course_analytics_read", request_id)
             return TeacherAnalyticsSuppressed(course_id=course_id, filters=filters)
 
         grouped: dict[tuple[str, str | None, str], _GroupAccumulator] = {}
@@ -99,18 +101,20 @@ class TeacherAnalyticsService:
             )
             if len(accumulator.subject_keys) >= MINIMUM_SAMPLE_SIZE
         )
-        return TeacherAnalyticsAvailable(
+        result = TeacherAnalyticsAvailable(
             course_id=course_id,
             filters=filters,
             sample_size=len(subject_keys),
             groups=groups,
         )
+        self._audit_read(actor, course_id, "teacher_course_analytics_read", request_id)
+        return result
 
     def review_queue(
-        self, actor: Actor, course_id: str, filters: AnalyticsFilters
+        self, actor: Actor, course_id: str, filters: AnalyticsFilters, *, request_id: str | None = None
     ) -> TeacherReviewQueue:
         filters = _validated_filters(filters)
-        self._courses.require_teacher_access(actor, course_id)
+        self._authorize_read(actor, course_id, "teacher_review_queue_read", request_id)
         candidates = []
         for item in self._repository.list_candidates(course_id):
             if not _candidate_matches(item, filters):
@@ -119,11 +123,38 @@ class TeacherAnalyticsService:
                 continue
             candidates.append(item)
         candidates.sort(key=lambda item: (item.queued_at, item.queue_event_id))
-        return TeacherReviewQueue(
+        result = TeacherReviewQueue(
             course_id=course_id,
             filters=filters,
             items=tuple(_queue_item(item) for item in candidates),
         )
+        self._audit_read(actor, course_id, "teacher_review_queue_read", request_id)
+        return result
+
+    def _authorize_read(self, actor: Actor, course_id: str, event_type: str, request_id: str | None) -> None:
+        try:
+            self._courses.require_teacher_access(actor, course_id)
+        except ResourceNotAvailable:
+            # The audit store requires an existing course FK. A missing course
+            # has no sensitive read to release and must keep the same public
+            # 404, rather than attempting to create a fictitious audit resource.
+            if self._courses.course_exists_for_audit(course_id):
+                self._audit_read(actor, course_id, event_type, request_id, outcome="denied")
+            raise
+
+    def _audit_read(self, actor: Actor, course_id: str, event_type: str, request_id: str | None, *, outcome: str = "success") -> None:
+        try:
+            # Complete the audit commit before any sensitive result is returned.
+            # Neither student keys nor query/filter/result details enter this log.
+            with self._audit.transaction():
+                self._audit.record(
+                    event_type=event_type, actor=actor, target_type="course", target_id=course_id,
+                    owner_user_id="", course_id=course_id, outcome=outcome,
+                    reason_code="resource_not_available" if outcome == "denied" else event_type,
+                    request_id=request_id or str(uuid4()),
+                )
+        except RuntimeError as exc:
+            raise AnalyticsPersistenceError("teacher read could not be audited safely") from exc
 
     def review_diagnosis(
         self,

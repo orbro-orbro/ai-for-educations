@@ -113,7 +113,7 @@ class Harness:
         self.enrollments._enrollments.pop((course, actor.user_id))
 
 
-def build_harness(*, provider=None, runner=None, knowledge_explanation="A match must cover all possible cases.", empty_knowledge=False):
+def build_harness(*, provider=None, runner=None, knowledge_explanation="A match must cover all possible cases.", empty_knowledge=False, pending_other_course=False):
     users = UserRepository([User.with_password(a.user_id, a.user_id, "synthetic-password", a.role)
                             for a in (STUDENT_A, STUDENT_B, TEACHER, OTHER_TEACHER)])
     courses = CourseRepository([Course(COURSE_A, "仓颉语言设计", TEACHER.user_id), Course(COURSE_B, "Synthetic isolation course", OTHER_TEACHER.user_id)],
@@ -144,7 +144,7 @@ def build_harness(*, provider=None, runner=None, knowledge_explanation="A match 
     for label, actor, course, content, accept in [
         ("a", STUDENT_A, COURSE_A, "PRIVATE_A_MEMORY_SENTINEL_c387", True),
         ("b", STUDENT_B, COURSE_A, PRIVATE_B, True),
-        ("a-other", STUDENT_A, COURSE_B, PRIVATE_OTHER_COURSE, True),
+        ("a-other", STUDENT_A, COURSE_B, PRIVATE_OTHER_COURSE, not pending_other_course),
         ("pending", STUDENT_A, COURSE_A, "PRIVATE_PENDING_SENTINEL", False),
     ]:
         sid, did, eid = f"submission-{label}", f"diagnosis-{label}", f"check-{label}"

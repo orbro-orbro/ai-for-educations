@@ -40,7 +40,7 @@ def test_planned_operation(case,caplog,monkeypatch,record_property):
     if category=='prompt_injection':
         prompt.test_untrusted_channels_cannot_rewrite_evidence_roles_or_memory(case['input']['channel'],case['input']['payload'],caplog,monkeypatch)
         return
-    h=build_harness()
+    h=build_harness(pending_other_course=category=='cross_course' and n==6)
     if category in {'idor','cross_student'}:
         p=h.proposals['b'].proposal_id;m=h.memories['b'].memory_id
         g=grant(h,STUDENT_B,'diagnosis-b')
@@ -66,8 +66,24 @@ def test_planned_operation(case,caplog,monkeypatch,record_property):
             assert h.state.memory_service.search_memories(STUDENT_A,COURSE_A,h.memories['a-other'].content,purpose='learning_support')==()
         elif n==5:public_denial(h.request('POST','/diagnoses/diagnosis-a-other/share-grants',body={'grantee_user_id':TEACHER.user_id,'purpose':'synthetic'}))
         elif n==6:
-            h.revoke_enrollment(STUDENT_B,COURSE_A)
-            public_denial(h.request('POST',f'/memory-proposals/{h.proposals["b"].proposal_id}/accept',actor=STUDENT_B))
+            proposal=h.state.memory_repository.get_proposal(h.proposals['a-other'].proposal_id)
+            assert proposal.course_id==COURSE_B and proposal.owner_user_id==STUDENT_A.user_id
+            assert proposal.status.value=='pending' and proposal.accepted_memory_id is None
+            assert h.state.memory_repository.get_memory_for_proposal(proposal.proposal_id) is None
+            record_property('attack_course',proposal.course_id)
+            record_property('attack_owner',proposal.owner_user_id)
+            record_property('proposal_status_before',proposal.status.value)
+            assert proposal.proposal_id in {p['proposal_id'] for p in h.request('GET','/me/memory-proposals?course_id=course-b').json()}
+            h.revoke_enrollment(STUDENT_A,COURSE_B)
+            record_property('revoked_course',COURSE_B)
+            response=h.request('POST',f'/memory-proposals/{proposal.proposal_id}/accept',actor=STUDENT_A)
+            public_denial(response)
+            assert proposal.content not in response.text+caplog.text
+            public_denial(h.request('GET','/me/memory-proposals?course_id=course-b',actor=STUDENT_A))
+            after=h.state.memory_repository.get_proposal(proposal.proposal_id)
+            assert after.status.value=='pending' and after.accepted_memory_id is None
+            assert h.state.memory_repository.get_memory_for_proposal(proposal.proposal_id) is None
+            assert not h.provider.diagnosis_requests and not h.provider.hint_requests and not h.provider.explanation_requests
         elif n==7:
             h.revoke_enrollment(STUDENT_A,COURSE_A);public_denial(h.request('GET','/submissions/submission-a'))
         else:assert h.request('PATCH',f'/memories/{h.memories["a"].memory_id}',body={'content':'synthetic','course_id':COURSE_B}).status_code==422

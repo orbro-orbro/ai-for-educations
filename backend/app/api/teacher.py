@@ -76,6 +76,7 @@ def create_teacher_router(
                 actor,
                 course_id,
                 _filters(concept_id, exercise_id, start_at, end_at),
+                request_id=request_id_for(request),
             )
         except InvalidAnalyticsFilters:
             return error_response(
@@ -105,6 +106,7 @@ def create_teacher_router(
                 actor,
                 course_id,
                 _filters(concept_id, exercise_id, start_at, end_at),
+                request_id=request_id_for(request),
             )
         except InvalidAnalyticsFilters:
             return error_response(

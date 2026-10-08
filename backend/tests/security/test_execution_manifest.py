@@ -18,8 +18,18 @@ def test_exact_164_execution_claims_are_verified_against_evidence():
     module.validate_manifest(manifest,ROOT)
     assert len(manifest['cases'])==164
 
-def test_reviewed_wrong_scenario_is_not_reported_as_attack_passed():
-    manifest=mapper().build()
+def test_reviewed_wrong_scenario_is_not_reported_as_attack_passed(monkeypatch):
+    module=mapper()
+    original=module.junit
+    def wrong_scenario(path):
+        report=original(path)
+        for node,result in report.items():
+            if node.endswith('[sec-cross-course-006]'):
+                result['properties'].update(attack_course='course-a',attack_owner='student-b',
+                    proposal_status_before='accepted',revoked_course='course-a')
+        return report
+    monkeypatch.setattr(module,'junit',wrong_scenario)
+    manifest=module.build()
     row=next(row for row in manifest['cases'] if row['case_id']=='sec-cross-course-006')
     assert row['status']=='not_executed'
     assert row['blocker']=='WG-CASE-CROSS-COURSE-006'

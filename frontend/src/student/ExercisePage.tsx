@@ -41,6 +41,7 @@ export function ExercisePage({ api }: { api: ApiClient }) {
 
   function clearLearningResult() {
     resultRequest.current?.abort();
+    setRunning(false);
     setSubmissionId(null); setExecution(null); setDiagnosis(null); setRunError(null);
     setExecutionUnavailable(false); setUnderstandingChecked(false); setMemoryConfirmed(false);
   }

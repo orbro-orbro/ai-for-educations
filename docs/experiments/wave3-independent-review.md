@@ -1,5 +1,7 @@
 # Wave 3 独立只读审查与主 Agent 裁定
 
+前半为原审查及停止时的历史记录；用户随后明确继续授权。当前修复证据与同次补核见文末，不用历史停止结论代替最新结论。
+
 审查基线：0598a2ea1d2a5016b94cd6f35a5a0e678b76ee07。
 固定审查HEAD：9e1a7b7692857d15bf789eb72d157ba7f28d66c4。
 审查者：全新上下文 /root/wave3_readonly_review；没有继承实现对话，没有写文件、改Git状态或服务、派发其他审查者、运行宿主不可信代码或使用真实学生/模型。补核了审查期间新增的失败证据及映射更正。
@@ -70,7 +72,7 @@ clearLearningResult取消旧resultRequest，但不清running；旧finally因abor
 
 没有其他Declined项，没有默默丢弃的范围。
 
-## 最终审查结论与后续授权范围
+## 原审查停止结论与当时待授权范围
 
 **Gate未通过，当前不能条件通过。**0Critical、3Important、2Minor；I1/I2产品未修复，I3正确场景未执行。最新证据：6安全RED，组件36pass/2fail，攻击映射162pass/2未执行（非教学成效）。不能用此前907/36/26绿色覆盖审查发现。
 
@@ -82,3 +84,18 @@ clearLearningResult取消旧resultRequest，但不清running；旧finally因abor
 4. 完整后端、真实PG/迁移、组件/构建/类型、两份浏览器及隔离Runner回归；由同一次独立审查上下文补核修复，重新判Gate。保留全部失败历史与上述5项限制。
 
 此授权不包含merge、rebase、push、PR、worktree删除、生产部署、真实学生/模型或新增外部适配器。
+
+
+## 用户授权后的修复证据（主 Agent 提交，待原审查者补核）
+
+用户明确“继续”授权原报告四步；没有新增实现或审查 Agent。I1/I2/I3/M1/M2均按失败回归→最小修复实施，没有权限、schema、公开DTO、生产依赖或基础设施变更。
+
+- I1：teacher Router传入实际request_id；服务在任何敏感结果返回前完成既有audit.transaction提交，仅事件/actor/course/稳定reason/request ID元数据。现有课程拒绝亦审计；RuntimeError/SQL故障转既有脱敏503。新增6领域+11实际PG先17RED→136相关GREEN。独立SQL实例看到已提交审计，真实flush/commit故障回滚、无敏感结果、健康重试通过。
+- 最终浏览器发现不存在课程被audit course FK拒绝成503。已保留Gate9pass/1fail报告以及2实际PG RED；内部course_exists_for_audit只选择是否写该必需FK，不授权/返回课程。不存在资源没有敏感读取，不造虚构课程，保持原统一404；现有拒绝及成功读取仍可靠审计，33相关回归GREEN。当前实际PG审计13项。
+- I2：clearLearningResult取消旧请求并复位running；两种切换RED→GREEN，验证旧请求不能覆盖新任务以及重新提交。
+- M1：trend准确标“概念诊断/修复关联次数”，说明多概念重复计入；不从冻结DTO猜唯一数。M2：新load清items/forms/busy，用generation隔离旧GET及旧POST成功/失败/finally，loading禁提交。三项交互RED→GREEN；最终组件41通过。
+- I3：只对sec-cross-course-006种子创建student-a/course-b/pending实际仓库提议；撤权前可读且未激活，撤权后列表/接受404、无私密内容/模型调用/记忆激活、提议仍pending。新语义测试1RED→GREEN，105执行回归通过；mapper拒绝错前置属性。最终164映射163通过/1未执行，严格工具11项；最终通过节点引用新完整后端报告。
+
+完整后端最终928通过/0失败/0跳过；原220源文件与Task10原commit逐字节一致，54真实SQL向量、10迁移、11+2读取审计、现有并发/恢复/闭环实际执行。组件41；build及all-types退出0；两浏览器16+10、0 skip/unexpected/flaky；隔离worker31/controller12/HTTP拓扑4及Compose、browser SQL proof均通过。中间926和浏览器9/1失败报告单独保留，不能冒充最终快照。
+
+五项Declined裁定继续保留。候选结论为条件通过，等待同一次只读审查补核，不宣称生产、外部擦除、请求编号严格拒绝或并发负载根因已验证。

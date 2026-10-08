@@ -1,8 +1,9 @@
-import { cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { cleanup, fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { App } from "../src/App";
 import { CourseDashboard } from "../src/teacher/CourseDashboard";
 import { ExercisePage } from "../src/student/ExercisePage";
+import { ReviewQueue } from "../src/teacher/ReviewQueue";
 import { ApiClient } from "../src/api/client";
 
 const filters = {concept_id:null, exercise_id:null, start_at:null, end_at:null};
@@ -121,5 +122,56 @@ describe("Wave 3 integration UI",()=>{
     expect(next).toBeEnabled();
     fireEvent.click(next);
     await waitFor(()=>expect(submissions).toEqual(["exercise-a",selection==="课程"?"exercise-b":"exercise-next"]));
+  });
+  it("labels multi-concept trend sums as associations rather than unique diagnosis totals",async()=>{
+    vi.stubGlobal("fetch",vi.fn(async(input:RequestInfo|URL)=>{
+      const u=new URL(String(input));
+      if(u.pathname==="/courses")return json([{course_id:"course-a",title:"Course A"}]);
+      if(u.pathname.endsWith("/review-queue"))return json({course_id:"course-a",filters,items:[]});
+      return json({status:"available",course_id:"course-a",filters,sample_size:5,groups:["concept-a","concept-b"].map(concept_id=>({concept_id,exercise_id:"exercise-a",category:"conceptual",sample_size:5,diagnosis_count:5,independent_repair_count:1}))});
+    }));
+    render(<CourseDashboard api={new ApiClient("http://localhost:8198",()=>"synthetic-token")}/>);
+    await screen.findByRole("table",{name:"匿名概念误区数据"});
+    fireEvent.change(screen.getByLabelText("开始日期"),{target:{value:"2026-10-07"}});
+    fireEvent.change(screen.getByLabelText("结束日期"),{target:{value:"2026-10-07"}});
+    fireEvent.click(screen.getByRole("button",{name:"应用筛选"}));
+    const table=await screen.findByRole("table",{name:"相邻时间窗口趋势数据"});
+    expect(within(table).getByRole("columnheader",{name:"概念诊断关联次数"})).toBeInTheDocument();
+    expect(within(table).getAllByRole("cell",{name:"10"})).toHaveLength(2);
+    expect(screen.getByText("同一诊断涉及多个概念时会分别计入，关联次数不代表唯一诊断总数。" )).toBeInTheDocument();
+  });
+  it("hides the previously loaded review queue while the next course is loading",async()=>{
+    let finish!:(value:Response)=>void;
+    const item={queue_event_id:"queue-a",diagnosis_id:"diagnosis-a",submission_id:"submission-a",exercise_id:"exercise-a",category:"conceptual",concept_ids:[],root_cause:"OLD_COURSE_QUEUE",evidence_summaries:[],confidence:.4,review_reason:"low_confidence",queued_at:"2026-10-07T00:00:00Z"};
+    vi.stubGlobal("fetch",vi.fn(async(input:RequestInfo|URL)=>String(input).includes("course-a")?json({course_id:"course-a",filters,items:[item]}):new Promise<Response>(resolve=>{finish=resolve;})));
+    const api=new ApiClient("http://localhost:8198",()=>"synthetic-token");
+    const view=render(<ReviewQueue api={api} courseId="course-a" filters={filters}/>);
+    await screen.findByText("OLD_COURSE_QUEUE");
+    view.rerender(<ReviewQueue api={api} courseId="course-b" filters={filters}/>);
+    await waitFor(()=>expect(finish).toBeDefined());
+    expect(screen.queryByText("OLD_COURSE_QUEUE")).not.toBeInTheDocument();
+    expect(screen.queryByRole("button",{name:"提交复核"})).not.toBeInTheDocument();
+    finish(json({course_id:"course-b",filters,items:[]}));
+    await screen.findByText("当前没有待复核诊断");
+  });
+  it("ignores an old review failure after switching to another course",async()=>{
+    let finish!:(value:Response)=>void;
+    const item={queue_event_id:"queue-a",diagnosis_id:"diagnosis-a",submission_id:"submission-a",exercise_id:"exercise-a",category:"conceptual",concept_ids:[],root_cause:"OLD_REVIEW",evidence_summaries:[],confidence:.4,review_reason:"low_confidence",queued_at:"2026-10-07T00:00:00Z"};
+    vi.stubGlobal("fetch",vi.fn(async(input:RequestInfo|URL)=>{
+      const u=new URL(String(input));
+      if(u.pathname.endsWith("/review"))return new Promise<Response>(resolve=>{finish=resolve;});
+      return json({course_id:u.pathname.includes("course-a")?"course-a":"course-b",filters,items:u.pathname.includes("course-a")?[item]:[]});
+    }));
+    const api=new ApiClient("http://localhost:8198",()=>"synthetic-token");
+    const view=render(<ReviewQueue api={api} courseId="course-a" filters={filters}/>);
+    await screen.findByText("OLD_REVIEW");
+    fireEvent.change(screen.getByLabelText("复核理由"),{target:{value:"Synthetic reasoning"}});
+    fireEvent.click(screen.getByRole("button",{name:"提交复核"}));
+    await waitFor(()=>expect(finish).toBeDefined());
+    view.rerender(<ReviewQueue api={api} courseId="course-b" filters={filters}/>);
+    await screen.findByText("当前没有待复核诊断");
+    finish(json({code:"DIAGNOSIS_REVIEW_CONFLICT",message:"Conflict",request_id:"OLD_REVIEW_ID"},409));
+    await new Promise(resolve=>setTimeout(resolve,20));
+    expect(screen.queryByText(/OLD_REVIEW_ID/)).not.toBeInTheDocument();
   });
 });

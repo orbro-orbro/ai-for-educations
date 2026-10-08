@@ -1,14 +1,16 @@
-# Wave 3 Integration Gate — 最终交接（安全停止，待授权）
+# Wave 3 Integration Gate — 最终交接（待补核的条件通过草稿）
 
 ## 1. Gate 结论
 
-当前结论：**未通过；独立只读审查完成，Important安全问题已触发停止条件，产品修复等待用户授权。**审查前完整验证907/36/26通过不能覆盖新失败。新审计回归6失败；最新组件36通过/2失败；攻击映射已更正为162通过/2未执行。审查0Critical、3Important、2Minor，详见第15节及wave3-independent-review.md。
+**拟定条件通过，待原审查者补核；尚不宣称Gate完成。**用户在安全停止报告后明确回复“继续”，授权并完成三项Important、两项Minor修复与完整回归；同一次独立只读审查的补核结果见第15节。最终后端928、组件41、浏览器16+10、隔离Runner31+12+4全部通过，无测试跳过。原220安全、54真实SQL向量、7浏览器Gate均实际执行。
+
+不能宣布完全通过：sec-sensitive-logging-008缺明确请求编号信任规则，仍未执行严格判定；外部向量/缓存/模型引用物理擦除未实现适配器；历史Runner并发编译失败根因及负载稳定性未证实。上述限制不是实际教学成效。
 
 ## 2. 完成与未完成
 
-已集成 Task 8/9/10 五个来源提交，完成 SQL 教师分析、原子复核/审计、正式 Router、40个运行时公开 operations、学生/教师 UI、持久化 logout、迁移往返和真实 PostgreSQL/Runner/浏览器组合。审查前快照后端907、组件36、浏览器26、隔离 Runner31+12+4通过，无 skip/xfail。审查发现教师敏感GET遗漏审计/失败关闭，因此不能宣称生产安全就绪。
+已语义集成五个来源提交；真实SQL教师分析、共享事务复核/审计、正式Router与40个operations、学生/教师UI、持久化logout、迁移往返及真实PG/Runner/浏览器组合均验证。授权后教师两个敏感GET返回前提交metadata-only审计，审计写入或commit失败关闭为503；拒绝读取亦记录最小元数据。学生切课/换练习取消运行后恢复提交；队列加载清除旧条目并隔离迟到提交结果；趋势明确显示概念关联次数。正确course-b/student-a/pending撤权攻击已执行，映射恢复163通过/1未执行。
 
-未完成：教师敏感读取审计/失败关闭（WG-TEACHER-READ-AUDIT），运行中切换课程/练习永久busy（WG-STUDENT-RUN-CANCEL），正确course-b pending撤权攻击（WG-CASE-CROSS-COURSE-006），以及多概念趋势计数/加载新队列仍可操作旧条目两项Minor。请求编号信任规则（WG-CORRELATION-POLICY）、外部物理擦除（WG-EXTERNAL-ERASURE）、Runner并发负载稳定性另保留。未执行真实教学试点、真实模型比较、生产部署。
+未完成范围：WG-CORRELATION-POLICY、WG-EXTERNAL-ERASURE、Runner历史失败根因/负载验证；正式教师gold、真实模型比较、教学试点及生产部署均未执行。没有增加角色、教师私人读取权限、生产依赖、外部基础设施、schema或公开DTO。
 
 ## 3. 五个来源提交及追溯
 
@@ -54,7 +56,7 @@ Task9 CORS 保留 docs/adr/0005-local-preview-cors-allowlist.md；Task10 安全 
 
 ## 10. 原220项安全回归
 
-最终907项后端JUnit中原安全模块实际220/220通过、0失败、0跳过：IDOR65、small_sample_contract62、prompt_injection41、security_repairs15、recompute13、cross_course_memory9、evaluation_datasets9、isolated_runner6。最后6项使用真实隔离容器。新增 case-ID、安全映射和容器攻击测试另计，未删除/skip/xfail/放宽原断言。原Task8领域68项亦保留，新增开发投影2项另计。
+最终backend-after-review.xml有928项、0失败/错误/跳过，其中原220/220通过：IDOR65、small_sample_contract62、prompt_injection41、security_repairs15、recompute13、cross_course_memory9、evaluation_datasets9、isolated_runner6。最后6项使用真实隔离容器。新增案例、审计和容器攻击测试另计；原Task10断言未放宽、未删除/skip/xfail。原Task8 68项保留，审计永久故障测试现在同时要求读取失败关闭及健康reader仍见pending，原复核回滚断言保留。
 
 ## 11. 原7项浏览器Gate
 
@@ -62,51 +64,56 @@ Task9 CORS 保留 docs/adr/0005-local-preview-cors-allowlist.md；Task10 安全 
 
 ## 12. 学生/教师真实组合
 
-教师真实登录、4人抑制/5人展示、私人/跨课404、过滤422、复核409、双击仅1敏感请求、SQL队列移除与页面更新、logout旧JWT401。学生真实编译失败、诊断/提示/解释（Mock Provider）、本人接受/纠正/删除、实际成功修复、理解验证/拒绝、退出。测试专用SQL写入故障产生真实脱敏503/request ID，失败时旧会话仍有效，普通退出重试成功；生产CORS未加入故障header，故障从测试API context发送，组件另验可见503重试。
+最终两份浏览器命令26/26通过，重试配置0。新增3场景不使用page.route，连接实际UI/API/SQL/隔离Runner：教师真实登录、4/5人阈值、私人/跨课404、过滤422、复核409、双击仅1敏感请求、SQL队列移除、logout旧JWT401；学生真实编译失败/成功修复、诊断/提示/理解（Mock Provider）、本人接受/纠正/拒绝/删除及退出。测试专用SQL写入故障返回脱敏503/request ID，旧会话保留，普通退出重试成功；没有生产故障入口或CORS放宽。
 
-最新只读SQL核对：review=1、review audit=1、擦除deleted版本=2、含正文私人版本=0、拒绝proposal=1、完成deletion=1、revoked logins=3。手机390×844和桌面1440×1000无document横向溢出；截图仅合成内容。截图发现课程切换残留loading，新增失败组件测试后最小修复，审查前36组件及26浏览器重跑；更新student-mobile截图复看。审查随后发现另一个运行中切换的busy状态问题，新增两个交互测试均失败，未实施修复。
+最新浏览器后只读SQL核对：review=1、review audit=1、deleted且正文擦除版本=2、含正文私人版本=0、拒绝proposal=1、完成deletion=1、revoked logins=3。手机390×844与桌面1440×1000无document横向溢出，截图仅合成内容。原7UI/learning2投影fixture和security HTTP14内存fixture分别标注，不冒称PG证明。
+
+审查后的取消运行两项及队列/趋势三项交互RED，最小修复后组件41/41；旧请求结果不能覆盖新课程，旧复核错误不能污染新队列。
 
 ## 13. 164条攻击执行映射及数据哈希
 
-security_execution_manifest.json 恰好164唯一ID：**162 automated_passed，2 not_executed**。保留原case hash/operation、计划tier与真实tier、确切JUnit node/case_id属性、命令/时间/退出码/证据hash及边界；工具现11项通过，包括撤回已发现错场景的负向回归。104本地参数、65 PG参数（3具体+54原向量+8反例）、3实际容器攻击有执行报告；相同case_id/复制operation本身不能证明前置条件正确，独立审查为此撤回一条旧通过声明，不能整文件pass自动覆盖。
+security_execution_manifest.json恰好164唯一原ID：**163 automated_passed、1 not_executed**。原case hash、operation、计划tier、真实tier、确切JUnit node/case_id属性、实际命令/UTC时间/退出码/report hash均保留。最终通过案例引用本次完整928报告的实际节点：104本地参数、65 PG参数（3具体+54原向量+8反例）、3容器攻击；并非164独立无重叠测试。严格映射工具11项通过，拒绝缺失/重复ID、伪hash、未执行/错操作、错场景。
 
-sec-cross-course-006 原节点实际是student-b/course-a/已accepted提议，与计划student-a/course-b/pending撤权不符。其通过已撤回，保留错误观察，不执行产品修复/补造通过。WG-CASE-CROSS-COURSE-006保留具体高敏感未执行原因；正确场景待授权后执行。此前163/1只表示被审查纠正前的快照。
+sec-cross-course-006原student-b/course-a/accepted错误声明曾撤回为未执行，保留停止checkpoint。授权后实际构造student-a/course-b/pending，先验证提议可读取及不存在已激活记忆，再撤销B关系；列表/接受均404，无私密正文泄漏、模型调用或记忆激活，提议仍pending。JUnit前置状态由实际仓库断言导出，映射器强制核对，不仅靠复制operation。新增场景语义RED1→GREEN及105参数回归保留。
 
-sec-sensitive-logging-008 未判定：已观察到调用方 X-Request-ID 回显，但原计划没有定义可接受格式/替换规则，不能把观察当成功拒绝。阻塞号 WG-CORRELATION-POLICY；待明确规则后补严格判定。五个原 architecture_pending 案例现有本地代码证据，但内存index/cache/model引用不证明外部物理删除；WG-EXTERNAL-ERASURE单独保留。
+sec-sensitive-logging-008仍未判定：调用方X-Request-ID回显的观察不等于成功拒绝；计划没有定义合法格式/替换规则。阻塞WG-CORRELATION-POLICY。五个原architecture_pending案例只有现有本地实现证据，内存index/cache/model引用不证明外部物理删除；WG-EXTERNAL-ERASURE独立保留。
 
 数据文件未改内容；Windows core.autocrlf导致worktree CRLF与原Git blob LF字节hash不同，规范LF逐字节相等，详见verification-summary.json。原LF hash：security a5a33c34cc95887988972dd094d4743d14bd8c5e31df501f71c2d21fff36e34e；analytics ccb7d5c512137d6f4eb2cbc74cef9684847d953a0f72c7142c9d74c805eb032d；diagnosis 96ace03aab66ca806e5e56152d1fe939cf8701c6d3b31c6422e95c84d49d4410。实际raw hash另外记录，不混用。4条教学样例仍draft，verified=0，未生成真实教学结果。
 
 ## 14. 全部命令、环境与结果
 
-wave3-command-results.json 记录每次实际完整argv/cwd/UTC起止/退出码/环境变量名称/raw SHA/脱敏归档SHA；包含失败尝试和RED，未伪造重试时间。docs/experiments/wave3-evidence/command-output 保存可克隆的实际输出，凭证脱敏、UTF8/LF归档与原bytes hash分开。证据目录局部.gitattributes仅固定XML/JSON/TXT的LF以维持跨平台hash，不改变产品配置。原本地raw路径保留在ledger。verification-summary.json 从实际XML/Playwright JSON推导计数和hash。
+wave3-command-results.json保存实际完整argv/cwd/UTC起止/退出码/环境变量名称/raw SHA及脱敏归档SHA。command-output保存实际UTF8/LF日志；历史失败/RED保留，不伪造重试。verification-summary.json从真实JUnit/Playwright JSON计算计数与hash；局部.gitattributes固定证据LF。第一次未提权场景测试Python卡在环境启动、未产生pytest结果，精确取消该helper/子进程后另次实际RED，未把取消计为断言失败。
 
-|最后验证|实际结果|证据/phase|
+|最终命令|实际结果|phase/报告|
 |---|---|---|
-|审查前完整 backend pytest tests|907 passed / 0 failed / 0 skipped；非当前安全通过结论|backend-final.xml；G10-full-backend-confirmed|
-|最新新增安全回归|6 failed / 0 skipped；审计/失败关闭缺口未修复|teacher-read-audit-red.xml；G10-review-audit-red|
-|最新npm test|36 passed / 2 failed（38）；切换时永久busy未修复|G10-review-selection-confirmed-red|
-|npm run build；显式全部test/E2E/config tsc|退出0；退出0|G10-frontend-build-final；G10-frontend-all-types-final|
-|npx playwright test|16 passed / 0 skipped / 0 flaky|browser-default-final.json|
-|npx playwright test --config playwright.gate.config.ts|10 passed / 0 skipped / 0 flaky|browser-gate-final.json|
-|隔离SDK worker pytest|31 passed|G10-runner-worker|
-|隔离trusted controller pytest|12 passed|G10-runner-controller|
-|HTTP controller→sandbox|4 passed|controller-topology-final.xml|
-|Task6/7真实PG与closed loop、Task10实际PG、迁移往返|全通过，计入907|backend-final.xml模块计数|
-|Compose解析/结构、运行时合同|退出0；42 passed及其他合同|G10-compose-parse；907中的contracts|
-|evaluate；最新manifest/hash校验|退出0；162/2；工具11passed；原LF内容相等|G10-evaluation-structure；G10-review-mapping-truthful/claim-confirmed；verification-summary.json|
-|最新浏览器后SQL核对|退出0；上述7项count|G10-browser-SQL-proof-final|
+|backend Python -B -m pytest tests -q -p no:cacheprovider --tb=short -o junit_family=xunit1|928 passed，0 failed/skipped；原220及真实PG全包含|G10-post-review-backend；backend-after-review.xml|
+|npm test|41 passed，0 failed|G10-repair-UI-confirmed|
+|npm run build；显式全部tests/E2E/config tsc|退出0；退出0|G10-post-review-frontend-build/types|
+|npx playwright test --reporter=list,json|16 passed，0 skipped/unexpected/flaky|G10-post-review-browser-default；browser-default-after-review.json|
+|npx playwright test --config playwright.gate.config.ts --reporter=list,json|10 passed，原7+真实3；0 skipped/unexpected/flaky|G10-post-review-browser-gate；browser-gate-after-review.json|
+|hardened worker/container pytest|31 passed|G10-post-review-runner-worker|
+|hardened controller/container pytest|12 passed|G10-post-review-runner-controller|
+|host HTTP→controller→sandbox fixed scenarios|4 passed|G10-post-review-topology；controller-topology-after-review.xml|
+|Compose config --quiet；结构与运行时合同|退出0；结构及42合同测试已包含928|G10-post-review-compose；backend-after-review.xml|
+|evaluate.py；mapper build/strict tests|退出0；163/1；11 passed|G10-post-review-evaluation/manifest/manifest-check|
+|browser read-only SQL probe|退出0，上述7项准确count|G10-post-review-browser-SQL-proof|
 
-真实服务：Docker独立项目knowbound-wave3-gate，PG127.0.0.1:55430，controller127.0.0.1:8199；浏览器测试启动API8198/UI5199后自行结束。六个库wave3_task6/task7/task10/router/migration/browser均为合成数据。完整后端显式TASK6/7/10_POSTGRES_URL及TASK6/7_RUNNER_ENDPOINT、TASK10_RUNNER_IMAGE；pytest清除DATABASE_URL以避免覆盖隔离迁移；WAVE3_POSTGRES_URL默认仅允许上述Gate router URL。无数据库服务替身；SQLite仅原结构单测，不计真实PG。
+真实服务：独立Docker项目knowbound-wave3-gate；PG loopback55430、controller8199，浏览器API8198/UI5199按命令启动和结束。六个wave3_task6/task7/task10/router/migration/browser库均合成。完整pytest显式TASK6/7/10_POSTGRES_URL、TASK6/7_RUNNER_ENDPOINT、TASK10_RUNNER_IMAGE并清除DATABASE_URL，隔离迁移与业务库。SQLite仅原结构单测，Mock仅模型响应，未替换SQL授权/JWT/事务/删除边界。
 
-实际版本：PG17.11、pgvector0.8.7、cjc/cjpm1.2.0、Python3.14、Node24、npm11.12.1、Docker29.8。仓颉攻击只在非root/无网/只读/cap-dropALL/no-new-privileges/PID64/CPU1/memory512m/tmpfs64m容器执行；宿主只发送结构化请求。sandbox/controller及测试image digest见下方G8记录；测试依赖由已有本地包离线烘焙，未加生产依赖。
+实际版本PG17.11/pgvector0.8.7、cjc/cjpm1.2.0、Python3.14、Node24/npm11.12.1、Docker29.8。全部不可信仓颉源码仅非root/无网/只读/cap-dropALL/no-new-privileges/PID64/CPU1/512m/tmpfs64m容器执行，宿主只发送结构化请求。镜像digest与离线测试依赖构建详见G8；无生产新依赖。
 
-保留的重要失败：首次完整backend899pass/4fail，定位为Alembic fileConfig关闭logger；新的实际PG测试RED后最小修复，907完整回归全绿。首次并发验证时4个HTTP拓扑都compile_failed；未改源码/限制后同严格2秒条件重跑4/4通过，仅增加失败详情/记录属性。Docker历史events未留存，**根因未证实，不能宣称负载问题已修好**；原失败日志保留，列为负载稳定性/诊断风险。其余fixture/命令/环境RED详见rolling record及ledger。
+重要历史失败仍保留：首次backend899pass/4fail为Alembic关闭logger，实际PG RED→最小修复→907通过→本次928通过；首次并发HTTP4全部compile_failed，源码/严格2秒限制不变重跑4通过，本次亦4通过。但当时Docker events未留存，根因及并发负载稳定性未证明，不宣称已修好。审查停止时6安全RED/组件36pass2fail/映射162/2均为历史事实，不能与本次最终结果混淆。
 
-## 15. 独立审查
+## 15. 独立审查发现和修复
 
-已完成一次全新上下文只读审查，范围BASE→9e1a7b7692857d15bf789eb72d157ba7f28d66c4，并补核新增失败证据/映射更正。审查者未写代码/索引/HEAD或服务。结果：0Critical、3Important、2Minor；Gate未通过。I1教师GET无审计/故障仍返回（design8.7/ADR0004§13）；I2运行中切换永久busy；I3错课程/提议状态被计为已通过。Minor为多概念趋势重复计数和加载新队列可提交旧条目。
+全新只读上下文曾审查BASE→9e1a7b7692857d15bf789eb72d157ba7f28d66c4，0Critical/3Important/2Minor，按用户停止条件保存281b93966d4dd3fec22950ac3d46013709cc44e4，未偷偷修复。用户明确继续后修复并完整回归，由同一审查上下文补核固定repair HEAD；实际补核记录、逐项根裁定及五项Declined完整清单见wave3-independent-review.md。
 
-I1/I2已保留6安全RED/2交互RED；I3仅纠正证据为not_executed，正确场景未执行。按用户第16节及已确认计划停止产品实现；backend/app和frontend/src仍为审查HEAD状态。完整报告wave3-independent-review.md逐项接受/裁定五个Declined行为（请求编号政策、外部擦除、Runner根因、真实教学/模型、生产部署），无静默丢弃。具体待授权修复步骤也已写入报告；不是因技能推断新增审批。
+I1敏感GET读取审计：新增6领域+11实际PG/HTTP先17RED，修复后136相关GREEN及928全回归；success/denied元数据、独立SQL连接可见commit、flush/commit故障503与rollback/健康重试均证明。浏览器发现不存在课程误503，补2项PG RED→只对现有课程持久化拒绝审计→33相关GREEN；保留同一404与外键约束，不建虚构课程或新增迁移。
+I2切换永久busy：两项有效组件RED→清running且旧请求失效→41全绿。
+I3错误攻击声明：先撤回，再实际course-b pending/撤权语义RED→修正唯一场景fixture→105全绿；mapper前置语义防伪11全绿。
+M1概念重复趋势：accurate关联次数标签及说明，保留冻结DTO；M2加载旧队列及迟到POST：清items/禁操作/代际隔离；三项先RED，再41全绿。
+
+补核结论及准确repair提交写入独立报告；请求编号政策、外部擦除、Runner负载根因、真实教学/模型、生产部署五项继续明确暂不判定。审查者未写代码或改变Git/服务，未新增另一审查Agent。
 
 ## 16. 真实数据/模型
 
@@ -118,13 +125,15 @@ I1/I2已保留6安全RED/2交互RED；I3仅纠正证据为not_executed，正确�
 
 ## 18. 风险与Wave4/Task11依赖
 
-当前首要阻塞为WG-TEACHER-READ-AUDIT和WG-STUDENT-RUN-CANCEL；高敏感WG-CASE-CROSS-COURSE-006必须正确执行后才可恢复通过，两项Minor待修。待授权范围：既有metadata-only读取审计+故障503、最小UI修复、正确攻击fixture、完整回归与同一次独立审查补核；不改变权限、公开DTO、迁移或生产依赖。
+三项Important、两项Minor已授权修复并回归，正确course-b攻击已执行。剩余条件：WG-CORRELATION-POLICY需明确公共correlation格式/信任规则后补严格判定；WG-EXTERNAL-ERASURE需先ADR及授权真实外部适配器，再验证物理删除、迟到writer、缓存失效；Runner首次并发失败的根因、可观测性、负载验证仍待完成。重复串行通过不能证明并发稳定性。
 
-后续条件：WG-CORRELATION-POLICY确定公共correlation信任规则；WG-EXTERNAL-ERASURE先ADR/授权外部适配器，再验证物理删除/迟到writer/cache invalidation；Runner根因/可观测性和负载验证。pgvector安装不代表适配器，本次没有新增外部设施。教师gold、真实模型、教学试点和比赛指标需要Wave4明确授权。
+pgvector扩展可用不代表适配器。本次没有外部新设施/依赖。教师gold、真实模型/学生、试点及比赛成效必须Wave4另获明确授权，当前不能把软件或模拟数据测试称为真实教学效果。迁移擦除/降级备份/统一密钥轮换条件见第8节。
 
 ## 19. Gate分支、提交与工作区
 
-分支codex/wave3-integration-gate；worktree C:\Users\lenovo\Desktop\cs competition\.worktrees\wave3-integration-gate；基线0598a2ea1d2a5016b94cd6f35a5a0e678b76ee07。G9 HEAD为8f2cf61ec7e4931e4e06de42749e933ea5c63237；固定G10审查commit为9e1a7b7692857d15bf789eb72d157ba7f28d66c4。当前仅形成安全停止/失败证据本地checkpoint，不创建代表完成集成的feat最终提交。准确checkpoint hash/clean状态在最终消息和Git history提供，文档不伪造自身提交hash。用户授权修复后才继续G10最终提交。
+分支codex/wave3-integration-gate；worktree C:\Users\lenovo\Desktop\cs competition\.worktrees\wave3-integration-gate；BASE0598a2ea1d2a5016b94cd6f35a5a0e678b76ee07。G9为8f2cf61ec7e4931e4e06de42749e933ea5c63237；原固定审查HEAD9e1a7b7692857d15bf789eb72d157ba7f28d66c4；停止checkpoint281b93966d4dd3fec22950ac3d46013709cc44e4。修复固定HEAD及原审查者补核写于独立报告。
+
+最终本地提交信息feat: integrate Wave 3 analytics UI and security gate。最终准确HEAD/干净状态由提交后的交付消息与Git history提供，文档不伪造自己的提交hash；完整差异文件见wave3-changed-files.txt，main/来源HEAD及清洁核对见最终仓库证据。
 
 ## 20. 未执行动作
 

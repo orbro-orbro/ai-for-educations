@@ -1,0 +1,29 @@
+FF                                                                       [100%]
+================================== FAILURES ===================================
+_ test_nonexistent_course_keeps_uniform_404_without_a_fictitious_course_audit[queue] _
+tests\integration\test_wave3_teacher_read_audit_postgres.py:106: in test_nonexistent_course_keeps_uniform_404_without_a_fictitious_course_audit
+    assert response.status_code == 404
+E   assert 503 == 404
+E    +  where 503 = <Response [503 Service Unavailable]>.status_code
+---------------------------- Captured stderr setup ----------------------------
+INFO  [alembic.runtime.migration] Context impl PostgresqlImpl.
+INFO  [alembic.runtime.migration] Will assume transactional DDL.
+_ test_nonexistent_course_keeps_uniform_404_without_a_fictitious_course_audit[available] _
+tests\integration\test_wave3_teacher_read_audit_postgres.py:106: in test_nonexistent_course_keeps_uniform_404_without_a_fictitious_course_audit
+    assert response.status_code == 404
+E   assert 503 == 404
+E    +  where 503 = <Response [503 Service Unavailable]>.status_code
+---------------------------- Captured stderr setup ----------------------------
+INFO  [alembic.runtime.migration] Context impl PostgresqlImpl.
+INFO  [alembic.runtime.migration] Will assume transactional DDL.
+============================== warnings summary ===============================
+tests/integration/test_wave3_teacher_read_audit_postgres.py::test_nonexistent_course_keeps_uniform_404_without_a_fictitious_course_audit[queue]
+tests/integration/test_wave3_teacher_read_audit_postgres.py::test_nonexistent_course_keeps_uniform_404_without_a_fictitious_course_audit[available]
+  C:\Users\lenovo\Desktop\cs competition\.venv\Lib\site-packages\alembic\config.py:604: DeprecationWarning: No path_separator found in configuration; falling back to legacy splitting on spaces, commas, and colons for prepend_sys_path.  Consider adding path_separator=os to Alembic config.
+    util.warn_deprecated(
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED tests/integration/test_wave3_teacher_read_audit_postgres.py::test_nonexistent_course_keeps_uniform_404_without_a_fictitious_course_audit[queue]
+FAILED tests/integration/test_wave3_teacher_read_audit_postgres.py::test_nonexistent_course_keeps_uniform_404_without_a_fictitious_course_audit[available]
+2 failed, 11 deselected, 2 warnings in 6.34s

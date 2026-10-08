@@ -1,7 +1,6 @@
-"""Unfixed review finding: sensitive teacher reads must audit or fail closed.
+"""Regression for sensitive teacher reads: metadata audit or fail closed.
 
-Only synthetic in-process facts are used. These RED tests deliberately remain
-unfixed while the user's Important-security stop condition is active.
+Only synthetic in-process facts are used; initial six RED results are retained.
 """
 import pytest
 

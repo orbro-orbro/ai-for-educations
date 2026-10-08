@@ -1,0 +1,448 @@
+{
+  "config": {
+    "argv": [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "C:\\Users\\lenovo\\Desktop\\cs competition\\.worktrees\\wave3-integration-gate\\frontend\\node_modules\\@playwright\\test\\cli.js",
+      "test",
+      "--config",
+      "playwright.gate.config.ts",
+      "--reporter=list,json"
+    ],
+    "configFile": "C:\\Users\\lenovo\\Desktop\\cs competition\\.worktrees\\wave3-integration-gate\\frontend\\playwright.gate.config.ts",
+    "rootDir": "C:/Users/lenovo/Desktop/cs competition/.worktrees/wave3-integration-gate/frontend/e2e",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "C:/Users/lenovo/Desktop/cs competition/.worktrees/wave3-integration-gate/frontend/test-results/security-ui-gate",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "security-ui-projection",
+        "name": "security-ui-projection",
+        "testDir": "C:/Users/lenovo/Desktop/cs competition/.worktrees/wave3-integration-gate/frontend/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "security-ui.gate.ts"
+        ],
+        "timeout": 30000
+      },
+      {
+        "outputDir": "C:/Users/lenovo/Desktop/cs competition/.worktrees/wave3-integration-gate/frontend/test-results/security-ui-gate",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "wave3-real-ui",
+        "name": "wave3-real-ui",
+        "testDir": "C:/Users/lenovo/Desktop/cs competition/.worktrees/wave3-integration-gate/frontend/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "wave3-real.spec.ts"
+        ],
+        "timeout": 30000
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "list"
+      ],
+      [
+        "json"
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.63.0",
+    "workers": 1,
+    "webServer": null
+  },
+  "suites": [
+    {
+      "title": "security-ui.gate.ts",
+      "file": "security-ui.gate.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "student entering a teacher URL never renders teacher controls",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "security-ui-projection",
+              "projectName": "security-ui-projection",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 824,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-08T09:53:49.306Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "baafb244d401df9b0662-1c4c39fe1e6865350816",
+          "file": "security-ui.gate.ts",
+          "line": 51,
+          "column": 1
+        },
+        {
+          "title": "teacher entering a private memory URL never requests or displays private content",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "security-ui-projection",
+              "projectName": "security-ui-projection",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 527,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-08T09:53:50.590Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "baafb244d401df9b0662-99a31e16fa5d9734877c",
+          "file": "security-ui.gate.ts",
+          "line": 60,
+          "column": 1
+        },
+        {
+          "title": "suppressed analytics shows no exact learner count or private conversation",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "security-ui-projection",
+              "projectName": "security-ui-projection",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 583,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-08T09:53:51.126Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "baafb244d401df9b0662-b11f1d41996053e986b5",
+          "file": "security-ui.gate.ts",
+          "line": 69,
+          "column": 1
+        },
+        {
+          "title": "403 and 404 render the same public denial without server details",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "security-ui-projection",
+              "projectName": "security-ui-projection",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 645,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-08T09:53:51.717Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "baafb244d401df9b0662-a69b30ed5663238c330a",
+          "file": "security-ui.gate.ts",
+          "line": 79,
+          "column": 1
+        },
+        {
+          "title": "error page hides sensitive service internals",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "security-ui-projection",
+              "projectName": "security-ui-projection",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 548,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-08T09:53:52.377Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "baafb244d401df9b0662-f86632437b3ac6c0c72e",
+          "file": "security-ui.gate.ts",
+          "line": 92,
+          "column": 1
+        },
+        {
+          "title": "logout clears persisted session and protected-page access",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "security-ui-projection",
+              "projectName": "security-ui-projection",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1031,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-08T09:53:52.942Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "baafb244d401df9b0662-ed425e0a7551b9ff67a9",
+          "file": "security-ui.gate.ts",
+          "line": 102,
+          "column": 1
+        },
+        {
+          "title": "repeated acceptance clicks send one pending sensitive request",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "security-ui-projection",
+              "projectName": "security-ui-projection",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 941,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-08T09:53:53.994Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "baafb244d401df9b0662-77b212a4232d802562e8",
+          "file": "security-ui.gate.ts",
+          "line": 113,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "title": "wave3-real.spec.ts",
+      "file": "wave3-real.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "real teacher SQL threshold, denial, authoritative review and logout",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "wave3-real-ui",
+              "projectName": "wave3-real-ui",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2116,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-08T09:53:55.891Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "b3289e1e56dd0cf72b1c-c34e27209f5697c8053b",
+          "file": "wave3-real.spec.ts",
+          "line": 17,
+          "column": 1
+        },
+        {
+          "title": "real student learning, compiler, hints and owned memory lifecycle",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 90000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "wave3-real-ui",
+              "projectName": "wave3-real-ui",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 6967,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-08T09:53:58.446Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "b3289e1e56dd0cf72b1c-523a5e7a41d85c2efe65",
+          "file": "wave3-real.spec.ts",
+          "line": 45,
+          "column": 1
+        },
+        {
+          "title": "real SQL logout failure is sanitized and remains retryable",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "wave3-real-ui",
+              "projectName": "wave3-real-ui",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 810,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-08T09:54:05.434Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "b3289e1e56dd0cf72b1c-67260e4dbde92d4b3ebb",
+          "file": "wave3-real.spec.ts",
+          "line": 73,
+          "column": 1
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-10-08T09:53:42.753Z",
+    "duration": 24891.502,
+    "expected": 10,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  }
+}

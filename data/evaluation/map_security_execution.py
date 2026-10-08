@@ -11,6 +11,11 @@ import xml.etree.ElementTree as ET
 
 ROOT=Path(__file__).resolve().parents[2]
 STATUSES={'automated_passed','automated_failed','manual_passed','manual_failed','not_executed'}
+COURSE_006_PRECONDITIONS={'attack_course':'course-b','attack_owner':'student-a',
+    'proposal_status_before':'pending','revoked_course':'course-b'}
+
+def correct_course_006(properties):
+    return all(properties.get(key)==value for key,value in COURSE_006_PRECONDITIONS.items())
 
 def digest(path):return hashlib.sha256(path.read_bytes()).hexdigest()
 def case_hash(case):return hashlib.sha256(json.dumps(case,ensure_ascii=False,sort_keys=True,separators=(',',':')).encode()).hexdigest()
@@ -65,6 +70,8 @@ def validate_manifest(manifest,root=ROOT):
                 wanted='backend/tests/integration/test_wave3_analytics_vectors_postgres.py::test_vector_through_official_router_sql_postgres[analytics-'+row['case_id'].removeprefix('sec-small-sample-')+']'
                 if evidence['node']!=wanted:raise ValueError('Wrong original SQL vector operation')
             elif actual['properties'].get('case_id')!=row['case_id']:raise ValueError('Evidence belongs to another attack case')
+            if row['case_id']=='sec-cross-course-006' and not correct_course_006(actual['properties']):
+                raise ValueError('Planned course/proposal preconditions not executed')
             if actual['timestamp']!=row['executed_at'] or actual['duration_seconds']!=evidence['duration_seconds']:raise ValueError('Timing differs from executed node')
             run=row['run']
             if run not in runs:raise ValueError('Command not present in actual execution ledger')
@@ -79,6 +86,11 @@ def build(root=ROOT):
     files={'local':('concrete-local.xml','G9-local-final'),'pg':('postgres-cases.xml','G9-PG-parameters-final'),
            'container':('container-attacks.xml','G9-container-attacks-confirmed')}
     commands=json.loads((root/'docs/experiments/wave3-command-results.json').read_text(encoding='utf-8'))['commands']
+    if (root/'docs/experiments/wave3-evidence/concrete-local-repair.xml').exists():
+        files['local']=('concrete-local-repair.xml','G10-repair-case-execution-confirmed')
+    if (root/'docs/experiments/wave3-evidence/backend-after-review.xml').exists() and any(
+        r['phase']=='G10-post-review-backend' and r['exit_code']==0 for r in commands):
+        files={key:('backend-after-review.xml','G10-post-review-backend') for key in files}
     reports={key:junit(root/'docs/experiments/wave3-evidence'/file) for key,(file,_) in files.items()}
     rows=[]
     for case in cases:
@@ -101,7 +113,7 @@ def build(root=ROOT):
             'boundary':'Synthetic SQL PostgreSQL authority; Mock provider/index where applicable.' if tier=='pg' else 'Actual hardened SDK 1.2.0 container, fixed limits, synthetic source only.' if tier=='container' else 'Real authorization/deletion/model-input code; synthetic in-memory stores/index and deterministic Mock provider; not physical external storage proof.',
             'run':{k:record[k] for k in ('command','cwd','start','end','exit_code')},
             'evidence':[{'path':'docs/experiments/wave3-evidence/'+file,'sha256':digest(root/'docs/experiments/wave3-evidence'/file),'node':node,'duration_seconds':actual['duration_seconds']}]}
-        if cid=='sec-cross-course-006':
+        if cid=='sec-cross-course-006' and not correct_course_006(actual['properties']):
             row.update(status='not_executed',executed_at=None,
                 reason='Independent review confirmed that the executed node revoked student-b in course-a and accessed an already accepted course-a proposal. The planned operation requires student-a with a pending course-b proposal after course-b enrollment revocation. The wrong-scenario observation cannot prove this planned attack passed; product implementation is paused pending user authorization.',
                 blocker='WG-CASE-CROSS-COURSE-006',observation=row['evidence'])

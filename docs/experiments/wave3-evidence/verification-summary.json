@@ -1,6 +1,16 @@
 {
   "data": "synthetic only; no real learner or model",
   "junit": {
+    "backend-after-review-926.xml": {
+      "sha256": "15caef02683b9b39e38d24d14e577e6348bd20ffca65e79fa9d73ba41ae2f98d",
+      "test_count": 926,
+      "passed": 926
+    },
+    "backend-after-review.xml": {
+      "sha256": "d784852e95b03ea495d24648f02647b41e5e3f5c812297e78afeb66ad95544aa",
+      "test_count": 928,
+      "passed": 928
+    },
     "backend-final.xml": {
       "sha256": "63e709a6b21d9e4fc87b657170b6195f57608fd0c99859ef9b7ad39c19447776",
       "test_count": 907,
@@ -18,6 +28,11 @@
       "passed": 106,
       "failed": 1
     },
+    "concrete-local-repair.xml": {
+      "sha256": "bdf6b9052f582ca9ee3d4851427b6918dd15c2828c3d8069da634fefb21f5184",
+      "test_count": 105,
+      "passed": 105
+    },
     "concrete-local.xml": {
       "sha256": "c528b4037c8e776d6a2afb4ffa27f910b2762faff0c11696f9c3720c0b3ab9e7",
       "test_count": 104,
@@ -28,28 +43,85 @@
       "test_count": 3,
       "passed": 3
     },
+    "controller-topology-after-review.xml": {
+      "sha256": "51685c4e91d514c52085603008e83761ba8b780bc0c943c70eec71b86853a476",
+      "test_count": 4,
+      "passed": 4
+    },
     "controller-topology-final.xml": {
       "sha256": "a119b0afb3fad52f80312541427bc4b8a17bfc1ee5ab6549841af7bb75770b1c",
       "test_count": 4,
       "passed": 4
+    },
+    "manifest-after-review.xml": {
+      "sha256": "3becbc7c3f6f3c4f776267aa7e3c2c8f3f7d7c20678b4ac2d6bb6d05c4a750a9",
+      "test_count": 11,
+      "passed": 11
     },
     "postgres-cases.xml": {
       "sha256": "b78fd1149131af9ea7ce927a0da763c50837a31d7d10c82f9bce35813700c1af",
       "test_count": 65,
       "passed": 65
     },
+    "teacher-read-audit-postgres-red.xml": {
+      "sha256": "57fe20b2c787b16b6584a0ac82d709423bbec05b47955801cfd8aa05eb3dd62a",
+      "test_count": 17,
+      "failed": 17
+    },
     "teacher-read-audit-red.xml": {
       "sha256": "0a9d4f18ae460b542167128c1fae4177c869ca467fb548adafcb97201b356e88",
       "test_count": 6,
       "failed": 6
+    },
+    "teacher-read-audit-repair.xml": {
+      "sha256": "0dd45ccae3c9f73de4ba31adfd99f3929d938955afaebed9218cec99b76766e2",
+      "test_count": 136,
+      "passed": 136
+    },
+    "teacher-read-missing-course-red.xml": {
+      "sha256": "0555df6f9e96de380dd8b1b1fc73d36725f17536832bc01932f07689e302507b",
+      "test_count": 2,
+      "failed": 2
+    },
+    "teacher-read-missing-course-repair.xml": {
+      "sha256": "0181889ad6de2e633457c0d0d22ce8da0706df1d503cfce3556726f4efe157a1",
+      "test_count": 33,
+      "passed": 33
     }
   },
   "browser": {
+    "browser-default-after-review.json": {
+      "sha256": "f4367d2b586824161666e656ccb8861696c450e90d9ab9786b6da62256bfa163",
+      "startTime": "2026-10-08T09:47:16.638Z",
+      "duration": 11727.449,
+      "expected": 16,
+      "skipped": 0,
+      "unexpected": 0,
+      "flaky": 0
+    },
     "browser-default-final.json": {
       "sha256": "ebc6535beb9fe76399b8669121bf047d949b2092824d5d1dadc0fdc8df60e20f",
       "startTime": "2026-10-08T05:39:33.874Z",
       "duration": 10088.544,
       "expected": 16,
+      "skipped": 0,
+      "unexpected": 0,
+      "flaky": 0
+    },
+    "browser-gate-after-review-failed.json": {
+      "sha256": "23ea0106e2afb4de51ebb3a1757e169b4446f6ec17303628eea9746f4168f8e0",
+      "startTime": "2026-10-08T09:49:57.076Z",
+      "duration": 31087.052,
+      "expected": 9,
+      "skipped": 0,
+      "unexpected": 1,
+      "flaky": 0
+    },
+    "browser-gate-after-review.json": {
+      "sha256": "0e45aaed44c844671b5114034b3814aff96bffdb62a5925cf78c5c6e08b2c405",
+      "startTime": "2026-10-08T09:53:42.753Z",
+      "duration": 24891.502,
+      "expected": 10,
       "skipped": 0,
       "unexpected": 0,
       "flaky": 0
@@ -110,6 +182,7 @@
     "tests.integration.test_wave3_migrations_postgres": 10,
     "tests.integration.test_wave3_reviews_postgres": 7,
     "tests.integration.test_wave3_security_cases_postgres": 3,
+    "tests.integration.test_wave3_teacher_read_audit_postgres": 13,
     "tests.knowledge.test_graph": 46,
     "tests.knowledge.test_seed": 21,
     "tests.memories.test_api": 6,
@@ -123,7 +196,7 @@
     "tests.persistence.test_task7_migration_contract": 7,
     "tests.security.test_cross_course_memory": 9,
     "tests.security.test_evaluation_datasets": 9,
-    "tests.security.test_execution_manifest": 10,
+    "tests.security.test_execution_manifest": 11,
     "tests.security.test_idor": 65,
     "tests.security.test_isolated_runner": 6,
     "tests.security.test_prompt_injection": 41,
@@ -131,7 +204,9 @@
     "tests.security.test_security_repairs": 15,
     "tests.security.test_small_sample_contract": 62,
     "tests.security.test_wave3_case_execution": 104,
+    "tests.security.test_wave3_case_semantics": 1,
     "tests.security.test_wave3_container_attacks": 3,
+    "tests.security.test_wave3_teacher_read_audit": 6,
     "tests.submissions.test_contract": 2,
     "tests.submissions.test_permissions": 8,
     "tests.submissions.test_pipeline": 17,
@@ -157,18 +232,18 @@
     }
   },
   "current_manifest": {
-    "automated_passed": 162,
-    "not_executed": 2
+    "automated_passed": 163,
+    "not_executed": 1
   },
-  "current_gate_status": "security_stop_waiting_user_authorization",
+  "current_gate_status": "validation_passed_review_supplement_pending",
   "current_frontend_components": {
-    "failed": 2,
-    "passed": 36,
-    "total": 38,
-    "phase": "G10-review-selection-confirmed-red"
+    "failed": 0,
+    "passed": 41,
+    "total": 41,
+    "phase": "G10-repair-UI-confirmed"
   },
   "archive": {
-    "commands": 112,
+    "commands": 137,
     "credential_redactions": 1,
     "directory": "docs/experiments/wave3-evidence/command-output"
   }

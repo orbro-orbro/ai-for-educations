@@ -13,12 +13,14 @@ export function ReviewQueue({ api, courseId, filters }: { api: ApiClient; course
   const [forms, setForms] = useState<Record<string, ReviewForm>>({});
   const [busyIds, setBusyIds] = useState<string[]>([]);
   const busyRef = useRef(new Set<string>());
+  const loadGeneration = useRef(0);
 
   const load = useCallback(async (signal?: AbortSignal) => {
-    setLoading(true); setError(null); setProcessed([]); setForms({}); busyRef.current.clear(); setBusyIds([]);
-    try { const next = await api.getTeacherReviewQueue(courseId, filters, signal); if (!signal?.aborted) setItems(next.items); }
-    catch (nextError) { if (!signal?.aborted && !(nextError instanceof DOMException && nextError.name === "AbortError")) setError(nextError); }
-    finally { if (!signal?.aborted) setLoading(false); }
+    const generation = ++loadGeneration.current;
+    setLoading(true); setItems([]); setError(null); setProcessed([]); setForms({}); busyRef.current.clear(); setBusyIds([]);
+    try { const next = await api.getTeacherReviewQueue(courseId, filters, signal); if (!signal?.aborted && generation === loadGeneration.current) setItems(next.items); }
+    catch (nextError) { if (!signal?.aborted && generation === loadGeneration.current && !(nextError instanceof DOMException && nextError.name === "AbortError")) setError(nextError); }
+    finally { if (!signal?.aborted && generation === loadGeneration.current) setLoading(false); }
   }, [api, courseId, filters]);
 
   useEffect(() => { const controller = new AbortController(); void load(controller.signal); return () => controller.abort(); }, [load]);
@@ -28,15 +30,17 @@ export function ReviewQueue({ api, courseId, filters }: { api: ApiClient; course
 
   async function review(item: TeacherReviewQueueItem) {
     const form = formFor(item.diagnosis_id);
-    if (!form.reason.trim() || busyRef.current.has(item.diagnosis_id)) return;
+    if (loading || !form.reason.trim() || busyRef.current.has(item.diagnosis_id)) return;
+    const generation = loadGeneration.current;
     busyRef.current.add(item.diagnosis_id); setBusyIds(Array.from(busyRef.current)); setError(null);
     try {
       await api.reviewDiagnosis(item.diagnosis_id, form.decision, form.reason.trim());
-      setProcessed((current) => [...current, item.diagnosis_id]);
+      if (generation === loadGeneration.current) setProcessed((current) => [...current, item.diagnosis_id]);
     } catch (nextError) {
+      if (generation !== loadGeneration.current) return;
       if (nextError instanceof ApiError && nextError.status === 409) setError(new ApiError(409, { ...nextError.envelope, message: "该诊断已被处理，请刷新队列" }));
       else setError(nextError);
-    } finally { busyRef.current.delete(item.diagnosis_id); setBusyIds(Array.from(busyRef.current)); }
+    } finally { if (generation === loadGeneration.current) { busyRef.current.delete(item.diagnosis_id); setBusyIds(Array.from(busyRef.current)); } }
   }
 
   return (
@@ -56,7 +60,7 @@ export function ReviewQueue({ api, courseId, filters }: { api: ApiClient; course
           {processed.includes(item.diagnosis_id) ? <p className="notice" role="status">已处理</p> : <div className="review-form">
             <label>复核决定<select value={form.decision} onChange={(event) => updateForm(item.diagnosis_id, { decision: event.target.value as TeacherReviewDecision })} disabled={busy}><option value="confirmed">确认诊断</option><option value="overturned">推翻诊断</option><option value="insufficient_evidence">证据不足</option></select></label>
             <label>复核理由<textarea value={form.reason} onChange={(event) => updateForm(item.diagnosis_id, { reason: event.target.value })} placeholder="说明判断所依据的课程概念或证据" disabled={busy} /></label>
-            <button type="button" onClick={() => void review(item)} disabled={busy || !form.reason.trim()}>{busy ? "正在提交…" : "提交复核"}</button>
+            <button type="button" onClick={() => void review(item)} disabled={loading || busy || !form.reason.trim()}>{busy ? "正在提交…" : "提交复核"}</button>
           </div>}
         </article>;
       })}</div>

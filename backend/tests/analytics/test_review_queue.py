@@ -299,4 +299,10 @@ def test_audit_failure_rolls_back_review_and_keeps_queue_pending(
         )
 
     assert repository.get_review(item.diagnosis_id) is None
-    assert len(service.review_queue(OWNER, COURSE_A, AnalyticsFilters()).items) == 1
+    with pytest.raises(AnalyticsPersistenceError, match="could not be audited"):
+        service.review_queue(OWNER, COURSE_A, AnalyticsFilters())
+    # A healthy reader must still see the pending item after the failed write.
+    from app.audit.service import AuditService
+    reader = TeacherAnalyticsService(courses=course_service, repository=repository,
+        audit=AuditService(), clock=lambda: BASE_TIME)
+    assert len(reader.review_queue(OWNER, COURSE_A, AnalyticsFilters()).items) == 1

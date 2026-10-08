@@ -1,0 +1,148 @@
+FFFFFFFFFFFFFFFFF                                                        [100%]
+================================== FAILURES ===================================
+_ test_teacher_get_audit_is_committed_metadata_and_visible_to_a_fresh_instance[queue] _
+tests\integration\test_wave3_teacher_read_audit_postgres.py:47: in test_teacher_get_audit_is_committed_metadata_and_visible_to_a_fresh_instance
+    assert len(rows) == 1
+E   assert 0 == 1
+E    +  where 0 = len([])
+---------------------------- Captured stderr setup ----------------------------
+INFO  [alembic.runtime.migration] Context impl PostgresqlImpl.
+INFO  [alembic.runtime.migration] Will assume transactional DDL.
+_ test_teacher_get_audit_is_committed_metadata_and_visible_to_a_fresh_instance[available] _
+tests\integration\test_wave3_teacher_read_audit_postgres.py:47: in test_teacher_get_audit_is_committed_metadata_and_visible_to_a_fresh_instance
+    assert len(rows) == 1
+E   assert 0 == 1
+E    +  where 0 = len([])
+---------------------------- Captured stderr setup ----------------------------
+INFO  [alembic.runtime.migration] Context impl PostgresqlImpl.
+INFO  [alembic.runtime.migration] Will assume transactional DDL.
+_ test_teacher_get_audit_is_committed_metadata_and_visible_to_a_fresh_instance[suppressed] _
+tests\integration\test_wave3_teacher_read_audit_postgres.py:47: in test_teacher_get_audit_is_committed_metadata_and_visible_to_a_fresh_instance
+    assert len(rows) == 1
+E   assert 0 == 1
+E    +  where 0 = len([])
+---------------------------- Captured stderr setup ----------------------------
+INFO  [alembic.runtime.migration] Context impl PostgresqlImpl.
+INFO  [alembic.runtime.migration] Will assume transactional DDL.
+_ test_teacher_get_returns_only_sanitized_503_if_audit_flush_or_commit_fails[flush-queue] _
+tests\integration\test_wave3_teacher_read_audit_postgres.py:78: in test_teacher_get_returns_only_sanitized_503_if_audit_flush_or_commit_fails
+    assert response.status_code == 503
+E   assert 200 == 503
+E    +  where 200 = <Response [200 OK]>.status_code
+---------------------------- Captured stderr setup ----------------------------
+INFO  [alembic.runtime.migration] Context impl PostgresqlImpl.
+INFO  [alembic.runtime.migration] Will assume transactional DDL.
+_ test_teacher_get_returns_only_sanitized_503_if_audit_flush_or_commit_fails[flush-available] _
+tests\integration\test_wave3_teacher_read_audit_postgres.py:78: in test_teacher_get_returns_only_sanitized_503_if_audit_flush_or_commit_fails
+    assert response.status_code == 503
+E   assert 200 == 503
+E    +  where 200 = <Response [200 OK]>.status_code
+---------------------------- Captured stderr setup ----------------------------
+INFO  [alembic.runtime.migration] Context impl PostgresqlImpl.
+INFO  [alembic.runtime.migration] Will assume transactional DDL.
+_ test_teacher_get_returns_only_sanitized_503_if_audit_flush_or_commit_fails[flush-suppressed] _
+tests\integration\test_wave3_teacher_read_audit_postgres.py:78: in test_teacher_get_returns_only_sanitized_503_if_audit_flush_or_commit_fails
+    assert response.status_code == 503
+E   assert 200 == 503
+E    +  where 200 = <Response [200 OK]>.status_code
+---------------------------- Captured stderr setup ----------------------------
+INFO  [alembic.runtime.migration] Context impl PostgresqlImpl.
+INFO  [alembic.runtime.migration] Will assume transactional DDL.
+_ test_teacher_get_returns_only_sanitized_503_if_audit_flush_or_commit_fails[commit-queue] _
+tests\integration\test_wave3_teacher_read_audit_postgres.py:78: in test_teacher_get_returns_only_sanitized_503_if_audit_flush_or_commit_fails
+    assert response.status_code == 503
+E   assert 200 == 503
+E    +  where 200 = <Response [200 OK]>.status_code
+---------------------------- Captured stderr setup ----------------------------
+INFO  [alembic.runtime.migration] Context impl PostgresqlImpl.
+INFO  [alembic.runtime.migration] Will assume transactional DDL.
+_ test_teacher_get_returns_only_sanitized_503_if_audit_flush_or_commit_fails[commit-available] _
+tests\integration\test_wave3_teacher_read_audit_postgres.py:78: in test_teacher_get_returns_only_sanitized_503_if_audit_flush_or_commit_fails
+    assert response.status_code == 503
+E   assert 200 == 503
+E    +  where 200 = <Response [200 OK]>.status_code
+---------------------------- Captured stderr setup ----------------------------
+INFO  [alembic.runtime.migration] Context impl PostgresqlImpl.
+INFO  [alembic.runtime.migration] Will assume transactional DDL.
+_ test_teacher_get_returns_only_sanitized_503_if_audit_flush_or_commit_fails[commit-suppressed] _
+tests\integration\test_wave3_teacher_read_audit_postgres.py:78: in test_teacher_get_returns_only_sanitized_503_if_audit_flush_or_commit_fails
+    assert response.status_code == 503
+E   assert 200 == 503
+E    +  where 200 = <Response [200 OK]>.status_code
+---------------------------- Captured stderr setup ----------------------------
+INFO  [alembic.runtime.migration] Context impl PostgresqlImpl.
+INFO  [alembic.runtime.migration] Will assume transactional DDL.
+______ test_teacher_get_denial_is_audited_with_one_public_reason[queue] _______
+tests\integration\test_wave3_teacher_read_audit_postgres.py:95: in test_teacher_get_denial_is_audited_with_one_public_reason
+    assert len(rows) == 1
+E   assert 0 == 1
+E    +  where 0 = len([])
+---------------------------- Captured stderr setup ----------------------------
+INFO  [alembic.runtime.migration] Context impl PostgresqlImpl.
+INFO  [alembic.runtime.migration] Will assume transactional DDL.
+____ test_teacher_get_denial_is_audited_with_one_public_reason[available] _____
+tests\integration\test_wave3_teacher_read_audit_postgres.py:95: in test_teacher_get_denial_is_audited_with_one_public_reason
+    assert len(rows) == 1
+E   assert 0 == 1
+E    +  where 0 = len([])
+---------------------------- Captured stderr setup ----------------------------
+INFO  [alembic.runtime.migration] Context impl PostgresqlImpl.
+INFO  [alembic.runtime.migration] Will assume transactional DDL.
+__________ test_sensitive_teacher_read_records_metadata_audit[queue] __________
+tests\security\test_wave3_teacher_read_audit.py:42: in test_sensitive_teacher_read_records_metadata_audit
+    assert len(events) >= 1, "Sensitive teacher GET returned without an audit event"
+E   AssertionError: Sensitive teacher GET returned without an audit event
+E   assert 0 >= 1
+E    +  where 0 = len(())
+___ test_sensitive_teacher_read_records_metadata_audit[available_analytics] ___
+tests\security\test_wave3_teacher_read_audit.py:42: in test_sensitive_teacher_read_records_metadata_audit
+    assert len(events) >= 1, "Sensitive teacher GET returned without an audit event"
+E   AssertionError: Sensitive teacher GET returned without an audit event
+E   assert 0 >= 1
+E    +  where 0 = len(())
+__ test_sensitive_teacher_read_records_metadata_audit[suppressed_analytics] ___
+tests\security\test_wave3_teacher_read_audit.py:42: in test_sensitive_teacher_read_records_metadata_audit
+    assert len(events) >= 1, "Sensitive teacher GET returned without an audit event"
+E   AssertionError: Sensitive teacher GET returned without an audit event
+E   assert 0 >= 1
+E    +  where 0 = len(())
+__ test_sensitive_teacher_read_fails_closed_when_audit_is_unavailable[queue] __
+tests\security\test_wave3_teacher_read_audit.py:54: in test_sensitive_teacher_read_fails_closed_when_audit_is_unavailable
+    with pytest.raises(AnalyticsPersistenceError):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   Failed: DID NOT RAISE AnalyticsPersistenceError
+_ test_sensitive_teacher_read_fails_closed_when_audit_is_unavailable[available_analytics] _
+tests\security\test_wave3_teacher_read_audit.py:54: in test_sensitive_teacher_read_fails_closed_when_audit_is_unavailable
+    with pytest.raises(AnalyticsPersistenceError):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   Failed: DID NOT RAISE AnalyticsPersistenceError
+_ test_sensitive_teacher_read_fails_closed_when_audit_is_unavailable[suppressed_analytics] _
+tests\security\test_wave3_teacher_read_audit.py:54: in test_sensitive_teacher_read_fails_closed_when_audit_is_unavailable
+    with pytest.raises(AnalyticsPersistenceError):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   Failed: DID NOT RAISE AnalyticsPersistenceError
+============================== warnings summary ===============================
+tests/integration/test_wave3_teacher_read_audit_postgres.py: 11 warnings
+  C:\Users\lenovo\Desktop\cs competition\.venv\Lib\site-packages\alembic\config.py:604: DeprecationWarning: No path_separator found in configuration; falling back to legacy splitting on spaces, commas, and colons for prepend_sys_path.  Consider adding path_separator=os to Alembic config.
+    util.warn_deprecated(
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED tests/integration/test_wave3_teacher_read_audit_postgres.py::test_teacher_get_audit_is_committed_metadata_and_visible_to_a_fresh_instance[queue]
+FAILED tests/integration/test_wave3_teacher_read_audit_postgres.py::test_teacher_get_audit_is_committed_metadata_and_visible_to_a_fresh_instance[available]
+FAILED tests/integration/test_wave3_teacher_read_audit_postgres.py::test_teacher_get_audit_is_committed_metadata_and_visible_to_a_fresh_instance[suppressed]
+FAILED tests/integration/test_wave3_teacher_read_audit_postgres.py::test_teacher_get_returns_only_sanitized_503_if_audit_flush_or_commit_fails[flush-queue]
+FAILED tests/integration/test_wave3_teacher_read_audit_postgres.py::test_teacher_get_returns_only_sanitized_503_if_audit_flush_or_commit_fails[flush-available]
+FAILED tests/integration/test_wave3_teacher_read_audit_postgres.py::test_teacher_get_returns_only_sanitized_503_if_audit_flush_or_commit_fails[flush-suppressed]
+FAILED tests/integration/test_wave3_teacher_read_audit_postgres.py::test_teacher_get_returns_only_sanitized_503_if_audit_flush_or_commit_fails[commit-queue]
+FAILED tests/integration/test_wave3_teacher_read_audit_postgres.py::test_teacher_get_returns_only_sanitized_503_if_audit_flush_or_commit_fails[commit-available]
+FAILED tests/integration/test_wave3_teacher_read_audit_postgres.py::test_teacher_get_returns_only_sanitized_503_if_audit_flush_or_commit_fails[commit-suppressed]
+FAILED tests/integration/test_wave3_teacher_read_audit_postgres.py::test_teacher_get_denial_is_audited_with_one_public_reason[queue]
+FAILED tests/integration/test_wave3_teacher_read_audit_postgres.py::test_teacher_get_denial_is_audited_with_one_public_reason[available]
+FAILED tests/security/test_wave3_teacher_read_audit.py::test_sensitive_teacher_read_records_metadata_audit[queue]
+FAILED tests/security/test_wave3_teacher_read_audit.py::test_sensitive_teacher_read_records_metadata_audit[available_analytics]
+FAILED tests/security/test_wave3_teacher_read_audit.py::test_sensitive_teacher_read_records_metadata_audit[suppressed_analytics]
+FAILED tests/security/test_wave3_teacher_read_audit.py::test_sensitive_teacher_read_fails_closed_when_audit_is_unavailable[queue]
+FAILED tests/security/test_wave3_teacher_read_audit.py::test_sensitive_teacher_read_fails_closed_when_audit_is_unavailable[available_analytics]
+FAILED tests/security/test_wave3_teacher_read_audit.py::test_sensitive_teacher_read_fails_closed_when_audit_is_unavailable[suppressed_analytics]
+17 failed, 11 warnings in 20.31s

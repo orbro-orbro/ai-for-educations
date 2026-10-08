@@ -99,6 +99,10 @@ class CourseService:
             )
         )
 
+    def course_exists_for_audit(self, course_id: str) -> bool:
+        """Internal audit routing only; this does not authorize or expose a course."""
+        return self._courses.get(course_id) is not None
+
     def _verified_actor(self, actor: Actor) -> Actor:
         user = self._users.get(actor.user_id)
         if user is None or not user.active or user.role is not actor.role:
