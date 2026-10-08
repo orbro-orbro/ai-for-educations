@@ -2614,6 +2614,457 @@
       "summary": [
         "Cangjie Project Manager: 1.2.0"
       ]
+    },
+    {
+      "phase": "G9-manifest-red",
+      "command": [
+        "C:/Users/lenovo/Desktop/cs competition/.venv/Scripts/python.exe",
+        "-B",
+        "-m",
+        "pytest",
+        "tests/security/test_execution_manifest.py",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "--tb=short",
+        "--basetemp",
+        "C:\\Users\\lenovo\\Desktop\\cs competition\\.worktrees\\wave3-integration-gate\\.superpowers\\sdd\\2026-10-08-wave3-integration-gate\\tmp-20261008020546093194"
+      ],
+      "cwd": "C:\\Users\\lenovo\\Desktop\\cs competition\\.worktrees\\wave3-integration-gate\\backend",
+      "start": "2026-10-08T02:05:46.093194+00:00",
+      "end": "2026-10-08T02:05:54.619136+00:00",
+      "exit_code": 1,
+      "status": "failed",
+      "environment_names": [
+        "PYTHONDONTWRITEBYTECODE"
+      ],
+      "data": "synthetic only",
+      "evidence_path": ".superpowers\\sdd\\2026-10-08-wave3-integration-gate\\G9-manifest-red-20261008020546.log",
+      "sha256": "241d730a289bcc3f7e3535da51ba18016fdf8ebb5646b30876c76e6e13f085dd",
+      "summary": [
+        "    ???",
+        "<frozen importlib._bootstrap_external>:892: in get_code",
+        "    ???",
+        "<frozen importlib._bootstrap_external>:950: in get_data",
+        "    ???",
+        "E   FileNotFoundError: [Errno 2] No such file or directory: 'C:\\\\Users\\\\lenovo\\\\Desktop\\\\cs competition\\\\.worktrees\\\\wave3-integration-gate\\\\data\\\\evaluation\\\\map_security_execution.py'",
+        "=========================== short test summary info ===========================",
+        "FAILED tests/security/test_execution_manifest.py::test_exact_164_execution_claims_are_verified_against_evidence",
+        "FAILED tests/security/test_execution_manifest.py::test_mapping_rejects_unverifiable_execution_claims[missing]",
+        "FAILED tests/security/test_execution_manifest.py::test_mapping_rejects_unverifiable_execution_claims[duplicate]",
+        "FAILED tests/security/test_execution_manifest.py::test_mapping_rejects_unverifiable_execution_claims[status]",
+        "FAILED tests/security/test_execution_manifest.py::test_mapping_rejects_unverifiable_execution_claims[evidence]",
+        "FAILED tests/security/test_execution_manifest.py::test_mapping_rejects_unverifiable_execution_claims[collected]",
+        "FAILED tests/security/test_execution_manifest.py::test_mapping_rejects_unverifiable_execution_claims[hash]",
+        "7 failed in 5.26s"
+      ]
+    },
+    {
+      "phase": "G9-concrete-cases",
+      "command": [
+        "C:/Users/lenovo/Desktop/cs competition/.venv/Scripts/python.exe",
+        "-B",
+        "-m",
+        "pytest",
+        "tests/security/test_wave3_case_execution.py",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "--tb=short",
+        "--junitxml=../docs/experiments/wave3-evidence/concrete-cases.xml",
+        "--basetemp",
+        "C:\\Users\\lenovo\\Desktop\\cs competition\\.worktrees\\wave3-integration-gate\\.superpowers\\sdd\\2026-10-08-wave3-integration-gate\\tmp-20261008020928603945"
+      ],
+      "cwd": "C:\\Users\\lenovo\\Desktop\\cs competition\\.worktrees\\wave3-integration-gate\\backend",
+      "start": "2026-10-08T02:09:28.603945+00:00",
+      "end": "2026-10-08T02:11:13.114933+00:00",
+      "exit_code": 1,
+      "status": "failed",
+      "environment_names": [
+        "PYTHONDONTWRITEBYTECODE"
+      ],
+      "data": "synthetic only",
+      "evidence_path": ".superpowers\\sdd\\2026-10-08-wave3-integration-gate\\G9-concrete-cases-20261008020928.log",
+      "sha256": "cdc04663b42d6c0ce53835291a51318d455b083bd48debfac76d581537cd1ef8",
+      "summary": [
+        "..\\..\\..\\..\\..\\miniconda3\\Lib\\dataclasses.py:1812: in _replace",
+        "    return self.__class__(**changes)",
+        "           ^^^^^^^^^^^^^^^^^^^^^^^^^",
+        "E   TypeError: Course.__init__() got an unexpected keyword argument 'teacher_user_id'",
+        "============================== warnings summary ===============================",
+        "tests/security/test_wave3_case_execution.py: 104 warnings",
+        "  tests\\security\\test_wave3_case_execution.py:35: PytestWarning: record_property is incompatible with junit_family 'xunit2' (use 'legacy' or 'xunit1')",
+        "    @pytest.mark.parametrize('case',LOCAL,ids=lambda c:c['case_id'])",
+        "",
+        "-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html",
+        "=========================== short test summary info ===========================",
+        "FAILED tests/security/test_wave3_case_execution.py::test_planned_operation[sec-share-bypass-002]",
+        "FAILED tests/security/test_wave3_case_execution.py::test_planned_operation[sec-share-bypass-003]",
+        "FAILED tests/security/test_wave3_case_execution.py::test_planned_operation[sec-share-bypass-006]",
+        "3 failed, 101 passed, 104 warnings in 100.52s (0:01:40)"
+      ]
+    },
+    {
+      "phase": "G9-container-attacks",
+      "command": [
+        "C:/Users/lenovo/Desktop/cs competition/.venv/Scripts/python.exe",
+        "-B",
+        "-m",
+        "pytest",
+        "tests/security/test_wave3_container_attacks.py",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "--tb=short",
+        "-o",
+        "junit_family=xunit1",
+        "--junitxml=../docs/experiments/wave3-evidence/container-attacks.xml",
+        "--basetemp",
+        "C:\\Users\\lenovo\\Desktop\\cs competition\\.worktrees\\wave3-integration-gate\\.superpowers\\sdd\\2026-10-08-wave3-integration-gate\\tmp-20261008021225332996"
+      ],
+      "cwd": "C:\\Users\\lenovo\\Desktop\\cs competition\\.worktrees\\wave3-integration-gate\\backend",
+      "start": "2026-10-08T02:12:25.332996+00:00",
+      "end": "2026-10-08T02:12:48.214704+00:00",
+      "exit_code": 1,
+      "status": "failed",
+      "environment_names": [
+        "PYTHONDONTWRITEBYTECODE",
+        "TASK10_RUNNER_IMAGE"
+      ],
+      "data": "synthetic only",
+      "evidence_path": ".superpowers\\sdd\\2026-10-08-wave3-integration-gate\\G9-container-attacks-20261008021225.log",
+      "sha256": "50ab801a5831624a6daaa57372c82db52478902682c429a43963a78732ecf255",
+      "summary": [
+        ".F.                                                                      [100%]",
+        "================================== FAILURES ===================================",
+        "___________ test_concrete_container_attack[sec-executor-abuse-007] ____________",
+        "tests\\security\\test_wave3_container_attacks.py:44: in test_concrete_container_attack",
+        "    match=re.search(r'PID_DENIED:(\\d+)',result['stdout']);assert match,result",
+        "                                                          ^^^^^^^^^^^^^^^^^^^",
+        "E   AssertionError: {'protocol_version': '2', 'submission_id': 'task10-isolated-test', 'status': 'timed_out', 'phase': 'run', ...}",
+        "E   assert None",
+        "=========================== short test summary info ===========================",
+        "FAILED tests/security/test_wave3_container_attacks.py::test_concrete_container_attack[sec-executor-abuse-007]",
+        "1 failed, 2 passed in 19.62s"
+      ]
+    },
+    {
+      "phase": "G9-container-attacks-confirmed",
+      "command": [
+        "C:/Users/lenovo/Desktop/cs competition/.venv/Scripts/python.exe",
+        "-B",
+        "-m",
+        "pytest",
+        "tests/security/test_wave3_container_attacks.py",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "--tb=short",
+        "-o",
+        "junit_family=xunit1",
+        "--junitxml=../docs/experiments/wave3-evidence/container-attacks.xml",
+        "--basetemp",
+        "C:\\Users\\lenovo\\Desktop\\cs competition\\.worktrees\\wave3-integration-gate\\.superpowers\\sdd\\2026-10-08-wave3-integration-gate\\tmp-20261008021449607631"
+      ],
+      "cwd": "C:\\Users\\lenovo\\Desktop\\cs competition\\.worktrees\\wave3-integration-gate\\backend",
+      "start": "2026-10-08T02:14:49.607631+00:00",
+      "end": "2026-10-08T02:15:12.631902+00:00",
+      "exit_code": 0,
+      "status": "passed",
+      "environment_names": [
+        "PYTHONDONTWRITEBYTECODE",
+        "TASK10_RUNNER_IMAGE"
+      ],
+      "data": "synthetic only",
+      "evidence_path": ".superpowers\\sdd\\2026-10-08-wave3-integration-gate\\G9-container-attacks-confirmed-20261008021449.log",
+      "sha256": "4b4ac225a3dd057200eab177e81b6b6ddb14401ecfcf110ea22ac5cd95a6c112",
+      "summary": [
+        "...                                                                      [100%]",
+        "3 passed in 19.69s"
+      ]
+    },
+    {
+      "phase": "G9-cases-confirmed",
+      "command": [
+        "C:/Users/lenovo/Desktop/cs competition/.venv/Scripts/python.exe",
+        "-B",
+        "-m",
+        "pytest",
+        "tests/security/test_wave3_case_execution.py",
+        "tests/integration/test_wave3_security_cases_postgres.py",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "--tb=short",
+        "-o",
+        "junit_family=xunit1",
+        "--junitxml=../docs/experiments/wave3-evidence/concrete-cases.xml",
+        "--basetemp",
+        "C:\\Users\\lenovo\\Desktop\\cs competition\\.worktrees\\wave3-integration-gate\\.superpowers\\sdd\\2026-10-08-wave3-integration-gate\\tmp-20261008021330066961"
+      ],
+      "cwd": "C:\\Users\\lenovo\\Desktop\\cs competition\\.worktrees\\wave3-integration-gate\\backend",
+      "start": "2026-10-08T02:13:30.066961+00:00",
+      "end": "2026-10-08T02:15:21.704837+00:00",
+      "exit_code": 1,
+      "status": "failed",
+      "environment_names": [
+        "PYTHONDONTWRITEBYTECODE",
+        "TASK10_RUNNER_IMAGE"
+      ],
+      "data": "synthetic only",
+      "evidence_path": ".superpowers\\sdd\\2026-10-08-wave3-integration-gate\\G9-cases-confirmed-20261008021330.log",
+      "sha256": "6696a8e33d9344c28692a98e4a3ebeb7c44e8fd104360e15cf1960274c6a0004",
+      "summary": [
+        "E   (Background on this error at: https://sqlalche.me/e/20/f405)",
+        "---------------------------- Captured stderr call -----------------------------",
+        "INFO  [alembic.runtime.migration] Context impl PostgresqlImpl.",
+        "INFO  [alembic.runtime.migration] Will assume transactional DDL.",
+        "============================== warnings summary ===============================",
+        "tests/integration/test_wave3_security_cases_postgres.py::test_concrete_postgres_operation[sec-cross-role-002]",
+        "tests/integration/test_wave3_security_cases_postgres.py::test_concrete_postgres_operation[sec-cross-role-008]",
+        "tests/integration/test_wave3_security_cases_postgres.py::test_concrete_postgres_operation[sec-deletion-recovery-005]",
+        "  C:\\Users\\lenovo\\Desktop\\cs competition\\.venv\\Lib\\site-packages\\alembic\\config.py:604: DeprecationWarning: No path_separator found in configuration; falling back to legacy splitting on spaces, commas, and colons for prepend_sys_path.  Consider adding path_separator=os to Alembic config.",
+        "    util.warn_deprecated(",
+        "",
+        "-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html",
+        "=========================== short test summary info ===========================",
+        "FAILED tests/integration/test_wave3_security_cases_postgres.py::test_concrete_postgres_operation[sec-cross-role-008]",
+        "1 failed, 106 passed, 3 warnings in 107.46s (0:01:47)"
+      ]
+    },
+    {
+      "phase": "G9-PG-parameters-final",
+      "command": [
+        "C:/Users/lenovo/Desktop/cs competition/.venv/Scripts/python.exe",
+        "-B",
+        "-m",
+        "pytest",
+        "tests/integration/test_wave3_security_cases_postgres.py",
+        "tests/integration/test_wave3_analytics_vectors_postgres.py",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "--tb=short",
+        "-o",
+        "junit_family=xunit1",
+        "--junitxml=../docs/experiments/wave3-evidence/postgres-cases.xml",
+        "--basetemp",
+        "C:\\Users\\lenovo\\Desktop\\cs competition\\.worktrees\\wave3-integration-gate\\.superpowers\\sdd\\2026-10-08-wave3-integration-gate\\tmp-20261008021644492039"
+      ],
+      "cwd": "C:\\Users\\lenovo\\Desktop\\cs competition\\.worktrees\\wave3-integration-gate\\backend",
+      "start": "2026-10-08T02:16:44.492039+00:00",
+      "end": "2026-10-08T02:19:04.288490+00:00",
+      "exit_code": 0,
+      "status": "passed",
+      "environment_names": [
+        "PYTHONDONTWRITEBYTECODE"
+      ],
+      "data": "synthetic only",
+      "evidence_path": ".superpowers\\sdd\\2026-10-08-wave3-integration-gate\\G9-PG-parameters-final-20261008021644.log",
+      "sha256": "a6b2a7e5724aecb5f6bdef8d9146c49f5a6d617b3b8c708ecd95cc3abd8d46d6",
+      "summary": [
+        ".................................................................        [100%]",
+        "============================== warnings summary ===============================",
+        "tests/integration/test_wave3_security_cases_postgres.py: 3 warnings",
+        "tests/integration/test_wave3_analytics_vectors_postgres.py: 62 warnings",
+        "  C:\\Users\\lenovo\\Desktop\\cs competition\\.venv\\Lib\\site-packages\\alembic\\config.py:604: DeprecationWarning: No path_separator found in configuration; falling back to legacy splitting on spaces, commas, and colons for prepend_sys_path.  Consider adding path_separator=os to Alembic config.",
+        "    util.warn_deprecated(",
+        "",
+        "-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html",
+        "65 passed, 65 warnings in 135.87s (0:02:15)"
+      ]
+    },
+    {
+      "phase": "G10-bearer-contract",
+      "command": [
+        "C:/Users/lenovo/Desktop/cs competition/.venv/Scripts/python.exe",
+        "-B",
+        "-m",
+        "pytest",
+        "tests/contracts/test_wave3_runtime_openapi.py",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "--tb=short",
+        "--basetemp",
+        "C:\\Users\\lenovo\\Desktop\\cs competition\\.worktrees\\wave3-integration-gate\\.superpowers\\sdd\\2026-10-08-wave3-integration-gate\\tmp-20261008021928603082"
+      ],
+      "cwd": "C:\\Users\\lenovo\\Desktop\\cs competition\\.worktrees\\wave3-integration-gate\\backend",
+      "start": "2026-10-08T02:19:28.603082+00:00",
+      "end": "2026-10-08T02:20:14.471614+00:00",
+      "exit_code": 0,
+      "status": "passed",
+      "environment_names": [
+        "PYTHONDONTWRITEBYTECODE"
+      ],
+      "data": "synthetic only",
+      "evidence_path": ".superpowers\\sdd\\2026-10-08-wave3-integration-gate\\G10-bearer-contract-20261008021928.log",
+      "sha256": "4e653994d72f9195f23c174c1e60fef5eb61e5f2c6201fcd5260acd07628b3be",
+      "summary": [
+        "..........................................                               [100%]",
+        "42 passed in 43.34s"
+      ]
+    },
+    {
+      "phase": "G9-local-final",
+      "command": [
+        "C:/Users/lenovo/Desktop/cs competition/.venv/Scripts/python.exe",
+        "-B",
+        "-m",
+        "pytest",
+        "tests/security/test_wave3_case_execution.py",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "--tb=short",
+        "-o",
+        "junit_family=xunit1",
+        "--junitxml=../docs/experiments/wave3-evidence/concrete-local.xml",
+        "--basetemp",
+        "C:\\Users\\lenovo\\Desktop\\cs competition\\.worktrees\\wave3-integration-gate\\.superpowers\\sdd\\2026-10-08-wave3-integration-gate\\tmp-20261008021837355343"
+      ],
+      "cwd": "C:\\Users\\lenovo\\Desktop\\cs competition\\.worktrees\\wave3-integration-gate\\backend",
+      "start": "2026-10-08T02:18:37.355343+00:00",
+      "end": "2026-10-08T02:20:20.356719+00:00",
+      "exit_code": 0,
+      "status": "passed",
+      "environment_names": [
+        "PYTHONDONTWRITEBYTECODE"
+      ],
+      "data": "synthetic only",
+      "evidence_path": ".superpowers\\sdd\\2026-10-08-wave3-integration-gate\\G9-local-final-20261008021837.log",
+      "sha256": "b0b86c3582e722fff34de191ebfd005ecd9f71ada1f73d33f467dfcfbecaeb62",
+      "summary": [
+        "........................................................................ [ 69%]",
+        "................................                                         [100%]",
+        "104 passed in 98.88s (0:01:38)"
+      ]
+    },
+    {
+      "phase": "G9-mapping-build",
+      "command": [
+        "C:/Users/lenovo/Desktop/cs competition/.venv/Scripts/python.exe",
+        "-B",
+        "data/evaluation/map_security_execution.py",
+        "--build"
+      ],
+      "cwd": "C:\\Users\\lenovo\\Desktop\\cs competition\\.worktrees\\wave3-integration-gate",
+      "start": "2026-10-08T02:21:00.774383+00:00",
+      "end": "2026-10-08T02:21:05.551920+00:00",
+      "exit_code": 0,
+      "status": "passed",
+      "environment_names": [
+        "PYTHONDONTWRITEBYTECODE"
+      ],
+      "data": "synthetic only",
+      "evidence_path": ".superpowers\\sdd\\2026-10-08-wave3-integration-gate\\G9-mapping-build-20261008022100.log",
+      "sha256": "26bcf3610bc03b096ff7f8a96db77bc32f0c615e008a56324354dc60a6f7c36c",
+      "summary": [
+        "{\"case_count\": 164, \"statuses\": {\"automated_passed\": 163, \"not_executed\": 1}, \"teaching_annotations\": \"unchanged draft\"}"
+      ]
+    },
+    {
+      "phase": "G9-manifest-confirmed",
+      "command": [
+        "C:/Users/lenovo/Desktop/cs competition/.venv/Scripts/python.exe",
+        "-B",
+        "-m",
+        "pytest",
+        "tests/security/test_execution_manifest.py",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "--tb=short",
+        "--basetemp",
+        "C:\\Users\\lenovo\\Desktop\\cs competition\\.worktrees\\wave3-integration-gate\\.superpowers\\sdd\\2026-10-08-wave3-integration-gate\\tmp-20261008022117123551"
+      ],
+      "cwd": "C:\\Users\\lenovo\\Desktop\\cs competition\\.worktrees\\wave3-integration-gate\\backend",
+      "start": "2026-10-08T02:21:17.123551+00:00",
+      "end": "2026-10-08T02:21:22.637215+00:00",
+      "exit_code": 0,
+      "status": "passed",
+      "environment_names": [
+        "PYTHONDONTWRITEBYTECODE"
+      ],
+      "data": "synthetic only",
+      "evidence_path": ".superpowers\\sdd\\2026-10-08-wave3-integration-gate\\G9-manifest-confirmed-20261008022117.log",
+      "sha256": "48512bad0967a1617a44159fb8378173ba741d303b8d144b74126ea754cbcab5",
+      "summary": [
+        ".......                                                                  [100%]",
+        "7 passed in 2.29s"
+      ]
+    },
+    {
+      "phase": "G10-frontend-components",
+      "command": [
+        "npm.cmd",
+        "test",
+        "--",
+        "--reporter=verbose"
+      ],
+      "cwd": "C:\\Users\\lenovo\\Desktop\\cs competition\\.worktrees\\wave3-integration-gate\\frontend",
+      "start": "2026-10-08T02:23:25.473247+00:00",
+      "end": "2026-10-08T02:23:32.881581+00:00",
+      "exit_code": 0,
+      "status": "passed",
+      "environment_names": [
+        "PYTHONDONTWRITEBYTECODE"
+      ],
+      "data": "synthetic only",
+      "evidence_path": ".superpowers\\sdd\\2026-10-08-wave3-integration-gate\\G10-frontend-components-20261008022325.log",
+      "sha256": "bec4186939d665f28964ac3e65cfb60b31ca03f7a7df34213300d44ca8e8cb16",
+      "summary": [
+        " ✓ tests/all.test.ts > teacher privacy dashboard > treats a 409 review replay as an idempotent conflict 80ms",
+        " ✓ tests/all.test.ts > teacher privacy dashboard > uses the same non-enumerating state for denied teacher resources 21ms",
+        " ✓ tests/all.test.ts > teacher privacy dashboard > renders an empty review queue as an actionable state 24ms",
+        " ✓ tests/all.test.ts > teacher privacy dashboard > recovers from a review queue loading failure 61ms",
+        " ✓ tests/all.test.ts > Wave 3 integration UI > revokes the old token once before clearing a busy logout 80ms",
+        " ✓ tests/all.test.ts > Wave 3 integration UI > keeps the session retryable after logout storage failure 126ms",
+        " ✓ tests/all.test.ts > Wave 3 integration UI > clears a token already rejected with 401 102ms",
+        " ✓ tests/all.test.ts > Wave 3 integration UI > uses next local midnight and adjacent half-open time windows 78ms",
+        " ✓ tests/all.test.ts > Wave 3 integration UI > ignores stale queue responses after switching courses 96ms",
+        "",
+        " Test Files  1 passed (1)",
+        "      Tests  35 passed (35)",
+        "   Start at  10:23:27",
+        "   Duration  5.51s (tests 54%, environment 26%, transform 11%, setup 5%, import 4%)",
+        ""
+      ]
+    },
+    {
+      "phase": "G10-frontend-build",
+      "command": [
+        "npm.cmd",
+        "run",
+        "build"
+      ],
+      "cwd": "C:\\Users\\lenovo\\Desktop\\cs competition\\.worktrees\\wave3-integration-gate\\frontend",
+      "start": "2026-10-08T02:23:44.849567+00:00",
+      "end": "2026-10-08T02:23:47.869639+00:00",
+      "exit_code": 0,
+      "status": "passed",
+      "environment_names": [
+        "PYTHONDONTWRITEBYTECODE"
+      ],
+      "data": "synthetic only",
+      "evidence_path": ".superpowers\\sdd\\2026-10-08-wave3-integration-gate\\G10-frontend-build-20261008022344.log",
+      "sha256": "009f8c6cf52cb46d64751a203b314f236cf1852e3f714adbbd19974a7651135c",
+      "summary": [
+        "",
+        "> knowbound-web@0.1.0 build",
+        "> tsc -b && vite build",
+        "",
+        "vite v8.3.1 building client environment for production...",
+        "transforming...",
+        "✓ 26 modules transformed.",
+        "rendering chunks...",
+        "computing gzip size...",
+        "dist/index.html                   0.42 kB │ gzip:  0.31 kB",
+        "dist/assets/index-Dfr-RlyW.css   14.89 kB │ gzip:  3.97 kB",
+        "dist/assets/index-CadZlEPk.js   257.90 kB │ gzip: 79.45 kB",
+        "",
+        "✓ built in 352ms"
+      ]
     }
   ]
 }
