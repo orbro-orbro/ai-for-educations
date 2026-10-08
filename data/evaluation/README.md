@@ -33,4 +33,4 @@ Task 8 合入后，将每个向量 facts 全部装入真实测试数据库，用
 
 容器检查要求显式 TASK10_RUNNER_IMAGE（本次本地 `knowbound-cj-runner-sandbox:1.2.0`），缺少时明确环境 skip。不可信代码只在 network=none、read-only、非 root、cap-drop、no-new-privileges、资源限额的隔离容器中编译/运行。现有数据库集成分别要求专用 TASK6_POSTGRES_URL / TASK7_POSTGRES_URL，不得用 SQLite 代替 PostgreSQL。
 
-已复现的权限、登出、模型源码与删除问题见 ADR 0005；用户授权后已修复，含JWT等价编码、迟到写入与来源删除并发回归。当前验证见 `docs/experiments/task10-repair-handoff.md`；框架阶段的历史失败证据保留在 `docs/experiments/task10-handoff.md`。Task 8/9 组合、真实向量/外部缓存擦除和教学实验仍未执行，不能据此宣称 Gate 或教学成效通过。
+已复现的权限、登出、模型源码与删除问题见 ADR 0006；用户授权后已修复，含JWT等价编码、迟到写入与来源删除并发回归。当前验证见 `docs/experiments/task10-repair-handoff.md`；框架阶段的历史失败证据保留在 `docs/experiments/task10-handoff.md`。Task 8/9 组合、真实向量/外部缓存擦除和教学实验仍未执行，不能据此宣称 Gate 或教学成效通过。

@@ -6,7 +6,7 @@
 
 ## 交付状态
 
-安全测试、独立请求 E2E、Gate 浏览器 spec、评测 schema/草案/校验与复算工具、预注册协议和空结果模板已建立。**安全验收仍失败，不能发布或宣称 Wave 3 已集成。** 已发现五类权限/架构问题，保留严格失败测试并在 ADR 0005 提案；尚未获得生产修复确认。没有 skip/xfail 隐藏产品失败。
+安全测试、独立请求 E2E、Gate 浏览器 spec、评测 schema/草案/校验与复算工具、预注册协议和空结果模板已建立。**安全验收仍失败，不能发布或宣称 Wave 3 已集成。** 已发现五类权限/架构问题，保留严格失败测试并在 ADR 0006 提案；尚未获得生产修复确认。没有 skip/xfail 隐藏产品失败。
 
 没有调用真实或付费模型，没有使用真实学生数据，没有产生教学实验结果。确定性 Mock Provider 的合成输出不是真实模型抗注入能力证据。正式教师标注与教学试点尚未进行。
 
@@ -41,7 +41,7 @@ protocol 已预注册三组对照、≥50/目标100真实教师核验案例、�
 
 |工作目录 / 命令|实际结果|退出码|
 |---|---|---|
-|backend: `python -B -m pytest tests/security -q -p no:cacheprovider --basetemp <fresh> --tb=short`，显式 TASK10_RUNNER_IMAGE|196 passed / 9 failed / 0 skipped；9项全部为 ADR 0005 中的产品失败|1|
+|backend: `python -B -m pytest tests/security -q -p no:cacheprovider --basetemp <fresh> --tb=short`，显式 TASK10_RUNNER_IMAGE|196 passed / 9 failed / 0 skipped；9项全部为 ADR 0006 中的产品失败|1|
 |backend: `python -B -m pytest tests/auth tests/memories tests/model_gateway tests/contracts -q -p no:cacheprovider`|94 passed / 0 failed / 0 skipped|0|
 |backend: `python -B -m pytest tests/courses tests/submissions tests/diagnostics -q -p no:cacheprovider --basetemp <fresh>`|108 passed / 0 failed / 0 skipped|0|
 |backend: `python -B -m pytest tests/integration/test_task6_postgres.py tests/integration/test_task7_postgres.py -q -p no:cacheprovider --basetemp <fresh>`，TASK6_POSTGRES_URL / TASK7_POSTGRES_URL 指向本任务数据库|11 passed / 0 failed / 0 skipped；14 个既有 Alembic DeprecationWarning|0|
@@ -85,7 +85,7 @@ protocol 已预注册三组对照、≥50/目标100真实教师核验案例、�
 
 新增 `frontend/e2e/security.spec.ts`、`frontend/e2e/security-ui.gate.ts`、`frontend/playwright.config.ts`、`frontend/playwright.gate.config.ts`。
 
-新增 `docs/adr/0005-task10-security-findings.md`、`docs/experiments/protocol.md`、`docs/experiments/results-template.md`、`docs/experiments/task10-handoff.md`。
+新增 `docs/adr/0006-task10-security-findings.md`、`docs/experiments/protocol.md`、`docs/experiments/results-template.md`、`docs/experiments/task10-handoff.md`。
 
 修改 `frontend/package.json`、`frontend/package-lock.json`：新增最小 Playwright devDependency ^1.63.0 与配置静态检查所需 @types/node ^22；没有 runtime dependency。修改 `frontend/vite.config.ts` 仅 test.include，使 Vitest 收集 src 下 test/spec，避免 Playwright 冲突；不改构建和 UI。
 
@@ -97,7 +97,7 @@ protocol 已预注册三组对照、≥50/目标100真实教师核验案例、�
 
 最终补充审查确认9个四学生向量及16个独立过滤反例满足实际过滤4/忽略单项过滤5，30个文件清单完整，无新增 Critical/Important 框架问题；可交接测试与评测框架，不能宣称生产安全或 Wave 3 Gate 通过。专用测试数据库已实际清理，未删除 worktree。
 
-Wave 3 Gate 依赖：先确认 ADR 0005 决策并修复五类问题；Task 8 合入后执行真实 Router/SQL/并发的小样本全部向量；Task 9 合入后执行7浏览器场景并实连 API；完善真实向量索引、缓存/外部引用删除探针、持久化重启与迟到 writer 验证；对164计划攻击逐条记录实际执行覆盖。真实教师 gold 和正式模型/试点须另行授权与审核。
+Wave 3 Gate 依赖：先确认 ADR 0006 决策并修复五类问题；Task 8 合入后执行真实 Router/SQL/并发的小样本全部向量；Task 9 合入后执行7浏览器场景并实连 API；完善真实向量索引、缓存/外部引用删除探针、持久化重启与迟到 writer 验证；对164计划攻击逐条记录实际执行覆盖。真实教师 gold 和正式模型/试点须另行授权与审核。
 
 本地提交信息：`test: add security and education evaluation harness`。最终 commit 可在该 worktree 执行 `git rev-parse HEAD` 取得，外部交接消息给出实际哈希；本文不嵌入自引用哈希。提交后工作树状态以最终 `git status --short` 为准。
 

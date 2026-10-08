@@ -22,3 +22,15 @@ Status: in progress. No Gate success is claimed. Daily services and source workt
 
 - Ruling: execute the skill's task bookkeeping natively in PowerShell/Python rather than Bash helpers. The approved plan uses G0–G10 headings, whereas the helpers parse numbered `Task` headings. Preserve the same ledger, briefs, commit ranges and observed verification evidence. Cost if wrong: bookkeeping interoperability only.
 - Ruling: preserve execution evidence in tracked handoff files rather than deleting it at completion. The user expressly requires reviewable evidence. Temporary scratch may be cleaned without deleting any worktree.
+
+## G1 integration
+
+- Task 8 source integrated with `-x`: analytics and frozen contract 73 passed (68 analytics + 5 contract).
+- Task 9 UI source integrated with `-x`: 30 components passed, production build passed, original 2 browser projection scenarios passed.
+- Task 9 CORS fix integrated with `-x`: 9 CORS/config tests passed.
+- Task 10 framework: add/add conflict in `frontend/playwright.config.ts`. Semantic merge retains learning UI project/Edge/Vite service and security HTTP request project/Python fixture. Each has independent testMatch/baseURL; both services reject reuse.
+- Automatic merge introduced duplicate `include` in `frontend/vite.config.ts`; retained Task 9 single aggregation entry, which excludes Playwright while preserving all 30 tests. `package.json` and lock preserve both test:e2e and unchanged Playwright/Node types versions.
+
+- Framework security: exactly 196 passed / 9 historical failures / 0 skipped; all nine match the source handoff. Applied authorized repair source with -x; no main.py conflict. CORS middleware, SQL token revocations and deletion source_context all remain.
+- ADR numbering: CORS retains 0005; accepted Task 10 security decision renamed 0006 and all deliverable safety references updated. Original case/vector data unchanged.
+- G1 final source safety regression: 220 passed, 0 failed, 0 skipped; actual sandbox checks included. Shared authentication/CORS/config regression: 28 passed. Components: 30 passed; build passed. Initial TS2688 installation lag resolved by lockfile npm ci; configuration typecheck then passed.

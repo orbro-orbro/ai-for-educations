@@ -1,6 +1,6 @@
 # Wave 3 Task 10 修复交接
 
-用户在2026-10-07指示“开始修复”，授权实施ADR 0005的五类修复。修复基于框架提交 `783bd84fddbeb9e0210a40e8e50170a67c5679e9`，分支为 `codex/wave3-task10-security-eval`，worktree为 `C:\Users\lenovo\Desktop\cs competition\.worktrees\wave3-task10-security-eval`。最终提交哈希由交接消息给出，本文不写入自引用哈希。
+用户在2026-10-07指示“开始修复”，授权实施ADR 0006的五类修复。修复基于框架提交 `783bd84fddbeb9e0210a40e8e50170a67c5679e9`，分支为 `codex/wave3-task10-security-eval`，worktree为 `C:\Users\lenovo\Desktop\cs competition\.worktrees\wave3-task10-security-eval`。最终提交哈希由交接消息给出，本文不写入自引用哈希。
 
 ## 完成内容与覆盖矩阵
 
@@ -59,7 +59,7 @@ Python使用 `C:\Users\lenovo\Desktop\cs competition\.venv\Scripts\python.exe`�
 
 测试修改：`backend/tests/memories/test_deletion.py`（普通迟到upsert应被拒绝，再人工污染原始派生存储以继续验证物理反查）、`backend/tests/integration/test_task7_postgres.py`（并发同步点）、`backend/tests/security/test_idor.py`、`backend/tests/security/test_prompt_injection.py`（源码注入渠道改为验证被过滤，其他渠道保留可达性断言）、`frontend/e2e/security.spec.ts`（登出必须204，旧token必须401）。
 
-文档修改：`docs/adr/0005-task10-security-findings.md`、`docs/experiments/task10-handoff.md`（标记历史快照）、`data/evaluation/README.md`。文档新增：本文。忽略目录中的内部ledger记录实施决策和证据，不作为交付文件提交。
+文档修改：`docs/adr/0006-task10-security-findings.md`、`docs/experiments/task10-handoff.md`（标记历史快照）、`data/evaluation/README.md`。文档新增：本文。忽略目录中的内部ledger记录实施决策和证据，不作为交付文件提交。
 
 ## 数据库、API与部署要求
 
