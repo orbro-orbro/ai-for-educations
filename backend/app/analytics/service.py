@@ -146,6 +146,10 @@ class TeacherAnalyticsService:
         self._courses.require_teacher_access(actor, candidate.course_id)
 
         with self._repository.review_claim(diagnosis_id):
+            candidate = self._repository.get_candidate(diagnosis_id)
+            if candidate is None:
+                raise ResourceNotAvailable()
+            self._courses.require_teacher_access(actor, candidate.course_id)
             existing = self._repository.get_review(diagnosis_id)
             if existing is not None:
                 if existing.decision == decision and existing.reason == reason:

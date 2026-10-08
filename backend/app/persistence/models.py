@@ -391,6 +391,22 @@ class DiagnosisRow(Base):
     )
 
 
+class TeacherDiagnosisReviewRow(Base):
+    __tablename__ = "teacher_diagnosis_reviews"
+    diagnosis_id: Mapped[str] = mapped_column(String(128), primary_key=True)
+    course_id: Mapped[str] = mapped_column(String(128), nullable=False)
+    reviewer_user_id: Mapped[str] = mapped_column(ForeignKey("users.id", ondelete="RESTRICT"), nullable=False)
+    decision: Mapped[str] = mapped_column(String(32), nullable=False)
+    reason: Mapped[str] = mapped_column(Text, nullable=False)
+    reviewed_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
+    __table_args__ = (
+        ForeignKeyConstraint(["diagnosis_id", "course_id"], ["diagnoses.id", "diagnoses.course_id"], ondelete="CASCADE"),
+        CheckConstraint("decision IN ('confirmed','overturned','insufficient_evidence')", name="ck_teacher_review_decision"),
+        CheckConstraint("length(trim(reason)) > 0 AND length(reason) <= 2000", name="ck_teacher_review_reason"),
+        Index("ix_teacher_reviews_course", "course_id"),
+    )
+
+
 class DiagnosisConceptRow(Base):
     __tablename__ = "diagnosis_concepts"
     diagnosis_id: Mapped[str] = mapped_column(String(128), primary_key=True)

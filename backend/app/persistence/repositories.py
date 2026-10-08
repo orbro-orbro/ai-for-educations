@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+import os
 from typing import TYPE_CHECKING, Iterable
 
 from sqlalchemy import create_engine, delete, event, select
@@ -26,6 +27,7 @@ from app.persistence.models import (
 )
 
 if TYPE_CHECKING:
+    from app.analytics.persistence import SqlTeacherAnalyticsRepository
     from app.audit.persistence import SqlAuditLog
     from app.diagnostics.persistence import SqlDiagnosticRepository
     from app.memories.persistence import SqlMemoryRepository, SqlMemoryUnitOfWork
@@ -280,6 +282,7 @@ class SqlRepositories:
     audit: "SqlAuditLog"
     memory_source: "SqlDiagnosticMemorySource"
     token_revocations: SqlTokenRevocations
+    analytics: "SqlTeacherAnalyticsRepository"
 
 
 def create_sql_repositories(
@@ -287,8 +290,10 @@ def create_sql_repositories(
     *,
     create_schema: bool = False,
     diagnosis_confidence_threshold: float = 0.75,
+    analytics_secret: str | None = None,
 ) -> SqlRepositories:
     from app.audit.persistence import SqlAuditLog
+    from app.analytics.persistence import SqlTeacherAnalyticsRepository
     from app.diagnostics.persistence import SqlDiagnosticRepository
     from app.memories.persistence import SqlMemoryRepository, SqlMemoryUnitOfWork
     from app.memories.source import SqlDiagnosticMemorySource
@@ -320,6 +325,8 @@ def create_sql_repositories(
             confidence_threshold=diagnosis_confidence_threshold,
         ),
         SqlTokenRevocations(sessions),
+        SqlTeacherAnalyticsRepository(memory_uow, secret=analytics_secret or os.environ.get("AUTH_TOKEN_SECRET", "development-only-token-secret"),
+            confidence_threshold=diagnosis_confidence_threshold),
     )
 
 

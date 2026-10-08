@@ -67,15 +67,18 @@ class Wave3PG:
     def mount(self, repository=None):
         from app.analytics.persistence import SqlTeacherAnalyticsRepository
         self.repository = repository or SqlTeacherAnalyticsRepository(self.repos.memory_uow, secret=SECRET)
-        self.service = TeacherAnalyticsService(courses=self.courses, repository=self.repository, audit=self.repos.audit, clock=lambda: NOW)
+        from app.audit.persistence import SqlAuditLog
+        self.audit = self.repos.audit if self.repository.uow is self.repos.memory_uow else SqlAuditLog(self.repository.uow)
+        self.service = TeacherAnalyticsService(courses=self.courses, repository=self.repository, audit=self.audit, clock=lambda: NOW)
         self.application = FastAPI()
         install_error_handling(self.application)
         self.application.include_router(create_teacher_router(self.service, self.auth))
 
-    def request(self, method, path, *, body=None, actor="teacher-a", headers=None):
+    def request(self, method, path, *, body=None, actor="teacher-a", headers=None, application=None):
         token, _ = self.auth.login(actor, "synthetic-password")
+        target = application or self.application
         async def call():
-            async with AsyncClient(transport=ASGITransport(app=self.application), base_url="http://gate") as client:
+            async with AsyncClient(transport=ASGITransport(app=target), base_url="http://gate") as client:
                 return await client.request(method, path, json=body, headers={"Authorization": "Bearer " + token, **(headers or {})})
         return anyio.run(call)
 

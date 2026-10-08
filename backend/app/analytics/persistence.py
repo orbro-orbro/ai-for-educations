@@ -10,9 +10,10 @@ from sqlalchemy.orm import aliased
 
 from app.analytics.models import AnalyticsDiagnosisFact, TeacherReviewCandidate
 from app.analytics.repository import AnalyticsPersistenceError
+from app.analytics.schemas import TeacherDiagnosisReview
 from app.memories.persistence import MemoryPersistenceError, SqlMemoryUnitOfWork
 from app.persistence.models import (DiagnosisRow, DiagnosisConceptRow, SubmissionRow,
-    ExplanationCheckRow, DiagnosisAttemptRow, ExecutionResultRow, HintEventRow, ReviewQueueEventRow)
+    ExplanationCheckRow, DiagnosisAttemptRow, ExecutionResultRow, HintEventRow, ReviewQueueEventRow, TeacherDiagnosisReviewRow)
 from app.persistence.repositories import SqlKnowledgeRepository
 
 
@@ -110,6 +111,29 @@ class SqlTeacherAnalyticsRepository:
         return next(iter(self._candidates(diagnosis_id=diagnosis_id)), None)
 
     def get_review(self, diagnosis_id):
-        # Review persistence is added by the next migration stage before mounting
-        # this adapter in the production composition root.
-        return None
+        with self._read() as session:
+            row = session.get(TeacherDiagnosisReviewRow, diagnosis_id)
+            return TeacherDiagnosisReview(diagnosis_id=row.diagnosis_id, course_id=row.course_id,
+                reviewer_user_id=row.reviewer_user_id, decision=row.decision, reason=row.reason,
+                reviewed_at=_aware(row.reviewed_at)) if row is not None else None
+
+    def save_review(self, review):
+        session = self.uow.require_session()
+        session.add(TeacherDiagnosisReviewRow(**review.model_dump()))
+        session.flush()
+        return review
+
+    @contextmanager
+    def transaction(self):
+        try:
+            with self.uow.transaction():
+                yield
+        except MemoryPersistenceError as error:
+            raise AnalyticsPersistenceError("analytics storage unavailable") from error
+
+    @contextmanager
+    def review_claim(self, diagnosis_id):
+        with self.transaction():
+            self.uow.require_session().execute(select(DiagnosisRow.id).where(
+                DiagnosisRow.id == diagnosis_id).with_for_update(key_share=True))
+            yield
