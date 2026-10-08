@@ -525,6 +525,380 @@
       "evidence_path": ".superpowers\\sdd\\2026-10-08-wave3-integration-gate\\G1-config-types-green-20261008003228.log",
       "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
       "summary": []
+    },
+    {
+      "phase": "G2-sql-red",
+      "command": [
+        "C:/Users/lenovo/Desktop/cs competition/.venv/Scripts/python.exe",
+        "-B",
+        "-m",
+        "pytest",
+        "tests/integration/test_wave3_analytics_postgres.py",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "--tb=short",
+        "-x",
+        "--basetemp",
+        "C:\\Users\\lenovo\\Desktop\\cs competition\\.worktrees\\wave3-integration-gate\\.superpowers\\sdd\\2026-10-08-wave3-integration-gate\\tmp-20261008003427714190"
+      ],
+      "cwd": "C:\\Users\\lenovo\\Desktop\\cs competition\\.worktrees\\wave3-integration-gate\\backend",
+      "start": "2026-10-08T00:34:27.714190+00:00",
+      "end": "2026-10-08T00:34:43.242078+00:00",
+      "exit_code": 1,
+      "status": "failed",
+      "environment_names": [
+        "PYTHONDONTWRITEBYTECODE"
+      ],
+      "data": "synthetic only",
+      "evidence_path": ".superpowers\\sdd\\2026-10-08-wave3-integration-gate\\G2-sql-red-20261008003427.log",
+      "sha256": "eabf557305945ad133c3113ed732d44246bbb4bd50a31cac80680f989772eea6",
+      "summary": [
+        "INFO  [alembic.runtime.migration] Running upgrade 0001_identity_courses -> 0002_knowledge_graph, Course-scoped knowledge graph and review state.",
+        "INFO  [alembic.runtime.migration] Running upgrade 0002_knowledge_graph -> 0003_submissions_diagnostics, Submission pipeline, compiler evidence, and exercise publication.",
+        "INFO  [alembic.runtime.migration] Running upgrade 0003_submissions_diagnostics -> 0004_diagnostics_hints, Persist evidence-bound diagnoses, hints, attempts and explanation checks.",
+        "INFO  [alembic.runtime.migration] Running upgrade 0004_diagnostics_hints -> 0005_memories_audit, Persist private learning-memory state, idempotency and metadata-only audit events.",
+        "INFO  [alembic.runtime.migration] Running upgrade 0005_memories_audit -> 0006_token_revocations, Persist token digests so logout survives worker changes and restart.",
+        "============================== warnings summary ===============================",
+        "tests/integration/test_wave3_analytics_postgres.py::test_distinct_students_at_sql_boundary[4-insufficient_sample]",
+        "  C:\\Users\\lenovo\\Desktop\\cs competition\\.venv\\Lib\\site-packages\\alembic\\config.py:604: DeprecationWarning: No path_separator found in configuration; falling back to legacy splitting on spaces, commas, and colons for prepend_sys_path.  Consider adding path_separator=os to Alembic config.",
+        "    util.warn_deprecated(",
+        "",
+        "-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html",
+        "=========================== short test summary info ===========================",
+        "FAILED tests/integration/test_wave3_analytics_postgres.py::test_distinct_students_at_sql_boundary[4-insufficient_sample]",
+        "!!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!",
+        "1 failed, 1 warning in 13.20s"
+      ]
+    },
+    {
+      "phase": "G2-course-seed-red",
+      "command": [
+        "C:/Users/lenovo/Desktop/cs competition/.venv/Scripts/python.exe",
+        "-B",
+        "-m",
+        "pytest",
+        "tests/integration/test_wave3_analytics_postgres.py::test_course_and_authorized_teacher_are_persisted_in_foreign_key_order",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "--tb=short",
+        "--basetemp",
+        "C:\\Users\\lenovo\\Desktop\\cs competition\\.worktrees\\wave3-integration-gate\\.superpowers\\sdd\\2026-10-08-wave3-integration-gate\\tmp-20261008003558121826"
+      ],
+      "cwd": "C:\\Users\\lenovo\\Desktop\\cs competition\\.worktrees\\wave3-integration-gate\\backend",
+      "start": "2026-10-08T00:35:58.121826+00:00",
+      "end": "2026-10-08T00:36:15.934755+00:00",
+      "exit_code": 1,
+      "status": "failed",
+      "environment_names": [
+        "PYTHONDONTWRITEBYTECODE"
+      ],
+      "data": "synthetic only",
+      "evidence_path": ".superpowers\\sdd\\2026-10-08-wave3-integration-gate\\G2-course-seed-red-20261008003558.log",
+      "sha256": "e79b31110b1a584e0fc31bda9ac32d8ca8bc9d58e908f7805871f1c8537a92f2",
+      "summary": [
+        "app\\persistence\\repositories.py:71: in add",
+        "    raise ValueError(\"duplicate or invalid course\") from exc",
+        "E   ValueError: duplicate or invalid course",
+        "---------------------------- Captured stderr setup ----------------------------",
+        "INFO  [alembic.runtime.migration] Context impl PostgresqlImpl.",
+        "INFO  [alembic.runtime.migration] Will assume transactional DDL.",
+        "============================== warnings summary ===============================",
+        "tests/integration/test_wave3_analytics_postgres.py::test_course_and_authorized_teacher_are_persisted_in_foreign_key_order",
+        "  C:\\Users\\lenovo\\Desktop\\cs competition\\.venv\\Lib\\site-packages\\alembic\\config.py:604: DeprecationWarning: No path_separator found in configuration; falling back to legacy splitting on spaces, commas, and colons for prepend_sys_path.  Consider adding path_separator=os to Alembic config.",
+        "    util.warn_deprecated(",
+        "",
+        "-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html",
+        "=========================== short test summary info ===========================",
+        "FAILED tests/integration/test_wave3_analytics_postgres.py::test_course_and_authorized_teacher_are_persisted_in_foreign_key_order",
+        "1 failed, 1 warning in 15.13s"
+      ]
+    },
+    {
+      "phase": "G2-data-source-red",
+      "command": [
+        "C:/Users/lenovo/Desktop/cs competition/.venv/Scripts/python.exe",
+        "-B",
+        "-m",
+        "pytest",
+        "tests/integration/test_wave3_analytics_postgres.py",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "--tb=short",
+        "-x",
+        "--basetemp",
+        "C:\\Users\\lenovo\\Desktop\\cs competition\\.worktrees\\wave3-integration-gate\\.superpowers\\sdd\\2026-10-08-wave3-integration-gate\\tmp-20261008003659753438"
+      ],
+      "cwd": "C:\\Users\\lenovo\\Desktop\\cs competition\\.worktrees\\wave3-integration-gate\\backend",
+      "start": "2026-10-08T00:36:59.753438+00:00",
+      "end": "2026-10-08T00:37:11.428076+00:00",
+      "exit_code": 1,
+      "status": "failed",
+      "environment_names": [
+        "PYTHONDONTWRITEBYTECODE"
+      ],
+      "data": "synthetic only",
+      "evidence_path": ".superpowers\\sdd\\2026-10-08-wave3-integration-gate\\G2-data-source-red-20261008003659.log",
+      "sha256": "832fef96ea5d8ab1b28e6862ea7e55f99a322ffea4b7316d4b2bf7a53ff944c9",
+      "summary": [
+        "E   ModuleNotFoundError: No module named 'app.analytics.persistence'",
+        "---------------------------- Captured stderr setup ----------------------------",
+        "INFO  [alembic.runtime.migration] Context impl PostgresqlImpl.",
+        "INFO  [alembic.runtime.migration] Will assume transactional DDL.",
+        "============================== warnings summary ===============================",
+        "tests/integration/test_wave3_analytics_postgres.py::test_course_and_authorized_teacher_are_persisted_in_foreign_key_order",
+        "tests/integration/test_wave3_analytics_postgres.py::test_distinct_students_at_sql_boundary[4-insufficient_sample]",
+        "  C:\\Users\\lenovo\\Desktop\\cs competition\\.venv\\Lib\\site-packages\\alembic\\config.py:604: DeprecationWarning: No path_separator found in configuration; falling back to legacy splitting on spaces, commas, and colons for prepend_sys_path.  Consider adding path_separator=os to Alembic config.",
+        "    util.warn_deprecated(",
+        "",
+        "-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html",
+        "=========================== short test summary info ===========================",
+        "FAILED tests/integration/test_wave3_analytics_postgres.py::test_distinct_students_at_sql_boundary[4-insufficient_sample]",
+        "!!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!",
+        "1 failed, 1 passed, 2 warnings in 9.67s"
+      ]
+    },
+    {
+      "phase": "G2-sql-green",
+      "command": [
+        "C:/Users/lenovo/Desktop/cs competition/.venv/Scripts/python.exe",
+        "-B",
+        "-m",
+        "pytest",
+        "tests/integration/test_wave3_analytics_postgres.py",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "--tb=short",
+        "--basetemp",
+        "C:\\Users\\lenovo\\Desktop\\cs competition\\.worktrees\\wave3-integration-gate\\.superpowers\\sdd\\2026-10-08-wave3-integration-gate\\tmp-20261008003900169819"
+      ],
+      "cwd": "C:\\Users\\lenovo\\Desktop\\cs competition\\.worktrees\\wave3-integration-gate\\backend",
+      "start": "2026-10-08T00:39:00.169819+00:00",
+      "end": "2026-10-08T00:39:32.664910+00:00",
+      "exit_code": 1,
+      "status": "failed",
+      "environment_names": [
+        "PYTHONDONTWRITEBYTECODE"
+      ],
+      "data": "synthetic only",
+      "evidence_path": ".superpowers\\sdd\\2026-10-08-wave3-integration-gate\\G2-sql-green-20261008003900.log",
+      "sha256": "e4c76e43a3ad2625b16b60e1bc459fa4f8d736cfb4c30691ccb8c67ddde027ba",
+      "summary": [
+        "E   id",
+        "E     String should match pattern '^cj(\\.[a-z0-9]+(-[a-z0-9]+)*){2,}$' [type=string_pattern_mismatch, input_value='synthetic-pattern-cj.pat...rn-match.exhaustiveness', input_type=str]",
+        "E       For further information visit https://errors.pydantic.dev/2.13/v/string_pattern_mismatch",
+        "---------------------------- Captured stderr setup ----------------------------",
+        "INFO  [alembic.runtime.migration] Context impl PostgresqlImpl.",
+        "INFO  [alembic.runtime.migration] Will assume transactional DDL.",
+        "============================== warnings summary ===============================",
+        "tests/integration/test_wave3_analytics_postgres.py: 11 warnings",
+        "  C:\\Users\\lenovo\\Desktop\\cs competition\\.venv\\Lib\\site-packages\\alembic\\config.py:604: DeprecationWarning: No path_separator found in configuration; falling back to legacy splitting on spaces, commas, and colons for prepend_sys_path.  Consider adding path_separator=os to Alembic config.",
+        "    util.warn_deprecated(",
+        "",
+        "-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html",
+        "=========================== short test summary info ===========================",
+        "FAILED tests/integration/test_wave3_analytics_postgres.py::test_sql_queue_projects_course_evidence_without_private_text",
+        "1 failed, 10 passed, 11 warnings in 29.64s"
+      ]
+    },
+    {
+      "phase": "G2-development-red",
+      "command": [
+        "C:/Users/lenovo/Desktop/cs competition/.venv/Scripts/python.exe",
+        "-B",
+        "-m",
+        "pytest",
+        "tests/analytics/test_data_source.py",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "--tb=short",
+        "--basetemp",
+        "C:\\Users\\lenovo\\Desktop\\cs competition\\.worktrees\\wave3-integration-gate\\.superpowers\\sdd\\2026-10-08-wave3-integration-gate\\tmp-20261008004109431843"
+      ],
+      "cwd": "C:\\Users\\lenovo\\Desktop\\cs competition\\.worktrees\\wave3-integration-gate\\backend",
+      "start": "2026-10-08T00:41:09.431843+00:00",
+      "end": "2026-10-08T00:41:20.098158+00:00",
+      "exit_code": 1,
+      "status": "failed",
+      "environment_names": [
+        "PYTHONDONTWRITEBYTECODE"
+      ],
+      "data": "synthetic only",
+      "evidence_path": ".superpowers\\sdd\\2026-10-08-wave3-integration-gate\\G2-development-red-20261008004109.log",
+      "sha256": "c988b54b21552eaa5cff247713f6d8c3e85a1ea1622f41253beb3595bb3929dc",
+      "summary": [
+        "F                                                                        [100%]",
+        "================================== FAILURES ===================================",
+        "_ test_development_projection_reads_current_diagnoses_and_safe_course_evidence _",
+        "tests\\analytics\\test_data_source.py:6: in test_development_projection_reads_current_diagnoses_and_safe_course_evidence",
+        "    from app.analytics.data_source import InMemoryTeacherAnalyticsDataSource",
+        "E   ModuleNotFoundError: No module named 'app.analytics.data_source'",
+        "=========================== short test summary info ===========================",
+        "FAILED tests/analytics/test_data_source.py::test_development_projection_reads_current_diagnoses_and_safe_course_evidence",
+        "1 failed in 8.01s"
+      ]
+    },
+    {
+      "phase": "G2-development-repair-red",
+      "command": [
+        "C:/Users/lenovo/Desktop/cs competition/.venv/Scripts/python.exe",
+        "-B",
+        "-m",
+        "pytest",
+        "tests/analytics/test_data_source.py",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "--tb=short",
+        "--basetemp",
+        "C:\\Users\\lenovo\\Desktop\\cs competition\\.worktrees\\wave3-integration-gate\\.superpowers\\sdd\\2026-10-08-wave3-integration-gate\\tmp-20261008004221773593"
+      ],
+      "cwd": "C:\\Users\\lenovo\\Desktop\\cs competition\\.worktrees\\wave3-integration-gate\\backend",
+      "start": "2026-10-08T00:42:21.773593+00:00",
+      "end": "2026-10-08T00:42:30.179565+00:00",
+      "exit_code": 1,
+      "status": "failed",
+      "environment_names": [
+        "PYTHONDONTWRITEBYTECODE"
+      ],
+      "data": "synthetic only",
+      "evidence_path": ".superpowers\\sdd\\2026-10-08-wave3-integration-gate\\G2-development-repair-red-20261008004221.log",
+      "sha256": "592cbf837a112f1b5d723188c2d7264bea2a5547717f2728bb9737eb6f0cd496",
+      "summary": [
+        "FF                                                                       [100%]",
+        "================================== FAILURES ===================================",
+        "_ test_development_projection_reads_current_diagnoses_and_safe_course_evidence _",
+        "tests\\analytics\\test_data_source.py:6: in test_development_projection_reads_current_diagnoses_and_safe_course_evidence",
+        "    from app.analytics.data_source import InMemoryTeacherAnalyticsDataSource",
+        "E   ModuleNotFoundError: No module named 'app.analytics.data_source'",
+        "__ test_development_repair_requires_an_explicit_link_to_the_successful_retry __",
+        "tests\\analytics\\test_data_source.py:26: in test_development_repair_requires_an_explicit_link_to_the_successful_retry",
+        "    from app.analytics.data_source import InMemoryTeacherAnalyticsDataSource",
+        "E   ModuleNotFoundError: No module named 'app.analytics.data_source'",
+        "=========================== short test summary info ===========================",
+        "FAILED tests/analytics/test_data_source.py::test_development_projection_reads_current_diagnoses_and_safe_course_evidence",
+        "FAILED tests/analytics/test_data_source.py::test_development_repair_requires_an_explicit_link_to_the_successful_retry",
+        "2 failed in 6.28s"
+      ]
+    },
+    {
+      "phase": "G2-all-green",
+      "command": [
+        "C:/Users/lenovo/Desktop/cs competition/.venv/Scripts/python.exe",
+        "-B",
+        "-m",
+        "pytest",
+        "tests/integration/test_wave3_analytics_postgres.py",
+        "tests/analytics",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "--tb=short",
+        "--basetemp",
+        "C:\\Users\\lenovo\\Desktop\\cs competition\\.worktrees\\wave3-integration-gate\\.superpowers\\sdd\\2026-10-08-wave3-integration-gate\\tmp-20261008004329633836"
+      ],
+      "cwd": "C:\\Users\\lenovo\\Desktop\\cs competition\\.worktrees\\wave3-integration-gate\\backend",
+      "start": "2026-10-08T00:43:29.633836+00:00",
+      "end": "2026-10-08T00:44:25.254032+00:00",
+      "exit_code": 0,
+      "status": "passed",
+      "environment_names": [
+        "PYTHONDONTWRITEBYTECODE"
+      ],
+      "data": "synthetic only",
+      "evidence_path": ".superpowers\\sdd\\2026-10-08-wave3-integration-gate\\G2-all-green-20261008004329.log",
+      "sha256": "f7c28cbc2ca99f98901949e2599d16d52765034a96f3751851897b0bde586b5d",
+      "summary": [
+        "........................................................................ [ 88%]",
+        ".........                                                                [100%]",
+        "============================== warnings summary ===============================",
+        "tests/integration/test_wave3_analytics_postgres.py: 11 warnings",
+        "  C:\\Users\\lenovo\\Desktop\\cs competition\\.venv\\Lib\\site-packages\\alembic\\config.py:604: DeprecationWarning: No path_separator found in configuration; falling back to legacy splitting on spaces, commas, and colons for prepend_sys_path.  Consider adding path_separator=os to Alembic config.",
+        "    util.warn_deprecated(",
+        "",
+        "-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html",
+        "81 passed, 11 warnings in 52.40s"
+      ]
+    },
+    {
+      "phase": "G2-projection-evidence",
+      "command": [
+        "C:/Users/lenovo/Desktop/cs competition/.venv/Scripts/python.exe",
+        "-B",
+        "-m",
+        "pytest",
+        "tests/integration/test_wave3_analytics_postgres.py",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "--tb=short",
+        "--basetemp",
+        "C:\\Users\\lenovo\\Desktop\\cs competition\\.worktrees\\wave3-integration-gate\\.superpowers\\sdd\\2026-10-08-wave3-integration-gate\\tmp-20261008004558712114"
+      ],
+      "cwd": "C:\\Users\\lenovo\\Desktop\\cs competition\\.worktrees\\wave3-integration-gate\\backend",
+      "start": "2026-10-08T00:45:58.712114+00:00",
+      "end": "2026-10-08T00:46:25.620498+00:00",
+      "exit_code": 0,
+      "status": "passed",
+      "environment_names": [
+        "PYTHONDONTWRITEBYTECODE"
+      ],
+      "data": "synthetic only",
+      "evidence_path": ".superpowers\\sdd\\2026-10-08-wave3-integration-gate\\G2-projection-evidence-20261008004558.log",
+      "sha256": "7352a32550a2f8913a9833ce3d110247e2761cdf29665c7a6bd292f5fbec6b1e",
+      "summary": [
+        "............                                                             [100%]",
+        "============================== warnings summary ===============================",
+        "tests/integration/test_wave3_analytics_postgres.py: 12 warnings",
+        "  C:\\Users\\lenovo\\Desktop\\cs competition\\.venv\\Lib\\site-packages\\alembic\\config.py:604: DeprecationWarning: No path_separator found in configuration; falling back to legacy splitting on spaces, commas, and colons for prepend_sys_path.  Consider adding path_separator=os to Alembic config.",
+        "    util.warn_deprecated(",
+        "",
+        "-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html",
+        "12 passed, 12 warnings in 24.42s"
+      ]
+    },
+    {
+      "phase": "G2-final",
+      "command": [
+        "C:/Users/lenovo/Desktop/cs competition/.venv/Scripts/python.exe",
+        "-B",
+        "-m",
+        "pytest",
+        "tests/integration/test_wave3_analytics_postgres.py",
+        "tests/analytics",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "--tb=short",
+        "--basetemp",
+        "C:\\Users\\lenovo\\Desktop\\cs competition\\.worktrees\\wave3-integration-gate\\.superpowers\\sdd\\2026-10-08-wave3-integration-gate\\tmp-20261008004727066154"
+      ],
+      "cwd": "C:\\Users\\lenovo\\Desktop\\cs competition\\.worktrees\\wave3-integration-gate\\backend",
+      "start": "2026-10-08T00:47:27.066154+00:00",
+      "end": "2026-10-08T00:48:31.041892+00:00",
+      "exit_code": 0,
+      "status": "passed",
+      "environment_names": [
+        "PYTHONDONTWRITEBYTECODE"
+      ],
+      "data": "synthetic only",
+      "evidence_path": ".superpowers\\sdd\\2026-10-08-wave3-integration-gate\\G2-final-20261008004727.log",
+      "sha256": "1ef9e397e1546abda62139bcd750ceca005bde744b0a7e713a70b170fd2eb2d4",
+      "summary": [
+        "........................................................................ [ 86%]",
+        "...........                                                              [100%]",
+        "============================== warnings summary ===============================",
+        "tests/integration/test_wave3_analytics_postgres.py: 13 warnings",
+        "  C:\\Users\\lenovo\\Desktop\\cs competition\\.venv\\Lib\\site-packages\\alembic\\config.py:604: DeprecationWarning: No path_separator found in configuration; falling back to legacy splitting on spaces, commas, and colons for prepend_sys_path.  Consider adding path_separator=os to Alembic config.",
+        "    util.warn_deprecated(",
+        "",
+        "-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html",
+        "83 passed, 13 warnings in 61.34s (0:01:01)"
+      ]
     }
   ]
 }

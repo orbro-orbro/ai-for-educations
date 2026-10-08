@@ -63,6 +63,7 @@ class SqlCourseRepository:
         try:
             with self._sessions.begin() as session:
                 session.add(CourseRow(id=course.course_id, title=course.title, owner_teacher_id=course.owner_teacher_id))
+                session.flush()
                 session.add_all(
                     CourseAuthorizedTeacherRow(course_id=course.course_id, teacher_id=teacher_id)
                     for teacher_id in course.authorized_teacher_ids

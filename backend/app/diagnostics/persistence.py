@@ -323,6 +323,11 @@ class SqlDiagnosticRepository:
         except SQLAlchemyError as exc:
             raise DiagnosticPersistenceError("diagnostic storage operation failed") from exc
 
+    def attempt_submission_ids(self, diagnosis_id: str) -> tuple[str, ...]:
+        with self._read() as session:
+            return tuple(session.scalars(select(DiagnosisAttemptRow.submission_id).where(
+                DiagnosisAttemptRow.diagnosis_id == diagnosis_id, DiagnosisAttemptRow.submission_id.is_not(None))).all())
+
     def attempt_count(self, diagnosis_id: str) -> int:
         with self._read() as session:
             return int(

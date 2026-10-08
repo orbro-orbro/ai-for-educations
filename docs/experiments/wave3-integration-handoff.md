@@ -34,3 +34,9 @@ Status: in progress. No Gate success is claimed. Daily services and source workt
 - Framework security: exactly 196 passed / 9 historical failures / 0 skipped; all nine match the source handoff. Applied authorized repair source with -x; no main.py conflict. CORS middleware, SQL token revocations and deletion source_context all remain.
 - ADR numbering: CORS retains 0005; accepted Task 10 security decision renamed 0006 and all deliverable safety references updated. Original case/vector data unchanged.
 - G1 final source safety regression: 220 passed, 0 failed, 0 skipped; actual sandbox checks included. Shared authentication/CORS/config regression: 28 passed. Components: 30 passed; build passed. Initial TS2688 installation lag resolved by lockfile npm ci; configuration typecheck then passed.
+
+## G2 SQL data source
+
+- First actual PG test reached existing `SqlCourseRepository.add` ordering defect: authorized-teacher insert before course caused FK violation. Dedicated reproduction observed RED before fix.
+- Ruling: flush the course parent within the existing transaction before inserting authorized teachers. No permissions/schema/API change; necessary to seed and persist valid course relationships. Cost if wrong: extra database round trip, transaction still atomic.
+- G2 final: 83 passed (13 actual PostgreSQL projection tests + original 68 analytics + 2 development projection tests), no skips. Covered multiple concepts/checks, duplicate students, actual private memory sentinel, mismatched/null queue relations, half-open dates, cross-course HMAC keys and explicit successful retry evidence. Review SQL persistence remains G3; application mounting remains G4.
