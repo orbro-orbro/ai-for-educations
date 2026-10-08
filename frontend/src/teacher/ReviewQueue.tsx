@@ -16,8 +16,8 @@ export function ReviewQueue({ api, courseId, filters }: { api: ApiClient; course
 
   const load = useCallback(async (signal?: AbortSignal) => {
     setLoading(true); setError(null); setProcessed([]); setForms({}); busyRef.current.clear(); setBusyIds([]);
-    try { setItems((await api.getTeacherReviewQueue(courseId, filters, signal)).items); }
-    catch (nextError) { if (!(nextError instanceof DOMException && nextError.name === "AbortError")) setError(nextError); }
+    try { const next = await api.getTeacherReviewQueue(courseId, filters, signal); if (!signal?.aborted) setItems(next.items); }
+    catch (nextError) { if (!signal?.aborted && !(nextError instanceof DOMException && nextError.name === "AbortError")) setError(nextError); }
     finally { if (!signal?.aborted) setLoading(false); }
   }, [api, courseId, filters]);
 

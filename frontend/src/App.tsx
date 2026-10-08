@@ -1,6 +1,6 @@
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 
-import { ApiClient, type SessionData } from "./api/client";
+import { ApiClient, ApiError, type SessionData } from "./api/client";
 import { clearSession, readSession, saveSession } from "./auth/session";
 import { RequestState } from "./components/RequestState";
 import { StudentPage } from "./student/StudentPage";
@@ -38,12 +38,27 @@ function Login({ onLogin }: { onLogin: (session: SessionData) => void }) {
 export function App() {
   const [session, setSession] = useState<SessionData | null>(() => readSession());
   const api = useMemo(() => new ApiClient(apiBaseUrl, () => session?.accessToken ?? null), [session?.accessToken]);
+  const logoutLock = useRef(false);
+  const [logoutBusy, setLogoutBusy] = useState(false);
+  const [logoutError, setLogoutError] = useState<unknown>(null);
+
+  async function logout() {
+    if (logoutLock.current) return;
+    logoutLock.current = true; setLogoutBusy(true); setLogoutError(null);
+    try {
+      await api.logout(); clearSession(); setSession(null);
+    } catch (error) {
+      if (error instanceof ApiError && error.status === 401) { clearSession(); setSession(null); }
+      else setLogoutError(error);
+    } finally { logoutLock.current = false; setLogoutBusy(false); }
+  }
 
   if (!session) return <Login onLogin={setSession} />;
 
   return (
     <div className="app-shell">
-      <header className="site-header"><a className="brand" href="#top" aria-label="知界·仓颉学伴首页"><span aria-hidden="true">知界</span><strong>仓颉学伴</strong></a><div className="session-meta"><span>{session.actor.role === "student" ? "学生端" : "教师端"}</span><button type="button" className="text-button" onClick={() => { clearSession(); setSession(null); }}>退出</button></div></header>
+      <header className="site-header"><a className="brand" href="#top" aria-label="知界·仓颉学伴首页"><span aria-hidden="true">知界</span><strong>仓颉学伴</strong></a><div className="session-meta"><span>{session.actor.role === "student" ? "学生端" : "教师端"}</span><button type="button" className="text-button" disabled={logoutBusy} onClick={() => void logout()}>{logoutBusy ? "正在退出…" : "退出"}</button></div></header>
+      {logoutError !== null && <RequestState error={logoutError} />}
       <main id="top">{session.actor.role === "student" ? <StudentPage api={api} /> : <CourseDashboard api={api} />}</main>
     </div>
   );

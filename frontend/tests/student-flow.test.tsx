@@ -157,7 +157,7 @@ describe("student learning loop", () => {
     expect(await screen.findByText("真实编译反馈")).toBeInTheDocument();
     const submitCall = fetchMock.mock.calls.find(([url]) => String(url).includes("/exercises/exercise-match/submissions"));
     expect(JSON.parse(String(submitCall?.[1]?.body))).toMatchObject({ entrypoint: "main.cj", is_formal: true });
-    expect(fetchMock.mock.calls.some(([url], init) => new URL(String(url)).pathname === "/submissions/submission-1" && (init?.method ?? "GET") === "GET")).toBe(true);
+    expect(fetchMock.mock.calls.some(([url, init]) => new URL(String(url)).pathname === "/submissions/submission-1" && (init?.method ?? "GET") === "GET")).toBe(true);
   });
 
   it("shows execution unavailable without inventing compiler output", async () => {
@@ -339,7 +339,7 @@ describe("student learning loop", () => {
 
     expect(screen.getByRole("dialog", { name: "确认删除个人记忆" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "确认删除" })).toHaveFocus();
-    expect(fetchMock.mock.calls.some(([url], init) => String(url).includes("/memories/memory-1") && init?.method === "DELETE")).toBe(false);
+    expect(fetchMock.mock.calls.some(([url, init]) => String(url).includes("/memories/memory-1") && init?.method === "DELETE")).toBe(false);
   });
 
   it("keeps deletion-pending memories visibly non-retrievable", async () => {

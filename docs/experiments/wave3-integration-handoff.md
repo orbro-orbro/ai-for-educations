@@ -55,3 +55,7 @@ HTTP 探针确认删除墓碑仍返回既有已脱敏诊断，满足非空公开
 ### G5 — 原始匿名向量真实执行
 原 54 组向量通过正式 create_app / SQL / PostgreSQL，附加 8 组逐个移除过滤条件的反例检查，共 62 passed / 0 failed / 0 skipped。JUnit 含唯一 vector node、真实请求 URL、响应、总入库事实数及 excluded_by 反例数；原 YAML 与哈希未变。
 测试映射说明：源向量用课程内 exercise-a 名称，数据库已存在全局 Exercise PK + course 复合 FK。course-a 保留公开 ID；其他课程的练习使用 course_id--exercise_id，保持全部 diagnosis/owner/course/concept/time/repair 事实与反例入库，不绕过或降低 SQL 约束。跨课程排除另由 G2 真实 SQL 课程隔离测试佐证。多概念逐一构造独立已审核证据后一起装载；不依据 excluded_by 预过滤。
+
+### G6 — 前端连接与退出
+保留原 UI，增加真实 POST /auth/logout；busy ref 阻止重复请求。204/已失效401才清本地会话，503保留令牌与请求编号，允许重试。结束日期使用下一本地日零时；相邻窗口为 [start-duration,start)，无一毫秒空隙；取消旧课程队列响应后不覆盖新课程。
+原30+新增5项 Vitest 全部通过，构建通过，显式 src/组件测试/E2E/两份配置 TypeScript 检查通过。发现两处旧测试把 Array.some 第二参数（index）误当 init，修正为解构调用元组，严格原断言保留。首次 UI Gate 拒绝文案不一致属 Minor 展示整合缺口，课程列表拒绝用通用文案，已有课程拒绝保留课程文案；无权限/隐私边界变化。

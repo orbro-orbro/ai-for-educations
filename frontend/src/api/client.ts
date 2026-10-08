@@ -100,6 +100,7 @@ export class ApiClient {
   login(username: string, password: string, signal?: AbortSignal) {
     return this.request<LoginResponse>("/auth/login", { method: "POST", body: JSON.stringify({ username, password }) }, signal);
   }
+  async logout() { await this.request<void>("/auth/logout", { method: "POST" }); }
   listCourses(signal?: AbortSignal) { return this.request<CourseSummary[]>("/courses", {}, signal); }
   listExercises(courseId: string, signal?: AbortSignal) { return this.request<ExerciseSummary[]>(`/courses/${encodeURIComponent(courseId)}/exercises`, {}, signal); }
   createSubmission(exerciseId: string, content: string, signal?: AbortSignal) {

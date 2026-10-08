@@ -9,15 +9,20 @@ const emptyFilters: TeacherFilters = { concept_id: null, exercise_id: null, star
 const emptyDraft: FilterDraft = { conceptId: "", exerciseId: "", startDate: "", endDate: "" };
 
 function startOfLocalDay(value: string) { return value ? new Date(`${value}T00:00:00`).toISOString() : null; }
-function endOfLocalDay(value: string) { return value ? new Date(`${value}T23:59:59.999`).toISOString() : null; }
+function endOfLocalDay(value: string) {
+  if (!value) return null;
+  const next = new Date(`${value}T00:00:00`);
+  next.setDate(next.getDate() + 1);
+  return next.toISOString();
+}
 
 function precedingWindow(filters: TeacherFilters): TeacherFilters | null {
   if (!filters.start_at || !filters.end_at) return null;
   const start = new Date(filters.start_at).getTime();
   const end = new Date(filters.end_at).getTime();
   const duration = end - start;
-  if (!Number.isFinite(duration) || duration < 0) return null;
-  const previousEnd = start - 1;
+  if (!Number.isFinite(duration) || duration <= 0) return null;
+  const previousEnd = start;
   return { ...filters, start_at: new Date(previousEnd - duration).toISOString(), end_at: new Date(previousEnd).toISOString() };
 }
 
@@ -75,7 +80,7 @@ export function CourseDashboard({ api }: { api: ApiClient }) {
     <div className="teacher-layout">
       <header className="page-heading teacher-heading"><div><p className="section-kicker">TEACHER · COURSE SIGNALS</p><h1>课程诊断台</h1><p>观察匿名群体概念信号，复核证据不足的诊断。</p></div><span className="course-mark">《仓颉语言设计》</span></header>
       {loading && <p role="status">正在读取课程…</p>}
-      {error !== null && <RequestState error={error} retry={() => void (courses.length ? loadAnalytics() : loadCourses())} retryLabel="重试课程数据" deniedLabel="无法访问该课程资源" />}
+      {error !== null && <RequestState error={error} retry={() => void (courses.length ? loadAnalytics() : loadCourses())} retryLabel="重试课程数据" deniedLabel={courses.length ? "无法访问该课程资源" : "无法访问该资源"} />}
       {!loading && !error && courses.length === 0 && <div className="empty-panel"><strong>还没有可管理的课程</strong></div>}
       {courseId && <>
         <section className="filter-rail" aria-label="分析筛选">

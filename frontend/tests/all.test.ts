@@ -4,3 +4,4 @@
 import "../src/App.test";
 import "./student-flow.test";
 import "./teacher-privacy.test";
+import "./wave3-integration.test";
