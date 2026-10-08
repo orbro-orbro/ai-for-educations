@@ -34,6 +34,80 @@
         ".......                                                                  [100%]",
         "79 passed in 20.16s"
       ]
+    },
+    {
+      "phase": "G0-ports-red",
+      "command": [
+        "C:/Users/lenovo/Desktop/cs competition/.venv/Scripts/python.exe",
+        "-B",
+        "-m",
+        "pytest",
+        "tests/contracts/test_wave3_environment.py",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "--tb=short",
+        "--basetemp",
+        "C:\\Users\\lenovo\\Desktop\\cs competition\\.worktrees\\wave3-integration-gate\\.superpowers\\sdd\\2026-10-08-wave3-integration-gate\\tmp-20261008001653839798"
+      ],
+      "cwd": "C:\\Users\\lenovo\\Desktop\\cs competition\\.worktrees\\wave3-integration-gate\\backend",
+      "start": "2026-10-08T00:16:53.839798+00:00",
+      "end": "2026-10-08T00:17:03.204884+00:00",
+      "exit_code": 1,
+      "status": "failed",
+      "environment_names": [
+        "PYTHONDONTWRITEBYTECODE"
+      ],
+      "data": "synthetic only",
+      "evidence_path": ".superpowers\\sdd\\2026-10-08-wave3-integration-gate\\G0-ports-red-20261008001653.log",
+      "sha256": "8d9c6f6b5a15b681ba2b90b179584ffa836b37a8c2c5b2f92d3c6d83383e191a",
+      "summary": [
+        "..........F                                                              [100%]",
+        "================================== FAILURES ===================================",
+        "_______________ test_gate_services_are_reachable_over_loopback ________________",
+        "tests\\contracts\\test_wave3_environment.py:25: in test_gate_services_are_reachable_over_loopback",
+        "    with socket.create_connection((\"127.0.0.1\", 55430), timeout=3):",
+        "         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^",
+        "..\\..\\..\\..\\..\\miniconda3\\Lib\\socket.py:874: in create_connection",
+        "    raise exceptions[0]",
+        "..\\..\\..\\..\\..\\miniconda3\\Lib\\socket.py:859: in create_connection",
+        "    sock.connect(sa)",
+        "E   ConnectionRefusedError: [WinError 10061] ����Ŀ�����������ܾ����޷����ӡ�",
+        "=========================== short test summary info ===========================",
+        "FAILED tests/contracts/test_wave3_environment.py::test_gate_services_are_reachable_over_loopback",
+        "1 failed, 10 passed in 7.04s"
+      ]
+    },
+    {
+      "phase": "G0-environment-green",
+      "command": [
+        "C:/Users/lenovo/Desktop/cs competition/.venv/Scripts/python.exe",
+        "-B",
+        "-m",
+        "pytest",
+        "tests/contracts/test_wave3_environment.py",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "--tb=short",
+        "--basetemp",
+        "C:\\Users\\lenovo\\Desktop\\cs competition\\.worktrees\\wave3-integration-gate\\.superpowers\\sdd\\2026-10-08-wave3-integration-gate\\tmp-20261008001809591818"
+      ],
+      "cwd": "C:\\Users\\lenovo\\Desktop\\cs competition\\.worktrees\\wave3-integration-gate\\backend",
+      "start": "2026-10-08T00:18:09.591818+00:00",
+      "end": "2026-10-08T00:18:12.618341+00:00",
+      "exit_code": 0,
+      "status": "passed",
+      "environment_names": [
+        "PYTHONDONTWRITEBYTECODE"
+      ],
+      "data": "synthetic only",
+      "evidence_path": ".superpowers\\sdd\\2026-10-08-wave3-integration-gate\\G0-environment-green-20261008001809.log",
+      "sha256": "dc0bff20904df206b6a410808cde50dc19eed4c3623e7f05a2579b9733bc4653",
+      "summary": [
+        "...........                                                              [100%]",
+        "11 passed in 0.55s"
+      ]
     }
   ]
 }

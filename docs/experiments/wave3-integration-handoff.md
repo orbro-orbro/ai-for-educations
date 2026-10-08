@@ -12,6 +12,11 @@ Status: in progress. No Gate success is claimed. Daily services and source workt
 
 - Gate initializer RED: missing `tests.integration.wave3_environment`, pytest exit 1; observed before implementation.
 - Main plan was copied with SHA-256 equality and its untracked original removed; no main product edit.
+- Backend baseline: 79 passed. Earlier invocation had 66 passed / 13 setup errors due to inaccessible system pytest temp directory; fresh Gate basetemp resolves all 13.
+- Frontend baseline: 1 passed; lockfile npm ci completed without dependency changes.
+- Six synthetic databases initialized; PostgreSQL 17.11 and vector 0.8.7 verified.
+- Resolved Compose isolation check passed. Actual loopback reachability initially failed (10 passed, 1 failed); Docker internal network had requested bindings but no effective host mappings.
+- Ruling: attach trusted Gate PostgreSQL/controller to the already-declared public network as well as internal, with loopback-only bindings. This only changes the local test override; sandbox remains networkless and has no socket/source mount. Cost if wrong: host test resources could be unreachable; no product topology change.
 
 ## Decisions
 
