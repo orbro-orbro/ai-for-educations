@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "status": "in_progress",
+  "commands": [
+    {
+      "phase": "G0-baseline",
+      "command": [
+        "C:/Users/lenovo/Desktop/cs competition/.venv/Scripts/python.exe",
+        "-B",
+        "-m",
+        "pytest",
+        "tests/auth",
+        "tests/contracts",
+        "tests/persistence",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "--basetemp",
+        "C:\\Users\\lenovo\\Desktop\\cs competition\\.worktrees\\wave3-integration-gate\\.superpowers\\sdd\\2026-10-08-wave3-integration-gate\\tmp-20261008001312375665"
+      ],
+      "cwd": "C:\\Users\\lenovo\\Desktop\\cs competition\\.worktrees\\wave3-integration-gate\\backend",
+      "start": "2026-10-08T00:13:12.375665+00:00",
+      "end": "2026-10-08T00:13:34.621951+00:00",
+      "exit_code": 0,
+      "status": "passed",
+      "environment_names": [
+        "PYTHONDONTWRITEBYTECODE"
+      ],
+      "data": "synthetic only",
+      "evidence_path": ".superpowers\\sdd\\2026-10-08-wave3-integration-gate\\G0-baseline-20261008001312.log",
+      "sha256": "d9fa7de283f044d2eae6556b68823f1a364c78d1ca21c0dfb2b42902b574cc4c",
+      "summary": [
+        "........................................................................ [ 91%]",
+        ".......                                                                  [100%]",
+        "79 passed in 20.16s"
+      ]
+    }
+  ]
+}
