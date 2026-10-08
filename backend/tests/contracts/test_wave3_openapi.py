@@ -16,7 +16,9 @@ def _schemas():
     return _document()["components"]["schemas"]
 
 
-def test_wave3_paths_are_frozen_but_not_part_of_the_current_runtime():
+def test_wave3_paths_are_frozen_and_mounted_in_the_current_runtime():
+    from app.main import create_app
+    runtime = create_app().openapi()
     document = _document()
     expected = {
         ("/teacher/courses/{course_id}/analytics", "get"): "getTeacherCourseAnalytics",
@@ -26,6 +28,7 @@ def test_wave3_paths_are_frozen_but_not_part_of_the_current_runtime():
     for (path, method), operation_id in expected.items():
         operation = document["paths"][path][method]
         assert operation["operationId"] == operation_id
+        assert runtime["paths"][path][method]["operationId"] == operation_id
         assert operation["x-contract-status"] == "frozen-for-wave-3"
         assert operation["security"] == [{"bearerAuth": []}]
         assert {"401", "404", "409", "422", "503"} <= set(

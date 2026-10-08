@@ -1123,6 +1123,455 @@
         "-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html",
         "7 passed, 7 warnings in 14.45s"
       ]
+    },
+    {
+      "phase": "G4-runtime-red",
+      "command": [
+        "C:/Users/lenovo/Desktop/cs competition/.venv/Scripts/python.exe",
+        "-B",
+        "-m",
+        "pytest",
+        "tests/contracts/test_wave3_runtime_openapi.py",
+        "tests/integration/test_wave3_gate.py",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "--tb=short",
+        "--basetemp",
+        "C:\\Users\\lenovo\\Desktop\\cs competition\\.worktrees\\wave3-integration-gate\\.superpowers\\sdd\\2026-10-08-wave3-integration-gate\\tmp-20261008010030048241"
+      ],
+      "cwd": "C:\\Users\\lenovo\\Desktop\\cs competition\\.worktrees\\wave3-integration-gate\\backend",
+      "start": "2026-10-08T01:00:30.048241+00:00",
+      "end": "2026-10-08T01:01:03.566431+00:00",
+      "exit_code": 1,
+      "status": "failed",
+      "environment_names": [
+        "PYTHONDONTWRITEBYTECODE"
+      ],
+      "data": "synthetic only",
+      "evidence_path": ".superpowers\\sdd\\2026-10-08-wave3-integration-gate\\G4-runtime-red-20261008010030.log",
+      "sha256": "6e30282cd07aed7add62e39b572ba6add5170bb2dc7b0ecc11afd66a1a17e2e7",
+      "summary": [
+        "FAILED tests/contracts/test_wave3_runtime_openapi.py::test_every_runtime_operation_matches_contract[/memories/{memory_id}-patch]",
+        "FAILED tests/contracts/test_wave3_runtime_openapi.py::test_every_runtime_operation_matches_contract[/memories/{memory_id}-delete]",
+        "FAILED tests/contracts/test_wave3_runtime_openapi.py::test_every_runtime_operation_matches_contract[/memory-deletions/{deletion_id}-get]",
+        "FAILED tests/contracts/test_wave3_runtime_openapi.py::test_every_runtime_operation_matches_contract[/memory-deletions/{deletion_id}/retry-post]",
+        "FAILED tests/contracts/test_wave3_runtime_openapi.py::test_every_runtime_operation_matches_contract[/diagnoses/{diagnosis_id}/share-grants-post]",
+        "FAILED tests/contracts/test_wave3_runtime_openapi.py::test_every_runtime_operation_matches_contract[/me/share-grants-get]",
+        "FAILED tests/contracts/test_wave3_runtime_openapi.py::test_every_runtime_operation_matches_contract[/share-grants/{grant_id}-get]",
+        "FAILED tests/contracts/test_wave3_runtime_openapi.py::test_every_runtime_operation_matches_contract[/share-grants/{grant_id}-delete]",
+        "FAILED tests/contracts/test_wave3_runtime_openapi.py::test_every_runtime_operation_matches_contract[/share-grants/{grant_id}/diagnosis-summary-get]",
+        "FAILED tests/contracts/test_wave3_runtime_openapi.py::test_every_runtime_operation_matches_contract[/teacher/courses/{course_id}/analytics-get]",
+        "FAILED tests/contracts/test_wave3_runtime_openapi.py::test_every_runtime_operation_matches_contract[/teacher/courses/{course_id}/review-queue-get]",
+        "FAILED tests/contracts/test_wave3_runtime_openapi.py::test_every_runtime_operation_matches_contract[/teacher/diagnoses/{diagnosis_id}/review-post]",
+        "FAILED tests/integration/test_wave3_gate.py::test_default_sql_application_mounts_teacher_routes_and_preserves_security_dependencies",
+        "FAILED tests/integration/test_wave3_gate.py::test_development_application_uses_dynamic_domain_projection",
+        "43 failed, 1 warning in 30.94s"
+      ]
+    },
+    {
+      "phase": "G4-mount",
+      "command": [
+        "C:/Users/lenovo/Desktop/cs competition/.venv/Scripts/python.exe",
+        "-B",
+        "-m",
+        "pytest",
+        "tests/integration/test_wave3_gate.py",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "--tb=short",
+        "--basetemp",
+        "C:\\Users\\lenovo\\Desktop\\cs competition\\.worktrees\\wave3-integration-gate\\.superpowers\\sdd\\2026-10-08-wave3-integration-gate\\tmp-20261008011026029212"
+      ],
+      "cwd": "C:\\Users\\lenovo\\Desktop\\cs competition\\.worktrees\\wave3-integration-gate\\backend",
+      "start": "2026-10-08T01:10:26.029212+00:00",
+      "end": "2026-10-08T01:10:32.313065+00:00",
+      "exit_code": 0,
+      "status": "passed",
+      "environment_names": [
+        "PYTHONDONTWRITEBYTECODE"
+      ],
+      "data": "synthetic only",
+      "evidence_path": ".superpowers\\sdd\\2026-10-08-wave3-integration-gate\\G4-mount-20261008011026.log",
+      "sha256": "8f57bf1538a2d006d545024973730bf58d625433389cde0aa32eb85e65a1ba9a",
+      "summary": [
+        "..                                                                       [100%]",
+        "============================== warnings summary ===============================",
+        "tests/integration/test_wave3_gate.py::test_default_sql_application_mounts_teacher_routes_and_preserves_security_dependencies",
+        "  C:\\Users\\lenovo\\Desktop\\cs competition\\.venv\\Lib\\site-packages\\alembic\\config.py:604: DeprecationWarning: No path_separator found in configuration; falling back to legacy splitting on spaces, commas, and colons for prepend_sys_path.  Consider adding path_separator=os to Alembic config.",
+        "    util.warn_deprecated(",
+        "",
+        "-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html",
+        "2 passed, 1 warning in 4.35s"
+      ]
+    },
+    {
+      "phase": "G4-partial",
+      "command": [
+        "C:/Users/lenovo/Desktop/cs competition/.venv/Scripts/python.exe",
+        "-B",
+        "-m",
+        "pytest",
+        "tests/contracts/test_wave3_runtime_openapi.py",
+        "tests/knowledge",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "--tb=short",
+        "--basetemp",
+        "C:\\Users\\lenovo\\Desktop\\cs competition\\.worktrees\\wave3-integration-gate\\.superpowers\\sdd\\2026-10-08-wave3-integration-gate\\tmp-20261008011647719086"
+      ],
+      "cwd": "C:\\Users\\lenovo\\Desktop\\cs competition\\.worktrees\\wave3-integration-gate\\backend",
+      "start": "2026-10-08T01:16:47.719086+00:00",
+      "end": "2026-10-08T01:17:47.168487+00:00",
+      "exit_code": 1,
+      "status": "failed",
+      "environment_names": [
+        "PYTHONDONTWRITEBYTECODE"
+      ],
+      "data": "synthetic only",
+      "evidence_path": ".superpowers\\sdd\\2026-10-08-wave3-integration-gate\\G4-partial-20261008011647.log",
+      "sha256": "f4ab0a7e497c0cc8be3fcc3e43df8bca3f7259af34b3b69b75c1bf812971b71b",
+      "summary": [
+        "FAILED tests/contracts/test_wave3_runtime_openapi.py::test_every_runtime_operation_matches_contract[/teacher/courses/{course_id}/misconceptions/{misconception_id}/review-post]",
+        "FAILED tests/contracts/test_wave3_runtime_openapi.py::test_every_runtime_operation_matches_contract[/exercises/{exercise_id}/submissions-post]",
+        "FAILED tests/contracts/test_wave3_runtime_openapi.py::test_every_runtime_operation_matches_contract[/submissions/{submission_id}-get]",
+        "FAILED tests/contracts/test_wave3_runtime_openapi.py::test_every_runtime_operation_matches_contract[/submissions/{submission_id}/execution-result-get]",
+        "FAILED tests/contracts/test_wave3_runtime_openapi.py::test_every_runtime_operation_matches_contract[/submissions/{submission_id}/diagnosis-get]",
+        "FAILED tests/contracts/test_wave3_runtime_openapi.py::test_every_runtime_operation_matches_contract[/diagnoses/{diagnosis_id}/explanation-check-post]",
+        "FAILED tests/knowledge/test_graph.py::test_api_create_concept_starts_pending_review",
+        "FAILED tests/knowledge/test_graph.py::test_api_rejects_client_supplied_review_status_and_missing_source",
+        "FAILED tests/knowledge/test_graph.py::test_api_duplicate_concept_conflicts - ...",
+        "FAILED tests/knowledge/test_graph.py::test_api_review_then_update_resets_approval",
+        "FAILED tests/knowledge/test_graph.py::test_api_rejects_unknown_review_decision",
+        "FAILED tests/knowledge/test_graph.py::test_api_misconception_lifecycle_feeds_approved_evidence_only_after_review",
+        "FAILED tests/knowledge/test_graph.py::test_api_misconception_with_unknown_root_is_rejected",
+        "FAILED tests/knowledge/test_graph.py::test_api_edge_rules - assert 422 == 201",
+        "17 failed, 91 passed in 57.32s"
+      ]
+    },
+    {
+      "phase": "G4-http-red",
+      "command": [
+        "C:/Users/lenovo/Desktop/cs competition/.venv/Scripts/python.exe",
+        "-B",
+        "-m",
+        "pytest",
+        "tests/contracts/test_wave3_http_contract.py",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "--tb=short",
+        "--basetemp",
+        "C:\\Users\\lenovo\\Desktop\\cs competition\\.worktrees\\wave3-integration-gate\\.superpowers\\sdd\\2026-10-08-wave3-integration-gate\\tmp-20261008011813778299"
+      ],
+      "cwd": "C:\\Users\\lenovo\\Desktop\\cs competition\\.worktrees\\wave3-integration-gate\\backend",
+      "start": "2026-10-08T01:18:13.778299+00:00",
+      "end": "2026-10-08T01:18:23.417739+00:00",
+      "exit_code": 1,
+      "status": "failed",
+      "environment_names": [
+        "PYTHONDONTWRITEBYTECODE"
+      ],
+      "data": "synthetic only",
+      "evidence_path": ".superpowers\\sdd\\2026-10-08-wave3-integration-gate\\G4-http-red-20261008011813.log",
+      "sha256": "72a51f1fd83d78063d1aabd4d68d8549fa88b71eac1b3cb2c0cc8b75dabd3773",
+      "summary": [
+        "F.                                                                       [100%]",
+        "================================== FAILURES ===================================",
+        "___ test_deleted_diagnosis_is_unavailable_instead_of_invalid_empty_success ____",
+        "tests\\contracts\\test_wave3_http_contract.py:9: in test_deleted_diagnosis_is_unavailable_instead_of_invalid_empty_success",
+        "    assert response.status_code == 404",
+        "E   assert 200 == 404",
+        "E    +  where 200 = <Response [200 OK]>.status_code",
+        "=========================== short test summary info ===========================",
+        "FAILED tests/contracts/test_wave3_http_contract.py::test_deleted_diagnosis_is_unavailable_instead_of_invalid_empty_success",
+        "1 failed, 1 passed in 7.78s"
+      ]
+    },
+    {
+      "phase": "G4-green",
+      "command": [
+        "C:/Users/lenovo/Desktop/cs competition/.venv/Scripts/python.exe",
+        "-B",
+        "-m",
+        "pytest",
+        "tests/contracts",
+        "tests/knowledge",
+        "tests/analytics",
+        "tests/api",
+        "tests/integration/test_wave3_gate.py",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "--tb=short",
+        "--basetemp",
+        "C:\\Users\\lenovo\\Desktop\\cs competition\\.worktrees\\wave3-integration-gate\\.superpowers\\sdd\\2026-10-08-wave3-integration-gate\\tmp-20261008012137936046"
+      ],
+      "cwd": "C:\\Users\\lenovo\\Desktop\\cs competition\\.worktrees\\wave3-integration-gate\\backend",
+      "start": "2026-10-08T01:21:37.936046+00:00",
+      "end": "2026-10-08T01:21:39.412470+00:00",
+      "exit_code": 4,
+      "status": "failed",
+      "environment_names": [
+        "PYTHONDONTWRITEBYTECODE"
+      ],
+      "data": "synthetic only",
+      "evidence_path": ".superpowers\\sdd\\2026-10-08-wave3-integration-gate\\G4-green-20261008012137.log",
+      "sha256": "f6919a36774a6a1b07013254f020df8a5c428d037e9f0f70a0b8b97656cef908",
+      "summary": [
+        "ERROR: file or directory not found: tests/api",
+        "",
+        "",
+        "no tests ran in 0.00s"
+      ]
+    },
+    {
+      "phase": "G4-green-correct-path",
+      "command": [
+        "C:/Users/lenovo/Desktop/cs competition/.venv/Scripts/python.exe",
+        "-B",
+        "-m",
+        "pytest",
+        "tests/contracts",
+        "tests/knowledge",
+        "tests/analytics",
+        "tests/test_api_cors.py",
+        "tests/integration/test_wave3_gate.py",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "--tb=short",
+        "--basetemp",
+        "C:\\Users\\lenovo\\Desktop\\cs competition\\.worktrees\\wave3-integration-gate\\.superpowers\\sdd\\2026-10-08-wave3-integration-gate\\tmp-20261008012156750101"
+      ],
+      "cwd": "C:\\Users\\lenovo\\Desktop\\cs competition\\.worktrees\\wave3-integration-gate\\backend",
+      "start": "2026-10-08T01:21:56.750101+00:00",
+      "end": "2026-10-08T01:21:58.128434+00:00",
+      "exit_code": 4,
+      "status": "failed",
+      "environment_names": [
+        "PYTHONDONTWRITEBYTECODE"
+      ],
+      "data": "synthetic only",
+      "evidence_path": ".superpowers\\sdd\\2026-10-08-wave3-integration-gate\\G4-green-correct-path-20261008012156.log",
+      "sha256": "7fd1e72d26b3fe33b8799d3dd00ec6879248d94e98e3a0150ea34134ef5c404c",
+      "summary": [
+        "ERROR: file or directory not found: tests/test_api_cors.py",
+        "",
+        "",
+        "no tests ran in 0.00s"
+      ]
+    },
+    {
+      "phase": "G4-green-verified-paths",
+      "command": [
+        "C:/Users/lenovo/Desktop/cs competition/.venv/Scripts/python.exe",
+        "-B",
+        "-m",
+        "pytest",
+        "tests/contracts",
+        "tests/knowledge",
+        "tests/analytics",
+        "tests/test_cors.py",
+        "tests/integration/test_wave3_gate.py",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "--tb=short",
+        "--basetemp",
+        "C:\\Users\\lenovo\\Desktop\\cs competition\\.worktrees\\wave3-integration-gate\\.superpowers\\sdd\\2026-10-08-wave3-integration-gate\\tmp-20261008012216725043"
+      ],
+      "cwd": "C:\\Users\\lenovo\\Desktop\\cs competition\\.worktrees\\wave3-integration-gate\\backend",
+      "start": "2026-10-08T01:22:16.725043+00:00",
+      "end": "2026-10-08T01:24:06.152269+00:00",
+      "exit_code": 1,
+      "status": "failed",
+      "environment_names": [
+        "PYTHONDONTWRITEBYTECODE"
+      ],
+      "data": "synthetic only",
+      "evidence_path": ".superpowers\\sdd\\2026-10-08-wave3-integration-gate\\G4-green-verified-paths-20261008012216.log",
+      "sha256": "2c58faabd67e6c88910bfdc7b01aaf9b134ba878f949b5e68c8265a16d7d0390",
+      "summary": [
+        "E   [parameters: {'course_id': 'course-a', 'user_id': 'synthetic-student-0', 'role': 'student'}]",
+        "E   (Background on this error at: https://sqlalche.me/e/20/gkpj)",
+        "---------------------------- Captured stderr call -----------------------------",
+        "INFO  [alembic.runtime.migration] Context impl PostgresqlImpl.",
+        "INFO  [alembic.runtime.migration] Will assume transactional DDL.",
+        "============================== warnings summary ===============================",
+        "tests/integration/test_wave3_gate.py::test_default_sql_application_mounts_teacher_routes_and_preserves_security_dependencies",
+        "  C:\\Users\\lenovo\\Desktop\\cs competition\\.venv\\Lib\\site-packages\\alembic\\config.py:604: DeprecationWarning: No path_separator found in configuration; falling back to legacy splitting on spaces, commas, and colons for prepend_sys_path.  Consider adding path_separator=os to Alembic config.",
+        "    util.warn_deprecated(",
+        "",
+        "-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html",
+        "=========================== short test summary info ===========================",
+        "FAILED tests/contracts/test_wave3_http_contract.py::test_deleted_diagnosis_is_unavailable_instead_of_invalid_empty_success",
+        "FAILED tests/integration/test_wave3_gate.py::test_default_sql_application_mounts_teacher_routes_and_preserves_security_dependencies",
+        "2 failed, 218 passed, 1 warning in 106.80s (0:01:46)"
+      ]
+    },
+    {
+      "phase": "G5-vectors",
+      "command": [
+        "C:/Users/lenovo/Desktop/cs competition/.venv/Scripts/python.exe",
+        "-B",
+        "-m",
+        "pytest",
+        "tests/integration/test_wave3_analytics_vectors_postgres.py",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "--tb=short",
+        "--junitxml=../.superpowers/sdd/2026-10-08-wave3-integration-gate/analytics-sql-results.xml",
+        "--basetemp",
+        "C:\\Users\\lenovo\\Desktop\\cs competition\\.worktrees\\wave3-integration-gate\\.superpowers\\sdd\\2026-10-08-wave3-integration-gate\\tmp-20261008012313409414"
+      ],
+      "cwd": "C:\\Users\\lenovo\\Desktop\\cs competition\\.worktrees\\wave3-integration-gate\\backend",
+      "start": "2026-10-08T01:23:13.409414+00:00",
+      "end": "2026-10-08T01:24:45.586369+00:00",
+      "exit_code": 1,
+      "status": "failed",
+      "environment_names": [
+        "PYTHONDONTWRITEBYTECODE"
+      ],
+      "data": "synthetic only",
+      "evidence_path": ".superpowers\\sdd\\2026-10-08-wave3-integration-gate\\G5-vectors-20261008012313.log",
+      "sha256": "83ef67647063333d238215e5473b0373c6cd250e71400e639e47de597da347ea",
+      "summary": [
+        "FAILED tests/integration/test_wave3_analytics_vectors_postgres.py::test_vector_through_official_router_sql_postgres[analytics-concept-time-small-group]",
+        "FAILED tests/integration/test_wave3_analytics_vectors_postgres.py::test_vector_through_official_router_sql_postgres[analytics-concept-time-suppressed-fields]",
+        "FAILED tests/integration/test_wave3_analytics_vectors_postgres.py::test_vector_through_official_router_sql_postgres[analytics-exercise-time-foreign-course]",
+        "FAILED tests/integration/test_wave3_analytics_vectors_postgres.py::test_vector_through_official_router_sql_postgres[analytics-exercise-time-small-group]",
+        "FAILED tests/integration/test_wave3_analytics_vectors_postgres.py::test_vector_through_official_router_sql_postgres[analytics-all-four-distinct]",
+        "FAILED tests/integration/test_wave3_analytics_vectors_postgres.py::test_vector_through_official_router_sql_postgres[analytics-all-five-distinct]",
+        "FAILED tests/integration/test_wave3_analytics_vectors_postgres.py::test_vector_through_official_router_sql_postgres[analytics-all-duplicate-student]",
+        "FAILED tests/integration/test_wave3_analytics_vectors_postgres.py::test_vector_through_official_router_sql_postgres[analytics-all-foreign-course]",
+        "FAILED tests/integration/test_wave3_analytics_vectors_postgres.py::test_vector_through_official_router_sql_postgres[analytics-all-small-group]",
+        "FAILED tests/integration/test_wave3_analytics_vectors_postgres.py::test_vector_through_official_router_sql_postgres[analytics-all-suppressed-fields]",
+        "FAILED tests/integration/test_wave3_analytics_vectors_postgres.py::test_each_filter_counterexample_remains_in_sql[analytics-concept-four-distinct]",
+        "FAILED tests/integration/test_wave3_analytics_vectors_postgres.py::test_each_filter_counterexample_remains_in_sql[analytics-concept-exercise-four-distinct]",
+        "FAILED tests/integration/test_wave3_analytics_vectors_postgres.py::test_each_filter_counterexample_remains_in_sql[analytics-concept-time-four-distinct]",
+        "FAILED tests/integration/test_wave3_analytics_vectors_postgres.py::test_each_filter_counterexample_remains_in_sql[analytics-all-four-distinct]",
+        "39 failed, 23 passed, 116 warnings in 88.84s (0:01:28)"
+      ]
+    },
+    {
+      "phase": "G6-ui-red",
+      "command": [
+        "npm.cmd",
+        "test"
+      ],
+      "cwd": "C:\\Users\\lenovo\\Desktop\\cs competition\\.worktrees\\wave3-integration-gate\\frontend",
+      "start": "2026-10-08T01:25:54.342182+00:00",
+      "end": "2026-10-08T01:26:52.364275+00:00",
+      "exit_code": 1,
+      "status": "failed",
+      "environment_names": [
+        "PYTHONDONTWRITEBYTECODE"
+      ],
+      "data": "synthetic only",
+      "evidence_path": ".superpowers\\sdd\\2026-10-08-wave3-integration-gate\\G6-ui-red-20261008012554.log",
+      "sha256": "739ae4e4f5e8afc182ac8ba4baea6214409ac34a6eac31def6ef5ee91d47dac2",
+      "summary": [
+        "     74|     await screen.findByText(\"当前没有待复核诊断\");",
+        "     75|     resolveFirst(json({course_id:\"course-a\",filters,items:[{queue_even…",
+        "     76|     await new Promise(r=>setTimeout(r,20));expect(screen.queryByText(\"…",
+        "       |                                                                                             ^",
+        "     77|   });",
+        "     78| });",
+        "",
+        "⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/4]⎯",
+        "",
+        "",
+        " Test Files  1 failed (1)",
+        "      Tests  4 failed | 31 passed (35)",
+        "   Start at  09:25:58",
+        "   Duration  53.60s (environment 74%, setup 15%, tests 8%, transform 2%, import 1%)",
+        ""
+      ]
+    },
+    {
+      "phase": "G6-ui-green",
+      "command": [
+        "npm.cmd",
+        "test"
+      ],
+      "cwd": "C:\\Users\\lenovo\\Desktop\\cs competition\\.worktrees\\wave3-integration-gate\\frontend",
+      "start": "2026-10-08T01:28:42.087889+00:00",
+      "end": "2026-10-08T01:28:48.249258+00:00",
+      "exit_code": 0,
+      "status": "passed",
+      "environment_names": [
+        "PYTHONDONTWRITEBYTECODE"
+      ],
+      "data": "synthetic only",
+      "evidence_path": ".superpowers\\sdd\\2026-10-08-wave3-integration-gate\\G6-ui-green-20261008012842.log",
+      "sha256": "8ef6e5e5d7862350b14b966d5d034dd05e8266af0eee873cb2f4157492c6c25f",
+      "summary": [
+        "",
+        "> knowbound-web@0.1.0 test",
+        "> vitest run",
+        "",
+        "",
+        " RUN  v5.0.3 C:/Users/lenovo/Desktop/cs competition/.worktrees/wave3-integration-gate/frontend",
+        "",
+        "",
+        " Test Files  1 passed (1)",
+        "      Tests  35 passed (35)",
+        "   Start at  09:28:43",
+        "   Duration  4.59s (tests 53%, environment 25%, transform 10%, setup 6%, import 6%)",
+        ""
+      ]
+    },
+    {
+      "phase": "G4-final",
+      "command": [
+        "C:/Users/lenovo/Desktop/cs competition/.venv/Scripts/python.exe",
+        "-B",
+        "-m",
+        "pytest",
+        "tests/contracts",
+        "tests/knowledge",
+        "tests/analytics",
+        "tests/test_cors.py",
+        "tests/integration/test_wave3_gate.py",
+        "tests/integration/test_wave3_reviews_postgres.py",
+        "tests/integration/test_wave3_analytics_postgres.py",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "--tb=short",
+        "--basetemp",
+        "C:\\Users\\lenovo\\Desktop\\cs competition\\.worktrees\\wave3-integration-gate\\.superpowers\\sdd\\2026-10-08-wave3-integration-gate\\tmp-20261008012736473485"
+      ],
+      "cwd": "C:\\Users\\lenovo\\Desktop\\cs competition\\.worktrees\\wave3-integration-gate\\backend",
+      "start": "2026-10-08T01:27:36.473485+00:00",
+      "end": "2026-10-08T01:29:43.326663+00:00",
+      "exit_code": 0,
+      "status": "passed",
+      "environment_names": [
+        "PYTHONDONTWRITEBYTECODE"
+      ],
+      "data": "synthetic only",
+      "evidence_path": ".superpowers\\sdd\\2026-10-08-wave3-integration-gate\\G4-final-20261008012736.log",
+      "sha256": "5a5b0e79b6f1e265b61705bc345776dcf178882280f072a552073670e493a0a4",
+      "summary": [
+        "........................................................................ [ 30%]",
+        "........................................................................ [ 60%]",
+        "........................................................................ [ 90%]",
+        "........................                                                 [100%]",
+        "============================== warnings summary ===============================",
+        "tests/integration/test_wave3_gate.py: 1 warning",
+        "tests/integration/test_wave3_reviews_postgres.py: 7 warnings",
+        "tests/integration/test_wave3_analytics_postgres.py: 13 warnings",
+        "  C:\\Users\\lenovo\\Desktop\\cs competition\\.venv\\Lib\\site-packages\\alembic\\config.py:604: DeprecationWarning: No path_separator found in configuration; falling back to legacy splitting on spaces, commas, and colons for prepend_sys_path.  Consider adding path_separator=os to Alembic config.",
+        "    util.warn_deprecated(",
+        "",
+        "-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html",
+        "240 passed, 21 warnings in 123.69s (0:02:03)"
+      ]
     }
   ]
 }

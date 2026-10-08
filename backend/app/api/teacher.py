@@ -2,8 +2,9 @@ from __future__ import annotations
 
 from datetime import datetime
 from typing import Annotated
+from pydantic import Field
 
-from fastapi import APIRouter, Header, Path, Query, Request
+from fastapi import Security, APIRouter, Header, Path, Query, Request
 
 from app.analytics.repository import AnalyticsPersistenceError
 from app.analytics.schemas import (
@@ -20,6 +21,7 @@ from app.analytics.service import (
     TeacherAnalyticsService,
     TeacherReviewConflict,
 )
+from app.api.contract import BEARER, errors
 from app.api.auth import Authenticator
 from app.api.errors import ErrorResponse, error_response, request_id_for
 
@@ -51,17 +53,17 @@ def _filters(
 def create_teacher_router(
     service: TeacherAnalyticsService, authenticator: Authenticator
 ) -> APIRouter:
-    router = APIRouter(tags=["teacher"])
+    router = APIRouter(tags=["teacher"], dependencies=[Security(BEARER)])
 
     @router.get(
         "/teacher/courses/{course_id}/analytics",
-        response_model=TeacherAnalyticsAvailable | TeacherAnalyticsSuppressed,
+        response_model=Annotated[TeacherAnalyticsAvailable | TeacherAnalyticsSuppressed, Field(discriminator="status")],
         operation_id="getTeacherCourseAnalytics",
         responses=_ERROR_RESPONSES,
     )
     def course_analytics(
         request: Request,
-        course_id: BoundedPathId,
+        course_id: str,
         concept_id: OptionalStringQuery = None,
         exercise_id: OptionalStringQuery = None,
         start_at: OptionalTimestampQuery = None,
@@ -90,7 +92,7 @@ def create_teacher_router(
     )
     def review_queue(
         request: Request,
-        course_id: BoundedPathId,
+        course_id: str,
         concept_id: OptionalStringQuery = None,
         exercise_id: OptionalStringQuery = None,
         start_at: OptionalTimestampQuery = None,

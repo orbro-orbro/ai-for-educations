@@ -6,13 +6,13 @@ import hmac
 import json
 import os
 import time
-from typing import Any
+from typing import Any, Literal
 from uuid import uuid4
 
 from fastapi import APIRouter, Request
 from fastapi.responses import JSONResponse
 from fastapi import Response
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, Field
 
 from app.auth.models import Actor, Role, UserRepository
 from app.auth.revocations import TokenRevocations, InMemoryTokenRevocations
@@ -138,17 +138,17 @@ class _RequestBody(BaseModel):
 
 class LoginRequest(_RequestBody):
     username: str
-    password: str
+    password: str = Field(json_schema_extra={"format": "password", "writeOnly": True})
 
 
-class ActorResponse(BaseModel):
+class ActorResponse(_RequestBody):
     user_id: str
     role: Role
 
 
-class LoginResponse(BaseModel):
+class LoginResponse(_RequestBody):
     access_token: str
-    token_type: str = "bearer"
+    token_type: Literal["bearer"]
     actor: ActorResponse
 
 
@@ -159,9 +159,10 @@ def authentication_error(request: Request) -> JSONResponse:
 
 
 def create_auth_router(authenticator: Authenticator) -> APIRouter:
+    from app.api.contract import errors
     router = APIRouter()
 
-    @router.post("/auth/login", response_model=LoginResponse)
+    @router.post("/auth/login", response_model=LoginResponse, operation_id="login", responses=errors(401,422))
     def login(payload: LoginRequest, request: Request):
         try:
             token, actor = authenticator.login(payload.username, payload.password)
@@ -169,12 +170,13 @@ def create_auth_router(authenticator: Authenticator) -> APIRouter:
             return authentication_error(request)
         return LoginResponse(
             access_token=token,
+            token_type="bearer",
             actor=ActorResponse(user_id=actor.user_id, role=actor.role),
         )
 
     @router.post("/auth/logout", status_code=204, response_class=Response,
                  operation_id="logout", openapi_extra={"security": [{"bearerAuth": []}]},
-                 responses={401: {"description": "Authentication failed."}, 503: {"description": "Storage unavailable."}})
+                 responses=errors(401,503))
     def logout(request: Request):
         authenticator.logout(request.headers.get("Authorization"))
         return Response(status_code=204)

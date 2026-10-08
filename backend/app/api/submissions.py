@@ -1,11 +1,12 @@
 from __future__ import annotations
 
 from datetime import datetime
-from typing import Annotated
+from typing import Annotated, Literal
 
-from fastapi import APIRouter, Header, Path, Request
+from fastapi import Security, APIRouter, Header, Path, Request
 from pydantic import BaseModel, ConfigDict, Field
 
+from app.api.contract import BEARER, errors
 from app.api.auth import Authenticator
 from app.api.errors import error_response
 from app.diagnostics.rules import RuleMatch
@@ -28,8 +29,8 @@ from app.submissions.runner_contract import (
 
 class SourceFileResponse(BaseModel):
     model_config = ConfigDict(extra="forbid")
-    path: str
-    content: str
+    path: str = Field(min_length=1, max_length=255)
+    content: str = Field(max_length=262_144)
 
 
 class SourceFileInput(BaseModel):
@@ -48,9 +49,9 @@ class SubmissionCreateRequest(BaseModel):
 class SubmissionResponse(BaseModel):
     model_config = ConfigDict(extra="forbid")
     submission_id: str
-    course_id: str
-    exercise_id: str
-    owner_user_id: str
+    course_id: str = Field(json_schema_extra={"readOnly": True})
+    exercise_id: str = Field(json_schema_extra={"readOnly": True})
+    owner_user_id: str = Field(json_schema_extra={"readOnly": True})
     source_files: list[SourceFileResponse]
     entrypoint: str
     is_formal: bool
@@ -64,30 +65,56 @@ class RuleMatchResponse(BaseModel):
     misconception_id: str
     root_concept_id: str
     related_concept_ids: list[str]
-    diagnostic_indices: list[int]
-    evidence_kind: str
+    diagnostic_indices: list[Annotated[int, Field(ge=0)]]
+    evidence_kind: Literal["compiler_diagnostic"]
     evidence_summary: str
     source_references: list[str]
-    match_strength: str
+    match_strength: Literal["strong", "weak"]
+
+
+class PublicCommandSummary(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    compiler: Literal["cjc"]
+    source_count: int = Field(ge=0, le=32)
+    entrypoint: str
+    output_kind: Literal["executable"]
+
+
+class PublicRunnerLimits(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    timeout_ms: int
+    max_output_chars: int
+    max_files: int
+    max_source_bytes: int
+    pids: int
+    memory_bytes: int
+    cpu_cores: float
+
+
+class PublicToolchainInfo(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    cjc: str
+    cjpm: str
+    backend: Literal["cjnative"]
 
 
 class ExecutionResultResponse(BaseModel):
     model_config = ConfigDict(extra="forbid")
     submission_id: str
-    protocol_version: str
-    status: RunnerStatus
+    protocol_version: Literal["2"]
+    status: Literal["succeeded", "compile_failed", "run_failed", "timed_out", "resource_exhausted"]
     phase: RunnerPhase
     retryable: bool
     exit_code: int | None
     signal: int | None
-    stdout: str
-    stderr: str
+    stdout: str = Field(max_length=65536)
+    stderr: str = Field(max_length=65536)
     stdout_truncated: bool
     stderr_truncated: bool
     diagnostics: list[CompilerDiagnostic]
-    command_summary: CommandSummary
-    limits: RunnerLimits
-    toolchain: ToolchainInfo
+    command_summary: PublicCommandSummary
+    limits: PublicRunnerLimits
+    toolchain: PublicToolchainInfo
     created_at: datetime
     request_id: str
     rule_matches: list[RuleMatchResponse]
@@ -134,19 +161,20 @@ def create_submissions_router(
     service: SubmissionService,
     authenticator: Authenticator,
 ) -> APIRouter:
-    router = APIRouter(tags=["submissions"])
+    router = APIRouter(tags=["submissions"], dependencies=[Security(BEARER)])
 
     @router.post(
         "/exercises/{exercise_id}/submissions",
         response_model=SubmissionResponse,
         status_code=201,
         operation_id="createExerciseSubmission",
+        responses=errors(401,404,409,422,503),
     )
     def create_submission(
         exercise_id: Annotated[str, Path(min_length=1, max_length=128)],
         payload: SubmissionCreateRequest,
         request: Request,
-        authorization: str | None = Header(default=None),
+        authorization: str | None = Header(default=None, include_in_schema=False),
     ):
         actor = authenticator.authenticate_header(authorization)
         try:
@@ -173,11 +201,12 @@ def create_submissions_router(
         "/submissions/{submission_id}",
         response_model=SubmissionResponse,
         operation_id="getSubmission",
+        responses=errors(401,404,409,422,503),
     )
     def get_submission(
         submission_id: Annotated[str, Path(min_length=1, max_length=128)],
         request: Request,
-        authorization: str | None = Header(default=None),
+        authorization: str | None = Header(default=None, include_in_schema=False),
     ):
         actor = authenticator.authenticate_header(authorization)
         try:
@@ -192,11 +221,12 @@ def create_submissions_router(
         "/submissions/{submission_id}/execution-result",
         response_model=ExecutionResultResponse,
         operation_id="getSubmissionExecutionResult",
+        responses=errors(401,404,409,422,503),
     )
     def get_execution_result(
         submission_id: Annotated[str, Path(min_length=1, max_length=128)],
         request: Request,
-        authorization: str | None = Header(default=None),
+        authorization: str | None = Header(default=None, include_in_schema=False),
     ):
         actor = authenticator.authenticate_header(authorization)
         try:
@@ -223,9 +253,9 @@ def create_submissions_router(
             stdout_truncated=result.stdout_truncated,
             stderr_truncated=result.stderr_truncated,
             diagnostics=list(result.diagnostics),
-            command_summary=result.command_summary,
-            limits=result.limits,
-            toolchain=result.toolchain,
+            command_summary=result.command_summary.model_dump(),
+            limits=result.limits.model_dump(),
+            toolchain=result.toolchain.model_dump(),
             created_at=result.created_at,
             request_id=str(request.state.request_id),
             rule_matches=[_rule_match_response(item) for item in matches],

@@ -2,7 +2,9 @@ from __future__ import annotations
 
 from uuid import uuid4
 
-from fastapi import APIRouter, Header, Request
+from fastapi import APIRouter, Header, Request, Security
+from app.api.contract import BEARER, errors
+from app.auth.models import Role
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel, ConfigDict
 
@@ -12,11 +14,13 @@ from app.courses.service import CourseService, ResourceNotAvailable
 
 
 class CourseResponse(BaseModel):
+    model_config = ConfigDict(extra="forbid")
     course_id: str
     title: str
 
 
 class ExerciseResponse(BaseModel):
+    model_config = ConfigDict(extra="forbid")
     exercise_id: str
     course_id: str
     title: str
@@ -29,9 +33,10 @@ class CreateCourseRequest(BaseModel):
 
 
 class EnrollmentResponse(BaseModel):
+    model_config = ConfigDict(extra="forbid")
     course_id: str
     user_id: str
-    role: str
+    role: Role
 
 
 def _course_response(course: Course) -> CourseResponse:
@@ -63,11 +68,11 @@ def resource_not_available(request: Request) -> JSONResponse:
 def create_courses_router(
     service: CourseService, authenticator: Authenticator
 ) -> APIRouter:
-    router = APIRouter()
+    router = APIRouter(dependencies=[Security(BEARER)])
 
-    @router.get("/courses", response_model=list[CourseResponse])
+    @router.get("/courses", response_model=list[CourseResponse], operation_id="listCourses", responses=errors(401))
     def list_courses(
-        request: Request, authorization: str | None = Header(default=None)
+        request: Request, authorization: str | None = Header(default=None, include_in_schema=False)
     ):
         try:
             actor = authenticator.authenticate_header(authorization)
@@ -76,12 +81,12 @@ def create_courses_router(
             return authentication_error(request)
 
     @router.get(
-        "/courses/{course_id}/exercises", response_model=list[ExerciseResponse]
+        "/courses/{course_id}/exercises", response_model=list[ExerciseResponse], operation_id="listCourseExercises", responses=errors(401,404)
     )
     def list_exercises(
         course_id: str,
         request: Request,
-        authorization: str | None = Header(default=None),
+        authorization: str | None = Header(default=None, include_in_schema=False),
     ):
         try:
             actor = authenticator.authenticate_header(authorization)
@@ -94,11 +99,11 @@ def create_courses_router(
         except ResourceNotAvailable:
             return resource_not_available(request)
 
-    @router.post("/teacher/courses", response_model=CourseResponse, status_code=201)
+    @router.post("/teacher/courses", response_model=CourseResponse, status_code=201, operation_id="createTeacherCourse", responses=errors(401,404,422))
     def create_course(
         payload: CreateCourseRequest,
         request: Request,
-        authorization: str | None = Header(default=None),
+        authorization: str | None = Header(default=None, include_in_schema=False),
     ):
         try:
             actor = authenticator.authenticate_header(authorization)
@@ -112,12 +117,13 @@ def create_courses_router(
     @router.post(
         "/courses/{course_id}/enrollments",
         response_model=EnrollmentResponse,
+        operation_id="enrollCurrentStudent", responses=errors(401,404),
         status_code=201,
     )
     def enroll_current_student(
         course_id: str,
         request: Request,
-        authorization: str | None = Header(default=None),
+        authorization: str | None = Header(default=None, include_in_schema=False),
     ):
         try:
             actor = authenticator.authenticate_header(authorization)

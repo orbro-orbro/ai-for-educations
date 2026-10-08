@@ -126,7 +126,7 @@ class ExplanationCheck(_StrictModel):
     evidence_summary: str
     confidence: float = Field(ge=0, le=1)
     feedback: str
-    memory_proposal_eligible: bool
+    memory_proposal_eligible: bool = Field(json_schema_extra={"readOnly": True})
     created_at: datetime
     request_id: str
 

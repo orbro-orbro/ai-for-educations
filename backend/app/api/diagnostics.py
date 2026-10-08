@@ -2,15 +2,26 @@ from __future__ import annotations
 
 from typing import Annotated, Callable
 
-from fastapi import APIRouter, Header, Path, Request
+from fastapi import Security, APIRouter, Header, Path, Request
 from pydantic import BaseModel, ConfigDict, Field
 
+from app.api.contract import BEARER, errors
 from app.api.auth import Authenticator
 from app.api.errors import ErrorResponse, error_response
 from app.auth.models import Actor
 from app.diagnostics.hints import HintLadderService, HintLevelExhausted
-from app.diagnostics.schema import Diagnosis, ExplanationCheck, HintEvent
+from app.diagnostics.schema import Diagnosis, DiagnosisLocation, EvidenceBinding, ExplanationCheck, HintEvent
 from app.diagnostics.service import DiagnosisService
+
+
+class PublicDiagnosis(Diagnosis):
+    course_id: str = Field(json_schema_extra={"readOnly": True})
+    owner_user_id: str = Field(json_schema_extra={"readOnly": True})
+    locations: tuple[DiagnosisLocation, ...] = Field(min_length=1)
+    concept_ids: tuple[str, ...] = Field(min_length=1)
+    root_cause: str = Field(min_length=1)
+    evidence: tuple[EvidenceBinding, ...] = Field(min_length=1)
+    requires_teacher_review: bool = Field(json_schema_extra={"readOnly": True})
 
 
 class NextHintRequest(BaseModel):
@@ -35,20 +46,21 @@ def create_diagnostics_router(
     authenticator: Authenticator | None,
     proposal_hook: Callable[[Actor, ExplanationCheck, str], object] | None = None,
 ) -> APIRouter:
-    router = APIRouter(tags=["diagnostics"])
+    router = APIRouter(tags=["diagnostics"], dependencies=[Security(BEARER)])
 
     @router.get(
         "/submissions/{submission_id}/diagnosis",
-        response_model=Diagnosis,
+        response_model=PublicDiagnosis,
         operation_id="getSubmissionDiagnosis",
         responses=_ERROR_RESPONSES,
     )
     def get_diagnosis(
         submission_id: Annotated[str, Path(min_length=1, max_length=128)],
-        authorization: str | None = Header(default=None),
+        authorization: str | None = Header(default=None, include_in_schema=False),
     ):
         actor = authenticator.authenticate_header(authorization)
-        return diagnosis_service.get_diagnosis(actor, submission_id)
+        diagnosis = diagnosis_service.get_diagnosis(actor, submission_id)
+        return diagnosis.model_dump()
 
     @router.post(
         "/diagnoses/{diagnosis_id}/hints/next",
@@ -60,7 +72,7 @@ def create_diagnostics_router(
         diagnosis_id: Annotated[str, Path(min_length=1, max_length=128)],
         payload: NextHintRequest,
         request: Request,
-        authorization: str | None = Header(default=None),
+        authorization: str | None = Header(default=None, include_in_schema=False),
     ):
         actor = authenticator.authenticate_header(authorization)
         try:
@@ -88,7 +100,7 @@ def create_diagnostics_router(
         diagnosis_id: Annotated[str, Path(min_length=1, max_length=128)],
         payload: ExplanationCheckRequest,
         request: Request,
-        authorization: str | None = Header(default=None),
+        authorization: str | None = Header(default=None, include_in_schema=False),
     ):
         actor = authenticator.authenticate_header(authorization)
         result = diagnosis_service.check_explanation(

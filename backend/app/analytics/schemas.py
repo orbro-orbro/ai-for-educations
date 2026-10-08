@@ -10,7 +10,14 @@ class _StrictModel(BaseModel):
     model_config = ConfigDict(extra="forbid", frozen=True)
 
 
+def _response_schema(schema):
+    schema["required"] = list(schema["properties"])
+    for field in schema["properties"].values():
+        field.pop("default", None)
+
+
 class TeacherAnalyticsFilters(_StrictModel):
+    model_config = ConfigDict(json_schema_extra=_response_schema)
     concept_id: str | None = None
     exercise_id: str | None = None
     start_at: datetime | None = None
@@ -40,6 +47,7 @@ class TeacherAnalyticsGroup(_StrictModel):
 
 
 class TeacherAnalyticsAvailable(_StrictModel):
+    model_config = ConfigDict(json_schema_extra=_response_schema)
     status: Literal["available"] = "available"
     course_id: str
     filters: AnalyticsFilters
@@ -49,6 +57,7 @@ class TeacherAnalyticsAvailable(_StrictModel):
 
 
 class TeacherAnalyticsSuppressed(_StrictModel):
+    model_config = ConfigDict(json_schema_extra=_response_schema)
     status: Literal["insufficient_sample"] = "insufficient_sample"
     course_id: str
     filters: AnalyticsFilters
@@ -76,8 +85,8 @@ class TeacherReviewQueue(_StrictModel):
 
 
 class TeacherDiagnosisReviewRequest(_StrictModel):
-    decision: Literal["confirmed", "overturned", "insufficient_evidence"]
-    reason: str = Field(min_length=1, max_length=2000)
+    decision: Literal["confirmed", "overturned", "insufficient_evidence"] = Field(json_schema_extra={"writeOnly": True})
+    reason: str = Field(min_length=1, max_length=2000, json_schema_extra={"writeOnly": True})
 
     @field_validator("reason")
     @classmethod
@@ -89,9 +98,9 @@ class TeacherDiagnosisReviewRequest(_StrictModel):
 
 
 class TeacherDiagnosisReview(_StrictModel):
-    diagnosis_id: str
-    course_id: str
-    reviewer_user_id: str
+    diagnosis_id: str = Field(json_schema_extra={"readOnly": True})
+    course_id: str = Field(json_schema_extra={"readOnly": True})
+    reviewer_user_id: str = Field(json_schema_extra={"readOnly": True})
     decision: Literal["confirmed", "overturned", "insufficient_evidence"]
     reason: str = Field(min_length=1, max_length=2000)
-    reviewed_at: datetime
+    reviewed_at: datetime = Field(json_schema_extra={"readOnly": True})

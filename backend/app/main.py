@@ -1,14 +1,21 @@
 from __future__ import annotations
 
 import os
+from datetime import UTC, datetime
+from typing import Literal
+from pydantic import BaseModel, ConfigDict
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.api.auth import Authenticator, TokenCodec, create_auth_router
+from app.api.teacher import create_teacher_router
+from app.analytics.service import TeacherAnalyticsService
+from app.analytics.repository import TeacherAnalyticsRepository
 from app.api.courses import create_courses_router
 from app.api.diagnostics import create_diagnostics_router
 from app.api.errors import install_error_handling
+from app.api.contract import install_generated_openapi
 from app.api.knowledge import router as knowledge_router
 from app.api.memories import create_memories_router
 from app.api.submissions import create_submissions_router
@@ -114,6 +121,7 @@ def _default_dependencies(
         repositories = create_sql_repositories(
             database_url,
             diagnosis_confidence_threshold=diagnosis_confidence_threshold,
+            analytics_secret=secret,
         )
         users = repositories.users
         courses = repositories.courses
@@ -178,6 +186,8 @@ def create_app(
     memory_audit: AuditLog | None = None,
     memory_service: MemoryService | None = None,
     deletion_service: DeletionService | None = None,
+    teacher_analytics_repository: TeacherAnalyticsRepository | None = None,
+    teacher_analytics_service: TeacherAnalyticsService | None = None,
 ) -> FastAPI:
     if diagnosis_confidence_threshold is None:
         try:
@@ -259,6 +269,27 @@ def create_app(
             source_context=memory_source,
         )
 
+    if teacher_analytics_repository is None:
+        from app.audit.persistence import SqlAuditLog
+        if isinstance(memory_audit, SqlAuditLog):
+            from app.analytics.persistence import SqlTeacherAnalyticsRepository
+            teacher_analytics_repository = SqlTeacherAnalyticsRepository(
+                memory_audit._uow,
+                secret=os.environ.get("AUTH_TOKEN_SECRET", _DEVELOPMENT_TOKEN_SECRET),
+                confidence_threshold=diagnosis_confidence_threshold,
+            )
+        else:
+            from app.analytics.data_source import InMemoryTeacherAnalyticsDataSource
+            teacher_analytics_repository = InMemoryTeacherAnalyticsDataSource(
+                submission_repository, diagnostic_repository, knowledge_repository,
+                secret=os.environ.get("AUTH_TOKEN_SECRET", _DEVELOPMENT_TOKEN_SECRET),
+                confidence_threshold=diagnosis_confidence_threshold,
+            )
+    teacher_analytics_service = teacher_analytics_service or TeacherAnalyticsService(
+        courses=course_service, repository=teacher_analytics_repository,
+        audit=memory_audit, clock=lambda: datetime.now(UTC),
+    )
+
     application = FastAPI(title="KnowBound-CJ", version="0.2.0")
     allowed_origins = _cors_origins_from_config()
     if allowed_origins:
@@ -275,6 +306,8 @@ def create_app(
             ],
             expose_headers=["X-Request-ID"],
         )
+    application.state.teacher_analytics_repository = teacher_analytics_repository
+    application.state.teacher_analytics_service = teacher_analytics_service
     application.state.authenticator = authenticator
     application.state.course_service = course_service
     application.state.knowledge_repository = knowledge_repository
@@ -313,11 +346,20 @@ def create_app(
         create_memories_router(memory_service, deletion_service, authenticator)
     )
 
-    @application.get("/health")
+    application.include_router(create_teacher_router(teacher_analytics_service, authenticator))
+
+    @application.get("/health", operation_id="getHealth", response_model=HealthResponse)
     def health() -> dict[str, str]:
         return {"status": "ok", "service": "knowbound-api"}
 
+    install_generated_openapi(application)
     return application
+
+
+class HealthResponse(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    status: Literal["ok"]
+    service: Literal["knowbound-api"]
 
 
 app = create_app()
