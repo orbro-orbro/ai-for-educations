@@ -30,9 +30,10 @@ COPY --from=sdk /opt/cangjie /opt/cangjie
 RUN chmod --recursive a+rX /opt/cangjie \
     && cjc -v \
     && cjpm -v
-COPY requirements.txt /tmp/requirements.txt
-RUN pip install --no-cache-dir --requirement /tmp/requirements.txt \
-    && rm /tmp/requirements.txt
+COPY requirements.lock /tmp/requirements.lock
+RUN pip install --no-cache-dir --no-deps --only-binary=:all: --require-hashes --requirement /tmp/requirements.lock \
+    && pip check \
+    && rm /tmp/requirements.lock
 
 COPY __init__.py /app/runner/__init__.py
 COPY worker /app/runner/worker

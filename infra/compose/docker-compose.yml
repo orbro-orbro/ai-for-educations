@@ -2,7 +2,7 @@ name: knowbound-cj
 
 services:
   postgres:
-    image: pgvector/pgvector:pg17
+    image: pgvector/pgvector@sha256:ac08538c6f8b9904c33c8224c5e5706dbe760aca29db1d096972b4052c22a75d
     environment:
       POSTGRES_DB: ${POSTGRES_DB:-knowbound}
       POSTGRES_USER: ${POSTGRES_USER:-knowbound}
@@ -35,13 +35,20 @@ services:
       MODEL_TIMEOUT_SECONDS: ${MODEL_TIMEOUT_SECONDS:-30}
       DIAGNOSIS_CONFIDENCE_THRESHOLD: ${DIAGNOSIS_CONFIDENCE_THRESHOLD:-0.75}
       RUNNER_ENDPOINT: ${RUNNER_ENDPOINT:-http://runner-controller:8080}
+      RUNNER_TIMEOUT_SECONDS: ${RUNNER_TIMEOUT_SECONDS:-15}
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health', timeout=2)"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+      start_period: 30s
     depends_on:
       postgres:
         condition: service_healthy
       runner-controller:
         condition: service_healthy
     ports:
-      - "${API_PORT:-8000}:8000"
+      - "127.0.0.1:${API_PORT:-8000}:8000"
     volumes:
       - ../../data/course_seed:/data/course_seed:ro
     networks: [public, internal]
@@ -49,11 +56,20 @@ services:
   web:
     build:
       context: ../../frontend
+      args:
+        VITE_API_BASE_URL: http://127.0.0.1:${API_PORT:-8000}
     environment:
       VITE_API_BASE_URL: http://localhost:${API_PORT:-8000}
     ports:
-      - "${WEB_PORT:-5173}:5173"
-    depends_on: [api]
+      - "127.0.0.1:${WEB_PORT:-5173}:5173"
+    depends_on:
+      api:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:5173/').then(r=>{if(!r.ok)process.exit(1)}).catch(()=>process.exit(1))"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
     networks: [public]
 
   runner-controller:
