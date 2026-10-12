@@ -30,9 +30,26 @@ SECRET = "synthetic-wave3-gate-secret-at-least-16-bytes"
 PRIVATE = "PRIVATE_WAVE3_SENTINEL_DO_NOT_PROJECT"
 
 
+def runner_endpoint():
+    return "http://127.0.0.1:8209" if os.environ.get("WAVE4_TEST_MODE") == "1" else "http://127.0.0.1:8199"
+
+
+def browser_origins():
+    port = 5219 if os.environ.get("WAVE4_TEST_MODE") == "1" else 5199
+    return f"http://127.0.0.1:{port},http://localhost:{port}"
+
+
 def postgres_url(database="wave3_router"):
     if database not in {"wave3_router","wave3_browser","wave3_migration","wave3_task6","wave3_task7","wave3_task10"}:
         raise ValueError("Unknown Gate synthetic database")
+    if os.environ.get("WAVE4_TEST_MODE") == "1":
+        value = os.environ.get("WAVE4_POSTGRES_URL")
+        if not value:
+            raise ValueError("Task 11 requires explicit WAVE4_POSTGRES_URL")
+        url = make_url(value)
+        if url.host != "127.0.0.1" or url.port != 55440 or url.database != "wave4_router" or not url.drivername.startswith("postgresql"):
+            raise ValueError("Only the dedicated Task 11 synthetic database is allowed")
+        return url.set(database=database.replace("wave3_", "wave4_", 1)).render_as_string(hide_password=False)
     value = os.environ.get("WAVE3_POSTGRES_URL", "postgresql+psycopg://knowbound:change-me@127.0.0.1:55430/wave3_router")
     url = make_url(value)
     if url.host != "127.0.0.1" or url.port != 55430 or url.database != "wave3_router" or not url.drivername.startswith("postgresql"):

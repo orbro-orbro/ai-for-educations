@@ -7,7 +7,7 @@ from datetime import datetime, UTC
 from itertools import repeat
 from app.main import create_app
 from app.model_gateway.mock import DeterministicMockProvider
-from tests.integration.wave3_support import Wave3PG, postgres_url, SECRET, NOW
+from tests.integration.wave3_support import Wave3PG, postgres_url, runner_endpoint, browser_origins, SECRET, NOW
 
 os.environ.pop("DATABASE_URL",None)
 pg=Wave3PG("wave3_browser")
@@ -17,8 +17,8 @@ facts=[dict(diagnosis_id=f"browser-{course}-{i}",subject_key=f"synthetic-subject
     for course,n in [("course-a",5),("course-b",4)] for i in range(n)]
 pg.seed_vector_facts(facts)
 os.environ.update(APP_ENV="test",DATABASE_URL=postgres_url("wave3_browser"),AUTH_TOKEN_SECRET=SECRET,
-    RUNNER_ENDPOINT="http://127.0.0.1:8199",RUNNER_TIMEOUT_SECONDS="15",
-    CORS_ALLOWED_ORIGINS="http://127.0.0.1:5199,http://localhost:5199")
+    RUNNER_ENDPOINT=runner_endpoint(),RUNNER_TIMEOUT_SECONDS="15",
+    CORS_ALLOWED_ORIGINS=browser_origins())
 output={"category":"conceptual","locations":[{"file":"main.cj","start_line":3,"end_line":3}],
     "concept_ids":["cj.pattern-match.exhaustiveness"],"root_cause":"合成诊断：match 应覆盖全部枚举分支。",
     "evidence":[{"kind":"approved_knowledge","summary":"synthetic model summary",

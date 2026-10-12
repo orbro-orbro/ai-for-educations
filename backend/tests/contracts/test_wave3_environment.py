@@ -3,6 +3,8 @@ import socket
 from urllib.request import urlopen
 
 from tests.integration.wave3_environment import DATABASES, validate_target
+from tests.integration.wave3_support import postgres_url, runner_endpoint
+from sqlalchemy.engine import make_url
 
 
 @pytest.mark.parametrize("database", DATABASES)
@@ -22,7 +24,8 @@ def test_gate_initializer_rejects_daily_resources_and_unlisted_database_names(la
 
 
 def test_gate_services_are_reachable_over_loopback():
-    with socket.create_connection(("127.0.0.1", 55430), timeout=3):
+    target = make_url(postgres_url())
+    with socket.create_connection((target.host, target.port), timeout=3):
         pass
-    with urlopen("http://127.0.0.1:8199/health", timeout=3) as response:
+    with urlopen(runner_endpoint() + "/health", timeout=3) as response:
         assert response.status == 200
