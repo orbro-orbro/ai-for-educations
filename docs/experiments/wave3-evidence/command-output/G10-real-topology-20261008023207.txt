@@ -1,0 +1,34 @@
+FFFF                                                                     [100%]
+================================== FAILURES ===================================
+_ test_real_controller_launches_and_cleans_isolated_job[success-main() { println("synthetic gate hello") }-succeeded] _
+runner\tests\test_wave3_isolated_topology.py:25: in test_real_controller_launches_and_cleans_isolated_job
+    assert result["status"]==expected
+E   AssertionError: assert 'compile_failed' == 'succeeded'
+E
+E     - succeeded
+E     + compile_failed
+_ test_real_controller_launches_and_cleans_isolated_job[compiler_failure-main() { let x: Int64 = true }-compile_failed] _
+runner\tests\test_wave3_isolated_topology.py:31: in test_real_controller_launches_and_cleans_isolated_job
+    if scenario=="compiler_failure":assert result["diagnostics"]
+                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   assert []
+_ test_real_controller_launches_and_cleans_isolated_job[infinite_loop-main() { while (true) {} }-timed_out] _
+runner\tests\test_wave3_isolated_topology.py:25: in test_real_controller_launches_and_cleans_isolated_job
+    assert result["status"]==expected
+E   AssertionError: assert 'compile_failed' == 'timed_out'
+E
+E     - timed_out
+E     + compile_failed
+_ test_real_controller_launches_and_cleans_isolated_job[output_limit-main() { while (true) { println("0123456789abcdef0123456789abcdef") } }-timed_out] _
+runner\tests\test_wave3_isolated_topology.py:25: in test_real_controller_launches_and_cleans_isolated_job
+    assert result["status"]==expected
+E   AssertionError: assert 'compile_failed' == 'timed_out'
+E
+E     - timed_out
+E     + compile_failed
+=========================== short test summary info ===========================
+FAILED runner/tests/test_wave3_isolated_topology.py::test_real_controller_launches_and_cleans_isolated_job[success-main() { println("synthetic gate hello") }-succeeded]
+FAILED runner/tests/test_wave3_isolated_topology.py::test_real_controller_launches_and_cleans_isolated_job[compiler_failure-main() { let x: Int64 = true }-compile_failed]
+FAILED runner/tests/test_wave3_isolated_topology.py::test_real_controller_launches_and_cleans_isolated_job[infinite_loop-main() { while (true) {} }-timed_out]
+FAILED runner/tests/test_wave3_isolated_topology.py::test_real_controller_launches_and_cleans_isolated_job[output_limit-main() { while (true) { println("0123456789abcdef0123456789abcdef") } }-timed_out]
+4 failed in 4.15s

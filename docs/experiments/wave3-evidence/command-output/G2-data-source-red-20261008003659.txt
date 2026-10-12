@@ -1,0 +1,22 @@
+.F
+================================== FAILURES ===================================
+________ test_distinct_students_at_sql_boundary[4-insufficient_sample] ________
+tests\integration\test_wave3_analytics_postgres.py:24: in test_distinct_students_at_sql_boundary
+    wave3_pg.mount()
+tests\integration\wave3_support.py:68: in mount
+    from app.analytics.persistence import SqlTeacherAnalyticsRepository
+E   ModuleNotFoundError: No module named 'app.analytics.persistence'
+---------------------------- Captured stderr setup ----------------------------
+INFO  [alembic.runtime.migration] Context impl PostgresqlImpl.
+INFO  [alembic.runtime.migration] Will assume transactional DDL.
+============================== warnings summary ===============================
+tests/integration/test_wave3_analytics_postgres.py::test_course_and_authorized_teacher_are_persisted_in_foreign_key_order
+tests/integration/test_wave3_analytics_postgres.py::test_distinct_students_at_sql_boundary[4-insufficient_sample]
+  C:\Users\lenovo\Desktop\cs competition\.venv\Lib\site-packages\alembic\config.py:604: DeprecationWarning: No path_separator found in configuration; falling back to legacy splitting on spaces, commas, and colons for prepend_sys_path.  Consider adding path_separator=os to Alembic config.
+    util.warn_deprecated(
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED tests/integration/test_wave3_analytics_postgres.py::test_distinct_students_at_sql_boundary[4-insufficient_sample]
+!!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!
+1 failed, 1 passed, 2 warnings in 9.67s

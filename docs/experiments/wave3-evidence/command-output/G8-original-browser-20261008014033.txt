@@ -1,0 +1,31 @@
+[WebServer] (node:5580) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] INFO:     Started server process [4472]
+[WebServer] INFO:     Waiting for application startup.
+[WebServer] INFO:     Application startup complete.
+[WebServer] INFO:     Uvicorn running on http://127.0.0.1:8197 (Press CTRL+C to quit)
+
+Running 16 tests using 1 worker
+
+(node:17360) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok  1 [learning-ui] › e2e\learning-loop.spec.ts:49:1 › student completes the evidence, understanding, and memory path on desktop (1.9s)
+  ok  2 [learning-ui] › e2e\learning-loop.spec.ts:80:1 › teacher sees only anonymous signals on a phone viewport (746ms)
+(node:37492) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok  3 [security-request] › e2e\security.spec.ts:23:1 › student directly accessing a teacher entry receives uniform denial (128ms)
+  ok  4 [security-request] › e2e\security.spec.ts:29:1 › teacher cannot list private student memories (80ms)
+  ok  5 [security-request] › e2e\security.spec.ts:35:3 › student A cannot enumerate student B submissions (90ms)
+  ok  6 [security-request] › e2e\security.spec.ts:35:3 › student A cannot enumerate student B submissions/execution-result (84ms)
+  ok  7 [security-request] › e2e\security.spec.ts:35:3 › student A cannot enumerate student B submissions/diagnosis (100ms)
+  ok  8 [security-request] › e2e\security.spec.ts:42:1 › direct protected URL without a token returns authentication failure (8ms)
+  ok  9 [security-request] › e2e\security.spec.ts:50:5 › student-b cannot PATCH another student's memory (185ms)
+  ok 10 [security-request] › e2e\security.spec.ts:50:5 › student-b cannot DELETE another student's memory (201ms)
+  ok 11 [security-request] › e2e\security.spec.ts:50:5 › teacher-a cannot PATCH another student's memory (202ms)
+  ok 12 [security-request] › e2e\security.spec.ts:50:5 › teacher-a cannot DELETE another student's memory (178ms)
+  ok 13 [security-request] › e2e\security.spec.ts:61:1 › malformed sensitive input never appears in the public error (81ms)
+  ok 14 [security-request] › e2e\security.spec.ts:74:1 › repeated concurrent acceptance produces one state change (105ms)
+  ok 15 [security-request] › e2e\security.spec.ts:87:1 › sharing grants only one summary and revocation immediately stops access (193ms)
+  ok 16 [security-request] › e2e\security.spec.ts:104:1 › logout makes a captured old bearer token unusable (85ms)
+
+  16 passed (14.2s)

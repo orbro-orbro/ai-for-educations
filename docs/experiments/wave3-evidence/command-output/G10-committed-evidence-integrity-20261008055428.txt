@@ -1,0 +1,2 @@
+Failed to find real location of C:\Users\lenovo\miniconda3\python.exe
+{"archived_commands_verified": 103, "case_evidence_in_git_verified": 164, "original_security_passed": 220, "junit_reports_verified": 7, "unresolved_conflicts": 0, "jwt_artifacts": 0}

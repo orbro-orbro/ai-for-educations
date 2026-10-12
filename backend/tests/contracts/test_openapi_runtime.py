@@ -42,7 +42,7 @@ def test_contract_contains_every_runtime_route_and_unique_operation_ids():
     runtime = create_app().openapi()
     assert runtime["info"]["version"] == document["info"]["version"]
     runtime_operations = {(path, method) for path, item in runtime["paths"].items() for method in item if method != "parameters"}
-    assert runtime_operations <= contract_operations
+    assert runtime_operations == contract_operations
     operation_ids = [operation["operationId"] for _, _, operation in _operations(document)]
     assert len(operation_ids) == len(set(operation_ids))
 

@@ -1,0 +1,5 @@
+Failed to find real location of C:\Users\lenovo\miniconda3\python.exe
+warning: in the working copy of 'backend/tests/security/test_execution_manifest.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'data/evaluation/map_security_execution.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'frontend/tests/wave3-integration.test.tsx', LF will be replaced by CRLF the next time Git touches it
+{"gate": "not_passed", "teacher_read_audit_new_failed": 6, "manifest": {"automated_passed": 162, "not_executed": 2}, "runtime_diff_since_security_stop": "empty", "unresolved_conflicts": 0}

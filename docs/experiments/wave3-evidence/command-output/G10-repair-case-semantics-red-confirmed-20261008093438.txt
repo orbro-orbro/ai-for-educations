@@ -1,0 +1,16 @@
+F                                                                        [100%]
+================================== FAILURES ===================================
+______ test_cross_course_006_executes_course_b_pending_owner_revocation _______
+tests\security\test_wave3_case_semantics.py:9: in test_cross_course_006_executes_course_b_pending_owner_revocation
+    assert {key: recorded.get(key) for key in ('attack_course', 'attack_owner', 'proposal_status_before', 'revoked_course')} == {
+E   AssertionError: assert {'attack_cour...course': None} == {'attack_cour...': 'course-b'}
+E
+E     Differing items:
+E     {'attack_owner': None} != {'attack_owner': 'student-a'}
+E     {'attack_course': None} != {'attack_course': 'course-b'}
+E     {'proposal_status_before': None} != {'proposal_status_before': 'pending'}
+E     {'revoked_course': None} != {'revoked_course': 'course-b'}
+E     Use -v to get more diff
+=========================== short test summary info ===========================
+FAILED tests/security/test_wave3_case_semantics.py::test_cross_course_006_executes_course_b_pending_owner_revocation
+1 failed in 3.26s

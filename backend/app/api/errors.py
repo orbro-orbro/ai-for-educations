@@ -32,6 +32,7 @@ def error_response(request: Request, status_code: int, code: str, message: str) 
 
 def install_error_handling(app: FastAPI) -> None:
     from app.api.auth import AuthenticationFailed
+    from app.auth.revocations import AuthenticationStorageError
     from app.courses.service import ResourceNotAvailable
     from app.diagnostics.repository import DiagnosticPersistenceError
     from app.diagnostics.service import ExecutionEvidenceUnavailable
@@ -73,6 +74,7 @@ def install_error_handling(app: FastAPI) -> None:
     @app.exception_handler(DiagnosticPersistenceError)
     @app.exception_handler(SubmissionPersistenceError)
     @app.exception_handler(MemoryPersistenceError)
+    @app.exception_handler(AuthenticationStorageError)
     async def handle_storage_unavailable(request: Request, _exc: RuntimeError):
         return error_response(
             request,

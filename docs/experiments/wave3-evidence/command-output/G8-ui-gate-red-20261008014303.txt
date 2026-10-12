@@ -1,0 +1,125 @@
+[WebServer] (node:40076) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] INFO  [alembic.runtime.migration] Context impl PostgresqlImpl.
+[WebServer] INFO  [alembic.runtime.migration] Will assume transactional DDL.
+[WebServer] INFO  [alembic.runtime.migration] Running upgrade  -> 0001_identity_courses, Identity, courses and enrollments.
+[WebServer] INFO  [alembic.runtime.migration] Running upgrade 0001_identity_courses -> 0002_knowledge_graph, Course-scoped knowledge graph and review state.
+[WebServer] INFO  [alembic.runtime.migration] Running upgrade 0002_knowledge_graph -> 0003_submissions_diagnostics, Submission pipeline, compiler evidence, and exercise publication.
+[WebServer] INFO  [alembic.runtime.migration] Running upgrade 0003_submissions_diagnostics -> 0004_diagnostics_hints, Persist evidence-bound diagnoses, hints, attempts and explanation checks.
+[WebServer] INFO  [alembic.runtime.migration] Running upgrade 0004_diagnostics_hints -> 0005_memories_audit, Persist private learning-memory state, idempotency and metadata-only audit events.
+[WebServer] INFO  [alembic.runtime.migration] Running upgrade 0005_memories_audit -> 0006_token_revocations, Persist token digests so logout survives worker changes and restart.
+[WebServer] INFO  [alembic.runtime.migration] Running upgrade 0006_token_revocations -> 0007_teacher_analytics_reviews, Persist one authoritative teacher review per diagnosis.
+
+Running 9 tests using 1 worker
+
+(node:13660) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 1 [security-ui-projection] › e2e\security-ui.gate.ts:50:1 › student entering a teacher URL never renders teacher controls (806ms)
+  ok 2 [security-ui-projection] › e2e\security-ui.gate.ts:59:1 › teacher entering a private memory URL never requests or displays private content (536ms)
+  ok 3 [security-ui-projection] › e2e\security-ui.gate.ts:68:1 › suppressed analytics shows no exact learner count or private conversation (925ms)
+  x  4 [security-ui-projection] › e2e\security-ui.gate.ts:78:1 › 403 and 404 render the same public denial without server details (5.5s)
+(node:39356) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 5 [security-ui-projection] › e2e\security-ui.gate.ts:91:1 › error page hides sensitive service internals (755ms)
+  x  6 [security-ui-projection] › e2e\security-ui.gate.ts:101:1 › logout clears persisted session and protected-page access (689ms)
+(node:16720) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 7 [security-ui-projection] › e2e\security-ui.gate.ts:112:1 › repeated acceptance clicks send one pending sensitive request (1.0s)
+(node:15124) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  8 [wave3-real-ui] › e2e\wave3-real.spec.ts:17:1 › real teacher SQL threshold, denial, authoritative review and logout (30.2s)
+(node:13016) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  9 [wave3-real-ui] › e2e\wave3-real.spec.ts:45:1 › real student learning, compiler, hints and owned memory lifecycle (1.5m)
+
+
+  1) [security-ui-projection] › e2e\security-ui.gate.ts:78:1 › 403 and 404 render the same public denial without server details
+
+    Error: expect(locator).toContainText(expected) failed
+
+    Locator: getByRole('alert').first()
+    Expected substring: "无法访问该资源"
+    Received string:    "无法访问该课程资源请返回可访问的课程，或联系课程教师确认权限。请求编号：req-ui-synthetic重试课程数据"
+    Timeout: 5000ms
+
+    Call log:
+      - Expect "toContainText" getByRole('alert').first() with timeout 5000ms
+      - waiting for getByRole('alert').first()
+        13 × locator resolved to <div role="alert" class="request-state is-denied">…</div>
+           - unexpected value "无法访问该课程资源请返回可访问的课程，或联系课程教师确认权限。请求编号：req-ui-synthetic重试课程数据"
+
+
+      83 |     await page.goto(`/teacher/courses/${status === 403 ? "existing" : "unknown"}`);
+      84 |     const alert = page.getByRole("alert").first();
+    > 85 |     await expect(alert).toContainText("无法访问该资源");
+         |                         ^
+      86 |     await expect(alert).not.toContainText("PRIVATE_SERVER_DETAIL");
+      87 |     await expect(alert).not.toContainText("SQLAlchemy");
+      88 |   }
+        at C:\Users\lenovo\Desktop\cs competition\.worktrees\wave3-integration-gate\frontend\e2e\security-ui.gate.ts:85:25
+
+    Error Context: test-results\security-ui-gate\security-ui.gate.ts-403-an-d2791-nial-without-server-details-security-ui-projection\error-context.md
+
+  2) [security-ui-projection] › e2e\security-ui.gate.ts:101:1 › logout clears persisted session and protected-page access
+
+    Error: expect(received).toBeNull()
+
+    Received: "{\"accessToken\":\"synthetic-ui-token\",\"actor\":{\"user_id\":\"teacher-a\",\"role\":\"teacher\"}}"
+
+      104 |   await page.goto("/");
+      105 |   await page.getByRole("button", { name: "退出", exact: true }).click();
+    > 106 |   expect(await page.evaluate(() => localStorage.getItem("knowbound.session"))).toBeNull();
+          |                                                                                ^
+      107 |   await page.goto("/teacher/courses/course-a");
+      108 |   await expect(page.getByRole("heading", { name: "进入课程空间" })).toBeVisible();
+      109 |   await expect(page.getByRole("heading", { name: "课程诊断台" })).toHaveCount(0);
+        at C:\Users\lenovo\Desktop\cs competition\.worktrees\wave3-integration-gate\frontend\e2e\security-ui.gate.ts:106:80
+
+    Error Context: test-results\security-ui-gate\security-ui.gate.ts-logout-2db97-n-and-protected-page-access-security-ui-projection\error-context.md
+
+  3) [wave3-real-ui] › e2e\wave3-real.spec.ts:17:1 › real teacher SQL threshold, denial, authoritative review and logout
+
+    Test timeout of 30000ms exceeded.
+
+    Error: locator.selectOption: Test timeout of 30000ms exceeded.
+    Call log:
+      - waiting for getByLabel('课程', { exact: true })
+
+
+      18 |   await page.setViewportSize({width:1440,height:1000});await login(page,"teacher-a");
+      19 |   await expect(page.getByRole("heading",{name:"课程诊断台"})).toBeVisible();
+    > 20 |   await page.getByLabel("课程",{exact:true}).selectOption("course-b");await expect(page.getByText("样本不足",{exact:true})).toBeVisible();
+         |                                            ^
+      21 |   await expect(page.getByText("有效匿名样本",{exact:true})).toHaveCount(0);
+      22 |   await page.getByLabel("课程",{exact:true}).selectOption("course-a");await expect(page.getByText("有效匿名样本",{exact:true})).toBeVisible();
+      23 |   await expect(page.locator(".signal-summary strong")).toHaveText("5");
+        at C:\Users\lenovo\Desktop\cs competition\.worktrees\wave3-integration-gate\frontend\e2e\wave3-real.spec.ts:20:44
+
+    Error Context: test-results\security-ui-gate\wave3-real-real-teacher-SQ-e9670-oritative-review-and-logout-wave3-real-ui\error-context.md
+
+  4) [wave3-real-ui] › e2e\wave3-real.spec.ts:45:1 › real student learning, compiler, hints and owned memory lifecycle
+
+    Test timeout of 90000ms exceeded.
+
+    Error: locator.selectOption: Test timeout of 90000ms exceeded.
+    Call log:
+      - waiting for getByLabel('课程', { exact: true })
+
+
+      48 |   await page.goto("/teacher/courses/course-a");await expect(page.getByRole("heading",{name:"课程诊断台"})).toHaveCount(0);
+      49 |   expect((await authenticated(page,"/teacher/courses/course-a/analytics")).status).toBe(404);
+    > 50 |   await page.getByLabel("课程",{exact:true}).selectOption("course-a");
+         |                                            ^
+      51 |   await page.getByLabel("仓颉源码").fill("enum Choice { A | B }\nmain() {\n  match (Choice.A) { case A => 1 }\n}");
+      52 |   await page.getByRole("button",{name:"提交并运行"}).click();await expect(page.getByText("编译未通过",{exact:true})).toBeVisible({timeout:30_000});
+      53 |   await expect(page.getByRole("heading",{name:"结构化误区诊断"})).toBeVisible();
+        at C:\Users\lenovo\Desktop\cs competition\.worktrees\wave3-integration-gate\frontend\e2e\wave3-real.spec.ts:50:44
+
+    Error Context: test-results\security-ui-gate\wave3-real-real-student-le-8cd7b--and-owned-memory-lifecycle-wave3-real-ui\error-context.md
+
+  4 failed
+    [security-ui-projection] › e2e\security-ui.gate.ts:78:1 › 403 and 404 render the same public denial without server details
+    [security-ui-projection] › e2e\security-ui.gate.ts:101:1 › logout clears persisted session and protected-page access
+    [wave3-real-ui] › e2e\wave3-real.spec.ts:17:1 › real teacher SQL threshold, denial, authoritative review and logout
+    [wave3-real-ui] › e2e\wave3-real.spec.ts:45:1 › real student learning, compiler, hints and owned memory lifecycle
+  5 passed (2.5m)

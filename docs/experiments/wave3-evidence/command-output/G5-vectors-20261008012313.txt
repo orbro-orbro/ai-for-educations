@@ -1,0 +1,1010 @@
+...FF.FFFFFF...FF....FF..F.FF.FFFFFFFFFFFF...FF.FFFFFFF...FF.F           [100%]
+================================== FAILURES ===================================
+_ test_vector_through_official_router_sql_postgres[analytics-none-foreign-course] _
+..\..\..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1967: in _exec_single_context
+    self.dialect.do_execute(
+..\..\..\.venv\Lib\site-packages\sqlalchemy\engine\default.py:952: in do_execute
+    cursor.execute(statement, parameters)
+..\..\..\.venv\Lib\site-packages\psycopg\cursor.py:117: in execute
+    raise ex.with_traceback(None)
+E   psycopg.errors.UniqueViolation: duplicate key value violates unique constraint "exercises_pkey"
+E   DETAIL:  Key (id)=(exercise-a) already exists.
+
+The above exception was the direct cause of the following exception:
+app\persistence\repositories.py:93: in add_exercise
+    with self._sessions.begin() as session:
+         ^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\..\..\miniconda3\Lib\contextlib.py:148: in __exit__
+    next(self.gen)
+..\..\..\.venv\Lib\site-packages\sqlalchemy\orm\session.py:1814: in _maker_context_manager
+    with self.begin():
+         ^^^^^^^^^^^^
+..\..\..\.venv\Lib\site-packages\sqlalchemy\engine\util.py:147: in __exit__
+    with util.safe_reraise():
+         ^^^^^^^^^^^^^^^^^^^
+..\..\..\.venv\Lib\site-packages\sqlalchemy\util\langhelpers.py:121: in __exit__
+    raise exc_value.with_traceback(exc_tb)
+..\..\..\.venv\Lib\site-packages\sqlalchemy\engine\util.py:145: in __exit__
+    self.commit()
+..\..\..\.venv\Lib\site-packages\sqlalchemy\orm\state_changes.py:137: in _go
+    ret_value = fn(self, *arg, **kw)
+                ^^^^^^^^^^^^^^^^^^^^
+..\..\..\.venv\Lib\site-packages\sqlalchemy\orm\session.py:1311: in commit
+    self._prepare_impl()
+..\..\..\.venv\Lib\site-packages\sqlalchemy\orm\state_changes.py:137: in _go
+    ret_value = fn(self, *arg, **kw)
+                ^^^^^^^^^^^^^^^^^^^^
+..\..\..\.venv\Lib\site-packages\sqlalchemy\orm\session.py:1286: in _prepare_impl
+    self.session.flush()
+..\..\..\.venv\Lib\site-packages\sqlalchemy\orm\session.py:4331: in flush
+    self._flush(objects)
+..\..\..\.venv\Lib\site-packages\sqlalchemy\orm\session.py:4466: in _flush
+    with util.safe_reraise():
+         ^^^^^^^^^^^^^^^^^^^
+..\..\..\.venv\Lib\site-packages\sqlalchemy\util\langhelpers.py:121: in __exit__
+    raise exc_value.with_traceback(exc_tb)
+..\..\..\.venv\Lib\site-packages\sqlalchemy\orm\session.py:4427: in _flush
+    flush_context.execute()
+..\..\..\.venv\Lib\site-packages\sqlalchemy\orm\unitofwork.py:466: in execute
+    rec.execute(self)
+..\..\..\.venv\Lib\site-packages\sqlalchemy\orm\unitofwork.py:642: in execute
+    util.preloaded.orm_persistence.save_obj(
+..\..\..\.venv\Lib\site-packages\sqlalchemy\orm\persistence.py:93: in save_obj
+    _emit_insert_statements(
+..\..\..\.venv\Lib\site-packages\sqlalchemy\orm\persistence.py:1048: in _emit_insert_statements
+    result = connection.execute(
+..\..\..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1419: in execute
+    return meth(
+..\..\..\.venv\Lib\site-packages\sqlalchemy\sql\elements.py:527: in _execute_on_connection
+    return connection._execute_clauseelement(
+..\..\..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1641: in _execute_clauseelement
+    ret = self._execute_context(
+..\..\..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1846: in _execute_context
+    return self._exec_single_context(
+..\..\..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1986: in _exec_single_context
+    self._handle_dbapi_exception(
+..\..\..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:2363: in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+..\..\..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1967: in _exec_single_context
+    self.dialect.do_execute(
+..\..\..\.venv\Lib\site-packages\sqlalchemy\engine\default.py:952: in do_execute
+    cursor.execute(statement, parameters)
+..\..\..\.venv\Lib\site-packages\psycopg\cursor.py:117: in execute
+    raise ex.with_traceback(None)
+E   sqlalchemy.exc.IntegrityError: (psycopg.errors.UniqueViolation) duplicate key value violates unique constraint "exercises_pkey"
+E   DETAIL:  Key (id)=(exercise-a) already exists.
+E   [SQL: INSERT INTO exercises (id, course_id, title, is_published, protected_answer) VALUES (%(id)s::VARCHAR, %(course_id)s::VARCHAR, %(title)s::VARCHAR, %(is_published)s, %(protected_answer)s::VARCHAR)]
+E   [parameters: {'id': 'exercise-a', 'course_id': 'course-b', 'title': 'Synthetic exercise', 'is_published': True, 'protected_answer': None}]
+E   (Background on this error at: https://sqlalche.me/e/20/gkpj)
+
+The above exception was the direct cause of the following exception:
+tests\integration\test_wave3_analytics_vectors_postgres.py:27: in test_vector_through_official_router_sql_postgres
+    gate.seed_vector_facts(vector["facts"])
+tests\integration\wave3_support.py:98: in seed_vector_facts
+    self.repos.courses.add_exercise(Exercise(exercise, course, "Synthetic exercise", True))
+app\persistence\repositories.py:103: in add_exercise
+    raise ValueError("duplicate exercise or missing course") from exc
+E   ValueError: duplicate exercise or missing course
+---------------------------- Captured stderr setup ----------------------------
+INFO  [alembic.runtime.migration] Context impl PostgresqlImpl.
+INFO  [alembic.runtime.migration] Will assume transactional DDL.
+_ test_vector_through_official_router_sql_postgres[analytics-none-small-group] _
+tests\integration\test_wave3_analytics_vectors_postgres.py:27: in test_vector_through_official_router_sql_postgres
+    gate.seed_vector_facts(vector["facts"])
+tests\integration\wave3_support.py:106: in seed_vector_facts
+    knowledge_for(temporary, course, concept=concept)
+tests\security\security_support.py:60: in knowledge_for
+    repo.load_course(course, [Concept.model_validate({"id": concept, "topic": "enum_match", "title": "Synthetic exhaustiveness",
+app\knowledge\repository.py:339: in load_course
+    raise KnowledgeValidationError("KNOWLEDGE_ID_CONFLICT", f"course {course_id} already has different knowledge")
+E   app.knowledge.models.KnowledgeValidationError: KNOWLEDGE_ID_CONFLICT: course course-a already has different knowledge
+---------------------------- Captured stderr setup ----------------------------
+INFO  [alembic.runtime.migration] Context impl PostgresqlImpl.
+INFO  [alembic.runtime.migration] Will assume transactional DDL.
+_ test_vector_through_official_router_sql_postgres[analytics-concept-four-distinct] _
+tests\integration\test_wave3_analytics_vectors_postgres.py:27: in test_vector_through_official_router_sql_postgres
+    gate.seed_vector_facts(vector["facts"])
+tests\integration\wave3_support.py:106: in seed_vector_facts
+    knowledge_for(temporary, course, concept=concept)
+tests\security\security_support.py:60: in knowledge_for
+    repo.load_course(course, [Concept.model_validate({"id": concept, "topic": "enum_match", "title": "Synthetic exhaustiveness",
+app\knowledge\repository.py:339: in load_course
+    raise KnowledgeValidationError("KNOWLEDGE_ID_CONFLICT", f"course {course_id} already has different knowledge")
+E   app.knowledge.models.KnowledgeValidationError: KNOWLEDGE_ID_CONFLICT: course course-a already has different knowledge
+---------------------------- Captured stderr setup ----------------------------
+INFO  [alembic.runtime.migration] Context impl PostgresqlImpl.
+INFO  [alembic.runtime.migration] Will assume transactional DDL.
+_ test_vector_through_official_router_sql_postgres[analytics-concept-five-distinct] _
+tests\integration\test_wave3_analytics_vectors_postgres.py:27: in test_vector_through_official_router_sql_postgres
+    gate.seed_vector_facts(vector["facts"])
+tests\integration\wave3_support.py:106: in seed_vector_facts
+    knowledge_for(temporary, course, concept=concept)
+tests\security\security_support.py:60: in knowledge_for
+    repo.load_course(course, [Concept.model_validate({"id": concept, "topic": "enum_match", "title": "Synthetic exhaustiveness",
+app\knowledge\repository.py:339: in load_course
+    raise KnowledgeValidationError("KNOWLEDGE_ID_CONFLICT", f"course {course_id} already has different knowledge")
+E   app.knowledge.models.KnowledgeValidationError: KNOWLEDGE_ID_CONFLICT: course course-a already has different knowledge
+---------------------------- Captured stderr setup ----------------------------
+INFO  [alembic.runtime.migration] Context impl PostgresqlImpl.
+INFO  [alembic.runtime.migration] Will assume transactional DDL.
+_ test_vector_through_official_router_sql_postgres[analytics-concept-duplicate-student] _
+tests\integration\test_wave3_analytics_vectors_postgres.py:27: in test_vector_through_official_router_sql_postgres
+    gate.seed_vector_facts(vector["facts"])
+tests\integration\wave3_support.py:106: in seed_vector_facts
+    knowledge_for(temporary, course, concept=concept)
+tests\security\security_support.py:60: in knowledge_for
+    repo.load_course(course, [Concept.model_validate({"id": concept, "topic": "enum_match", "title": "Synthetic exhaustiveness",
+app\knowledge\repository.py:339: in load_course
+    raise KnowledgeValidationError("KNOWLEDGE_ID_CONFLICT", f"course {course_id} already has different knowledge")
+E   app.knowledge.models.KnowledgeValidationError: KNOWLEDGE_ID_CONFLICT: course course-a already has different knowledge
+---------------------------- Captured stderr setup ----------------------------
+INFO  [alembic.runtime.migration] Context impl PostgresqlImpl.
+INFO  [alembic.runtime.migration] Will assume transactional DDL.
+_ test_vector_through_official_router_sql_postgres[analytics-concept-foreign-course] _
+tests\integration\test_wave3_analytics_vectors_postgres.py:27: in test_vector_through_official_router_sql_postgres
+    gate.seed_vector_facts(vector["facts"])
+tests\integration\wave3_support.py:106: in seed_vector_facts
+    knowledge_for(temporary, course, concept=concept)
+tests\security\security_support.py:60: in knowledge_for
+    repo.load_course(course, [Concept.model_validate({"id": concept, "topic": "enum_match", "title": "Synthetic exhaustiveness",
+app\knowledge\repository.py:339: in load_course
+    raise KnowledgeValidationError("KNOWLEDGE_ID_CONFLICT", f"course {course_id} already has different knowledge")
+E   app.knowledge.models.KnowledgeValidationError: KNOWLEDGE_ID_CONFLICT: course course-a already has different knowledge
+---------------------------- Captured stderr setup ----------------------------
+INFO  [alembic.runtime.migration] Context impl PostgresqlImpl.
+INFO  [alembic.runtime.migration] Will assume transactional DDL.
+_ test_vector_through_official_router_sql_postgres[analytics-concept-small-group] _
+tests\integration\test_wave3_analytics_vectors_postgres.py:27: in test_vector_through_official_router_sql_postgres
+    gate.seed_vector_facts(vector["facts"])
+tests\integration\wave3_support.py:106: in seed_vector_facts
+    knowledge_for(temporary, course, concept=concept)
+tests\security\security_support.py:60: in knowledge_for
+    repo.load_course(course, [Concept.model_validate({"id": concept, "topic": "enum_match", "title": "Synthetic exhaustiveness",
+app\knowledge\repository.py:339: in load_course
+    raise KnowledgeValidationError("KNOWLEDGE_ID_CONFLICT", f"course {course_id} already has different knowledge")
+E   app.knowledge.models.KnowledgeValidationError: KNOWLEDGE_ID_CONFLICT: course course-a already has different knowledge
+---------------------------- Captured stderr setup ----------------------------
+INFO  [alembic.runtime.migration] Context impl PostgresqlImpl.
+INFO  [alembic.runtime.migration] Will assume transactional DDL.
+_ test_vector_through_official_router_sql_postgres[analytics-concept-suppressed-fields] _
+tests\integration\test_wave3_analytics_vectors_postgres.py:27: in test_vector_through_official_router_sql_postgres
+    gate.seed_vector_facts(vector["facts"])
+tests\integration\wave3_support.py:106: in seed_vector_facts
+    knowledge_for(temporary, course, concept=concept)
+tests\security\security_support.py:60: in knowledge_for
+    repo.load_course(course, [Concept.model_validate({"id": concept, "topic": "enum_match", "title": "Synthetic exhaustiveness",
+app\knowledge\repository.py:339: in load_course
+    raise KnowledgeValidationError("KNOWLEDGE_ID_CONFLICT", f"course {course_id} already has different knowledge")
+E   app.knowledge.models.KnowledgeValidationError: KNOWLEDGE_ID_CONFLICT: course course-a already has different knowledge
+---------------------------- Captured stderr setup ----------------------------
+INFO  [alembic.runtime.migration] Context impl PostgresqlImpl.
+INFO  [alembic.runtime.migration] Will assume transactional DDL.
+_ test_vector_through_official_router_sql_postgres[analytics-exercise-foreign-course] _
+..\..\..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1967: in _exec_single_context
+    self.dialect.do_execute(
+..\..\..\.venv\Lib\site-packages\sqlalchemy\engine\default.py:952: in do_execute
+    cursor.execute(statement, parameters)
+..\..\..\.venv\Lib\site-packages\psycopg\cursor.py:117: in execute
+    raise ex.with_traceback(None)
+E   psycopg.errors.UniqueViolation: duplicate key value violates unique constraint "exercises_pkey"
+E   DETAIL:  Key (id)=(exercise-a) already exists.
+
+The above exception was the direct cause of the following exception:
+app\persistence\repositories.py:93: in add_exercise
+    with self._sessions.begin() as session:
+         ^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\..\..\miniconda3\Lib\contextlib.py:148: in __exit__
+    next(self.gen)
+..\..\..\.venv\Lib\site-packages\sqlalchemy\orm\session.py:1814: in _maker_context_manager
+    with self.begin():
+         ^^^^^^^^^^^^
+..\..\..\.venv\Lib\site-packages\sqlalchemy\engine\util.py:147: in __exit__
+    with util.safe_reraise():
+         ^^^^^^^^^^^^^^^^^^^
+..\..\..\.venv\Lib\site-packages\sqlalchemy\util\langhelpers.py:121: in __exit__
+    raise exc_value.with_traceback(exc_tb)
+..\..\..\.venv\Lib\site-packages\sqlalchemy\engine\util.py:145: in __exit__
+    self.commit()
+..\..\..\.venv\Lib\site-packages\sqlalchemy\orm\state_changes.py:137: in _go
+    ret_value = fn(self, *arg, **kw)
+                ^^^^^^^^^^^^^^^^^^^^
+..\..\..\.venv\Lib\site-packages\sqlalchemy\orm\session.py:1311: in commit
+    self._prepare_impl()
+..\..\..\.venv\Lib\site-packages\sqlalchemy\orm\state_changes.py:137: in _go
+    ret_value = fn(self, *arg, **kw)
+                ^^^^^^^^^^^^^^^^^^^^
+..\..\..\.venv\Lib\site-packages\sqlalchemy\orm\session.py:1286: in _prepare_impl
+    self.session.flush()
+..\..\..\.venv\Lib\site-packages\sqlalchemy\orm\session.py:4331: in flush
+    self._flush(objects)
+..\..\..\.venv\Lib\site-packages\sqlalchemy\orm\session.py:4466: in _flush
+    with util.safe_reraise():
+         ^^^^^^^^^^^^^^^^^^^
+..\..\..\.venv\Lib\site-packages\sqlalchemy\util\langhelpers.py:121: in __exit__
+    raise exc_value.with_traceback(exc_tb)
+..\..\..\.venv\Lib\site-packages\sqlalchemy\orm\session.py:4427: in _flush
+    flush_context.execute()
+..\..\..\.venv\Lib\site-packages\sqlalchemy\orm\unitofwork.py:466: in execute
+    rec.execute(self)
+..\..\..\.venv\Lib\site-packages\sqlalchemy\orm\unitofwork.py:642: in execute
+    util.preloaded.orm_persistence.save_obj(
+..\..\..\.venv\Lib\site-packages\sqlalchemy\orm\persistence.py:93: in save_obj
+    _emit_insert_statements(
+..\..\..\.venv\Lib\site-packages\sqlalchemy\orm\persistence.py:1048: in _emit_insert_statements
+    result = connection.execute(
+..\..\..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1419: in execute
+    return meth(
+..\..\..\.venv\Lib\site-packages\sqlalchemy\sql\elements.py:527: in _execute_on_connection
+    return connection._execute_clauseelement(
+..\..\..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1641: in _execute_clauseelement
+    ret = self._execute_context(
+..\..\..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1846: in _execute_context
+    return self._exec_single_context(
+..\..\..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1986: in _exec_single_context
+    self._handle_dbapi_exception(
+..\..\..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:2363: in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+..\..\..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1967: in _exec_single_context
+    self.dialect.do_execute(
+..\..\..\.venv\Lib\site-packages\sqlalchemy\engine\default.py:952: in do_execute
+    cursor.execute(statement, parameters)
+..\..\..\.venv\Lib\site-packages\psycopg\cursor.py:117: in execute
+    raise ex.with_traceback(None)
+E   sqlalchemy.exc.IntegrityError: (psycopg.errors.UniqueViolation) duplicate key value violates unique constraint "exercises_pkey"
+E   DETAIL:  Key (id)=(exercise-a) already exists.
+E   [SQL: INSERT INTO exercises (id, course_id, title, is_published, protected_answer) VALUES (%(id)s::VARCHAR, %(course_id)s::VARCHAR, %(title)s::VARCHAR, %(is_published)s, %(protected_answer)s::VARCHAR)]
+E   [parameters: {'id': 'exercise-a', 'course_id': 'course-b', 'title': 'Synthetic exercise', 'is_published': True, 'protected_answer': None}]
+E   (Background on this error at: https://sqlalche.me/e/20/gkpj)
+
+The above exception was the direct cause of the following exception:
+tests\integration\test_wave3_analytics_vectors_postgres.py:27: in test_vector_through_official_router_sql_postgres
+    gate.seed_vector_facts(vector["facts"])
+tests\integration\wave3_support.py:98: in seed_vector_facts
+    self.repos.courses.add_exercise(Exercise(exercise, course, "Synthetic exercise", True))
+app\persistence\repositories.py:103: in add_exercise
+    raise ValueError("duplicate exercise or missing course") from exc
+E   ValueError: duplicate exercise or missing course
+---------------------------- Captured stderr setup ----------------------------
+INFO  [alembic.runtime.migration] Context impl PostgresqlImpl.
+INFO  [alembic.runtime.migration] Will assume transactional DDL.
+_ test_vector_through_official_router_sql_postgres[analytics-exercise-small-group] _
+tests\integration\test_wave3_analytics_vectors_postgres.py:27: in test_vector_through_official_router_sql_postgres
+    gate.seed_vector_facts(vector["facts"])
+tests\integration\wave3_support.py:106: in seed_vector_facts
+    knowledge_for(temporary, course, concept=concept)
+tests\security\security_support.py:60: in knowledge_for
+    repo.load_course(course, [Concept.model_validate({"id": concept, "topic": "enum_match", "title": "Synthetic exhaustiveness",
+app\knowledge\repository.py:339: in load_course
+    raise KnowledgeValidationError("KNOWLEDGE_ID_CONFLICT", f"course {course_id} already has different knowledge")
+E   app.knowledge.models.KnowledgeValidationError: KNOWLEDGE_ID_CONFLICT: course course-a already has different knowledge
+---------------------------- Captured stderr setup ----------------------------
+INFO  [alembic.runtime.migration] Context impl PostgresqlImpl.
+INFO  [alembic.runtime.migration] Will assume transactional DDL.
+_ test_vector_through_official_router_sql_postgres[analytics-start-foreign-course] _
+..\..\..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1967: in _exec_single_context
+    self.dialect.do_execute(
+..\..\..\.venv\Lib\site-packages\sqlalchemy\engine\default.py:952: in do_execute
+    cursor.execute(statement, parameters)
+..\..\..\.venv\Lib\site-packages\psycopg\cursor.py:117: in execute
+    raise ex.with_traceback(None)
+E   psycopg.errors.UniqueViolation: duplicate key value violates unique constraint "exercises_pkey"
+E   DETAIL:  Key (id)=(exercise-a) already exists.
+
+The above exception was the direct cause of the following exception:
+app\persistence\repositories.py:93: in add_exercise
+    with self._sessions.begin() as session:
+         ^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\..\..\miniconda3\Lib\contextlib.py:148: in __exit__
+    next(self.gen)
+..\..\..\.venv\Lib\site-packages\sqlalchemy\orm\session.py:1814: in _maker_context_manager
+    with self.begin():
+         ^^^^^^^^^^^^
+..\..\..\.venv\Lib\site-packages\sqlalchemy\engine\util.py:147: in __exit__
+    with util.safe_reraise():
+         ^^^^^^^^^^^^^^^^^^^
+..\..\..\.venv\Lib\site-packages\sqlalchemy\util\langhelpers.py:121: in __exit__
+    raise exc_value.with_traceback(exc_tb)
+..\..\..\.venv\Lib\site-packages\sqlalchemy\engine\util.py:145: in __exit__
+    self.commit()
+..\..\..\.venv\Lib\site-packages\sqlalchemy\orm\state_changes.py:137: in _go
+    ret_value = fn(self, *arg, **kw)
+                ^^^^^^^^^^^^^^^^^^^^
+..\..\..\.venv\Lib\site-packages\sqlalchemy\orm\session.py:1311: in commit
+    self._prepare_impl()
+..\..\..\.venv\Lib\site-packages\sqlalchemy\orm\state_changes.py:137: in _go
+    ret_value = fn(self, *arg, **kw)
+                ^^^^^^^^^^^^^^^^^^^^
+..\..\..\.venv\Lib\site-packages\sqlalchemy\orm\session.py:1286: in _prepare_impl
+    self.session.flush()
+..\..\..\.venv\Lib\site-packages\sqlalchemy\orm\session.py:4331: in flush
+    self._flush(objects)
+..\..\..\.venv\Lib\site-packages\sqlalchemy\orm\session.py:4466: in _flush
+    with util.safe_reraise():
+         ^^^^^^^^^^^^^^^^^^^
+..\..\..\.venv\Lib\site-packages\sqlalchemy\util\langhelpers.py:121: in __exit__
+    raise exc_value.with_traceback(exc_tb)
+..\..\..\.venv\Lib\site-packages\sqlalchemy\orm\session.py:4427: in _flush
+    flush_context.execute()
+..\..\..\.venv\Lib\site-packages\sqlalchemy\orm\unitofwork.py:466: in execute
+    rec.execute(self)
+..\..\..\.venv\Lib\site-packages\sqlalchemy\orm\unitofwork.py:642: in execute
+    util.preloaded.orm_persistence.save_obj(
+..\..\..\.venv\Lib\site-packages\sqlalchemy\orm\persistence.py:93: in save_obj
+    _emit_insert_statements(
+..\..\..\.venv\Lib\site-packages\sqlalchemy\orm\persistence.py:1048: in _emit_insert_statements
+    result = connection.execute(
+..\..\..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1419: in execute
+    return meth(
+..\..\..\.venv\Lib\site-packages\sqlalchemy\sql\elements.py:527: in _execute_on_connection
+    return connection._execute_clauseelement(
+..\..\..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1641: in _execute_clauseelement
+    ret = self._execute_context(
+..\..\..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1846: in _execute_context
+    return self._exec_single_context(
+..\..\..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1986: in _exec_single_context
+    self._handle_dbapi_exception(
+..\..\..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:2363: in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+..\..\..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1967: in _exec_single_context
+    self.dialect.do_execute(
+..\..\..\.venv\Lib\site-packages\sqlalchemy\engine\default.py:952: in do_execute
+    cursor.execute(statement, parameters)
+..\..\..\.venv\Lib\site-packages\psycopg\cursor.py:117: in execute
+    raise ex.with_traceback(None)
+E   sqlalchemy.exc.IntegrityError: (psycopg.errors.UniqueViolation) duplicate key value violates unique constraint "exercises_pkey"
+E   DETAIL:  Key (id)=(exercise-a) already exists.
+E   [SQL: INSERT INTO exercises (id, course_id, title, is_published, protected_answer) VALUES (%(id)s::VARCHAR, %(course_id)s::VARCHAR, %(title)s::VARCHAR, %(is_published)s, %(protected_answer)s::VARCHAR)]
+E   [parameters: {'id': 'exercise-a', 'course_id': 'course-b', 'title': 'Synthetic exercise', 'is_published': True, 'protected_answer': None}]
+E   (Background on this error at: https://sqlalche.me/e/20/gkpj)
+
+The above exception was the direct cause of the following exception:
+tests\integration\test_wave3_analytics_vectors_postgres.py:27: in test_vector_through_official_router_sql_postgres
+    gate.seed_vector_facts(vector["facts"])
+tests\integration\wave3_support.py:98: in seed_vector_facts
+    self.repos.courses.add_exercise(Exercise(exercise, course, "Synthetic exercise", True))
+app\persistence\repositories.py:103: in add_exercise
+    raise ValueError("duplicate exercise or missing course") from exc
+E   ValueError: duplicate exercise or missing course
+---------------------------- Captured stderr setup ----------------------------
+INFO  [alembic.runtime.migration] Context impl PostgresqlImpl.
+INFO  [alembic.runtime.migration] Will assume transactional DDL.
+_ test_vector_through_official_router_sql_postgres[analytics-start-small-group] _
+tests\integration\test_wave3_analytics_vectors_postgres.py:27: in test_vector_through_official_router_sql_postgres
+    gate.seed_vector_facts(vector["facts"])
+tests\integration\wave3_support.py:106: in seed_vector_facts
+    knowledge_for(temporary, course, concept=concept)
+tests\security\security_support.py:60: in knowledge_for
+    repo.load_course(course, [Concept.model_validate({"id": concept, "topic": "enum_match", "title": "Synthetic exhaustiveness",
+app\knowledge\repository.py:339: in load_course
+    raise KnowledgeValidationError("KNOWLEDGE_ID_CONFLICT", f"course {course_id} already has different knowledge")
+E   app.knowledge.models.KnowledgeValidationError: KNOWLEDGE_ID_CONFLICT: course course-a already has different knowledge
+---------------------------- Captured stderr setup ----------------------------
+INFO  [alembic.runtime.migration] Context impl PostgresqlImpl.
+INFO  [alembic.runtime.migration] Will assume transactional DDL.
+_ test_vector_through_official_router_sql_postgres[analytics-end-five-distinct] _
+..\..\..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1967: in _exec_single_context
+    self.dialect.do_execute(
+..\..\..\.venv\Lib\site-packages\sqlalchemy\engine\default.py:952: in do_execute
+    cursor.execute(statement, parameters)
+..\..\..\.venv\Lib\site-packages\psycopg\cursor.py:117: in execute
+    raise ex.with_traceback(None)
+E   psycopg.errors.UniqueViolation: duplicate key value violates unique constraint "users_pkey"
+E   DETAIL:  Key (id)=(synthetic-student-2) already exists.
+
+The above exception was the direct cause of the following exception:
+app\persistence\repositories.py:44: in add
+    with self._sessions.begin() as session:
+         ^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\..\..\miniconda3\Lib\contextlib.py:148: in __exit__
+    next(self.gen)
+..\..\..\.venv\Lib\site-packages\sqlalchemy\orm\session.py:1814: in _maker_context_manager
+    with self.begin():
+         ^^^^^^^^^^^^
+..\..\..\.venv\Lib\site-packages\sqlalchemy\engine\util.py:147: in __exit__
+    with util.safe_reraise():
+         ^^^^^^^^^^^^^^^^^^^
+..\..\..\.venv\Lib\site-packages\sqlalchemy\util\langhelpers.py:121: in __exit__
+    raise exc_value.with_traceback(exc_tb)
+..\..\..\.venv\Lib\site-packages\sqlalchemy\engine\util.py:145: in __exit__
+    self.commit()
+..\..\..\.venv\Lib\site-packages\sqlalchemy\orm\state_changes.py:137: in _go
+    ret_value = fn(self, *arg, **kw)
+                ^^^^^^^^^^^^^^^^^^^^
+..\..\..\.venv\Lib\site-packages\sqlalchemy\orm\session.py:1311: in commit
+    self._prepare_impl()
+..\..\..\.venv\Lib\site-packages\sqlalchemy\orm\state_changes.py:137: in _go
+    ret_value = fn(self, *arg, **kw)
+                ^^^^^^^^^^^^^^^^^^^^
+..\..\..\.venv\Lib\site-packages\sqlalchemy\orm\session.py:1286: in _prepare_impl
+    self.session.flush()
+..\..\..\.venv\Lib\site-packages\sqlalchemy\orm\session.py:4331: in flush
+    self._flush(objects)
+..\..\..\.venv\Lib\site-packages\sqlalchemy\orm\session.py:4466: in _flush
+    with util.safe_reraise():
+         ^^^^^^^^^^^^^^^^^^^
+..\..\..\.venv\Lib\site-packages\sqlalchemy\util\langhelpers.py:121: in __exit__
+    raise exc_value.with_traceback(exc_tb)
+..\..\..\.venv\Lib\site-packages\sqlalchemy\orm\session.py:4427: in _flush
+    flush_context.execute()
+..\..\..\.venv\Lib\site-packages\sqlalchemy\orm\unitofwork.py:466: in execute
+    rec.execute(self)
+..\..\..\.venv\Lib\site-packages\sqlalchemy\orm\unitofwork.py:642: in execute
+    util.preloaded.orm_persistence.save_obj(
+..\..\..\.venv\Lib\site-packages\sqlalchemy\orm\persistence.py:93: in save_obj
+    _emit_insert_statements(
+..\..\..\.venv\Lib\site-packages\sqlalchemy\orm\persistence.py:1048: in _emit_insert_statements
+    result = connection.execute(
+..\..\..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1419: in execute
+    return meth(
+..\..\..\.venv\Lib\site-packages\sqlalchemy\sql\elements.py:527: in _execute_on_connection
+    return connection._execute_clauseelement(
+..\..\..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1641: in _execute_clauseelement
+    ret = self._execute_context(
+..\..\..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1846: in _execute_context
+    return self._exec_single_context(
+..\..\..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1986: in _exec_single_context
+    self._handle_dbapi_exception(
+..\..\..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:2363: in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+..\..\..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1967: in _exec_single_context
+    self.dialect.do_execute(
+..\..\..\.venv\Lib\site-packages\sqlalchemy\engine\default.py:952: in do_execute
+    cursor.execute(statement, parameters)
+..\..\..\.venv\Lib\site-packages\psycopg\cursor.py:117: in execute
+    raise ex.with_traceback(None)
+E   sqlalchemy.exc.IntegrityError: (psycopg.errors.UniqueViolation) duplicate key value violates unique constraint "users_pkey"
+E   DETAIL:  Key (id)=(synthetic-student-2) already exists.
+E   [SQL: INSERT INTO users (id, username, password_hash, role, active) VALUES (%(id)s::VARCHAR, %(username)s::VARCHAR, %(password_hash)s::VARCHAR, %(role)s::VARCHAR, %(active)s)]
+E   [parameters: {'id': 'synthetic-student-2', 'username': 'synthetic-student-2', 'password_hash': 'pbkdf2_sha256$210000$8z_5lmK3ar6hh60aRvcE8A==$NcpzeU3Rf_6UxqntqBP8SBHtTRZ4GtQJzrNnnb3V5TA=', 'role': 'student', 'active': True}]
+E   (Background on this error at: https://sqlalche.me/e/20/gkpj)
+
+The above exception was the direct cause of the following exception:
+tests\integration\test_wave3_analytics_vectors_postgres.py:27: in test_vector_through_official_router_sql_postgres
+    gate.seed_vector_facts(vector["facts"])
+tests\integration\wave3_support.py:114: in seed_vector_facts
+    self.repos.users.add(User.with_password(uid, uid, "[REDACTED_SYNTHETIC_CREDENTIAL]", Role.STUDENT))
+app\persistence\repositories.py:47: in add
+    raise ValueError("duplicate user") from exc
+E   ValueError: duplicate user
+---------------------------- Captured stderr setup ----------------------------
+INFO  [alembic.runtime.migration] Context impl PostgresqlImpl.
+INFO  [alembic.runtime.migration] Will assume transactional DDL.
+_ test_vector_through_official_router_sql_postgres[analytics-end-foreign-course] _
+..\..\..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1967: in _exec_single_context
+    self.dialect.do_execute(
+..\..\..\.venv\Lib\site-packages\sqlalchemy\engine\default.py:952: in do_execute
+    cursor.execute(statement, parameters)
+..\..\..\.venv\Lib\site-packages\psycopg\cursor.py:117: in execute
+    raise ex.with_traceback(None)
+E   psycopg.errors.UniqueViolation: duplicate key value violates unique constraint "exercises_pkey"
+E   DETAIL:  Key (id)=(exercise-a) already exists.
+
+The above exception was the direct cause of the following exception:
+app\persistence\repositories.py:93: in add_exercise
+    with self._sessions.begin() as session:
+         ^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\..\..\miniconda3\Lib\contextlib.py:148: in __exit__
+    next(self.gen)
+..\..\..\.venv\Lib\site-packages\sqlalchemy\orm\session.py:1814: in _maker_context_manager
+    with self.begin():
+         ^^^^^^^^^^^^
+..\..\..\.venv\Lib\site-packages\sqlalchemy\engine\util.py:147: in __exit__
+    with util.safe_reraise():
+         ^^^^^^^^^^^^^^^^^^^
+..\..\..\.venv\Lib\site-packages\sqlalchemy\util\langhelpers.py:121: in __exit__
+    raise exc_value.with_traceback(exc_tb)
+..\..\..\.venv\Lib\site-packages\sqlalchemy\engine\util.py:145: in __exit__
+    self.commit()
+..\..\..\.venv\Lib\site-packages\sqlalchemy\orm\state_changes.py:137: in _go
+    ret_value = fn(self, *arg, **kw)
+                ^^^^^^^^^^^^^^^^^^^^
+..\..\..\.venv\Lib\site-packages\sqlalchemy\orm\session.py:1311: in commit
+    self._prepare_impl()
+..\..\..\.venv\Lib\site-packages\sqlalchemy\orm\state_changes.py:137: in _go
+    ret_value = fn(self, *arg, **kw)
+                ^^^^^^^^^^^^^^^^^^^^
+..\..\..\.venv\Lib\site-packages\sqlalchemy\orm\session.py:1286: in _prepare_impl
+    self.session.flush()
+..\..\..\.venv\Lib\site-packages\sqlalchemy\orm\session.py:4331: in flush
+    self._flush(objects)
+..\..\..\.venv\Lib\site-packages\sqlalchemy\orm\session.py:4466: in _flush
+    with util.safe_reraise():
+         ^^^^^^^^^^^^^^^^^^^
+..\..\..\.venv\Lib\site-packages\sqlalchemy\util\langhelpers.py:121: in __exit__
+    raise exc_value.with_traceback(exc_tb)
+..\..\..\.venv\Lib\site-packages\sqlalchemy\orm\session.py:4427: in _flush
+    flush_context.execute()
+..\..\..\.venv\Lib\site-packages\sqlalchemy\orm\unitofwork.py:466: in execute
+    rec.execute(self)
+..\..\..\.venv\Lib\site-packages\sqlalchemy\orm\unitofwork.py:642: in execute
+    util.preloaded.orm_persistence.save_obj(
+..\..\..\.venv\Lib\site-packages\sqlalchemy\orm\persistence.py:93: in save_obj
+    _emit_insert_statements(
+..\..\..\.venv\Lib\site-packages\sqlalchemy\orm\persistence.py:1048: in _emit_insert_statements
+    result = connection.execute(
+..\..\..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1419: in execute
+    return meth(
+..\..\..\.venv\Lib\site-packages\sqlalchemy\sql\elements.py:527: in _execute_on_connection
+    return connection._execute_clauseelement(
+..\..\..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1641: in _execute_clauseelement
+    ret = self._execute_context(
+..\..\..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1846: in _execute_context
+    return self._exec_single_context(
+..\..\..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1986: in _exec_single_context
+    self._handle_dbapi_exception(
+..\..\..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:2363: in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+..\..\..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1967: in _exec_single_context
+    self.dialect.do_execute(
+..\..\..\.venv\Lib\site-packages\sqlalchemy\engine\default.py:952: in do_execute
+    cursor.execute(statement, parameters)
+..\..\..\.venv\Lib\site-packages\psycopg\cursor.py:117: in execute
+    raise ex.with_traceback(None)
+E   sqlalchemy.exc.IntegrityError: (psycopg.errors.UniqueViolation) duplicate key value violates unique constraint "exercises_pkey"
+E   DETAIL:  Key (id)=(exercise-a) already exists.
+E   [SQL: INSERT INTO exercises (id, course_id, title, is_published, protected_answer) VALUES (%(id)s::VARCHAR, %(course_id)s::VARCHAR, %(title)s::VARCHAR, %(is_published)s, %(protected_answer)s::VARCHAR)]
+E   [parameters: {'id': 'exercise-a', 'course_id': 'course-b', 'title': 'Synthetic exercise', 'is_published': True, 'protected_answer': None}]
+E   (Background on this error at: https://sqlalche.me/e/20/gkpj)
+
+The above exception was the direct cause of the following exception:
+tests\integration\test_wave3_analytics_vectors_postgres.py:27: in test_vector_through_official_router_sql_postgres
+    gate.seed_vector_facts(vector["facts"])
+tests\integration\wave3_support.py:98: in seed_vector_facts
+    self.repos.courses.add_exercise(Exercise(exercise, course, "Synthetic exercise", True))
+app\persistence\repositories.py:103: in add_exercise
+    raise ValueError("duplicate exercise or missing course") from exc
+E   ValueError: duplicate exercise or missing course
+---------------------------- Captured stderr setup ----------------------------
+INFO  [alembic.runtime.migration] Context impl PostgresqlImpl.
+INFO  [alembic.runtime.migration] Will assume transactional DDL.
+_ test_vector_through_official_router_sql_postgres[analytics-end-small-group] _
+tests\integration\test_wave3_analytics_vectors_postgres.py:27: in test_vector_through_official_router_sql_postgres
+    gate.seed_vector_facts(vector["facts"])
+tests\integration\wave3_support.py:106: in seed_vector_facts
+    knowledge_for(temporary, course, concept=concept)
+tests\security\security_support.py:60: in knowledge_for
+    repo.load_course(course, [Concept.model_validate({"id": concept, "topic": "enum_match", "title": "Synthetic exhaustiveness",
+app\knowledge\repository.py:339: in load_course
+    raise KnowledgeValidationError("KNOWLEDGE_ID_CONFLICT", f"course {course_id} already has different knowledge")
+E   app.knowledge.models.KnowledgeValidationError: KNOWLEDGE_ID_CONFLICT: course course-a already has different knowledge
+---------------------------- Captured stderr setup ----------------------------
+INFO  [alembic.runtime.migration] Context impl PostgresqlImpl.
+INFO  [alembic.runtime.migration] Will assume transactional DDL.
+_ test_vector_through_official_router_sql_postgres[analytics-concept-exercise-four-distinct] _
+tests\integration\test_wave3_analytics_vectors_postgres.py:27: in test_vector_through_official_router_sql_postgres
+    gate.seed_vector_facts(vector["facts"])
+tests\integration\wave3_support.py:106: in seed_vector_facts
+    knowledge_for(temporary, course, concept=concept)
+tests\security\security_support.py:60: in knowledge_for
+    repo.load_course(course, [Concept.model_validate({"id": concept, "topic": "enum_match", "title": "Synthetic exhaustiveness",
+app\knowledge\repository.py:339: in load_course
+    raise KnowledgeValidationError("KNOWLEDGE_ID_CONFLICT", f"course {course_id} already has different knowledge")
+E   app.knowledge.models.KnowledgeValidationError: KNOWLEDGE_ID_CONFLICT: course course-a already has different knowledge
+---------------------------- Captured stderr setup ----------------------------
+INFO  [alembic.runtime.migration] Context impl PostgresqlImpl.
+INFO  [alembic.runtime.migration] Will assume transactional DDL.
+_ test_vector_through_official_router_sql_postgres[analytics-concept-exercise-five-distinct] _
+tests\integration\test_wave3_analytics_vectors_postgres.py:27: in test_vector_through_official_router_sql_postgres
+    gate.seed_vector_facts(vector["facts"])
+tests\integration\wave3_support.py:106: in seed_vector_facts
+    knowledge_for(temporary, course, concept=concept)
+tests\security\security_support.py:60: in knowledge_for
+    repo.load_course(course, [Concept.model_validate({"id": concept, "topic": "enum_match", "title": "Synthetic exhaustiveness",
+app\knowledge\repository.py:339: in load_course
+    raise KnowledgeValidationError("KNOWLEDGE_ID_CONFLICT", f"course {course_id} already has different knowledge")
+E   app.knowledge.models.KnowledgeValidationError: KNOWLEDGE_ID_CONFLICT: course course-a already has different knowledge
+---------------------------- Captured stderr setup ----------------------------
+INFO  [alembic.runtime.migration] Context impl PostgresqlImpl.
+INFO  [alembic.runtime.migration] Will assume transactional DDL.
+_ test_vector_through_official_router_sql_postgres[analytics-concept-exercise-duplicate-student] _
+tests\integration\test_wave3_analytics_vectors_postgres.py:27: in test_vector_through_official_router_sql_postgres
+    gate.seed_vector_facts(vector["facts"])
+tests\integration\wave3_support.py:106: in seed_vector_facts
+    knowledge_for(temporary, course, concept=concept)
+tests\security\security_support.py:60: in knowledge_for
+    repo.load_course(course, [Concept.model_validate({"id": concept, "topic": "enum_match", "title": "Synthetic exhaustiveness",
+app\knowledge\repository.py:339: in load_course
+    raise KnowledgeValidationError("KNOWLEDGE_ID_CONFLICT", f"course {course_id} already has different knowledge")
+E   app.knowledge.models.KnowledgeValidationError: KNOWLEDGE_ID_CONFLICT: course course-a already has different knowledge
+---------------------------- Captured stderr setup ----------------------------
+INFO  [alembic.runtime.migration] Context impl PostgresqlImpl.
+INFO  [alembic.runtime.migration] Will assume transactional DDL.
+_ test_vector_through_official_router_sql_postgres[analytics-concept-exercise-foreign-course] _
+tests\integration\test_wave3_analytics_vectors_postgres.py:27: in test_vector_through_official_router_sql_postgres
+    gate.seed_vector_facts(vector["facts"])
+tests\integration\wave3_support.py:106: in seed_vector_facts
+    knowledge_for(temporary, course, concept=concept)
+tests\security\security_support.py:60: in knowledge_for
+    repo.load_course(course, [Concept.model_validate({"id": concept, "topic": "enum_match", "title": "Synthetic exhaustiveness",
+app\knowledge\repository.py:339: in load_course
+    raise KnowledgeValidationError("KNOWLEDGE_ID_CONFLICT", f"course {course_id} already has different knowledge")
+E   app.knowledge.models.KnowledgeValidationError: KNOWLEDGE_ID_CONFLICT: course course-a already has different knowledge
+---------------------------- Captured stderr setup ----------------------------
+INFO  [alembic.runtime.migration] Context impl PostgresqlImpl.
+INFO  [alembic.runtime.migration] Will assume transactional DDL.
+_ test_vector_through_official_router_sql_postgres[analytics-concept-exercise-small-group] _
+tests\integration\test_wave3_analytics_vectors_postgres.py:27: in test_vector_through_official_router_sql_postgres
+    gate.seed_vector_facts(vector["facts"])
+tests\integration\wave3_support.py:106: in seed_vector_facts
+    knowledge_for(temporary, course, concept=concept)
+tests\security\security_support.py:60: in knowledge_for
+    repo.load_course(course, [Concept.model_validate({"id": concept, "topic": "enum_match", "title": "Synthetic exhaustiveness",
+app\knowledge\repository.py:339: in load_course
+    raise KnowledgeValidationError("KNOWLEDGE_ID_CONFLICT", f"course {course_id} already has different knowledge")
+E   app.knowledge.models.KnowledgeValidationError: KNOWLEDGE_ID_CONFLICT: course course-a already has different knowledge
+---------------------------- Captured stderr setup ----------------------------
+INFO  [alembic.runtime.migration] Context impl PostgresqlImpl.
+INFO  [alembic.runtime.migration] Will assume transactional DDL.
+_ test_vector_through_official_router_sql_postgres[analytics-concept-exercise-suppressed-fields] _
+tests\integration\test_wave3_analytics_vectors_postgres.py:27: in test_vector_through_official_router_sql_postgres
+    gate.seed_vector_facts(vector["facts"])
+tests\integration\wave3_support.py:106: in seed_vector_facts
+    knowledge_for(temporary, course, concept=concept)
+tests\security\security_support.py:60: in knowledge_for
+    repo.load_course(course, [Concept.model_validate({"id": concept, "topic": "enum_match", "title": "Synthetic exhaustiveness",
+app\knowledge\repository.py:339: in load_course
+    raise KnowledgeValidationError("KNOWLEDGE_ID_CONFLICT", f"course {course_id} already has different knowledge")
+E   app.knowledge.models.KnowledgeValidationError: KNOWLEDGE_ID_CONFLICT: course course-a already has different knowledge
+---------------------------- Captured stderr setup ----------------------------
+INFO  [alembic.runtime.migration] Context impl PostgresqlImpl.
+INFO  [alembic.runtime.migration] Will assume transactional DDL.
+_ test_vector_through_official_router_sql_postgres[analytics-concept-time-four-distinct] _
+tests\integration\test_wave3_analytics_vectors_postgres.py:27: in test_vector_through_official_router_sql_postgres
+    gate.seed_vector_facts(vector["facts"])
+tests\integration\wave3_support.py:106: in seed_vector_facts
+    knowledge_for(temporary, course, concept=concept)
+tests\security\security_support.py:60: in knowledge_for
+    repo.load_course(course, [Concept.model_validate({"id": concept, "topic": "enum_match", "title": "Synthetic exhaustiveness",
+app\knowledge\repository.py:339: in load_course
+    raise KnowledgeValidationError("KNOWLEDGE_ID_CONFLICT", f"course {course_id} already has different knowledge")
+E   app.knowledge.models.KnowledgeValidationError: KNOWLEDGE_ID_CONFLICT: course course-a already has different knowledge
+---------------------------- Captured stderr setup ----------------------------
+INFO  [alembic.runtime.migration] Context impl PostgresqlImpl.
+INFO  [alembic.runtime.migration] Will assume transactional DDL.
+_ test_vector_through_official_router_sql_postgres[analytics-concept-time-five-distinct] _
+tests\integration\test_wave3_analytics_vectors_postgres.py:27: in test_vector_through_official_router_sql_postgres
+    gate.seed_vector_facts(vector["facts"])
+tests\integration\wave3_support.py:106: in seed_vector_facts
+    knowledge_for(temporary, course, concept=concept)
+tests\security\security_support.py:60: in knowledge_for
+    repo.load_course(course, [Concept.model_validate({"id": concept, "topic": "enum_match", "title": "Synthetic exhaustiveness",
+app\knowledge\repository.py:339: in load_course
+    raise KnowledgeValidationError("KNOWLEDGE_ID_CONFLICT", f"course {course_id} already has different knowledge")
+E   app.knowledge.models.KnowledgeValidationError: KNOWLEDGE_ID_CONFLICT: course course-a already has different knowledge
+---------------------------- Captured stderr setup ----------------------------
+INFO  [alembic.runtime.migration] Context impl PostgresqlImpl.
+INFO  [alembic.runtime.migration] Will assume transactional DDL.
+_ test_vector_through_official_router_sql_postgres[analytics-concept-time-duplicate-student] _
+tests\integration\test_wave3_analytics_vectors_postgres.py:27: in test_vector_through_official_router_sql_postgres
+    gate.seed_vector_facts(vector["facts"])
+tests\integration\wave3_support.py:106: in seed_vector_facts
+    knowledge_for(temporary, course, concept=concept)
+tests\security\security_support.py:60: in knowledge_for
+    repo.load_course(course, [Concept.model_validate({"id": concept, "topic": "enum_match", "title": "Synthetic exhaustiveness",
+app\knowledge\repository.py:339: in load_course
+    raise KnowledgeValidationError("KNOWLEDGE_ID_CONFLICT", f"course {course_id} already has different knowledge")
+E   app.knowledge.models.KnowledgeValidationError: KNOWLEDGE_ID_CONFLICT: course course-a already has different knowledge
+---------------------------- Captured stderr setup ----------------------------
+INFO  [alembic.runtime.migration] Context impl PostgresqlImpl.
+INFO  [alembic.runtime.migration] Will assume transactional DDL.
+_ test_vector_through_official_router_sql_postgres[analytics-concept-time-foreign-course] _
+tests\integration\test_wave3_analytics_vectors_postgres.py:27: in test_vector_through_official_router_sql_postgres
+    gate.seed_vector_facts(vector["facts"])
+tests\integration\wave3_support.py:106: in seed_vector_facts
+    knowledge_for(temporary, course, concept=concept)
+tests\security\security_support.py:60: in knowledge_for
+    repo.load_course(course, [Concept.model_validate({"id": concept, "topic": "enum_match", "title": "Synthetic exhaustiveness",
+app\knowledge\repository.py:339: in load_course
+    raise KnowledgeValidationError("KNOWLEDGE_ID_CONFLICT", f"course {course_id} already has different knowledge")
+E   app.knowledge.models.KnowledgeValidationError: KNOWLEDGE_ID_CONFLICT: course course-a already has different knowledge
+---------------------------- Captured stderr setup ----------------------------
+INFO  [alembic.runtime.migration] Context impl PostgresqlImpl.
+INFO  [alembic.runtime.migration] Will assume transactional DDL.
+_ test_vector_through_official_router_sql_postgres[analytics-concept-time-small-group] _
+tests\integration\test_wave3_analytics_vectors_postgres.py:27: in test_vector_through_official_router_sql_postgres
+    gate.seed_vector_facts(vector["facts"])
+tests\integration\wave3_support.py:106: in seed_vector_facts
+    knowledge_for(temporary, course, concept=concept)
+tests\security\security_support.py:60: in knowledge_for
+    repo.load_course(course, [Concept.model_validate({"id": concept, "topic": "enum_match", "title": "Synthetic exhaustiveness",
+app\knowledge\repository.py:339: in load_course
+    raise KnowledgeValidationError("KNOWLEDGE_ID_CONFLICT", f"course {course_id} already has different knowledge")
+E   app.knowledge.models.KnowledgeValidationError: KNOWLEDGE_ID_CONFLICT: course course-a already has different knowledge
+---------------------------- Captured stderr setup ----------------------------
+INFO  [alembic.runtime.migration] Context impl PostgresqlImpl.
+INFO  [alembic.runtime.migration] Will assume transactional DDL.
+_ test_vector_through_official_router_sql_postgres[analytics-concept-time-suppressed-fields] _
+tests\integration\test_wave3_analytics_vectors_postgres.py:27: in test_vector_through_official_router_sql_postgres
+    gate.seed_vector_facts(vector["facts"])
+tests\integration\wave3_support.py:106: in seed_vector_facts
+    knowledge_for(temporary, course, concept=concept)
+tests\security\security_support.py:60: in knowledge_for
+    repo.load_course(course, [Concept.model_validate({"id": concept, "topic": "enum_match", "title": "Synthetic exhaustiveness",
+app\knowledge\repository.py:339: in load_course
+    raise KnowledgeValidationError("KNOWLEDGE_ID_CONFLICT", f"course {course_id} already has different knowledge")
+E   app.knowledge.models.KnowledgeValidationError: KNOWLEDGE_ID_CONFLICT: course course-a already has different knowledge
+---------------------------- Captured stderr setup ----------------------------
+INFO  [alembic.runtime.migration] Context impl PostgresqlImpl.
+INFO  [alembic.runtime.migration] Will assume transactional DDL.
+_ test_vector_through_official_router_sql_postgres[analytics-exercise-time-foreign-course] _
+..\..\..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1967: in _exec_single_context
+    self.dialect.do_execute(
+..\..\..\.venv\Lib\site-packages\sqlalchemy\engine\default.py:952: in do_execute
+    cursor.execute(statement, parameters)
+..\..\..\.venv\Lib\site-packages\psycopg\cursor.py:117: in execute
+    raise ex.with_traceback(None)
+E   psycopg.errors.UniqueViolation: duplicate key value violates unique constraint "exercises_pkey"
+E   DETAIL:  Key (id)=(exercise-a) already exists.
+
+The above exception was the direct cause of the following exception:
+app\persistence\repositories.py:93: in add_exercise
+    with self._sessions.begin() as session:
+         ^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\..\..\miniconda3\Lib\contextlib.py:148: in __exit__
+    next(self.gen)
+..\..\..\.venv\Lib\site-packages\sqlalchemy\orm\session.py:1814: in _maker_context_manager
+    with self.begin():
+         ^^^^^^^^^^^^
+..\..\..\.venv\Lib\site-packages\sqlalchemy\engine\util.py:147: in __exit__
+    with util.safe_reraise():
+         ^^^^^^^^^^^^^^^^^^^
+..\..\..\.venv\Lib\site-packages\sqlalchemy\util\langhelpers.py:121: in __exit__
+    raise exc_value.with_traceback(exc_tb)
+..\..\..\.venv\Lib\site-packages\sqlalchemy\engine\util.py:145: in __exit__
+    self.commit()
+..\..\..\.venv\Lib\site-packages\sqlalchemy\orm\state_changes.py:137: in _go
+    ret_value = fn(self, *arg, **kw)
+                ^^^^^^^^^^^^^^^^^^^^
+..\..\..\.venv\Lib\site-packages\sqlalchemy\orm\session.py:1311: in commit
+    self._prepare_impl()
+..\..\..\.venv\Lib\site-packages\sqlalchemy\orm\state_changes.py:137: in _go
+    ret_value = fn(self, *arg, **kw)
+                ^^^^^^^^^^^^^^^^^^^^
+..\..\..\.venv\Lib\site-packages\sqlalchemy\orm\session.py:1286: in _prepare_impl
+    self.session.flush()
+..\..\..\.venv\Lib\site-packages\sqlalchemy\orm\session.py:4331: in flush
+    self._flush(objects)
+..\..\..\.venv\Lib\site-packages\sqlalchemy\orm\session.py:4466: in _flush
+    with util.safe_reraise():
+         ^^^^^^^^^^^^^^^^^^^
+..\..\..\.venv\Lib\site-packages\sqlalchemy\util\langhelpers.py:121: in __exit__
+    raise exc_value.with_traceback(exc_tb)
+..\..\..\.venv\Lib\site-packages\sqlalchemy\orm\session.py:4427: in _flush
+    flush_context.execute()
+..\..\..\.venv\Lib\site-packages\sqlalchemy\orm\unitofwork.py:466: in execute
+    rec.execute(self)
+..\..\..\.venv\Lib\site-packages\sqlalchemy\orm\unitofwork.py:642: in execute
+    util.preloaded.orm_persistence.save_obj(
+..\..\..\.venv\Lib\site-packages\sqlalchemy\orm\persistence.py:93: in save_obj
+    _emit_insert_statements(
+..\..\..\.venv\Lib\site-packages\sqlalchemy\orm\persistence.py:1048: in _emit_insert_statements
+    result = connection.execute(
+..\..\..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1419: in execute
+    return meth(
+..\..\..\.venv\Lib\site-packages\sqlalchemy\sql\elements.py:527: in _execute_on_connection
+    return connection._execute_clauseelement(
+..\..\..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1641: in _execute_clauseelement
+    ret = self._execute_context(
+..\..\..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1846: in _execute_context
+    return self._exec_single_context(
+..\..\..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1986: in _exec_single_context
+    self._handle_dbapi_exception(
+..\..\..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:2363: in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+..\..\..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1967: in _exec_single_context
+    self.dialect.do_execute(
+..\..\..\.venv\Lib\site-packages\sqlalchemy\engine\default.py:952: in do_execute
+    cursor.execute(statement, parameters)
+..\..\..\.venv\Lib\site-packages\psycopg\cursor.py:117: in execute
+    raise ex.with_traceback(None)
+E   sqlalchemy.exc.IntegrityError: (psycopg.errors.UniqueViolation) duplicate key value violates unique constraint "exercises_pkey"
+E   DETAIL:  Key (id)=(exercise-a) already exists.
+E   [SQL: INSERT INTO exercises (id, course_id, title, is_published, protected_answer) VALUES (%(id)s::VARCHAR, %(course_id)s::VARCHAR, %(title)s::VARCHAR, %(is_published)s, %(protected_answer)s::VARCHAR)]
+E   [parameters: {'id': 'exercise-a', 'course_id': 'course-b', 'title': 'Synthetic exercise', 'is_published': True, 'protected_answer': None}]
+E   (Background on this error at: https://sqlalche.me/e/20/gkpj)
+
+The above exception was the direct cause of the following exception:
+tests\integration\test_wave3_analytics_vectors_postgres.py:27: in test_vector_through_official_router_sql_postgres
+    gate.seed_vector_facts(vector["facts"])
+tests\integration\wave3_support.py:98: in seed_vector_facts
+    self.repos.courses.add_exercise(Exercise(exercise, course, "Synthetic exercise", True))
+app\persistence\repositories.py:103: in add_exercise
+    raise ValueError("duplicate exercise or missing course") from exc
+E   ValueError: duplicate exercise or missing course
+---------------------------- Captured stderr setup ----------------------------
+INFO  [alembic.runtime.migration] Context impl PostgresqlImpl.
+INFO  [alembic.runtime.migration] Will assume transactional DDL.
+_ test_vector_through_official_router_sql_postgres[analytics-exercise-time-small-group] _
+tests\integration\test_wave3_analytics_vectors_postgres.py:27: in test_vector_through_official_router_sql_postgres
+    gate.seed_vector_facts(vector["facts"])
+tests\integration\wave3_support.py:106: in seed_vector_facts
+    knowledge_for(temporary, course, concept=concept)
+tests\security\security_support.py:60: in knowledge_for
+    repo.load_course(course, [Concept.model_validate({"id": concept, "topic": "enum_match", "title": "Synthetic exhaustiveness",
+app\knowledge\repository.py:339: in load_course
+    raise KnowledgeValidationError("KNOWLEDGE_ID_CONFLICT", f"course {course_id} already has different knowledge")
+E   app.knowledge.models.KnowledgeValidationError: KNOWLEDGE_ID_CONFLICT: course course-a already has different knowledge
+---------------------------- Captured stderr setup ----------------------------
+INFO  [alembic.runtime.migration] Context impl PostgresqlImpl.
+INFO  [alembic.runtime.migration] Will assume transactional DDL.
+_ test_vector_through_official_router_sql_postgres[analytics-all-four-distinct] _
+tests\integration\test_wave3_analytics_vectors_postgres.py:27: in test_vector_through_official_router_sql_postgres
+    gate.seed_vector_facts(vector["facts"])
+tests\integration\wave3_support.py:106: in seed_vector_facts
+    knowledge_for(temporary, course, concept=concept)
+tests\security\security_support.py:60: in knowledge_for
+    repo.load_course(course, [Concept.model_validate({"id": concept, "topic": "enum_match", "title": "Synthetic exhaustiveness",
+app\knowledge\repository.py:339: in load_course
+    raise KnowledgeValidationError("KNOWLEDGE_ID_CONFLICT", f"course {course_id} already has different knowledge")
+E   app.knowledge.models.KnowledgeValidationError: KNOWLEDGE_ID_CONFLICT: course course-a already has different knowledge
+---------------------------- Captured stderr setup ----------------------------
+INFO  [alembic.runtime.migration] Context impl PostgresqlImpl.
+INFO  [alembic.runtime.migration] Will assume transactional DDL.
+_ test_vector_through_official_router_sql_postgres[analytics-all-five-distinct] _
+tests\integration\test_wave3_analytics_vectors_postgres.py:27: in test_vector_through_official_router_sql_postgres
+    gate.seed_vector_facts(vector["facts"])
+tests\integration\wave3_support.py:106: in seed_vector_facts
+    knowledge_for(temporary, course, concept=concept)
+tests\security\security_support.py:60: in knowledge_for
+    repo.load_course(course, [Concept.model_validate({"id": concept, "topic": "enum_match", "title": "Synthetic exhaustiveness",
+app\knowledge\repository.py:339: in load_course
+    raise KnowledgeValidationError("KNOWLEDGE_ID_CONFLICT", f"course {course_id} already has different knowledge")
+E   app.knowledge.models.KnowledgeValidationError: KNOWLEDGE_ID_CONFLICT: course course-a already has different knowledge
+---------------------------- Captured stderr setup ----------------------------
+INFO  [alembic.runtime.migration] Context impl PostgresqlImpl.
+INFO  [alembic.runtime.migration] Will assume transactional DDL.
+_ test_vector_through_official_router_sql_postgres[analytics-all-duplicate-student] _
+tests\integration\test_wave3_analytics_vectors_postgres.py:27: in test_vector_through_official_router_sql_postgres
+    gate.seed_vector_facts(vector["facts"])
+tests\integration\wave3_support.py:106: in seed_vector_facts
+    knowledge_for(temporary, course, concept=concept)
+tests\security\security_support.py:60: in knowledge_for
+    repo.load_course(course, [Concept.model_validate({"id": concept, "topic": "enum_match", "title": "Synthetic exhaustiveness",
+app\knowledge\repository.py:339: in load_course
+    raise KnowledgeValidationError("KNOWLEDGE_ID_CONFLICT", f"course {course_id} already has different knowledge")
+E   app.knowledge.models.KnowledgeValidationError: KNOWLEDGE_ID_CONFLICT: course course-a already has different knowledge
+---------------------------- Captured stderr setup ----------------------------
+INFO  [alembic.runtime.migration] Context impl PostgresqlImpl.
+INFO  [alembic.runtime.migration] Will assume transactional DDL.
+_ test_vector_through_official_router_sql_postgres[analytics-all-foreign-course] _
+tests\integration\test_wave3_analytics_vectors_postgres.py:27: in test_vector_through_official_router_sql_postgres
+    gate.seed_vector_facts(vector["facts"])
+tests\integration\wave3_support.py:106: in seed_vector_facts
+    knowledge_for(temporary, course, concept=concept)
+tests\security\security_support.py:60: in knowledge_for
+    repo.load_course(course, [Concept.model_validate({"id": concept, "topic": "enum_match", "title": "Synthetic exhaustiveness",
+app\knowledge\repository.py:339: in load_course
+    raise KnowledgeValidationError("KNOWLEDGE_ID_CONFLICT", f"course {course_id} already has different knowledge")
+E   app.knowledge.models.KnowledgeValidationError: KNOWLEDGE_ID_CONFLICT: course course-a already has different knowledge
+---------------------------- Captured stderr setup ----------------------------
+INFO  [alembic.runtime.migration] Context impl PostgresqlImpl.
+INFO  [alembic.runtime.migration] Will assume transactional DDL.
+_ test_vector_through_official_router_sql_postgres[analytics-all-small-group] _
+tests\integration\test_wave3_analytics_vectors_postgres.py:27: in test_vector_through_official_router_sql_postgres
+    gate.seed_vector_facts(vector["facts"])
+tests\integration\wave3_support.py:106: in seed_vector_facts
+    knowledge_for(temporary, course, concept=concept)
+tests\security\security_support.py:60: in knowledge_for
+    repo.load_course(course, [Concept.model_validate({"id": concept, "topic": "enum_match", "title": "Synthetic exhaustiveness",
+app\knowledge\repository.py:339: in load_course
+    raise KnowledgeValidationError("KNOWLEDGE_ID_CONFLICT", f"course {course_id} already has different knowledge")
+E   app.knowledge.models.KnowledgeValidationError: KNOWLEDGE_ID_CONFLICT: course course-a already has different knowledge
+---------------------------- Captured stderr setup ----------------------------
+INFO  [alembic.runtime.migration] Context impl PostgresqlImpl.
+INFO  [alembic.runtime.migration] Will assume transactional DDL.
+_ test_vector_through_official_router_sql_postgres[analytics-all-suppressed-fields] _
+tests\integration\test_wave3_analytics_vectors_postgres.py:27: in test_vector_through_official_router_sql_postgres
+    gate.seed_vector_facts(vector["facts"])
+tests\integration\wave3_support.py:106: in seed_vector_facts
+    knowledge_for(temporary, course, concept=concept)
+tests\security\security_support.py:60: in knowledge_for
+    repo.load_course(course, [Concept.model_validate({"id": concept, "topic": "enum_match", "title": "Synthetic exhaustiveness",
+app\knowledge\repository.py:339: in load_course
+    raise KnowledgeValidationError("KNOWLEDGE_ID_CONFLICT", f"course {course_id} already has different knowledge")
+E   app.knowledge.models.KnowledgeValidationError: KNOWLEDGE_ID_CONFLICT: course course-a already has different knowledge
+---------------------------- Captured stderr setup ----------------------------
+INFO  [alembic.runtime.migration] Context impl PostgresqlImpl.
+INFO  [alembic.runtime.migration] Will assume transactional DDL.
+_ test_each_filter_counterexample_remains_in_sql[analytics-concept-four-distinct] _
+tests\integration\test_wave3_analytics_vectors_postgres.py:42: in test_each_filter_counterexample_remains_in_sql
+    gate.seed_vector_facts(vector["facts"])
+tests\integration\wave3_support.py:106: in seed_vector_facts
+    knowledge_for(temporary, course, concept=concept)
+tests\security\security_support.py:60: in knowledge_for
+    repo.load_course(course, [Concept.model_validate({"id": concept, "topic": "enum_match", "title": "Synthetic exhaustiveness",
+app\knowledge\repository.py:339: in load_course
+    raise KnowledgeValidationError("KNOWLEDGE_ID_CONFLICT", f"course {course_id} already has different knowledge")
+E   app.knowledge.models.KnowledgeValidationError: KNOWLEDGE_ID_CONFLICT: course course-a already has different knowledge
+---------------------------- Captured stderr setup ----------------------------
+INFO  [alembic.runtime.migration] Context impl PostgresqlImpl.
+INFO  [alembic.runtime.migration] Will assume transactional DDL.
+_ test_each_filter_counterexample_remains_in_sql[analytics-concept-exercise-four-distinct] _
+tests\integration\test_wave3_analytics_vectors_postgres.py:42: in test_each_filter_counterexample_remains_in_sql
+    gate.seed_vector_facts(vector["facts"])
+tests\integration\wave3_support.py:106: in seed_vector_facts
+    knowledge_for(temporary, course, concept=concept)
+tests\security\security_support.py:60: in knowledge_for
+    repo.load_course(course, [Concept.model_validate({"id": concept, "topic": "enum_match", "title": "Synthetic exhaustiveness",
+app\knowledge\repository.py:339: in load_course
+    raise KnowledgeValidationError("KNOWLEDGE_ID_CONFLICT", f"course {course_id} already has different knowledge")
+E   app.knowledge.models.KnowledgeValidationError: KNOWLEDGE_ID_CONFLICT: course course-a already has different knowledge
+---------------------------- Captured stderr setup ----------------------------
+INFO  [alembic.runtime.migration] Context impl PostgresqlImpl.
+INFO  [alembic.runtime.migration] Will assume transactional DDL.
+_ test_each_filter_counterexample_remains_in_sql[analytics-concept-time-four-distinct] _
+tests\integration\test_wave3_analytics_vectors_postgres.py:42: in test_each_filter_counterexample_remains_in_sql
+    gate.seed_vector_facts(vector["facts"])
+tests\integration\wave3_support.py:106: in seed_vector_facts
+    knowledge_for(temporary, course, concept=concept)
+tests\security\security_support.py:60: in knowledge_for
+    repo.load_course(course, [Concept.model_validate({"id": concept, "topic": "enum_match", "title": "Synthetic exhaustiveness",
+app\knowledge\repository.py:339: in load_course
+    raise KnowledgeValidationError("KNOWLEDGE_ID_CONFLICT", f"course {course_id} already has different knowledge")
+E   app.knowledge.models.KnowledgeValidationError: KNOWLEDGE_ID_CONFLICT: course course-a already has different knowledge
+---------------------------- Captured stderr setup ----------------------------
+INFO  [alembic.runtime.migration] Context impl PostgresqlImpl.
+INFO  [alembic.runtime.migration] Will assume transactional DDL.
+_ test_each_filter_counterexample_remains_in_sql[analytics-all-four-distinct] _
+tests\integration\test_wave3_analytics_vectors_postgres.py:42: in test_each_filter_counterexample_remains_in_sql
+    gate.seed_vector_facts(vector["facts"])
+tests\integration\wave3_support.py:106: in seed_vector_facts
+    knowledge_for(temporary, course, concept=concept)
+tests\security\security_support.py:60: in knowledge_for
+    repo.load_course(course, [Concept.model_validate({"id": concept, "topic": "enum_match", "title": "Synthetic exhaustiveness",
+app\knowledge\repository.py:339: in load_course
+    raise KnowledgeValidationError("KNOWLEDGE_ID_CONFLICT", f"course {course_id} already has different knowledge")
+E   app.knowledge.models.KnowledgeValidationError: KNOWLEDGE_ID_CONFLICT: course course-a already has different knowledge
+---------------------------- Captured stderr setup ----------------------------
+INFO  [alembic.runtime.migration] Context impl PostgresqlImpl.
+INFO  [alembic.runtime.migration] Will assume transactional DDL.
+============================== warnings summary ===============================
+tests/integration/test_wave3_analytics_vectors_postgres.py: 62 warnings
+  C:\Users\lenovo\Desktop\cs competition\.venv\Lib\site-packages\alembic\config.py:604: DeprecationWarning: No path_separator found in configuration; falling back to legacy splitting on spaces, commas, and colons for prepend_sys_path.  Consider adding path_separator=os to Alembic config.
+    util.warn_deprecated(
+
+tests/integration/test_wave3_analytics_vectors_postgres.py: 54 warnings
+  tests\integration\test_wave3_analytics_vectors_postgres.py:25: PytestWarning: record_property is incompatible with junit_family 'xunit2' (use 'legacy' or 'xunit1')
+    @pytest.mark.parametrize("vector", vectors(), ids=lambda v:v["vector_id"])
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED tests/integration/test_wave3_analytics_vectors_postgres.py::test_vector_through_official_router_sql_postgres[analytics-none-foreign-course]
+FAILED tests/integration/test_wave3_analytics_vectors_postgres.py::test_vector_through_official_router_sql_postgres[analytics-none-small-group]
+FAILED tests/integration/test_wave3_analytics_vectors_postgres.py::test_vector_through_official_router_sql_postgres[analytics-concept-four-distinct]
+FAILED tests/integration/test_wave3_analytics_vectors_postgres.py::test_vector_through_official_router_sql_postgres[analytics-concept-five-distinct]
+FAILED tests/integration/test_wave3_analytics_vectors_postgres.py::test_vector_through_official_router_sql_postgres[analytics-concept-duplicate-student]
+FAILED tests/integration/test_wave3_analytics_vectors_postgres.py::test_vector_through_official_router_sql_postgres[analytics-concept-foreign-course]
+FAILED tests/integration/test_wave3_analytics_vectors_postgres.py::test_vector_through_official_router_sql_postgres[analytics-concept-small-group]
+FAILED tests/integration/test_wave3_analytics_vectors_postgres.py::test_vector_through_official_router_sql_postgres[analytics-concept-suppressed-fields]
+FAILED tests/integration/test_wave3_analytics_vectors_postgres.py::test_vector_through_official_router_sql_postgres[analytics-exercise-foreign-course]
+FAILED tests/integration/test_wave3_analytics_vectors_postgres.py::test_vector_through_official_router_sql_postgres[analytics-exercise-small-group]
+FAILED tests/integration/test_wave3_analytics_vectors_postgres.py::test_vector_through_official_router_sql_postgres[analytics-start-foreign-course]
+FAILED tests/integration/test_wave3_analytics_vectors_postgres.py::test_vector_through_official_router_sql_postgres[analytics-start-small-group]
+FAILED tests/integration/test_wave3_analytics_vectors_postgres.py::test_vector_through_official_router_sql_postgres[analytics-end-five-distinct]
+FAILED tests/integration/test_wave3_analytics_vectors_postgres.py::test_vector_through_official_router_sql_postgres[analytics-end-foreign-course]
+FAILED tests/integration/test_wave3_analytics_vectors_postgres.py::test_vector_through_official_router_sql_postgres[analytics-end-small-group]
+FAILED tests/integration/test_wave3_analytics_vectors_postgres.py::test_vector_through_official_router_sql_postgres[analytics-concept-exercise-four-distinct]
+FAILED tests/integration/test_wave3_analytics_vectors_postgres.py::test_vector_through_official_router_sql_postgres[analytics-concept-exercise-five-distinct]
+FAILED tests/integration/test_wave3_analytics_vectors_postgres.py::test_vector_through_official_router_sql_postgres[analytics-concept-exercise-duplicate-student]
+FAILED tests/integration/test_wave3_analytics_vectors_postgres.py::test_vector_through_official_router_sql_postgres[analytics-concept-exercise-foreign-course]
+FAILED tests/integration/test_wave3_analytics_vectors_postgres.py::test_vector_through_official_router_sql_postgres[analytics-concept-exercise-small-group]
+FAILED tests/integration/test_wave3_analytics_vectors_postgres.py::test_vector_through_official_router_sql_postgres[analytics-concept-exercise-suppressed-fields]
+FAILED tests/integration/test_wave3_analytics_vectors_postgres.py::test_vector_through_official_router_sql_postgres[analytics-concept-time-four-distinct]
+FAILED tests/integration/test_wave3_analytics_vectors_postgres.py::test_vector_through_official_router_sql_postgres[analytics-concept-time-five-distinct]
+FAILED tests/integration/test_wave3_analytics_vectors_postgres.py::test_vector_through_official_router_sql_postgres[analytics-concept-time-duplicate-student]
+FAILED tests/integration/test_wave3_analytics_vectors_postgres.py::test_vector_through_official_router_sql_postgres[analytics-concept-time-foreign-course]
+FAILED tests/integration/test_wave3_analytics_vectors_postgres.py::test_vector_through_official_router_sql_postgres[analytics-concept-time-small-group]
+FAILED tests/integration/test_wave3_analytics_vectors_postgres.py::test_vector_through_official_router_sql_postgres[analytics-concept-time-suppressed-fields]
+FAILED tests/integration/test_wave3_analytics_vectors_postgres.py::test_vector_through_official_router_sql_postgres[analytics-exercise-time-foreign-course]
+FAILED tests/integration/test_wave3_analytics_vectors_postgres.py::test_vector_through_official_router_sql_postgres[analytics-exercise-time-small-group]
+FAILED tests/integration/test_wave3_analytics_vectors_postgres.py::test_vector_through_official_router_sql_postgres[analytics-all-four-distinct]
+FAILED tests/integration/test_wave3_analytics_vectors_postgres.py::test_vector_through_official_router_sql_postgres[analytics-all-five-distinct]
+FAILED tests/integration/test_wave3_analytics_vectors_postgres.py::test_vector_through_official_router_sql_postgres[analytics-all-duplicate-student]
+FAILED tests/integration/test_wave3_analytics_vectors_postgres.py::test_vector_through_official_router_sql_postgres[analytics-all-foreign-course]
+FAILED tests/integration/test_wave3_analytics_vectors_postgres.py::test_vector_through_official_router_sql_postgres[analytics-all-small-group]
+FAILED tests/integration/test_wave3_analytics_vectors_postgres.py::test_vector_through_official_router_sql_postgres[analytics-all-suppressed-fields]
+FAILED tests/integration/test_wave3_analytics_vectors_postgres.py::test_each_filter_counterexample_remains_in_sql[analytics-concept-four-distinct]
+FAILED tests/integration/test_wave3_analytics_vectors_postgres.py::test_each_filter_counterexample_remains_in_sql[analytics-concept-exercise-four-distinct]
+FAILED tests/integration/test_wave3_analytics_vectors_postgres.py::test_each_filter_counterexample_remains_in_sql[analytics-concept-time-four-distinct]
+FAILED tests/integration/test_wave3_analytics_vectors_postgres.py::test_each_filter_counterexample_remains_in_sql[analytics-all-four-distinct]
+39 failed, 23 passed, 116 warnings in 88.84s (0:01:28)

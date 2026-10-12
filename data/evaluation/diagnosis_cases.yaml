@@ -1,0 +1,132 @@
+{
+  "dataset_version": "task10-diagnosis-draft-v1",
+  "status": "synthetic_draft_not_teacher_verified",
+  "cases": [
+    {
+      "case_id": "diag-missing-b",
+      "case_type": "diagnosis",
+      "course_version": "cangjie-design/1.2.0/task10-v1",
+      "input": {
+        "source_code": "enum Choice { A | B }\nfunc value(choice: Choice): Int64 {\n    match (choice) { case A => 1 }\n}\nmain(): Int64 { value(B) }",
+        "expected_execution_status": "compile_failed",
+        "student_explanation": "Synthetic example; teacher root-cause annotation is pending."
+      },
+      "expected_concept_ids": [
+        "cj.pattern-match.exhaustiveness"
+      ],
+      "evidence": [
+        {
+          "kind": "knowledge_base",
+          "reference": "cangjie-coding:language.pattern_match.1-match-表达式.1-1-有匹配值的-match",
+          "status": "planned"
+        },
+        {
+          "kind": "toolchain",
+          "reference": "backend/tests/security/test_isolated_runner.py::test_draft_diagnosis_sources_have_recorded_compiler_outcome",
+          "status": "planned"
+        }
+      ],
+      "teacher_annotators": [],
+      "annotation_status": "draft",
+      "privacy_classification": "synthetic_public",
+      "dataset_split": "dev",
+      "source_type": "synthetic",
+      "created_at": "2026-10-07T00:00:00Z",
+      "notes": "Author-created synthetic schema/control example. Expected concept is a draft hypothesis, not a teacher label. Compiler verification cannot upgrade annotation_status."
+    },
+    {
+      "case_id": "diag-missing-c",
+      "case_type": "diagnosis",
+      "course_version": "cangjie-design/1.2.0/task10-v1",
+      "input": {
+        "source_code": "enum Choice { A | B | C }\nfunc value(choice: Choice): Int64 {\n    match (choice) {\n        case A => 1\n        case B => 2\n    }\n}\nmain(): Int64 { value(C) }",
+        "expected_execution_status": "compile_failed",
+        "student_explanation": "Synthetic example; teacher root-cause annotation is pending."
+      },
+      "expected_concept_ids": [
+        "cj.pattern-match.exhaustiveness"
+      ],
+      "evidence": [
+        {
+          "kind": "knowledge_base",
+          "reference": "cangjie-coding:language.pattern_match.1-match-表达式.1-1-有匹配值的-match",
+          "status": "planned"
+        },
+        {
+          "kind": "toolchain",
+          "reference": "backend/tests/security/test_isolated_runner.py::test_draft_diagnosis_sources_have_recorded_compiler_outcome",
+          "status": "planned"
+        }
+      ],
+      "teacher_annotators": [],
+      "annotation_status": "draft",
+      "privacy_classification": "synthetic_public",
+      "dataset_split": "dev",
+      "source_type": "synthetic",
+      "created_at": "2026-10-07T00:00:00Z",
+      "notes": "Author-created synthetic schema/control example. Expected concept is a draft hypothesis, not a teacher label. Compiler verification cannot upgrade annotation_status."
+    },
+    {
+      "case_id": "diag-integer-no-default",
+      "case_type": "diagnosis",
+      "course_version": "cangjie-design/1.2.0/task10-v1",
+      "input": {
+        "source_code": "func value(input: Int64): Int64 {\n    match (input) { case 1 => 1 }\n}\nmain(): Int64 { value(2) }",
+        "expected_execution_status": "compile_failed",
+        "student_explanation": "Synthetic example; teacher root-cause annotation is pending."
+      },
+      "expected_concept_ids": [
+        "cj.pattern-match.exhaustiveness"
+      ],
+      "evidence": [
+        {
+          "kind": "knowledge_base",
+          "reference": "cangjie-coding:language.pattern_match.1-match-表达式.1-1-有匹配值的-match",
+          "status": "planned"
+        },
+        {
+          "kind": "toolchain",
+          "reference": "backend/tests/security/test_isolated_runner.py::test_draft_diagnosis_sources_have_recorded_compiler_outcome",
+          "status": "planned"
+        }
+      ],
+      "teacher_annotators": [],
+      "annotation_status": "draft",
+      "privacy_classification": "synthetic_public",
+      "dataset_split": "dev",
+      "source_type": "synthetic",
+      "created_at": "2026-10-07T00:00:00Z",
+      "notes": "Author-created synthetic schema/control example. Expected concept is a draft hypothesis, not a teacher label. Compiler verification cannot upgrade annotation_status."
+    },
+    {
+      "case_id": "diag-exhaustive-control",
+      "case_type": "diagnosis",
+      "course_version": "cangjie-design/1.2.0/task10-v1",
+      "input": {
+        "source_code": "enum Choice { A | B }\nfunc value(choice: Choice): Int64 {\n    match (choice) {\n        case A => 1\n        case B => 2\n    }\n}\nmain(): Int64 { let result = value(B); println(result); 0 }",
+        "expected_execution_status": "succeeded",
+        "student_explanation": "Synthetic example; teacher root-cause annotation is pending."
+      },
+      "expected_concept_ids": [],
+      "evidence": [
+        {
+          "kind": "knowledge_base",
+          "reference": "cangjie-coding:language.pattern_match.1-match-表达式.1-1-有匹配值的-match",
+          "status": "planned"
+        },
+        {
+          "kind": "toolchain",
+          "reference": "backend/tests/security/test_isolated_runner.py::test_draft_diagnosis_sources_have_recorded_compiler_outcome",
+          "status": "planned"
+        }
+      ],
+      "teacher_annotators": [],
+      "annotation_status": "draft",
+      "privacy_classification": "synthetic_public",
+      "dataset_split": "dev",
+      "source_type": "synthetic",
+      "created_at": "2026-10-07T00:00:00Z",
+      "notes": "Author-created synthetic schema/control example. Expected concept is a draft hypothesis, not a teacher label. Compiler verification cannot upgrade annotation_status."
+    }
+  ]
+}

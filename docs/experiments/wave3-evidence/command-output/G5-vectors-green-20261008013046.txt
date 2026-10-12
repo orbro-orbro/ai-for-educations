@@ -1,0 +1,145 @@
+...F.....F.....F.....F.....F.....F.....F.....F.....F..........           [100%]
+================================== FAILURES ===================================
+_ test_vector_through_official_router_sql_postgres[analytics-none-foreign-course] _
+tests\integration\test_wave3_analytics_vectors_postgres.py:27: in test_vector_through_official_router_sql_postgres
+    gate.seed_vector_facts(vector["facts"])
+tests\integration\wave3_support.py:131: in seed_vector_facts
+    self.repos.submissions.create(submission_id=sid, course_id=course, exercise_id=exercise, owner_user_id=owner,
+app\submissions\persistence.py:49: in wrapped
+    return method(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+app\submissions\persistence.py:84: in create
+    raise ValueError("exercise does not belong to course")
+E   ValueError: exercise does not belong to course
+---------------------------- Captured stderr setup ----------------------------
+INFO  [alembic.runtime.migration] Context impl PostgresqlImpl.
+INFO  [alembic.runtime.migration] Will assume transactional DDL.
+_ test_vector_through_official_router_sql_postgres[analytics-concept-foreign-course] _
+tests\integration\test_wave3_analytics_vectors_postgres.py:27: in test_vector_through_official_router_sql_postgres
+    gate.seed_vector_facts(vector["facts"])
+tests\integration\wave3_support.py:131: in seed_vector_facts
+    self.repos.submissions.create(submission_id=sid, course_id=course, exercise_id=exercise, owner_user_id=owner,
+app\submissions\persistence.py:49: in wrapped
+    return method(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+app\submissions\persistence.py:84: in create
+    raise ValueError("exercise does not belong to course")
+E   ValueError: exercise does not belong to course
+---------------------------- Captured stderr setup ----------------------------
+INFO  [alembic.runtime.migration] Context impl PostgresqlImpl.
+INFO  [alembic.runtime.migration] Will assume transactional DDL.
+_ test_vector_through_official_router_sql_postgres[analytics-exercise-foreign-course] _
+tests\integration\test_wave3_analytics_vectors_postgres.py:27: in test_vector_through_official_router_sql_postgres
+    gate.seed_vector_facts(vector["facts"])
+tests\integration\wave3_support.py:131: in seed_vector_facts
+    self.repos.submissions.create(submission_id=sid, course_id=course, exercise_id=exercise, owner_user_id=owner,
+app\submissions\persistence.py:49: in wrapped
+    return method(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+app\submissions\persistence.py:84: in create
+    raise ValueError("exercise does not belong to course")
+E   ValueError: exercise does not belong to course
+---------------------------- Captured stderr setup ----------------------------
+INFO  [alembic.runtime.migration] Context impl PostgresqlImpl.
+INFO  [alembic.runtime.migration] Will assume transactional DDL.
+_ test_vector_through_official_router_sql_postgres[analytics-start-foreign-course] _
+tests\integration\test_wave3_analytics_vectors_postgres.py:27: in test_vector_through_official_router_sql_postgres
+    gate.seed_vector_facts(vector["facts"])
+tests\integration\wave3_support.py:131: in seed_vector_facts
+    self.repos.submissions.create(submission_id=sid, course_id=course, exercise_id=exercise, owner_user_id=owner,
+app\submissions\persistence.py:49: in wrapped
+    return method(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+app\submissions\persistence.py:84: in create
+    raise ValueError("exercise does not belong to course")
+E   ValueError: exercise does not belong to course
+---------------------------- Captured stderr setup ----------------------------
+INFO  [alembic.runtime.migration] Context impl PostgresqlImpl.
+INFO  [alembic.runtime.migration] Will assume transactional DDL.
+_ test_vector_through_official_router_sql_postgres[analytics-end-foreign-course] _
+tests\integration\test_wave3_analytics_vectors_postgres.py:27: in test_vector_through_official_router_sql_postgres
+    gate.seed_vector_facts(vector["facts"])
+tests\integration\wave3_support.py:131: in seed_vector_facts
+    self.repos.submissions.create(submission_id=sid, course_id=course, exercise_id=exercise, owner_user_id=owner,
+app\submissions\persistence.py:49: in wrapped
+    return method(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+app\submissions\persistence.py:84: in create
+    raise ValueError("exercise does not belong to course")
+E   ValueError: exercise does not belong to course
+---------------------------- Captured stderr setup ----------------------------
+INFO  [alembic.runtime.migration] Context impl PostgresqlImpl.
+INFO  [alembic.runtime.migration] Will assume transactional DDL.
+_ test_vector_through_official_router_sql_postgres[analytics-concept-exercise-foreign-course] _
+tests\integration\test_wave3_analytics_vectors_postgres.py:27: in test_vector_through_official_router_sql_postgres
+    gate.seed_vector_facts(vector["facts"])
+tests\integration\wave3_support.py:131: in seed_vector_facts
+    self.repos.submissions.create(submission_id=sid, course_id=course, exercise_id=exercise, owner_user_id=owner,
+app\submissions\persistence.py:49: in wrapped
+    return method(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+app\submissions\persistence.py:84: in create
+    raise ValueError("exercise does not belong to course")
+E   ValueError: exercise does not belong to course
+---------------------------- Captured stderr setup ----------------------------
+INFO  [alembic.runtime.migration] Context impl PostgresqlImpl.
+INFO  [alembic.runtime.migration] Will assume transactional DDL.
+_ test_vector_through_official_router_sql_postgres[analytics-concept-time-foreign-course] _
+tests\integration\test_wave3_analytics_vectors_postgres.py:27: in test_vector_through_official_router_sql_postgres
+    gate.seed_vector_facts(vector["facts"])
+tests\integration\wave3_support.py:131: in seed_vector_facts
+    self.repos.submissions.create(submission_id=sid, course_id=course, exercise_id=exercise, owner_user_id=owner,
+app\submissions\persistence.py:49: in wrapped
+    return method(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+app\submissions\persistence.py:84: in create
+    raise ValueError("exercise does not belong to course")
+E   ValueError: exercise does not belong to course
+---------------------------- Captured stderr setup ----------------------------
+INFO  [alembic.runtime.migration] Context impl PostgresqlImpl.
+INFO  [alembic.runtime.migration] Will assume transactional DDL.
+_ test_vector_through_official_router_sql_postgres[analytics-exercise-time-foreign-course] _
+tests\integration\test_wave3_analytics_vectors_postgres.py:27: in test_vector_through_official_router_sql_postgres
+    gate.seed_vector_facts(vector["facts"])
+tests\integration\wave3_support.py:131: in seed_vector_facts
+    self.repos.submissions.create(submission_id=sid, course_id=course, exercise_id=exercise, owner_user_id=owner,
+app\submissions\persistence.py:49: in wrapped
+    return method(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+app\submissions\persistence.py:84: in create
+    raise ValueError("exercise does not belong to course")
+E   ValueError: exercise does not belong to course
+---------------------------- Captured stderr setup ----------------------------
+INFO  [alembic.runtime.migration] Context impl PostgresqlImpl.
+INFO  [alembic.runtime.migration] Will assume transactional DDL.
+_ test_vector_through_official_router_sql_postgres[analytics-all-foreign-course] _
+tests\integration\test_wave3_analytics_vectors_postgres.py:27: in test_vector_through_official_router_sql_postgres
+    gate.seed_vector_facts(vector["facts"])
+tests\integration\wave3_support.py:131: in seed_vector_facts
+    self.repos.submissions.create(submission_id=sid, course_id=course, exercise_id=exercise, owner_user_id=owner,
+app\submissions\persistence.py:49: in wrapped
+    return method(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+app\submissions\persistence.py:84: in create
+    raise ValueError("exercise does not belong to course")
+E   ValueError: exercise does not belong to course
+---------------------------- Captured stderr setup ----------------------------
+INFO  [alembic.runtime.migration] Context impl PostgresqlImpl.
+INFO  [alembic.runtime.migration] Will assume transactional DDL.
+============================== warnings summary ===============================
+tests/integration/test_wave3_analytics_vectors_postgres.py: 62 warnings
+  C:\Users\lenovo\Desktop\cs competition\.venv\Lib\site-packages\alembic\config.py:604: DeprecationWarning: No path_separator found in configuration; falling back to legacy splitting on spaces, commas, and colons for prepend_sys_path.  Consider adding path_separator=os to Alembic config.
+    util.warn_deprecated(
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED tests/integration/test_wave3_analytics_vectors_postgres.py::test_vector_through_official_router_sql_postgres[analytics-none-foreign-course]
+FAILED tests/integration/test_wave3_analytics_vectors_postgres.py::test_vector_through_official_router_sql_postgres[analytics-concept-foreign-course]
+FAILED tests/integration/test_wave3_analytics_vectors_postgres.py::test_vector_through_official_router_sql_postgres[analytics-exercise-foreign-course]
+FAILED tests/integration/test_wave3_analytics_vectors_postgres.py::test_vector_through_official_router_sql_postgres[analytics-start-foreign-course]
+FAILED tests/integration/test_wave3_analytics_vectors_postgres.py::test_vector_through_official_router_sql_postgres[analytics-end-foreign-course]
+FAILED tests/integration/test_wave3_analytics_vectors_postgres.py::test_vector_through_official_router_sql_postgres[analytics-concept-exercise-foreign-course]
+FAILED tests/integration/test_wave3_analytics_vectors_postgres.py::test_vector_through_official_router_sql_postgres[analytics-concept-time-foreign-course]
+FAILED tests/integration/test_wave3_analytics_vectors_postgres.py::test_vector_through_official_router_sql_postgres[analytics-exercise-time-foreign-course]
+FAILED tests/integration/test_wave3_analytics_vectors_postgres.py::test_vector_through_official_router_sql_postgres[analytics-all-foreign-course]
+9 failed, 53 passed, 62 warnings in 129.33s (0:02:09)

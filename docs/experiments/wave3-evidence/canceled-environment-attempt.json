@@ -1,0 +1,9 @@
+{
+  "attempt": "G10-repair-case-semantics-red-20261008093045",
+  "status": "canceled before pytest produced any test result",
+  "raw_local_path": ".superpowers/sdd/2026-10-08-wave3-integration-gate/G10-repair-case-semantics-red-20261008093045.log",
+  "raw_sha256": "0069c6d69254e8515894f5c25deca637eadd1cb745564f4cc9d7a6bdf0a3217e",
+  "archive": "docs/experiments/wave3-evidence/command-output/canceled-case-semantics-environment-attempt.txt",
+  "archive_sha256": "0069c6d69254e8515894f5c25deca637eadd1cb745564f4cc9d7a6bdf0a3217e",
+  "limitation": "Exact completion timing and child exit code were not recorded. No invented test failure or completion entry. Only this helper and its children were canceled; no service was stopped."
+}

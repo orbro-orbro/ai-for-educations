@@ -1,18 +1,27 @@
 from __future__ import annotations
 
 import os
+from datetime import UTC, datetime
+from typing import Literal
+from pydantic import BaseModel, ConfigDict
 
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 
 from app.api.auth import Authenticator, TokenCodec, create_auth_router
+from app.api.teacher import create_teacher_router
+from app.analytics.service import TeacherAnalyticsService
+from app.analytics.repository import TeacherAnalyticsRepository
 from app.api.courses import create_courses_router
 from app.api.diagnostics import create_diagnostics_router
 from app.api.errors import install_error_handling
+from app.api.contract import install_generated_openapi
 from app.api.knowledge import router as knowledge_router
 from app.api.memories import create_memories_router
 from app.api.submissions import create_submissions_router
 from app.audit.service import AuditLog, AuditService
 from app.auth.models import UserRepository
+from app.auth.revocations import InMemoryTokenRevocations
 from app.auth.policy import AuthorizationPolicy
 from app.courses.models import CourseRepository, EnrollmentRepository, ProtectedAnswerLookup
 from app.courses.service import CourseService
@@ -35,6 +44,26 @@ from app.submissions.runner_client import RunnerClient
 from app.submissions.service import CourseSubmissionAccess, SubmissionService
 
 _DEVELOPMENT_TOKEN_SECRET = "development-only-token-secret"
+_DEVELOPMENT_CORS_ORIGINS = (
+    "http://localhost:5173",
+    "http://127.0.0.1:5173",
+)
+
+
+def _cors_origins_from_config() -> tuple[str, ...]:
+    configured = os.environ.get("CORS_ALLOWED_ORIGINS")
+    if configured is not None:
+        origins = tuple(
+            origin.strip().rstrip("/")
+            for origin in configured.split(",")
+            if origin.strip()
+        )
+        if "*" in origins:
+            raise RuntimeError("CORS_ALLOWED_ORIGINS must contain explicit origins")
+        return origins
+    if os.environ.get("APP_ENV", "development") in {"development", "test"}:
+        return _DEVELOPMENT_CORS_ORIGINS
+    return ()
 
 
 def _runner_client_from_config() -> RunnerClient:
@@ -92,6 +121,7 @@ def _default_dependencies(
         repositories = create_sql_repositories(
             database_url,
             diagnosis_confidence_threshold=diagnosis_confidence_threshold,
+            analytics_secret=secret,
         )
         users = repositories.users
         courses = repositories.courses
@@ -103,6 +133,7 @@ def _default_dependencies(
         memories = repositories.memories
         memory_source = repositories.memory_source
         memory_audit = repositories.audit
+        token_revocations = repositories.token_revocations
     else:
         if environment not in {"development", "test"}:
             raise RuntimeError("DATABASE_URL must be set outside development and test")
@@ -120,7 +151,8 @@ def _default_dependencies(
             confidence_threshold=diagnosis_confidence_threshold,
         )
         memory_audit = AuditService()
-    authenticator = Authenticator(users, TokenCodec(secret))
+        token_revocations = InMemoryTokenRevocations()
+    authenticator = Authenticator(users, TokenCodec(secret), token_revocations)
     course_service = CourseService(users, courses, enrollments, AuthorizationPolicy())
     return (
         authenticator,
@@ -154,6 +186,8 @@ def create_app(
     memory_audit: AuditLog | None = None,
     memory_service: MemoryService | None = None,
     deletion_service: DeletionService | None = None,
+    teacher_analytics_repository: TeacherAnalyticsRepository | None = None,
+    teacher_analytics_service: TeacherAnalyticsService | None = None,
 ) -> FastAPI:
     if diagnosis_confidence_threshold is None:
         try:
@@ -232,9 +266,48 @@ def create_app(
             policy=memory_policy,
             retrieval_index=memory_index,
             audit=memory_audit,
+            source_context=memory_source,
         )
 
+    if teacher_analytics_repository is None:
+        from app.audit.persistence import SqlAuditLog
+        if isinstance(memory_audit, SqlAuditLog):
+            from app.analytics.persistence import SqlTeacherAnalyticsRepository
+            teacher_analytics_repository = SqlTeacherAnalyticsRepository(
+                memory_audit._uow,
+                secret=os.environ.get("AUTH_TOKEN_SECRET", _DEVELOPMENT_TOKEN_SECRET),
+                confidence_threshold=diagnosis_confidence_threshold,
+            )
+        else:
+            from app.analytics.data_source import InMemoryTeacherAnalyticsDataSource
+            teacher_analytics_repository = InMemoryTeacherAnalyticsDataSource(
+                submission_repository, diagnostic_repository, knowledge_repository,
+                secret=os.environ.get("AUTH_TOKEN_SECRET", _DEVELOPMENT_TOKEN_SECRET),
+                confidence_threshold=diagnosis_confidence_threshold,
+            )
+    teacher_analytics_service = teacher_analytics_service or TeacherAnalyticsService(
+        courses=course_service, repository=teacher_analytics_repository,
+        audit=memory_audit, clock=lambda: datetime.now(UTC),
+    )
+
     application = FastAPI(title="KnowBound-CJ", version="0.2.0")
+    allowed_origins = _cors_origins_from_config()
+    if allowed_origins:
+        application.add_middleware(
+            CORSMiddleware,
+            allow_origins=list(allowed_origins),
+            allow_credentials=False,
+            allow_methods=["GET", "POST", "PATCH", "DELETE"],
+            allow_headers=[
+                "Authorization",
+                "Content-Type",
+                "Idempotency-Key",
+                "X-Request-ID",
+            ],
+            expose_headers=["X-Request-ID"],
+        )
+    application.state.teacher_analytics_repository = teacher_analytics_repository
+    application.state.teacher_analytics_service = teacher_analytics_service
     application.state.authenticator = authenticator
     application.state.course_service = course_service
     application.state.knowledge_repository = knowledge_repository
@@ -273,11 +346,20 @@ def create_app(
         create_memories_router(memory_service, deletion_service, authenticator)
     )
 
-    @application.get("/health")
+    application.include_router(create_teacher_router(teacher_analytics_service, authenticator))
+
+    @application.get("/health", operation_id="getHealth", response_model=HealthResponse)
     def health() -> dict[str, str]:
         return {"status": "ok", "service": "knowbound-api"}
 
+    install_generated_openapi(application)
     return application
+
+
+class HealthResponse(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    status: Literal["ok"]
+    service: Literal["knowbound-api"]
 
 
 app = create_app()

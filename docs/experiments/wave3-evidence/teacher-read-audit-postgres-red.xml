@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="17" skipped="0" tests="17" time="20.314" timestamp="2026-10-08T17:25:47.563292+08:00" hostname="LAPTOP-N3QA8JA6"><testcase classname="tests.integration.test_wave3_teacher_read_audit_postgres" name="test_teacher_get_audit_is_committed_metadata_and_visible_to_a_fresh_instance[queue]" file="tests\integration\test_wave3_teacher_read_audit_postgres.py" line="39" time="2.171"><failure message="assert 0 == 1&#10; +  where 0 = len([])">tests\integration\test_wave3_teacher_read_audit_postgres.py:47: in test_teacher_get_audit_is_committed_metadata_and_visible_to_a_fresh_instance
+    assert len(rows) == 1
+E   assert 0 == 1
+E    +  where 0 = len([])</failure></testcase><testcase classname="tests.integration.test_wave3_teacher_read_audit_postgres" name="test_teacher_get_audit_is_committed_metadata_and_visible_to_a_fresh_instance[available]" file="tests\integration\test_wave3_teacher_read_audit_postgres.py" line="39" time="1.285"><failure message="assert 0 == 1&#10; +  where 0 = len([])">tests\integration\test_wave3_teacher_read_audit_postgres.py:47: in test_teacher_get_audit_is_committed_metadata_and_visible_to_a_fresh_instance
+    assert len(rows) == 1
+E   assert 0 == 1
+E    +  where 0 = len([])</failure></testcase><testcase classname="tests.integration.test_wave3_teacher_read_audit_postgres" name="test_teacher_get_audit_is_committed_metadata_and_visible_to_a_fresh_instance[suppressed]" file="tests\integration\test_wave3_teacher_read_audit_postgres.py" line="39" time="1.126"><failure message="assert 0 == 1&#10; +  where 0 = len([])">tests\integration\test_wave3_teacher_read_audit_postgres.py:47: in test_teacher_get_audit_is_committed_metadata_and_visible_to_a_fresh_instance
+    assert len(rows) == 1
+E   assert 0 == 1
+E    +  where 0 = len([])</failure></testcase><testcase classname="tests.integration.test_wave3_teacher_read_audit_postgres" name="test_teacher_get_returns_only_sanitized_503_if_audit_flush_or_commit_fails[flush-queue]" file="tests\integration\test_wave3_teacher_read_audit_postgres.py" line="62" time="1.301"><failure message="assert 200 == 503&#10; +  where 200 = &lt;Response [200 OK]&gt;.status_code">tests\integration\test_wave3_teacher_read_audit_postgres.py:78: in test_teacher_get_returns_only_sanitized_503_if_audit_flush_or_commit_fails
+    assert response.status_code == 503
+E   assert 200 == 503
+E    +  where 200 = &lt;Response [200 OK]&gt;.status_code</failure></testcase><testcase classname="tests.integration.test_wave3_teacher_read_audit_postgres" name="test_teacher_get_returns_only_sanitized_503_if_audit_flush_or_commit_fails[flush-available]" file="tests\integration\test_wave3_teacher_read_audit_postgres.py" line="62" time="1.314"><failure message="assert 200 == 503&#10; +  where 200 = &lt;Response [200 OK]&gt;.status_code">tests\integration\test_wave3_teacher_read_audit_postgres.py:78: in test_teacher_get_returns_only_sanitized_503_if_audit_flush_or_commit_fails
+    assert response.status_code == 503
+E   assert 200 == 503
+E    +  where 200 = &lt;Response [200 OK]&gt;.status_code</failure></testcase><testcase classname="tests.integration.test_wave3_teacher_read_audit_postgres" name="test_teacher_get_returns_only_sanitized_503_if_audit_flush_or_commit_fails[flush-suppressed]" file="tests\integration\test_wave3_teacher_read_audit_postgres.py" line="62" time="1.135"><failure message="assert 200 == 503&#10; +  where 200 = &lt;Response [200 OK]&gt;.status_code">tests\integration\test_wave3_teacher_read_audit_postgres.py:78: in test_teacher_get_returns_only_sanitized_503_if_audit_flush_or_commit_fails
+    assert response.status_code == 503
+E   assert 200 == 503
+E    +  where 200 = &lt;Response [200 OK]&gt;.status_code</failure></testcase><testcase classname="tests.integration.test_wave3_teacher_read_audit_postgres" name="test_teacher_get_returns_only_sanitized_503_if_audit_flush_or_commit_fails[commit-queue]" file="tests\integration\test_wave3_teacher_read_audit_postgres.py" line="62" time="1.328"><failure message="assert 200 == 503&#10; +  where 200 = &lt;Response [200 OK]&gt;.status_code">tests\integration\test_wave3_teacher_read_audit_postgres.py:78: in test_teacher_get_returns_only_sanitized_503_if_audit_flush_or_commit_fails
+    assert response.status_code == 503
+E   assert 200 == 503
+E    +  where 200 = &lt;Response [200 OK]&gt;.status_code</failure></testcase><testcase classname="tests.integration.test_wave3_teacher_read_audit_postgres" name="test_teacher_get_returns_only_sanitized_503_if_audit_flush_or_commit_fails[commit-available]" file="tests\integration\test_wave3_teacher_read_audit_postgres.py" line="62" time="1.195"><failure message="assert 200 == 503&#10; +  where 200 = &lt;Response [200 OK]&gt;.status_code">tests\integration\test_wave3_teacher_read_audit_postgres.py:78: in test_teacher_get_returns_only_sanitized_503_if_audit_flush_or_commit_fails
+    assert response.status_code == 503
+E   assert 200 == 503
+E    +  where 200 = &lt;Response [200 OK]&gt;.status_code</failure></testcase><testcase classname="tests.integration.test_wave3_teacher_read_audit_postgres" name="test_teacher_get_returns_only_sanitized_503_if_audit_flush_or_commit_fails[commit-suppressed]" file="tests\integration\test_wave3_teacher_read_audit_postgres.py" line="62" time="1.172"><failure message="assert 200 == 503&#10; +  where 200 = &lt;Response [200 OK]&gt;.status_code">tests\integration\test_wave3_teacher_read_audit_postgres.py:78: in test_teacher_get_returns_only_sanitized_503_if_audit_flush_or_commit_fails
+    assert response.status_code == 503
+E   assert 200 == 503
+E    +  where 200 = &lt;Response [200 OK]&gt;.status_code</failure></testcase><testcase classname="tests.integration.test_wave3_teacher_read_audit_postgres" name="test_teacher_get_denial_is_audited_with_one_public_reason[queue]" file="tests\integration\test_wave3_teacher_read_audit_postgres.py" line="88" time="1.215"><failure message="assert 0 == 1&#10; +  where 0 = len([])">tests\integration\test_wave3_teacher_read_audit_postgres.py:95: in test_teacher_get_denial_is_audited_with_one_public_reason
+    assert len(rows) == 1
+E   assert 0 == 1
+E    +  where 0 = len([])</failure></testcase><testcase classname="tests.integration.test_wave3_teacher_read_audit_postgres" name="test_teacher_get_denial_is_audited_with_one_public_reason[available]" file="tests\integration\test_wave3_teacher_read_audit_postgres.py" line="88" time="1.240"><failure message="assert 0 == 1&#10; +  where 0 = len([])">tests\integration\test_wave3_teacher_read_audit_postgres.py:95: in test_teacher_get_denial_is_audited_with_one_public_reason
+    assert len(rows) == 1
+E   assert 0 == 1
+E    +  where 0 = len([])</failure></testcase><testcase classname="tests.security.test_wave3_teacher_read_audit" name="test_sensitive_teacher_read_records_metadata_audit[queue]" file="tests\security\test_wave3_teacher_read_audit.py" line="35" time="0.323"><failure message="AssertionError: Sensitive teacher GET returned without an audit event&#10;assert 0 &gt;= 1&#10; +  where 0 = len(())">tests\security\test_wave3_teacher_read_audit.py:42: in test_sensitive_teacher_read_records_metadata_audit
+    assert len(events) &gt;= 1, "Sensitive teacher GET returned without an audit event"
+E   AssertionError: Sensitive teacher GET returned without an audit event
+E   assert 0 &gt;= 1
+E    +  where 0 = len(())</failure></testcase><testcase classname="tests.security.test_wave3_teacher_read_audit" name="test_sensitive_teacher_read_records_metadata_audit[available_analytics]" file="tests\security\test_wave3_teacher_read_audit.py" line="35" time="0.286"><failure message="AssertionError: Sensitive teacher GET returned without an audit event&#10;assert 0 &gt;= 1&#10; +  where 0 = len(())">tests\security\test_wave3_teacher_read_audit.py:42: in test_sensitive_teacher_read_records_metadata_audit
+    assert len(events) &gt;= 1, "Sensitive teacher GET returned without an audit event"
+E   AssertionError: Sensitive teacher GET returned without an audit event
+E   assert 0 &gt;= 1
+E    +  where 0 = len(())</failure></testcase><testcase classname="tests.security.test_wave3_teacher_read_audit" name="test_sensitive_teacher_read_records_metadata_audit[suppressed_analytics]" file="tests\security\test_wave3_teacher_read_audit.py" line="35" time="0.311"><failure message="AssertionError: Sensitive teacher GET returned without an audit event&#10;assert 0 &gt;= 1&#10; +  where 0 = len(())">tests\security\test_wave3_teacher_read_audit.py:42: in test_sensitive_teacher_read_records_metadata_audit
+    assert len(events) &gt;= 1, "Sensitive teacher GET returned without an audit event"
+E   AssertionError: Sensitive teacher GET returned without an audit event
+E   assert 0 &gt;= 1
+E    +  where 0 = len(())</failure></testcase><testcase classname="tests.security.test_wave3_teacher_read_audit" name="test_sensitive_teacher_read_fails_closed_when_audit_is_unavailable[queue]" file="tests\security\test_wave3_teacher_read_audit.py" line="50" time="0.304"><failure message="Failed: DID NOT RAISE AnalyticsPersistenceError">tests\security\test_wave3_teacher_read_audit.py:54: in test_sensitive_teacher_read_fails_closed_when_audit_is_unavailable
+    with pytest.raises(AnalyticsPersistenceError):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   Failed: DID NOT RAISE AnalyticsPersistenceError</failure></testcase><testcase classname="tests.security.test_wave3_teacher_read_audit" name="test_sensitive_teacher_read_fails_closed_when_audit_is_unavailable[available_analytics]" file="tests\security\test_wave3_teacher_read_audit.py" line="50" time="0.296"><failure message="Failed: DID NOT RAISE AnalyticsPersistenceError">tests\security\test_wave3_teacher_read_audit.py:54: in test_sensitive_teacher_read_fails_closed_when_audit_is_unavailable
+    with pytest.raises(AnalyticsPersistenceError):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   Failed: DID NOT RAISE AnalyticsPersistenceError</failure></testcase><testcase classname="tests.security.test_wave3_teacher_read_audit" name="test_sensitive_teacher_read_fails_closed_when_audit_is_unavailable[suppressed_analytics]" file="tests\security\test_wave3_teacher_read_audit.py" line="50" time="0.304"><failure message="Failed: DID NOT RAISE AnalyticsPersistenceError">tests\security\test_wave3_teacher_read_audit.py:54: in test_sensitive_teacher_read_fails_closed_when_audit_is_unavailable
+    with pytest.raises(AnalyticsPersistenceError):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   Failed: DID NOT RAISE AnalyticsPersistenceError</failure></testcase></testsuite></testsuites>

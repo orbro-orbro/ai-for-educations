@@ -1,0 +1,90 @@
+.......F................................................................ [ 35%]
+...FFFFFF...............................................FF.............. [ 70%]
+.............................................................            [100%]
+================================== FAILURES ===================================
+__________ test_late_upsert_must_not_restore_physical_original_text ___________
+tests\security\test_cross_course_memory.py:97: in test_late_upsert_must_not_restore_physical_original_text
+    assert not h.state.memory_index.contains(old.index_document_id), "Late upsert restores a physical private-text copy after a completed deletion"
+E   AssertionError: Late upsert restores a physical private-text copy after a completed deletion
+E   assert not True
+E    +  where True = contains('memory-index:8d5bedad-3599-43c5-afc6-71f981c8a1ea')
+E    +    where contains = <app.memories.retrieval.InMemoryRetrievalIndex object at 0x000001FAD3871C50>.contains
+E    +      where <app.memories.retrieval.InMemoryRetrievalIndex object at 0x000001FAD3871C50> = <starlette.datastructures.State object at 0x000001FAD3A8E620>.memory_index
+E    +        where <starlette.datastructures.State object at 0x000001FAD3A8E620> = Harness(app=<fastapi.applications.FastAPI object at 0x000001FAD3A02120>, users=<app.auth.models.UserRepository object ...e.datetime(2026, 11, 7, 0, 25, 38, 829046, tzinfo=datetime.timezone.utc), request_id='seed', accepted_memory_id=None)}).state
+E    +    and   'memory-index:8d5bedad-3599-43c5-afc6-71f981c8a1ea' = LearningMemory(memory_id='8d5bedad-3599-43c5-afc6-71f981c8a1ea', logical_memory_id='8d5bedad-3599-43c5-afc6-71f981c8a1...at=datetime.datetime(2026, 10, 8, 0, 25, 38, 827431, tzinfo=datetime.timezone.utc), expires_at=None, request_id='seed').index_document_id
+_ test_revoked_course_relation_denies_existing_submission_resources[GET-/submissions/submission-a-None] _
+tests\security\test_idor.py:103: in test_revoked_course_relation_denies_existing_submission_resources
+    assert public_denial(security_app.request(method, path, body=body)) == public_denial(security_app.request(method, missing, body=body))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\security\security_support.py:176: in public_denial
+    assert response.status_code == 404
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   AssertionError
+_ test_revoked_course_relation_denies_existing_submission_resources[GET-/submissions/submission-a/execution-result-None] _
+tests\security\test_idor.py:103: in test_revoked_course_relation_denies_existing_submission_resources
+    assert public_denial(security_app.request(method, path, body=body)) == public_denial(security_app.request(method, missing, body=body))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\security\security_support.py:176: in public_denial
+    assert response.status_code == 404
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   AssertionError
+_ test_revoked_course_relation_denies_existing_submission_resources[GET-/submissions/submission-a/diagnosis-None] _
+tests\security\test_idor.py:103: in test_revoked_course_relation_denies_existing_submission_resources
+    assert public_denial(security_app.request(method, path, body=body)) == public_denial(security_app.request(method, missing, body=body))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\security\security_support.py:176: in public_denial
+    assert response.status_code == 404
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   AssertionError
+_ test_revoked_course_relation_denies_existing_submission_resources[POST-/diagnoses/diagnosis-a/hints/next-body3] _
+tests\security\test_idor.py:103: in test_revoked_course_relation_denies_existing_submission_resources
+    assert public_denial(security_app.request(method, path, body=body)) == public_denial(security_app.request(method, missing, body=body))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\security\security_support.py:176: in public_denial
+    assert response.status_code == 404
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   AssertionError
+_ test_revoked_course_relation_denies_existing_submission_resources[POST-/diagnoses/diagnosis-a/explanation-check-body4] _
+tests\security\test_idor.py:103: in test_revoked_course_relation_denies_existing_submission_resources
+    assert public_denial(security_app.request(method, path, body=body)) == public_denial(security_app.request(method, missing, body=body))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\security\security_support.py:176: in public_denial
+    assert response.status_code == 404
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   AssertionError
+____________ test_logout_revokes_old_token_at_the_server_boundary _____________
+tests\security\test_idor.py:109: in test_logout_revokes_old_token_at_the_server_boundary
+    assert response.status_code == 401, "Logging out must invalidate the captured old token; current main has no revocation contract"
+E   AssertionError: Logging out must invalidate the captured old token; current main has no revocation contract
+E   assert 200 == 401
+E    +  where 200 = <Response [200 OK]>.status_code
+_____________ test_raw_source_must_not_enter_final_model_request ______________
+tests\security\test_prompt_injection.py:151: in test_raw_source_must_not_enter_final_model_request
+    assert "RAW_PRIVATE_CODE_SENTINEL" not in h.provider.diagnosis_requests[0].model_dump_json(), "Task 10 literal source prohibition conflicts with the current diagnosis architecture"
+E   AssertionError: Task 10 literal source prohibition conflicts with the current diagnosis architecture
+E   assert 'RAW_PRIVATE_CODE_SENTINEL' not in '{"source_fi...context":""}'
+E
+E     'RAW_PRIVATE_CODE_SENTINEL' is contained here:
+E        }\n}\n// RAW_PRIVATE_CODE_SENTINEL"}],"execution":{"status":"compile_failed","phase":"compile","retryable":false,"exit_code":1,"diagnostics":[{"severity":"error","message":"non-exhaustive patterns","code":null,"file":"main.cj","start_line":3,"end_line":3}],"toolchain_cjc":"1.2.0"},"rule_matches":[{"misconception_id":"cj.misconception.match-non-exhaustive","root_concept_id":"cj.pattern-match.exhaustiveness","related_concept_ids":[],"diagnostic_indices":[0],"evidence_summary":"non-exhaustive patterns","source_references":["f...
+E
+E     ...Full output truncated (2 lines hidden), use '-vv' to show
+_______ test_deleted_memory_original_text_cannot_reenter_model_context ________
+tests\security\test_prompt_injection.py:160: in test_deleted_memory_original_text_cannot_reenter_model_context
+    assert old.content not in h.provider.hint_requests[0].model_dump_json(), "The retained source diagnosis can still reproduce memory text in a model context"
+E   AssertionError: The retained source diagnosis can still reproduce memory text in a model context
+E   assert 'PRIVATE_A_M...ENTINEL_c387' not in '{"category"...tion":false}'
+E
+E     'PRIVATE_A_MEMORY_SENTINEL_c387' is contained here:
+E       {"category":"conceptual","root_cause":"PRIVATE_A_MEMORY_SENTINEL_c387","concept_ids":["cj.pattern-match.exhaustiveness"],"level":1,"previous_attempt_count":0,"approved_outline":"Reflect on case coverage, step 1.","low_information":false}
+E     ?                                        ++++++++++++++++++++++++++++++
+=========================== short test summary info ===========================
+FAILED tests/security/test_cross_course_memory.py::test_late_upsert_must_not_restore_physical_original_text
+FAILED tests/security/test_idor.py::test_revoked_course_relation_denies_existing_submission_resources[GET-/submissions/submission-a-None]
+FAILED tests/security/test_idor.py::test_revoked_course_relation_denies_existing_submission_resources[GET-/submissions/submission-a/execution-result-None]
+FAILED tests/security/test_idor.py::test_revoked_course_relation_denies_existing_submission_resources[GET-/submissions/submission-a/diagnosis-None]
+FAILED tests/security/test_idor.py::test_revoked_course_relation_denies_existing_submission_resources[POST-/diagnoses/diagnosis-a/hints/next-body3]
+FAILED tests/security/test_idor.py::test_revoked_course_relation_denies_existing_submission_resources[POST-/diagnoses/diagnosis-a/explanation-check-body4]
+FAILED tests/security/test_idor.py::test_logout_revokes_old_token_at_the_server_boundary
+FAILED tests/security/test_prompt_injection.py::test_raw_source_must_not_enter_final_model_request
+FAILED tests/security/test_prompt_injection.py::test_deleted_memory_original_text_cannot_reenter_model_context
+9 failed, 196 passed in 132.29s (0:02:12)

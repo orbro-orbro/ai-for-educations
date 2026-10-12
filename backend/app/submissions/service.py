@@ -53,9 +53,11 @@ class CourseSubmissionAccess:
         raise ResourceNotAvailable()
 
     def require_read(self, actor: Actor, submission: Submission) -> None:
-        self._courses.list_courses(actor)  # verifies the bearer-derived actor
+        visible_courses = self._courses.list_courses(actor)  # live actor/membership facts
         if actor.role is Role.STUDENT:
-            if actor.user_id != submission.owner_user_id:
+            if actor.user_id != submission.owner_user_id or not any(
+                course.course_id == submission.course_id for course in visible_courses
+            ):
                 raise ResourceNotAvailable()
             return
         if not submission.is_formal:

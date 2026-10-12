@@ -1,0 +1,1264 @@
+
+> knowbound-web@0.1.0 test
+> vitest run
+
+
+ RUN  v5.0.3 C:/Users/lenovo/Desktop/cs competition/.worktrees/wave3-integration-gate/frontend
+
+ ❯ tests/all.test.ts (41 tests | 5 failed) 4960ms
+   ❯ Wave 3 integration UI (11)
+     × allows a new submission after switching 课程 during a run 1097ms
+     × allows a new submission after switching 练习 during a run 1079ms
+     × labels multi-concept trend sums as associations rather than unique diagnosis totals 81ms
+     × hides the previously loaded review queue while the next course is loading 35ms
+     × ignores an old review failure after switching to another course 80ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 5 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/all.test.ts > Wave 3 integration UI > allows a new submission after switching 课程 during a run
+TestingLibraryElementError: Unable to find role="button" and name "提交并运行"
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"student-layout"[39m
+    [36m>[39m
+      [36m<section[39m
+        [33maria-labelledby[39m=[32m"student-workspace-title"[39m
+        [33mclass[39m=[32m"workspace-column"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"page-heading"[39m
+        [36m>[39m
+          [36m<div>[39m
+            [36m<p[39m
+              [33mclass[39m=[32m"section-kicker"[39m
+            [36m>[39m
+              [0mSTUDENT · LEARNING LOOP[0m
+            [36m</p>[39m
+            [36m<h1[39m
+              [33mid[39m=[32m"student-workspace-title"[39m
+            [36m>[39m
+              [0m学生工作台[0m
+            [36m</h1>[39m
+            [36m<p>[39m
+              [0m从真实编译证据出发，沿概念脉络完成一次可核验的学习闭环。[0m
+            [36m</p>[39m
+          [36m</div>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"course-mark"[39m
+          [36m>[39m
+            [0m《仓颉语言设计》[0m
+          [36m</span>[39m
+        [36m</div>[39m
+        [36m<ol[39m
+          [33maria-label[39m=[32m"概念脉络轨迹"[39m
+          [33mclass[39m=[32m"concept-trace"[39m
+        [36m>[39m
+          [36m<li[39m
+            [33maria-label[39m=[32m"代码提交，已完成"[39m
+            [33mclass[39m=[32m"is-complete"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"trace-index"[39m
+            [36m>[39m
+              [0m1[0m
+            [36m</span>[39m
+            [36m<span>[39m
+              [0m代码提交[0m
+            [36m</span>[39m
+          [36m</li>[39m
+          [36m<li[39m
+            [33maria-current[39m=[32m"step"[39m
+            [33maria-label[39m=[32m"编译证据，当前步骤"[39m
+            [33mclass[39m=[32m"is-current"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"trace-index"[39m
+            [36m>[39m
+              [0m2[0m
+            [36m</span>[39m
+            [36m<span>[39m
+              [0m编译证据[0m
+            [36m</span>[39m
+          [36m</li>[39m
+          [36m<li[39m
+            [33maria-label[39m=[32m"概念根因，尚未开始"[39m
+            [33mclass[39m=[32m""[39m
+          [36m>[39m
+            [36m<span[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"trace-index"[39m
+            [36m>[39m
+              [0m3[0m
+            [36m</span>[39m
+            [36m<span>[39m
+              [0m概念根因[0m
+            [36m</span>[39m
+          [36m</li>[39m
+          [36m<li[39m
+            [33maria-label[39m=[32m"提示阶梯，尚未开始"[39m
+            [33mclass[39m=[32m""[39m
+          [36m>[39m
+            [36m<span[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"trace-index"[39m
+            [36m>[39m
+              [0m4[0m
+            [36m</span>[39m
+            [36m<span>[39m
+              [0m提示阶梯[0m
+            [36m</span>[39m
+          [36m</li>[39m
+          [36m<li[39m
+            [33maria-label[39m=[32m"理解验证，尚未开始"[39m
+            [33mclass[39m=[32m""[39m
+          [36m>[39m
+            [36m<span[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"trace-index"[39m
+            [36m>[39m
+              [0m5[0m
+            [36m</span>[39m
+            [36m<span>[39m
+              [0m理解验证[0m
+            [36m</span>[39m
+          [36m</li>[39m
+          [36m<li[39m
+            [33maria-label[39m=[32m"记忆确认，尚未开始"[39m
+            [33mclass[39m=[32m""[39m
+          [36m>[39m
+            [36m<span[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"trace-index"[39m
+            [36m>[39m
+              [0m6[0m
+            [36m</span>[39m
+            [36m<span>[39m
+              [0m记忆确认[0m
+            [36m</span>[39m
+          [36m</li>[39m
+        [36m</ol>[39m
+        [36m<section[39m
+          [33maria-labelledby[39m=[32m"code-title"[39m
+          [33mclass[39m=[32m"code-workbench"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"workbench-bar"[39m
+          [36m>[39m
+            [36m<div>[39m
+              [36m<p[39m
+                [33mclass[39m=[32m"section-kicker"[39m
+              [36m>[39m
+                [0m01 · 选择任务[0m
+              [36m</p>[39m
+              [36m<h2[39m
+                [33mid[39m=[32m"code-title"[39m
+              [36m>[39m
+                [0m代码实验台[0m
+              [36m</h2>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"selector-row"[39m
+            [36m>[39m
+              [36m<label>[39m
+                [0m课程[0m
+                [36m<select>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"course-a"[39m
+                  [36m>[39m
+                    [0mCourse A[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"course-b"[39m
+                  [36m>[39m
+                    [0mCourse B[0m
+                  [36m</option>[39m
+                [36m</select>[39m
+              [36m</label>[39m
+              [36m<label>[39m
+                [0m练习[0m
+                [36m<select>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"exercise-b"[39m
+                  [36m>[39m
+                    [0mExercise B[0m
+                  [36m</option>[39m
+                [36m</select>[39m
+              [36m</label>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"editor-label"[39m
+            [33mfor[39m=[32m"cangjie-source"[39m
+          [36m>[39m
+            [36m<span>[39m
+              [0m仓颉源码[0m
+            [36m</span>[39m
+            [36m<small>[39m
+              [0mmain.cj · 隔离执行[0m
+            [36m</small>[39m
+          [36m</label>[39m
+          [36m<textarea[39m
+            [33maria-label[39m=[32m"仓颉源码"[39m
+            [33mclass[39m=[32m"code-editor"[39m
+            [33mid[39m=[32m"cangjie-source"[39m
+            [33mspellcheck[39m=[32m"false"[39m
+          [36m>[39m
+            [0mmain() {
+    // 在这里编写仓颉代码
+}[0m
+          [36m</textarea>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"submit-row"[39m
+          [36m>[39m
+            [36m<p>[39m
+              [0m代码只会发送到受限执行器，不在浏览器中模拟结果。[0m
+            [36m</p>[39m
+            [36m<button[39m
+              [33mdisabled[39m=[32m""[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0m正在隔离执行…[0m
+            [36m</button>[39m
+          [36m</div>[39m
+        [36m</section>[39m
+      [36m</section>[39m
+      [36m<aside[39m
+        [33mclass[39m=[32m"memory-column"[39m
+      [36m>[39m
+        [36m<section[39m
+          [33maria-labelledby[39m=[32m"memory-title"[39m
+          [33mclass[39m=[32m"memory-center"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"section-heading"[39m
+          [36m>[39m
+            [36m<div>[39m
+              [36m<p[39m
+                [33mclass[39m=[32m"section-kicker memory-kicker"[39m
+              [36m>[39m
+                [0m本人确认区[0m
+              [36m</p>[39m
+              [36m<h2[39m
+                [33mid[39m=[32m"memory-title"[39m
+              [36m>[39m
+                [0m个人课程记忆[0m
+              [36m</h2>[39m
+            [36m</div>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"privacy-chip"[39m
+            [36m>[39m
+              [0m仅你可见[0m
+            [36m</span>[39m
+          [36m</div>[39m
+          [36m<p[39m
+            [33mclass[39m=[32m"privacy-note"[39m
+          [36m>[39m
+            [0m系统只能提出建议。只有你接受后，内容才会成为《仓颉语言设计》的长期学习记忆。[0m
+          [36m</p>[39m
+          [36m<p[39m
+            [33mclass[39m=[32m"empty-copy"[39m
+          [36m>[39m
+            [0m还没有经你确认的课程记忆。完成理解验证后，建议会出现在这里。[0m
+          [36m</p>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"memory-list"[39m
+          [36m/>[39m
+        [36m</section>[39m
+      [36m</aside>[39m
+    [36m</div>[39m
+  [36m</div>[39m
+[36m</body>[39m
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"student-layout"[39m
+    [36m>[39m
+      [36m<section[39m
+        [33maria-labelledby[39m=[32m"student-workspace-title"[39m
+        [33mclass[39m=[32m"workspace-column"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"page-heading"[39m
+        [36m>[39m
+          [36m<div>[39m
+            [36m<p[39m
+              [33mclass[39m=[32m"section-kicker"[39m
+            [36m>[39m
+              [0mSTUDENT · LEARNING LOOP[0m
+            [36m</p>[39m
+            [36m<h1[39m
+              [33mid[39m=[32m"student-workspace-title"[39m
+            [36m>[39m
+              [0m学生工作台[0m
+            [36m</h1>[39m
+            [36m<p>[39m
+              [0m从真实编译证据出发，沿概念脉络完成一次可核验的学习闭环。[0m
+            [36m</p>[39m
+          [36m</div>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"course-mark"[39m
+          [36m>[39m
+            [0m《仓颉语言设计》[0m
+          [36m</span>[39m
+        [36m</div>[39m
+        [36m<ol[39m
+          [33maria-label[39m=[32m"概念脉络轨迹"[39m
+          [33mclass[39m=[32m"concept-trace"[39m
+        [36m>[39m
+          [36m<li[39m
+            [33maria-label[39m=[32m"代码提交，已完成"[39m
+            [33mclass[39m=[32m"is-complete"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"trace-index"[39m
+            [36m>[39m
+              [0m1[0m
+            [36m</span>[39m
+            [36m<span>[39m
+              [0m代码提交[0m
+            [36m</span>[39m
+          [36m</li>[39m
+          [36m<li[39m
+            [33maria-current[39m=[32m"step"[39m
+            [33maria-label[39m=[32m"编译证据，当前步骤"[39m
+            [33mclass[39m=[32m"is-current"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"trace-index"[39m
+            [36m>[39m
+              [0m2[0m
+            [36m</span>[39m
+            [36m<span>[39m
+              [0m编译证据[0m
+            [36m</span>[39m
+          [36m</li>[39m
+          [36m<li[39m
+            [33maria-label[39m=[32m"概念根因，尚未开始"[39m
+            [33mclass[39m=[32m""[39m
+          [36m>[39m
+            [36m<span[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"trace-index"[39m
+            [36m>[39m
+              [0m3[0m
+            [36m</span>[39m
+            [36m<span>[39m
+              [0m概念根因[0m
+            [36m</span>[39m
+          [36m</li>[39m
+          [36m<li[39m
+            [33maria-label[39m=[32m"提示阶梯，尚未开始"[39m
+            [33mclass[39m=[32m""[39m
+          [36m>[39m
+            [36m<span[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"trace-index"[39m
+            [36m>[39m
+              [0m4[0m
+            [36m</span>[39m
+            [36m<span>[39m
+              [0m提示阶梯[0m
+            [36m</span>[39m
+          [36m</li>[39m
+          [36m<li[39m
+            [33maria-label[39m=[32m"理解验证，尚未开始"[39m
+            [33mclass[39m=[32m""[39m
+          [36m>[39m
+            [36m<span[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"trace-index"[39m
+            [36m>[39m
+              [0m5[0m
+            [36m</span>[39m
+            [36m<span>[39m
+              [0m理解验证[0m
+            [36m</span>[39m
+          [36m</li>[39m
+          [36m<li[39m
+            [33maria-label[39m=[32m"记忆确认，尚未开始"[39m
+            [33mclass[39m=[32m""[39m
+          [36m>[39m
+            [36m<span[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"trace-index"[39m
+            [36m>[39m
+              [0m6[0m
+            [36m</span>[39m
+            [36m<span>[39m
+              [0m记忆确认[0m
+            [36m</span>[39m
+          [36m</li>[39m
+        [36m</ol>[39m
+        [36m<section[39m
+          [33maria-labelledby[39m=[32m"code-title"[39m
+          [33mclass[39m=[32m"code-workbench"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"workbench-bar"[39m
+          [36m>[39m
+            [36m<div>[39m
+              [36m<p[39m
+                [33mclass[39m=[32m"section-kicker"[39m
+              [36m>[39m
+                [0m01 · 选择任务[0m
+              [36m</p>[39m
+              [36m<h2[39m
+                [33mid[39m=[32m"code-title"[39m
+              [36m>[39m
+                [0m代码实验台[0m
+              [36m</h2>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"selector-row"[39m
+            [36m>[39m
+              [36m<label>[39m
+                [0m课程[0m
+                [36m<select>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"course-a"[39m
+                  [36m>[39m
+                    [0mCourse A[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"course-b"[39m
+                  [36m>[39m
+                    [0mCourse B[0m
+                  [36m</option>[39m
+                [36m</select>[39m
+              [36m</label>[39m
+              [36m<label>[39m
+                [0m练习[0m
+                [36m<select>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"exercise-b"[39m
+                  [36m>[39m
+                    [0mExercise B[0m
+                  [36m</option>[39m
+                [36m</select>[39m
+              [36m</label>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"editor-label"[39m
+            [33mfor[39m=[32m"cangjie-source"[39m
+          [36m>[39m
+            [36m<span>[39m
+              [0m仓颉源码[0m
+            [36m</span>[39m
+            [36m<small>[39m
+              [0mmain.cj · 隔离执行[0m
+            [36m</small>[39m
+          [36m</label>[39m
+          [36m<textarea[39m
+            [33maria-label[39m=[32m"仓颉源码"[39m
+            [33mclass[39m=[32m"code-editor"[39m
+            [33mid[39m=[32m"cangjie-source"[39m
+            [33mspellcheck[39m=[32m"false"[39m
+          [36m>[39m
+            [0mmain() {
+    // 在这里编写仓颉代码
+}[0m
+          [36m</textarea>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"submit-row"[39m
+          [36m>[39m
+            [36m<p>[39m
+              [0m代码只会发送到受限执行器，不在浏览器中模拟结果。[0m
+            [36m</p>[39m
+            [36m<button[39m
+              [33mdisabled[39m=[32m""[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0m正在隔离执行…[0m
+            [36m</button>[39m
+          [36m</div>[39m
+        [36m</section>[39m
+      [36m</section>[39m
+      [36m<aside[39m
+        [33mclass[39m=[32m"memory-column"[39m
+      [36m>[39m
+        [36m<section[39m
+          [33maria-labelledby[39m=[32m"memory-title"[39m
+          [33mclass[39m=[32m"memory-center"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"section-heading"[39m
+          [36m>[39m
+            [36m<div>[39m
+              [36m<p[39m
+                [33mclass[39m=[32m"section-kicker memory-kicker"[39m
+              [36m>[39m
+                [0m本人确认区[0m
+              [36m</p>[39m
+              [36m<h2[39m
+                [33mid[39m=[32m"memory-title"[39m
+              [36m>[39m
+                [0m个人课程记忆[0m
+              [36m</h2>[39m
+            [36m</div>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"privacy-chip"[39m
+            [36m>[39m
+              [0m仅你可见[0m
+            [36m</span>[39m
+          [36m</div>[39m
+          [36m<p[39m
+            [33mclass[39m=[32m"privacy-note"[39m
+          [36m>[39m
+            [0m系统只能提出建议。只有你接受后，内容才会成为《仓颉语言设计》的长期学习记忆。[0m
+          [36m</p>[39m
+          [36m<p[39m
+            [33mclass[39m=[32m"empty-copy"[39m
+          [36m>[39m
+            [0m还没有经你确认的课程记忆。完成理解验证后，建议会出现在这里。[0m
+          [36m</p>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"memory-list"[39m
+          [36m/>[39m
+        [36m</section>[39m
+      [36m</aside>[39m
+    [36m</div>[39m
+  [36m</div>[39m
+[36m</body>[39m
+ ❯ waitForWrapper node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ tests/wave3-integration.test.tsx:121:29
+    119|     fireEvent.change(screen.getByRole("combobox",{name:selection}),{ta…
+    120|     await screen.findByRole("option",{name:selection==="课程"?"Exercise …
+    121|     const next=await screen.findByRole("button",{name:"提交并运行"});
+       |                             ^
+    122|     expect(next).toBeEnabled();
+    123|     fireEvent.click(next);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/5]⎯
+
+ FAIL  tests/all.test.ts > Wave 3 integration UI > allows a new submission after switching 练习 during a run
+TestingLibraryElementError: Unable to find role="button" and name "提交并运行"
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"student-layout"[39m
+    [36m>[39m
+      [36m<section[39m
+        [33maria-labelledby[39m=[32m"student-workspace-title"[39m
+        [33mclass[39m=[32m"workspace-column"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"page-heading"[39m
+        [36m>[39m
+          [36m<div>[39m
+            [36m<p[39m
+              [33mclass[39m=[32m"section-kicker"[39m
+            [36m>[39m
+              [0mSTUDENT · LEARNING LOOP[0m
+            [36m</p>[39m
+            [36m<h1[39m
+              [33mid[39m=[32m"student-workspace-title"[39m
+            [36m>[39m
+              [0m学生工作台[0m
+            [36m</h1>[39m
+            [36m<p>[39m
+              [0m从真实编译证据出发，沿概念脉络完成一次可核验的学习闭环。[0m
+            [36m</p>[39m
+          [36m</div>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"course-mark"[39m
+          [36m>[39m
+            [0m《仓颉语言设计》[0m
+          [36m</span>[39m
+        [36m</div>[39m
+        [36m<ol[39m
+          [33maria-label[39m=[32m"概念脉络轨迹"[39m
+          [33mclass[39m=[32m"concept-trace"[39m
+        [36m>[39m
+          [36m<li[39m
+            [33maria-label[39m=[32m"代码提交，已完成"[39m
+            [33mclass[39m=[32m"is-complete"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"trace-index"[39m
+            [36m>[39m
+              [0m1[0m
+            [36m</span>[39m
+            [36m<span>[39m
+              [0m代码提交[0m
+            [36m</span>[39m
+          [36m</li>[39m
+          [36m<li[39m
+            [33maria-current[39m=[32m"step"[39m
+            [33maria-label[39m=[32m"编译证据，当前步骤"[39m
+            [33mclass[39m=[32m"is-current"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"trace-index"[39m
+            [36m>[39m
+              [0m2[0m
+            [36m</span>[39m
+            [36m<span>[39m
+              [0m编译证据[0m
+            [36m</span>[39m
+          [36m</li>[39m
+          [36m<li[39m
+            [33maria-label[39m=[32m"概念根因，尚未开始"[39m
+            [33mclass[39m=[32m""[39m
+          [36m>[39m
+            [36m<span[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"trace-index"[39m
+            [36m>[39m
+              [0m3[0m
+            [36m</span>[39m
+            [36m<span>[39m
+              [0m概念根因[0m
+            [36m</span>[39m
+          [36m</li>[39m
+          [36m<li[39m
+            [33maria-label[39m=[32m"提示阶梯，尚未开始"[39m
+            [33mclass[39m=[32m""[39m
+          [36m>[39m
+            [36m<span[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"trace-index"[39m
+            [36m>[39m
+              [0m4[0m
+            [36m</span>[39m
+            [36m<span>[39m
+              [0m提示阶梯[0m
+            [36m</span>[39m
+          [36m</li>[39m
+          [36m<li[39m
+            [33maria-label[39m=[32m"理解验证，尚未开始"[39m
+            [33mclass[39m=[32m""[39m
+          [36m>[39m
+            [36m<span[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"trace-index"[39m
+            [36m>[39m
+              [0m5[0m
+            [36m</span>[39m
+            [36m<span>[39m
+              [0m理解验证[0m
+            [36m</span>[39m
+          [36m</li>[39m
+          [36m<li[39m
+            [33maria-label[39m=[32m"记忆确认，尚未开始"[39m
+            [33mclass[39m=[32m""[39m
+          [36m>[39m
+            [36m<span[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"trace-index"[39m
+            [36m>[39m
+              [0m6[0m
+            [36m</span>[39m
+            [36m<span>[39m
+              [0m记忆确认[0m
+            [36m</span>[39m
+          [36m</li>[39m
+        [36m</ol>[39m
+        [36m<section[39m
+          [33maria-labelledby[39m=[32m"code-title"[39m
+          [33mclass[39m=[32m"code-workbench"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"workbench-bar"[39m
+          [36m>[39m
+            [36m<div>[39m
+              [36m<p[39m
+                [33mclass[39m=[32m"section-kicker"[39m
+              [36m>[39m
+                [0m01 · 选择任务[0m
+              [36m</p>[39m
+              [36m<h2[39m
+                [33mid[39m=[32m"code-title"[39m
+              [36m>[39m
+                [0m代码实验台[0m
+              [36m</h2>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"selector-row"[39m
+            [36m>[39m
+              [36m<label>[39m
+                [0m课程[0m
+                [36m<select>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"course-a"[39m
+                  [36m>[39m
+                    [0mCourse A[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"course-b"[39m
+                  [36m>[39m
+                    [0mCourse B[0m
+                  [36m</option>[39m
+                [36m</select>[39m
+              [36m</label>[39m
+              [36m<label>[39m
+                [0m练习[0m
+                [36m<select>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"exercise-a"[39m
+                  [36m>[39m
+                    [0mExercise A[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"exercise-next"[39m
+                  [36m>[39m
+                    [0mExercise Next[0m
+                  [36m</option>[39m
+                [36m</select>[39m
+              [36m</label>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"editor-label"[39m
+            [33mfor[39m=[32m"cangjie-source"[39m
+          [36m>[39m
+            [36m<span>[39m
+              [0m仓颉源码[0m
+            [36m</span>[39m
+            [36m<small>[39m
+              [0mmain.cj · 隔离执行[0m
+            [36m</small>[39m
+          [36m</label>[39m
+          [36m<textarea[39m
+            [33maria-label[39m=[32m"仓颉源码"[39m
+            [33mclass[39m=[32m"code-editor"[39m
+            [33mid[39m=[32m"cangjie-source"[39m
+            [33mspellcheck[39m=[32m"false"[39m
+          [36m>[39m
+            [0mmain() {
+    // 在这里编写仓颉代码
+}[0m
+          [36m</textarea>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"submit-row"[39m
+          [36m>[39m
+            [36m<p>[39m
+              [0m代码只会发送到受限执行器，不在浏览器中模拟结果。[0m
+            [36m</p>[39m
+            [36m<button[39m
+              [33mdisabled[39m=[32m""[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0m正在隔离执行…[0m
+            [36m</button>[39m
+          [36m</div>[39m
+        [36m</section>[39m
+      [36m</section>[39m
+      [36m<aside[39m
+        [33mclass[39m=[32m"memory-column"[39m
+      [36m>[39m
+        [36m<section[39m
+          [33maria-labelledby[39m=[32m"memory-title"[39m
+          [33mclass[39m=[32m"memory-center"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"section-heading"[39m
+          [36m>[39m
+            [36m<div>[39m
+              [36m<p[39m
+                [33mclass[39m=[32m"section-kicker memory-kicker"[39m
+              [36m>[39m
+                [0m本人确认区[0m
+              [36m</p>[39m
+              [36m<h2[39m
+                [33mid[39m=[32m"memory-title"[39m
+              [36m>[39m
+                [0m个人课程记忆[0m
+              [36m</h2>[39m
+            [36m</div>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"privacy-chip"[39m
+            [36m>[39m
+              [0m仅你可见[0m
+            [36m</span>[39m
+          [36m</div>[39m
+          [36m<p[39m
+            [33mclass[39m=[32m"privacy-note"[39m
+          [36m>[39m
+            [0m系统只能提出建议。只有你接受后，内容才会成为《仓颉语言设计》的长期学习记忆。[0m
+          [36m</p>[39m
+          [36m<p[39m
+            [33mclass[39m=[32m"empty-copy"[39m
+          [36m>[39m
+            [0m还没有经你确认的课程记忆。完成理解验证后，建议会出现在这里。[0m
+          [36m</p>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"memory-list"[39m
+          [36m/>[39m
+        [36m</section>[39m
+      [36m</aside>[39m
+    [36m</div>[39m
+  [36m</div>[39m
+[36m</body>[39m
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"student-layout"[39m
+    [36m>[39m
+      [36m<section[39m
+        [33maria-labelledby[39m=[32m"student-workspace-title"[39m
+        [33mclass[39m=[32m"workspace-column"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"page-heading"[39m
+        [36m>[39m
+          [36m<div>[39m
+            [36m<p[39m
+              [33mclass[39m=[32m"section-kicker"[39m
+            [36m>[39m
+              [0mSTUDENT · LEARNING LOOP[0m
+            [36m</p>[39m
+            [36m<h1[39m
+              [33mid[39m=[32m"student-workspace-title"[39m
+            [36m>[39m
+              [0m学生工作台[0m
+            [36m</h1>[39m
+            [36m<p>[39m
+              [0m从真实编译证据出发，沿概念脉络完成一次可核验的学习闭环。[0m
+            [36m</p>[39m
+          [36m</div>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"course-mark"[39m
+          [36m>[39m
+            [0m《仓颉语言设计》[0m
+          [36m</span>[39m
+        [36m</div>[39m
+        [36m<ol[39m
+          [33maria-label[39m=[32m"概念脉络轨迹"[39m
+          [33mclass[39m=[32m"concept-trace"[39m
+        [36m>[39m
+          [36m<li[39m
+            [33maria-label[39m=[32m"代码提交，已完成"[39m
+            [33mclass[39m=[32m"is-complete"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"trace-index"[39m
+            [36m>[39m
+              [0m1[0m
+            [36m</span>[39m
+            [36m<span>[39m
+              [0m代码提交[0m
+            [36m</span>[39m
+          [36m</li>[39m
+          [36m<li[39m
+            [33maria-current[39m=[32m"step"[39m
+            [33maria-label[39m=[32m"编译证据，当前步骤"[39m
+            [33mclass[39m=[32m"is-current"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"trace-index"[39m
+            [36m>[39m
+              [0m2[0m
+            [36m</span>[39m
+            [36m<span>[39m
+              [0m编译证据[0m
+            [36m</span>[39m
+          [36m</li>[39m
+          [36m<li[39m
+            [33maria-label[39m=[32m"概念根因，尚未开始"[39m
+            [33mclass[39m=[32m""[39m
+          [36m>[39m
+            [36m<span[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"trace-index"[39m
+            [36m>[39m
+              [0m3[0m
+            [36m</span>[39m
+            [36m<span>[39m
+              [0m概念根因[0m
+            [36m</span>[39m
+          [36m</li>[39m
+          [36m<li[39m
+            [33maria-label[39m=[32m"提示阶梯，尚未开始"[39m
+            [33mclass[39m=[32m""[39m
+          [36m>[39m
+            [36m<span[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"trace-index"[39m
+            [36m>[39m
+              [0m4[0m
+            [36m</span>[39m
+            [36m<span>[39m
+              [0m提示阶梯[0m
+            [36m</span>[39m
+          [36m</li>[39m
+          [36m<li[39m
+            [33maria-label[39m=[32m"理解验证，尚未开始"[39m
+            [33mclass[39m=[32m""[39m
+          [36m>[39m
+            [36m<span[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"trace-index"[39m
+            [36m>[39m
+              [0m5[0m
+            [36m</span>[39m
+            [36m<span>[39m
+              [0m理解验证[0m
+            [36m</span>[39m
+          [36m</li>[39m
+          [36m<li[39m
+            [33maria-label[39m=[32m"记忆确认，尚未开始"[39m
+            [33mclass[39m=[32m""[39m
+          [36m>[39m
+            [36m<span[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"trace-index"[39m
+            [36m>[39m
+              [0m6[0m
+            [36m</span>[39m
+            [36m<span>[39m
+              [0m记忆确认[0m
+            [36m</span>[39m
+          [36m</li>[39m
+        [36m</ol>[39m
+        [36m<section[39m
+          [33maria-labelledby[39m=[32m"code-title"[39m
+          [33mclass[39m=[32m"code-workbench"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"workbench-bar"[39m
+          [36m>[39m
+            [36m<div>[39m
+              [36m<p[39m
+                [33mclass[39m=[32m"section-kicker"[39m
+              [36m>[39m
+                [0m01 · 选择任务[0m
+              [36m</p>[39m
+              [36m<h2[39m
+                [33mid[39m=[32m"code-title"[39m
+              [36m>[39m
+                [0m代码实验台[0m
+              [36m</h2>[39m
+            [36m</div>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"selector-row"[39m
+            [36m>[39m
+              [36m<label>[39m
+                [0m课程[0m
+                [36m<select>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"course-a"[39m
+                  [36m>[39m
+                    [0mCourse A[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"course-b"[39m
+                  [36m>[39m
+                    [0mCourse B[0m
+                  [36m</option>[39m
+                [36m</select>[39m
+              [36m</label>[39m
+              [36m<label>[39m
+                [0m练习[0m
+                [36m<select>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"exercise-a"[39m
+                  [36m>[39m
+                    [0mExercise A[0m
+                  [36m</option>[39m
+                  [36m<option[39m
+                    [33mvalue[39m=[32m"exercise-next"[39m
+                  [36m>[39m
+                    [0mExercise Next[0m
+                  [36m</option>[39m
+                [36m</select>[39m
+              [36m</label>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+          [36m<label[39m
+            [33mclass[39m=[32m"editor-label"[39m
+            [33mfor[39m=[32m"cangjie-source"[39m
+          [36m>[39m
+            [36m<span>[39m
+              [0m仓颉源码[0m
+            [36m</span>[39m
+            [36m<small>[39m
+              [0mmain.cj · 隔离执行[0m
+            [36m</small>[39m
+          [36m</label>[39m
+          [36m<textarea[39m
+            [33maria-label[39m=[32m"仓颉源码"[39m
+            [33mclass[39m=[32m"code-editor"[39m
+            [33mid[39m=[32m"cangjie-source"[39m
+            [33mspellcheck[39m=[32m"false"[39m
+          [36m>[39m
+            [0mmain() {
+    // 在这里编写仓颉代码
+}[0m
+          [36m</textarea>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"submit-row"[39m
+          [36m>[39m
+            [36m<p>[39m
+              [0m代码只会发送到受限执行器，不在浏览器中模拟结果。[0m
+            [36m</p>[39m
+            [36m<button[39m
+              [33mdisabled[39m=[32m""[39m
+              [33mtype[39m=[32m"button"[39m
+            [36m>[39m
+              [0m正在隔离执行…[0m
+            [36m</button>[39m
+          [36m</div>[39m
+        [36m</section>[39m
+      [36m</section>[39m
+      [36m<aside[39m
+        [33mclass[39m=[32m"memory-column"[39m
+      [36m>[39m
+        [36m<section[39m
+          [33maria-labelledby[39m=[32m"memory-title"[39m
+          [33mclass[39m=[32m"memory-center"[39m
+        [36m>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"section-heading"[39m
+          [36m>[39m
+            [36m<div>[39m
+              [36m<p[39m
+                [33mclass[39m=[32m"section-kicker memory-kicker"[39m
+              [36m>[39m
+                [0m本人确认区[0m
+              [36m</p>[39m
+              [36m<h2[39m
+                [33mid[39m=[32m"memory-title"[39m
+              [36m>[39m
+                [0m个人课程记忆[0m
+              [36m</h2>[39m
+            [36m</div>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"privacy-chip"[39m
+            [36m>[39m
+              [0m仅你可见[0m
+            [36m</span>[39m
+          [36m</div>[39m
+          [36m<p[39m
+            [33mclass[39m=[32m"privacy-note"[39m
+          [36m>[39m
+            [0m系统只能提出建议。只有你接受后，内容才会成为《仓颉语言设计》的长期学习记忆。[0m
+          [36m</p>[39m
+          [36m<p[39m
+            [33mclass[39m=[32m"empty-copy"[39m
+          [36m>[39m
+            [0m还没有经你确认的课程记忆。完成理解验证后，建议会出现在这里。[0m
+          [36m</p>[39m
+          [36m<div[39m
+            [33mclass[39m=[32m"memory-list"[39m
+          [36m/>[39m
+        [36m</section>[39m
+      [36m</aside>[39m
+    [36m</div>[39m
+  [36m</div>[39m
+[36m</body>[39m
+ ❯ waitForWrapper node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ tests/wave3-integration.test.tsx:121:29
+    119|     fireEvent.change(screen.getByRole("combobox",{name:selection}),{ta…
+    120|     await screen.findByRole("option",{name:selection==="课程"?"Exercise …
+    121|     const next=await screen.findByRole("button",{name:"提交并运行"});
+       |                             ^
+    122|     expect(next).toBeEnabled();
+    123|     fireEvent.click(next);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/5]⎯
+
+ FAIL  tests/all.test.ts > Wave 3 integration UI > labels multi-concept trend sums as associations rather than unique diagnosis totals
+TestingLibraryElementError: Unable to find an accessible element with the role "columnheader" and name "概念诊断关联次数"
+
+Here are the accessible roles:
+
+  rowgroup:
+
+  Name "":
+  [36m<thead />[39m
+
+  --------------------------------------------------
+  row:
+
+  Name "窗口 诊断次数 独立修复":
+  [36m<tr />[39m
+
+  --------------------------------------------------
+  columnheader:
+
+  Name "窗口":
+  [36m<th />[39m
+
+  Name "诊断次数":
+  [36m<th />[39m
+
+  Name "独立修复":
+  [36m<th />[39m
+
+  --------------------------------------------------rowgroup:
+
+  Name "":
+  [36m<tbody />[39m
+
+  --------------------------------------------------
+  row:
+
+  Name "当前窗口 10 2":
+  [36m<tr />[39m
+
+  Name "前一窗口 10 2":
+  [36m<tr />[39m
+
+  --------------------------------------------------
+  cell:
+
+  Name "当前窗口":
+  [36m<td[39m
+    [33mdata-label[39m=[32m"窗口"[39m
+  [36m/>[39m
+
+  Name "10":
+  [36m<td[39m
+    [33mdata-label[39m=[32m"诊断次数"[39m
+  [36m/>[39m
+
+  Name "2":
+  [36m<td[39m
+    [33mdata-label[39m=[32m"独立修复"[39m
+  [36m/>[39m
+
+  Name "前一窗口":
+  [36m<td[39m
+    [33mdata-label[39m=[32m"窗口"[39m
+  [36m/>[39m
+
+  Name "10":
+  [36m<td[39m
+    [33mdata-label[39m=[32m"诊断次数"[39m
+  [36m/>[39m
+
+  Name "2":
+  [36m<td[39m
+    [33mdata-label[39m=[32m"独立修复"[39m
+  [36m/>[39m
+
+  --------------------------------------------------
+
+Ignored nodes: comments, script, style
+[36m<table[39m
+  [33maria-label[39m=[32m"相邻时间窗口趋势数据"[39m
+[36m>[39m
+  [36m<thead>[39m
+    [36m<tr>[39m
+      [36m<th>[39m
+        [0m窗口[0m
+      [36m</th>[39m
+      [36m<th>[39m
+        [0m诊断次数[0m
+      [36m</th>[39m
+      [36m<th>[39m
+        [0m独立修复[0m
+      [36m</th>[39m
+    [36m</tr>[39m
+  [36m</thead>[39m
+  [36m<tbody>[39m
+    [36m<tr>[39m
+      [36m<td[39m
+        [33mdata-label[39m=[32m"窗口"[39m
+      [36m>[39m
+        [0m当前窗口[0m
+      [36m</td>[39m
+      [36m<td[39m
+        [33mdata-label[39m=[32m"诊断次数"[39m
+      [36m>[39m
+        [0m10[0m
+      [36m</td>[39m
+      [36m<td[39m
+        [33mdata-label[39m=[32m"独立修复"[39m
+      [36m>[39m
+        [0m2[0m
+      [36m</td>[39m
+    [36m</tr>[39m
+    [36m<tr>[39m
+      [36m<td[39m
+        [33mdata-label[39m=[32m"窗口"[39m
+      [36m>[39m
+        [0m前一窗口[0m
+      [36m</td>[39m
+      [36m<td[39m
+        [33mdata-label[39m=[32m"诊断次数"[39m
+      [36m>[39m
+        [0m10[0m
+      [36m</td>[39m
+      [36m<td[39m
+        [33mdata-label[39m=[32m"独立修复"[39m
+      [36m>[39m
+        [0m2[0m
+      [36m</td>[39m
+    [36m</tr>[39m
+  [36m</tbody>[39m
+[36m</table>[39m
+ ❯ Object.getElementError node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ tests/wave3-integration.test.tsx:139:26
+    137|     fireEvent.click(screen.getByRole("button",{name:"应用筛选"}));
+    138|     const table=await screen.findByRole("table",{name:"相邻时间窗口趋势数据"});
+    139|     expect(within(table).getByRole("columnheader",{name:"概念诊断关联次数"})).…
+       |                          ^
+    140|     expect(within(table).getAllByRole("cell",{name:"10"})).toHaveLengt…
+    141|     expect(screen.getByText("同一诊断涉及多个概念时会分别计入，关联次数不代表唯一诊断总数。" )).toBeI…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/5]⎯
+
+ FAIL  tests/all.test.ts > Wave 3 integration UI > hides the previously loaded review queue while the next course is loading
+Error: expect(element).not.toBeInTheDocument()
+
+expected document not to contain element, found <h3>
+  OLD_COURSE_QUEUE
+</h3> instead
+ ❯ tests/wave3-integration.test.tsx:152:56
+    150|     view.rerender(<ReviewQueue api={api} courseId="course-b" filters={…
+    151|     await waitFor(()=>expect(finish).toBeDefined());
+    152|     expect(screen.queryByText("OLD_COURSE_QUEUE")).not.toBeInTheDocume…
+       |                                                        ^
+    153|     expect(screen.queryByRole("button",{name:"提交复核"})).not.toBeInTheDo…
+    154|     finish(json({course_id:"course-b",filters,items:[]}));
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/5]⎯
+
+ FAIL  tests/all.test.ts > Wave 3 integration UI > ignores an old review failure after switching to another course
+Error: expect(element).not.toBeInTheDocument()
+
+expected document not to contain element, found <p
+  class="request-id"
+>
+  请求编号：
+  OLD_REVIEW_ID
+</p> instead
+ ❯ tests/wave3-integration.test.tsx:175:53
+    173|     finish(json({code:"DIAGNOSIS_REVIEW_CONFLICT",message:"Conflict",r…
+    174|     await new Promise(resolve=>setTimeout(resolve,20));
+    175|     expect(screen.queryByText(/OLD_REVIEW_ID/)).not.toBeInTheDocument(…
+       |                                                     ^
+    176|   });
+    177| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/5]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  5 failed | 36 passed (41)
+   Start at  17:27:27
+   Duration  40.56s (environment 70%, setup 14%, tests 12%, transform 2%, import 2%)

@@ -56,6 +56,7 @@ class MemoryRepository(Protocol):
         self, proposal_id: str, request_id: str, result: MemoryProposal
     ) -> None: ...
     def save_proposal(self, proposal: MemoryProposal) -> MemoryProposal: ...
+    def erase_proposal_content(self, owner_user_id: str, course_id: str, diagnosis_ids: frozenset[str]) -> None: ...
     def list_proposals(
         self, owner_user_id: str, course_id: str
     ) -> tuple[MemoryProposal, ...]: ...
@@ -142,6 +143,12 @@ class InMemoryMemoryRepository:
         key = (claim_type, resource_id)
         with self._claim_registry_lock:
             return self._claim_locks.setdefault(key, RLock())
+
+    def erase_proposal_content(self, owner_user_id: str, course_id: str, diagnosis_ids: frozenset[str]) -> None:
+        from dataclasses import replace
+        for key, proposal in tuple(self._proposals.items()):
+            if proposal.owner_user_id == owner_user_id and proposal.course_id == course_id and proposal.diagnosis_id in diagnosis_ids:
+                self._proposals[key] = replace(proposal, content="[Deleted by student]")
 
     @contextmanager
     def transaction(self):

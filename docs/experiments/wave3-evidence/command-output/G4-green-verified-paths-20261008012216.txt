@@ -1,0 +1,109 @@
+..............................F......................................... [ 32%]
+........................................................................ [ 65%]
+........................................................................ [ 98%]
+..F.                                                                     [100%]
+================================== FAILURES ===================================
+___ test_deleted_diagnosis_is_unavailable_instead_of_invalid_empty_success ____
+tests\contracts\test_wave3_http_contract.py:9: in test_deleted_diagnosis_is_unavailable_instead_of_invalid_empty_success
+    assert response.status_code == 404
+E   assert 200 == 404
+E    +  where 200 = <Response [200 OK]>.status_code
+_ test_default_sql_application_mounts_teacher_routes_and_preserves_security_dependencies _
+..\..\..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1967: in _exec_single_context
+    self.dialect.do_execute(
+..\..\..\.venv\Lib\site-packages\sqlalchemy\engine\default.py:952: in do_execute
+    cursor.execute(statement, parameters)
+..\..\..\.venv\Lib\site-packages\psycopg\cursor.py:117: in execute
+    raise ex.with_traceback(None)
+E   psycopg.errors.ForeignKeyViolation: insert or update on table "enrollments" violates foreign key constraint "enrollments_course_id_fkey"
+E   DETAIL:  Key (course_id)=(course-a) is not present in table "courses".
+
+The above exception was the direct cause of the following exception:
+tests\integration\test_wave3_gate.py:10: in test_default_sql_application_mounts_teacher_routes_and_preserves_security_dependencies
+    pg.seed_diagnoses(students=5)
+tests\integration\wave3_support.py:145: in seed_diagnoses
+    self.seed_vector_facts(facts)
+tests\integration\wave3_support.py:117: in seed_vector_facts
+    self.repos.enrollments.add(Enrollment(course, mapping[key], Role.STUDENT))
+app\persistence\repositories.py:142: in add
+    with self._sessions.begin() as session:
+         ^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\..\..\miniconda3\Lib\contextlib.py:148: in __exit__
+    next(self.gen)
+..\..\..\.venv\Lib\site-packages\sqlalchemy\orm\session.py:1814: in _maker_context_manager
+    with self.begin():
+         ^^^^^^^^^^^^
+..\..\..\.venv\Lib\site-packages\sqlalchemy\engine\util.py:147: in __exit__
+    with util.safe_reraise():
+         ^^^^^^^^^^^^^^^^^^^
+..\..\..\.venv\Lib\site-packages\sqlalchemy\util\langhelpers.py:121: in __exit__
+    raise exc_value.with_traceback(exc_tb)
+..\..\..\.venv\Lib\site-packages\sqlalchemy\engine\util.py:145: in __exit__
+    self.commit()
+<string>:2: in commit
+    ???
+..\..\..\.venv\Lib\site-packages\sqlalchemy\orm\state_changes.py:137: in _go
+    ret_value = fn(self, *arg, **kw)
+                ^^^^^^^^^^^^^^^^^^^^
+..\..\..\.venv\Lib\site-packages\sqlalchemy\orm\session.py:1311: in commit
+    self._prepare_impl()
+<string>:2: in _prepare_impl
+    ???
+..\..\..\.venv\Lib\site-packages\sqlalchemy\orm\state_changes.py:137: in _go
+    ret_value = fn(self, *arg, **kw)
+                ^^^^^^^^^^^^^^^^^^^^
+..\..\..\.venv\Lib\site-packages\sqlalchemy\orm\session.py:1286: in _prepare_impl
+    self.session.flush()
+..\..\..\.venv\Lib\site-packages\sqlalchemy\orm\session.py:4331: in flush
+    self._flush(objects)
+..\..\..\.venv\Lib\site-packages\sqlalchemy\orm\session.py:4466: in _flush
+    with util.safe_reraise():
+         ^^^^^^^^^^^^^^^^^^^
+..\..\..\.venv\Lib\site-packages\sqlalchemy\util\langhelpers.py:121: in __exit__
+    raise exc_value.with_traceback(exc_tb)
+..\..\..\.venv\Lib\site-packages\sqlalchemy\orm\session.py:4427: in _flush
+    flush_context.execute()
+..\..\..\.venv\Lib\site-packages\sqlalchemy\orm\unitofwork.py:466: in execute
+    rec.execute(self)
+..\..\..\.venv\Lib\site-packages\sqlalchemy\orm\unitofwork.py:642: in execute
+    util.preloaded.orm_persistence.save_obj(
+..\..\..\.venv\Lib\site-packages\sqlalchemy\orm\persistence.py:93: in save_obj
+    _emit_insert_statements(
+..\..\..\.venv\Lib\site-packages\sqlalchemy\orm\persistence.py:1048: in _emit_insert_statements
+    result = connection.execute(
+..\..\..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1419: in execute
+    return meth(
+..\..\..\.venv\Lib\site-packages\sqlalchemy\sql\elements.py:527: in _execute_on_connection
+    return connection._execute_clauseelement(
+..\..\..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1641: in _execute_clauseelement
+    ret = self._execute_context(
+..\..\..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1846: in _execute_context
+    return self._exec_single_context(
+..\..\..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1986: in _exec_single_context
+    self._handle_dbapi_exception(
+..\..\..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:2363: in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+..\..\..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1967: in _exec_single_context
+    self.dialect.do_execute(
+..\..\..\.venv\Lib\site-packages\sqlalchemy\engine\default.py:952: in do_execute
+    cursor.execute(statement, parameters)
+..\..\..\.venv\Lib\site-packages\psycopg\cursor.py:117: in execute
+    raise ex.with_traceback(None)
+E   sqlalchemy.exc.IntegrityError: (psycopg.errors.ForeignKeyViolation) insert or update on table "enrollments" violates foreign key constraint "enrollments_course_id_fkey"
+E   DETAIL:  Key (course_id)=(course-a) is not present in table "courses".
+E   [SQL: INSERT INTO enrollments (course_id, user_id, role) VALUES (%(course_id)s::VARCHAR, %(user_id)s::VARCHAR, %(role)s::VARCHAR)]
+E   [parameters: {'course_id': 'course-a', 'user_id': 'synthetic-student-0', 'role': 'student'}]
+E   (Background on this error at: https://sqlalche.me/e/20/gkpj)
+---------------------------- Captured stderr call -----------------------------
+INFO  [alembic.runtime.migration] Context impl PostgresqlImpl.
+INFO  [alembic.runtime.migration] Will assume transactional DDL.
+============================== warnings summary ===============================
+tests/integration/test_wave3_gate.py::test_default_sql_application_mounts_teacher_routes_and_preserves_security_dependencies
+  C:\Users\lenovo\Desktop\cs competition\.venv\Lib\site-packages\alembic\config.py:604: DeprecationWarning: No path_separator found in configuration; falling back to legacy splitting on spaces, commas, and colons for prepend_sys_path.  Consider adding path_separator=os to Alembic config.
+    util.warn_deprecated(
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED tests/contracts/test_wave3_http_contract.py::test_deleted_diagnosis_is_unavailable_instead_of_invalid_empty_success
+FAILED tests/integration/test_wave3_gate.py::test_default_sql_application_mounts_teacher_routes_and_preserves_security_dependencies
+2 failed, 218 passed, 1 warning in 106.80s (0:01:46)

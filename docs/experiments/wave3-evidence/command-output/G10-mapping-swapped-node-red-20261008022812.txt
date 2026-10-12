@@ -1,0 +1,10 @@
+F                                                                        [100%]
+================================== FAILURES ===================================
+_______ test_mapping_rejects_unverifiable_execution_claims[wrong_case] ________
+tests\security\test_execution_manifest.py:38: in test_mapping_rejects_unverifiable_execution_claims
+    with pytest.raises(ValueError):module.validate_manifest(changed,ROOT)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^
+E   Failed: DID NOT RAISE ValueError
+=========================== short test summary info ===========================
+FAILED tests/security/test_execution_manifest.py::test_mapping_rejects_unverifiable_execution_claims[wrong_case]
+1 failed, 9 deselected in 11.50s

@@ -1,0 +1,35 @@
+{
+  "observed_at_utc": "2026-10-08T10:16:34.387106+00:00",
+  "scope": "Read-only main/source verification before final Gate commit; final Gate HEAD is delivered after commit.",
+  "gate_branch": "codex/wave3-integration-gate",
+  "main_and_sources": [
+    {
+      "path": "C:\\Users\\lenovo\\Desktop\\cs competition",
+      "expected_head": "0598a2ea1d2a5016b94cd6f35a5a0e678b76ee07",
+      "actual_head": "0598a2ea1d2a5016b94cd6f35a5a0e678b76ee07",
+      "status_porcelain": "",
+      "unchanged_clean": true
+    },
+    {
+      "path": "C:\\Users\\lenovo\\Desktop\\cs competition\\.worktrees\\wave3-task8-analytics",
+      "expected_head": "988cc2c49265667a7ddeba8d50a92269467c0407",
+      "actual_head": "988cc2c49265667a7ddeba8d50a92269467c0407",
+      "status_porcelain": "",
+      "unchanged_clean": true
+    },
+    {
+      "path": "C:\\Users\\lenovo\\Desktop\\cs competition\\.worktrees\\wave3-task9-ui",
+      "expected_head": "b53b4b4d3f5d18dfab2505a07fde9bb96c10bf4d",
+      "actual_head": "b53b4b4d3f5d18dfab2505a07fde9bb96c10bf4d",
+      "status_porcelain": "",
+      "unchanged_clean": true
+    },
+    {
+      "path": "C:\\Users\\lenovo\\Desktop\\cs competition\\.worktrees\\wave3-task10-security-eval",
+      "expected_head": "e39f0df42e5fb17fc60e84f92db8051fb0d3a726",
+      "actual_head": "e39f0df42e5fb17fc60e84f92db8051fb0d3a726",
+      "status_porcelain": "",
+      "unchanged_clean": true
+    }
+  ]
+}

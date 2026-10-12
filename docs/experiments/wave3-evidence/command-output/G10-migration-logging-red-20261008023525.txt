@@ -1,0 +1,21 @@
+F                                                                        [100%]
+================================== FAILURES ===================================
+_________ test_migration_preserves_sanitized_provider_failure_logging _________
+tests\integration\test_wave3_migration_logging_postgres.py:13: in test_migration_preserves_sanitized_provider_failure_logging
+    sanitized_failure(caplog)
+tests\model_gateway\test_openai_responses.py:128: in test_untrusted_provider_request_id_is_redacted
+    assert "request_id=unavailable" in caplog.text
+E   AssertionError: assert 'request_id=unavailable' in ''
+E    +  where '' = <_pytest.logging.LogCaptureFixture object at 0x0000023DB1F4D400>.text
+---------------------------- Captured stderr call -----------------------------
+INFO  [alembic.runtime.migration] Context impl PostgresqlImpl.
+INFO  [alembic.runtime.migration] Will assume transactional DDL.
+============================== warnings summary ===============================
+tests/integration/test_wave3_migration_logging_postgres.py::test_migration_preserves_sanitized_provider_failure_logging
+  C:\Users\lenovo\Desktop\cs competition\.venv\Lib\site-packages\alembic\config.py:604: DeprecationWarning: No path_separator found in configuration; falling back to legacy splitting on spaces, commas, and colons for prepend_sys_path.  Consider adding path_separator=os to Alembic config.
+    util.warn_deprecated(
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED tests/integration/test_wave3_migration_logging_postgres.py::test_migration_preserves_sanitized_provider_failure_logging
+1 failed, 1 warning in 4.42s

@@ -1,0 +1,394 @@
+FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF                              [100%]
+================================== FAILURES ===================================
+_______ test_full_runtime_operation_set_matches_frozen_shared_contract ________
+tests\contracts\test_wave3_runtime_openapi.py:66: in test_full_runtime_operation_set_matches_frozen_shared_contract
+    assert set(operations(create_app().openapi())) == set(operations(SHARED))
+E   AssertionError: assert {('/auth/logi... 'post'), ...} == {('/auth/logi... 'post'), ...}
+E
+E     Extra items in the right set:
+E     ('/teacher/courses/{course_id}/analytics', 'get')
+E     ('/teacher/courses/{course_id}/review-queue', 'get')
+E     ('/teacher/diagnoses/{diagnosis_id}/review', 'post')
+E     Use -v to get more diff
+_________ test_every_runtime_operation_matches_contract[/health-get] __________
+tests\contracts\test_wave3_runtime_openapi.py:75: in test_every_runtime_operation_matches_contract
+    assert actual["operationId"] == expected["operationId"]
+E   AssertionError: assert 'health_health_get' == 'getHealth'
+E
+E     - getHealth
+E     + health_health_get
+_______ test_every_runtime_operation_matches_contract[/auth/login-post] _______
+tests\contracts\test_wave3_runtime_openapi.py:75: in test_every_runtime_operation_matches_contract
+    assert actual["operationId"] == expected["operationId"]
+E   AssertionError: assert 'login_auth_login_post' == 'login'
+E
+E     - login
+E     + login_auth_login_post
+______ test_every_runtime_operation_matches_contract[/auth/logout-post] _______
+tests\contracts\test_wave3_runtime_openapi.py:79: in test_every_runtime_operation_matches_contract
+    assert resolve(actual["responses"],runtime) == resolve(expected["responses"],SHARED)
+E   AssertionError: assert {'204': {}, '...{}, '503': {}} == {'204': {}, '...': {...}}}}}}}
+E
+E     Omitting 1 identical items, use -vv to show
+E     Differing items:
+E     {'503': {}} != {'503': {'content': {'application/json': {'schema': {'type': 'object', 'additionalProperties': False, 'required': ['code', 'message', 'request_id'], 'properties': {'code': {...}, 'message': {...}, 'request_id': {...}}}}}}}
+E     {'401': {}} != {'401': {'content': {'application/json': {'schema': {'type': 'object', 'additionalProperties': False, 'required': ['code', 'message', 'request_id'], 'properties': {'code': {...}, 'message': {...}, 'request_id': {...}}}}}}}
+E     Use -v to get more diff
+_________ test_every_runtime_operation_matches_contract[/courses-get] _________
+tests\contracts\test_wave3_runtime_openapi.py:75: in test_every_runtime_operation_matches_contract
+    assert actual["operationId"] == expected["operationId"]
+E   AssertionError: assert 'list_courses_courses_get' == 'listCourses'
+E
+E     - listCourses
+E     + list_courses_courses_get
+_ test_every_runtime_operation_matches_contract[/courses/{course_id}/exercises-get] _
+tests\contracts\test_wave3_runtime_openapi.py:75: in test_every_runtime_operation_matches_contract
+    assert actual["operationId"] == expected["operationId"]
+E   AssertionError: assert 'list_exercis...exercises_get' == 'listCourseExercises'
+E
+E     - listCourseExercises
+E     + list_exercises_courses__course_id__exercises_get
+____ test_every_runtime_operation_matches_contract[/teacher/courses-post] _____
+tests\contracts\test_wave3_runtime_openapi.py:75: in test_every_runtime_operation_matches_contract
+    assert actual["operationId"] == expected["operationId"]
+E   AssertionError: assert 'create_cours..._courses_post' == 'createTeacherCourse'
+E
+E     - createTeacherCourse
+E     + create_course_teacher_courses_post
+_ test_every_runtime_operation_matches_contract[/courses/{course_id}/enrollments-post] _
+tests\contracts\test_wave3_runtime_openapi.py:75: in test_every_runtime_operation_matches_contract
+    assert actual["operationId"] == expected["operationId"]
+E   AssertionError: assert 'enroll_curre...ollments_post' == 'enrollCurrentStudent'
+E
+E     - enrollCurrentStudent
+E     + enroll_current_student_courses__course_id__enrollments_post
+_ test_every_runtime_operation_matches_contract[/teacher/courses/{course_id}/concepts-get] _
+tests\contracts\test_wave3_runtime_openapi.py:75: in test_every_runtime_operation_matches_contract
+    assert actual["operationId"] == expected["operationId"]
+E   AssertionError: assert 'list_concept..._concepts_get' == 'listCourseConcepts'
+E
+E     - listCourseConcepts
+E     + list_concepts_teacher_courses__course_id__concepts_get
+_ test_every_runtime_operation_matches_contract[/teacher/courses/{course_id}/concepts-post] _
+tests\contracts\test_wave3_runtime_openapi.py:75: in test_every_runtime_operation_matches_contract
+    assert actual["operationId"] == expected["operationId"]
+E   AssertionError: assert 'create_conce...concepts_post' == 'createCourseConcept'
+E
+E     - createCourseConcept
+E     + create_concept_teacher_courses__course_id__concepts_post
+_ test_every_runtime_operation_matches_contract[/teacher/courses/{course_id}/concepts/{concept_id}-patch] _
+tests\contracts\test_wave3_runtime_openapi.py:75: in test_every_runtime_operation_matches_contract
+    assert actual["operationId"] == expected["operationId"]
+E   AssertionError: assert 'update_conce...ept_id__patch' == 'updateCourseConcept'
+E
+E     - updateCourseConcept
+E     + update_concept_teacher_courses__course_id__concepts__concept_id__patch
+_ test_every_runtime_operation_matches_contract[/teacher/courses/{course_id}/concepts/{concept_id}/review-post] _
+tests\contracts\test_wave3_runtime_openapi.py:75: in test_every_runtime_operation_matches_contract
+    assert actual["operationId"] == expected["operationId"]
+E   AssertionError: assert 'review_conce...__review_post' == 'reviewCourseConcept'
+E
+E     - reviewCourseConcept
+E     + review_concept_teacher_courses__course_id__concepts__concept_id__review_post
+_ test_every_runtime_operation_matches_contract[/teacher/courses/{course_id}/concept-edges-get] _
+tests\contracts\test_wave3_runtime_openapi.py:75: in test_every_runtime_operation_matches_contract
+    assert actual["operationId"] == expected["operationId"]
+E   AssertionError: assert 'list_edges_t...ept_edges_get' == 'listCourseConceptEdges'
+E
+E     - listCourseConceptEdges
+E     + list_edges_teacher_courses__course_id__concept_edges_get
+_ test_every_runtime_operation_matches_contract[/teacher/courses/{course_id}/concept-edges-post] _
+tests\contracts\test_wave3_runtime_openapi.py:75: in test_every_runtime_operation_matches_contract
+    assert actual["operationId"] == expected["operationId"]
+E   AssertionError: assert 'create_edge_...pt_edges_post' == 'createCourseConceptEdge'
+E
+E     - createCourseConceptEdge
+E     + create_edge_teacher_courses__course_id__concept_edges_post
+_ test_every_runtime_operation_matches_contract[/teacher/courses/{course_id}/misconceptions-get] _
+tests\contracts\test_wave3_runtime_openapi.py:75: in test_every_runtime_operation_matches_contract
+    assert actual["operationId"] == expected["operationId"]
+E   AssertionError: assert 'list_misconc...nceptions_get' == 'listCourseMisconceptions'
+E
+E     - listCourseMisconceptions
+E     + list_misconceptions_teacher_courses__course_id__misconceptions_get
+_ test_every_runtime_operation_matches_contract[/teacher/courses/{course_id}/misconceptions-post] _
+tests\contracts\test_wave3_runtime_openapi.py:75: in test_every_runtime_operation_matches_contract
+    assert actual["operationId"] == expected["operationId"]
+E   AssertionError: assert 'create_misco...ceptions_post' == 'createCourseMisconception'
+E
+E     - createCourseMisconception
+E     + create_misconception_teacher_courses__course_id__misconceptions_post
+_ test_every_runtime_operation_matches_contract[/teacher/courses/{course_id}/misconceptions/{misconception_id}-patch] _
+tests\contracts\test_wave3_runtime_openapi.py:75: in test_every_runtime_operation_matches_contract
+    assert actual["operationId"] == expected["operationId"]
+E   AssertionError: assert 'update_misco...ion_id__patch' == 'updateCourseMisconception'
+E
+E     - updateCourseMisconception
+E     + update_misconception_teacher_courses__course_id__misconceptions__misconception_id__patch
+_ test_every_runtime_operation_matches_contract[/teacher/courses/{course_id}/misconceptions/{misconception_id}/review-post] _
+tests\contracts\test_wave3_runtime_openapi.py:75: in test_every_runtime_operation_matches_contract
+    assert actual["operationId"] == expected["operationId"]
+E   AssertionError: assert 'review_misco...__review_post' == 'reviewCourseMisconception'
+E
+E     - reviewCourseMisconception
+E     + review_misconception_teacher_courses__course_id__misconceptions__misconception_id__review_post
+_ test_every_runtime_operation_matches_contract[/exercises/{exercise_id}/submissions-post] _
+tests\contracts\test_wave3_runtime_openapi.py:76: in test_every_runtime_operation_matches_contract
+    assert actual.get("security",[]) == expected.get("security",[])
+E   AssertionError: assert [] == [{'bearerAuth': []}]
+E
+E     Right contains one more item: {'bearerAuth': []}
+E     Use -v to get more diff
+_ test_every_runtime_operation_matches_contract[/submissions/{submission_id}-get] _
+tests\contracts\test_wave3_runtime_openapi.py:76: in test_every_runtime_operation_matches_contract
+    assert actual.get("security",[]) == expected.get("security",[])
+E   AssertionError: assert [] == [{'bearerAuth': []}]
+E
+E     Right contains one more item: {'bearerAuth': []}
+E     Use -v to get more diff
+_ test_every_runtime_operation_matches_contract[/submissions/{submission_id}/execution-result-get] _
+tests\contracts\test_wave3_runtime_openapi.py:76: in test_every_runtime_operation_matches_contract
+    assert actual.get("security",[]) == expected.get("security",[])
+E   AssertionError: assert [] == [{'bearerAuth': []}]
+E
+E     Right contains one more item: {'bearerAuth': []}
+E     Use -v to get more diff
+_ test_every_runtime_operation_matches_contract[/submissions/{submission_id}/diagnosis-get] _
+tests\contracts\test_wave3_runtime_openapi.py:76: in test_every_runtime_operation_matches_contract
+    assert actual.get("security",[]) == expected.get("security",[])
+E   AssertionError: assert [] == [{'bearerAuth': []}]
+E
+E     Right contains one more item: {'bearerAuth': []}
+E     Use -v to get more diff
+_ test_every_runtime_operation_matches_contract[/diagnoses/{diagnosis_id}/hints/next-post] _
+tests\contracts\test_wave3_runtime_openapi.py:76: in test_every_runtime_operation_matches_contract
+    assert actual.get("security",[]) == expected.get("security",[])
+E   AssertionError: assert [] == [{'bearerAuth': []}]
+E
+E     Right contains one more item: {'bearerAuth': []}
+E     Use -v to get more diff
+_ test_every_runtime_operation_matches_contract[/diagnoses/{diagnosis_id}/explanation-check-post] _
+tests\contracts\test_wave3_runtime_openapi.py:76: in test_every_runtime_operation_matches_contract
+    assert actual.get("security",[]) == expected.get("security",[])
+E   AssertionError: assert [] == [{'bearerAuth': []}]
+E
+E     Right contains one more item: {'bearerAuth': []}
+E     Use -v to get more diff
+___ test_every_runtime_operation_matches_contract[/me/memory-proposals-get] ___
+tests\contracts\test_wave3_runtime_openapi.py:79: in test_every_runtime_operation_matches_contract
+    assert resolve(actual["responses"],runtime) == resolve(expected["responses"],SHARED)
+E   AssertionError: assert {'200': {'con...id']}}}}, ...} == {'200': {'con.....}}}}}}, ...}
+E
+E     Omitting 5 identical items, use -vv to show
+E     Differing items:
+E     {'200': {'content': {'application/json': {'schema': {'type': 'array', 'items': {'properties': {...}, 'type': 'object', 'required': [...]}}}}}} != {'200': {'content': {'application/json': {'schema': {'type': 'array', 'items': {'type': 'object', 'additionalProperties': False, 'required': [...], 'properties': {...}}}}}}}
+E     Use -v to get more diff
+_ test_every_runtime_operation_matches_contract[/memory-proposals/{proposal_id}/accept-post] _
+tests\contracts\test_wave3_runtime_openapi.py:79: in test_every_runtime_operation_matches_contract
+    assert resolve(actual["responses"],runtime) == resolve(expected["responses"],SHARED)
+E   AssertionError: assert {'200': {'con...id']}}}}, ...} == {'200': {'con.....}}}}}}, ...}
+E
+E     Omitting 5 identical items, use -vv to show
+E     Differing items:
+E     {'200': {'content': {'application/json': {'schema': {'properties': {'memory_id': {...}, 'logical_memory_id': {...}, 'p...'object', 'required': ['allowed_purposes', 'concept_ids', 'confidence', 'content', 'course_id', 'created_at', ...]}}}}} != {'200': {'content': {'application/json': {'schema': {'type': 'object', 'additionalProperties': False, 'required': ['al...properties': {'memory_id': {...}, 'logical_memory_id': {...}, 'previous_version_id': {...}, 'version': {...}, ...}}}}}}
+E     Use -v to get more diff
+_ test_every_runtime_operation_matches_contract[/memory-proposals/{proposal_id}/reject-post] _
+tests\contracts\test_wave3_runtime_openapi.py:79: in test_every_runtime_operation_matches_contract
+    assert resolve(actual["responses"],runtime) == resolve(expected["responses"],SHARED)
+E   AssertionError: assert {'200': {'con...id']}}}}, ...} == {'200': {'con.....}}}}}}, ...}
+E
+E     Omitting 5 identical items, use -vv to show
+E     Differing items:
+E     {'200': {'content': {'application/json': {'schema': {'properties': {'proposal_id': {...}, 'root_proposal_id': {...}, '...e': 'object', 'required': ['concept_ids', 'confidence', 'content', 'course_id', 'created_at', 'diagnosis_id', ...]}}}}} != {'200': {'content': {'application/json': {'schema': {'type': 'object', 'additionalProperties': False, 'required': ['co...operties': {'proposal_id': {...}, 'root_proposal_id': {...}, 'previous_proposal_id': {...}, 'version': {...}, ...}}}}}}
+E     Use -v to get more diff
+_ test_every_runtime_operation_matches_contract[/memory-proposals/{proposal_id}-patch] _
+tests\contracts\test_wave3_runtime_openapi.py:79: in test_every_runtime_operation_matches_contract
+    assert resolve(actual["responses"],runtime) == resolve(expected["responses"],SHARED)
+E   AssertionError: assert {'200': {'con...id']}}}}, ...} == {'200': {'con.....}}}}}}, ...}
+E
+E     Omitting 5 identical items, use -vv to show
+E     Differing items:
+E     {'200': {'content': {'application/json': {'schema': {'properties': {'proposal_id': {...}, 'root_proposal_id': {...}, '...e': 'object', 'required': ['concept_ids', 'confidence', 'content', 'course_id', 'created_at', 'diagnosis_id', ...]}}}}} != {'200': {'content': {'application/json': {'schema': {'type': 'object', 'additionalProperties': False, 'required': ['co...operties': {'proposal_id': {...}, 'root_proposal_id': {...}, 'previous_proposal_id': {...}, 'version': {...}, ...}}}}}}
+E     Use -v to get more diff
+_______ test_every_runtime_operation_matches_contract[/me/memories-get] _______
+tests\contracts\test_wave3_runtime_openapi.py:79: in test_every_runtime_operation_matches_contract
+    assert resolve(actual["responses"],runtime) == resolve(expected["responses"],SHARED)
+E   AssertionError: assert {'200': {'con...id']}}}}, ...} == {'200': {'con.....}}}}}}, ...}
+E
+E     Omitting 5 identical items, use -vv to show
+E     Differing items:
+E     {'200': {'content': {'application/json': {'schema': {'type': 'array', 'items': {'properties': {...}, 'type': 'object', 'required': [...]}}}}}} != {'200': {'content': {'application/json': {'schema': {'type': 'array', 'items': {'type': 'object', 'additionalProperties': False, 'required': [...], 'properties': {...}}}}}}}
+E     Use -v to get more diff
+_ test_every_runtime_operation_matches_contract[/memories/{memory_id}-patch] __
+tests\contracts\test_wave3_runtime_openapi.py:79: in test_every_runtime_operation_matches_contract
+    assert resolve(actual["responses"],runtime) == resolve(expected["responses"],SHARED)
+E   AssertionError: assert {'200': {'con...id']}}}}, ...} == {'200': {'con.....}}}}}}, ...}
+E
+E     Omitting 5 identical items, use -vv to show
+E     Differing items:
+E     {'200': {'content': {'application/json': {'schema': {'properties': {'memory_id': {...}, 'logical_memory_id': {...}, 'p...'object', 'required': ['allowed_purposes', 'concept_ids', 'confidence', 'content', 'course_id', 'created_at', ...]}}}}} != {'200': {'content': {'application/json': {'schema': {'type': 'object', 'additionalProperties': False, 'required': ['al...properties': {'memory_id': {...}, 'logical_memory_id': {...}, 'previous_version_id': {...}, 'version': {...}, ...}}}}}}
+E     Use -v to get more diff
+_ test_every_runtime_operation_matches_contract[/memories/{memory_id}-delete] _
+tests\contracts\test_wave3_runtime_openapi.py:79: in test_every_runtime_operation_matches_contract
+    assert resolve(actual["responses"],runtime) == resolve(expected["responses"],SHARED)
+E   AssertionError: assert {'202': {'con...id']}}}}, ...} == {'202': {'con.....}}}}}}, ...}
+E
+E     Omitting 5 identical items, use -vv to show
+E     Differing items:
+E     {'202': {'content': {'application/json': {'schema': {'properties': {'deletion_id': {...}, 'memory_id': {...}, 'owner_u...'object', 'required': ['attempts', 'cache_cleared', 'completed_at', 'course_id', 'deletion_id', 'error_code', ...]}}}}} != {'202': {'content': {'application/json': {'schema': {'type': 'object', 'additionalProperties': False, 'required': ['at...', ...], 'properties': {'deletion_id': {...}, 'memory_id': {...}, 'owner_user_id': {...}, 'course_id': {...}, ...}}}}}}
+E     Use -v to get more diff
+_ test_every_runtime_operation_matches_contract[/memory-deletions/{deletion_id}-get] _
+tests\contracts\test_wave3_runtime_openapi.py:79: in test_every_runtime_operation_matches_contract
+    assert resolve(actual["responses"],runtime) == resolve(expected["responses"],SHARED)
+E   AssertionError: assert {'200': {'con...id']}}}}, ...} == {'200': {'con.....}}}}}}, ...}
+E
+E     Omitting 5 identical items, use -vv to show
+E     Differing items:
+E     {'200': {'content': {'application/json': {'schema': {'properties': {'deletion_id': {...}, 'memory_id': {...}, 'owner_u...'object', 'required': ['attempts', 'cache_cleared', 'completed_at', 'course_id', 'deletion_id', 'error_code', ...]}}}}} != {'200': {'content': {'application/json': {'schema': {'type': 'object', 'additionalProperties': False, 'required': ['at...', ...], 'properties': {'deletion_id': {...}, 'memory_id': {...}, 'owner_user_id': {...}, 'course_id': {...}, ...}}}}}}
+E     Use -v to get more diff
+_ test_every_runtime_operation_matches_contract[/memory-deletions/{deletion_id}/retry-post] _
+tests\contracts\test_wave3_runtime_openapi.py:79: in test_every_runtime_operation_matches_contract
+    assert resolve(actual["responses"],runtime) == resolve(expected["responses"],SHARED)
+E   AssertionError: assert {'200': {'con...id']}}}}, ...} == {'200': {'con.....}}}}}}, ...}
+E
+E     Omitting 5 identical items, use -vv to show
+E     Differing items:
+E     {'200': {'content': {'application/json': {'schema': {'properties': {'deletion_id': {...}, 'memory_id': {...}, 'owner_u...'object', 'required': ['attempts', 'cache_cleared', 'completed_at', 'course_id', 'deletion_id', 'error_code', ...]}}}}} != {'200': {'content': {'application/json': {'schema': {'type': 'object', 'additionalProperties': False, 'required': ['at...', ...], 'properties': {'deletion_id': {...}, 'memory_id': {...}, 'owner_user_id': {...}, 'course_id': {...}, ...}}}}}}
+E     Use -v to get more diff
+_ test_every_runtime_operation_matches_contract[/diagnoses/{diagnosis_id}/share-grants-post] _
+tests\contracts\test_wave3_runtime_openapi.py:79: in test_every_runtime_operation_matches_contract
+    assert resolve(actual["responses"],runtime) == resolve(expected["responses"],SHARED)
+E   AssertionError: assert {'201': {'con...id']}}}}, ...} == {'201': {'con.....}}}}}}, ...}
+E
+E     Omitting 5 identical items, use -vv to show
+E     Differing items:
+E     {'201': {'content': {'application/json': {'schema': {'properties': {'grant_id': {...}, 'owner_user_id': {...}, 'course...bject', 'required': ['course_id', 'created_at', 'expires_at', 'grant_id', 'grantee_user_id', 'owner_user_id', ...]}}}}} != {'201': {'content': {'application/json': {'schema': {'type': 'object', 'additionalProperties': False, 'required': ['co..., ...], 'properties': {'grant_id': {...}, 'owner_user_id': {...}, 'course_id': {...}, 'resource_type': {...}, ...}}}}}}
+E     Use -v to get more diff
+_____ test_every_runtime_operation_matches_contract[/me/share-grants-get] _____
+tests\contracts\test_wave3_runtime_openapi.py:79: in test_every_runtime_operation_matches_contract
+    assert resolve(actual["responses"],runtime) == resolve(expected["responses"],SHARED)
+E   AssertionError: assert {'200': {'con...id']}}}}, ...} == {'200': {'con.....}}}}}}, ...}
+E
+E     Omitting 5 identical items, use -vv to show
+E     Differing items:
+E     {'200': {'content': {'application/json': {'schema': {'type': 'array', 'items': {'properties': {...}, 'type': 'object', 'required': [...]}}}}}} != {'200': {'content': {'application/json': {'schema': {'type': 'array', 'items': {'type': 'object', 'additionalProperties': False, 'required': [...], 'properties': {...}}}}}}}
+E     Use -v to get more diff
+_ test_every_runtime_operation_matches_contract[/share-grants/{grant_id}-get] _
+tests\contracts\test_wave3_runtime_openapi.py:79: in test_every_runtime_operation_matches_contract
+    assert resolve(actual["responses"],runtime) == resolve(expected["responses"],SHARED)
+E   AssertionError: assert {'200': {'con...id']}}}}, ...} == {'200': {'con.....}}}}}}, ...}
+E
+E     Omitting 5 identical items, use -vv to show
+E     Differing items:
+E     {'200': {'content': {'application/json': {'schema': {'properties': {'grant_id': {...}, 'owner_user_id': {...}, 'course...bject', 'required': ['course_id', 'created_at', 'expires_at', 'grant_id', 'grantee_user_id', 'owner_user_id', ...]}}}}} != {'200': {'content': {'application/json': {'schema': {'type': 'object', 'additionalProperties': False, 'required': ['co..., ...], 'properties': {'grant_id': {...}, 'owner_user_id': {...}, 'course_id': {...}, 'resource_type': {...}, ...}}}}}}
+E     Use -v to get more diff
+_ test_every_runtime_operation_matches_contract[/share-grants/{grant_id}-delete] _
+tests\contracts\test_wave3_runtime_openapi.py:79: in test_every_runtime_operation_matches_contract
+    assert resolve(actual["responses"],runtime) == resolve(expected["responses"],SHARED)
+E   AssertionError: assert {'200': {'con...id']}}}}, ...} == {'200': {'con.....}}}}}}, ...}
+E
+E     Omitting 5 identical items, use -vv to show
+E     Differing items:
+E     {'200': {'content': {'application/json': {'schema': {'properties': {'grant_id': {...}, 'owner_user_id': {...}, 'course...bject', 'required': ['course_id', 'created_at', 'expires_at', 'grant_id', 'grantee_user_id', 'owner_user_id', ...]}}}}} != {'200': {'content': {'application/json': {'schema': {'type': 'object', 'additionalProperties': False, 'required': ['co..., ...], 'properties': {'grant_id': {...}, 'owner_user_id': {...}, 'course_id': {...}, 'resource_type': {...}, ...}}}}}}
+E     Use -v to get more diff
+_ test_every_runtime_operation_matches_contract[/share-grants/{grant_id}/diagnosis-summary-get] _
+tests\contracts\test_wave3_runtime_openapi.py:79: in test_every_runtime_operation_matches_contract
+    assert resolve(actual["responses"],runtime) == resolve(expected["responses"],SHARED)
+E   AssertionError: assert {'200': {'con...id']}}}}, ...} == {'200': {'con.....}}}}}}, ...}
+E
+E     Omitting 5 identical items, use -vv to show
+E     Differing items:
+E     {'200': {'content': {'application/json': {'schema': {'properties': {'diagnosis_id': {...}, 'owner_user_id': {...}, 'co...'object', 'required': ['category', 'concept_ids', 'confidence', 'course_id', 'diagnosis_id', 'owner_user_id', ...]}}}}} != {'200': {'content': {'application/json': {'schema': {'type': 'object', 'additionalProperties': False, 'required': ['ca...', ...], 'properties': {'diagnosis_id': {...}, 'owner_user_id': {...}, 'course_id': {...}, 'category': {...}, ...}}}}}}
+E     Use -v to get more diff
+_ test_every_runtime_operation_matches_contract[/teacher/courses/{course_id}/analytics-get] _
+tests\contracts\test_wave3_runtime_openapi.py:74: in test_every_runtime_operation_matches_contract
+    assert actual is not None
+E   assert None is not None
+_ test_every_runtime_operation_matches_contract[/teacher/courses/{course_id}/review-queue-get] _
+tests\contracts\test_wave3_runtime_openapi.py:74: in test_every_runtime_operation_matches_contract
+    assert actual is not None
+E   assert None is not None
+_ test_every_runtime_operation_matches_contract[/teacher/diagnoses/{diagnosis_id}/review-post] _
+tests\contracts\test_wave3_runtime_openapi.py:74: in test_every_runtime_operation_matches_contract
+    assert actual is not None
+E   assert None is not None
+_ test_default_sql_application_mounts_teacher_routes_and_preserves_security_dependencies _
+..\..\..\.venv\Lib\site-packages\starlette\datastructures.py:683: in __getattr__
+    return self._state[key]
+           ^^^^^^^^^^^^^^^^
+E   KeyError: 'teacher_analytics_repository'
+
+During handling of the above exception, another exception occurred:
+tests\integration\test_wave3_gate.py:15: in test_default_sql_application_mounts_teacher_routes_and_preserves_security_dependencies
+    repository = app.state.teacher_analytics_repository
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\.venv\Lib\site-packages\starlette\datastructures.py:686: in __getattr__
+    raise AttributeError(message.format(self.__class__.__name__, key))
+E   AttributeError: 'State' object has no attribute 'teacher_analytics_repository'
+---------------------------- Captured stderr call -----------------------------
+INFO  [alembic.runtime.migration] Context impl PostgresqlImpl.
+INFO  [alembic.runtime.migration] Will assume transactional DDL.
+_________ test_development_application_uses_dynamic_domain_projection _________
+..\..\..\.venv\Lib\site-packages\starlette\datastructures.py:683: in __getattr__
+    return self._state[key]
+           ^^^^^^^^^^^^^^^^
+E   KeyError: 'teacher_analytics_repository'
+
+During handling of the above exception, another exception occurred:
+tests\integration\test_wave3_gate.py:34: in test_development_application_uses_dynamic_domain_projection
+    assert isinstance(app.state.teacher_analytics_repository,InMemoryTeacherAnalyticsDataSource)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\.venv\Lib\site-packages\starlette\datastructures.py:686: in __getattr__
+    raise AttributeError(message.format(self.__class__.__name__, key))
+E   AttributeError: 'State' object has no attribute 'teacher_analytics_repository'
+============================== warnings summary ===============================
+tests/integration/test_wave3_gate.py::test_default_sql_application_mounts_teacher_routes_and_preserves_security_dependencies
+  C:\Users\lenovo\Desktop\cs competition\.venv\Lib\site-packages\alembic\config.py:604: DeprecationWarning: No path_separator found in configuration; falling back to legacy splitting on spaces, commas, and colons for prepend_sys_path.  Consider adding path_separator=os to Alembic config.
+    util.warn_deprecated(
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED tests/contracts/test_wave3_runtime_openapi.py::test_full_runtime_operation_set_matches_frozen_shared_contract
+FAILED tests/contracts/test_wave3_runtime_openapi.py::test_every_runtime_operation_matches_contract[/health-get]
+FAILED tests/contracts/test_wave3_runtime_openapi.py::test_every_runtime_operation_matches_contract[/auth/login-post]
+FAILED tests/contracts/test_wave3_runtime_openapi.py::test_every_runtime_operation_matches_contract[/auth/logout-post]
+FAILED tests/contracts/test_wave3_runtime_openapi.py::test_every_runtime_operation_matches_contract[/courses-get]
+FAILED tests/contracts/test_wave3_runtime_openapi.py::test_every_runtime_operation_matches_contract[/courses/{course_id}/exercises-get]
+FAILED tests/contracts/test_wave3_runtime_openapi.py::test_every_runtime_operation_matches_contract[/teacher/courses-post]
+FAILED tests/contracts/test_wave3_runtime_openapi.py::test_every_runtime_operation_matches_contract[/courses/{course_id}/enrollments-post]
+FAILED tests/contracts/test_wave3_runtime_openapi.py::test_every_runtime_operation_matches_contract[/teacher/courses/{course_id}/concepts-get]
+FAILED tests/contracts/test_wave3_runtime_openapi.py::test_every_runtime_operation_matches_contract[/teacher/courses/{course_id}/concepts-post]
+FAILED tests/contracts/test_wave3_runtime_openapi.py::test_every_runtime_operation_matches_contract[/teacher/courses/{course_id}/concepts/{concept_id}-patch]
+FAILED tests/contracts/test_wave3_runtime_openapi.py::test_every_runtime_operation_matches_contract[/teacher/courses/{course_id}/concepts/{concept_id}/review-post]
+FAILED tests/contracts/test_wave3_runtime_openapi.py::test_every_runtime_operation_matches_contract[/teacher/courses/{course_id}/concept-edges-get]
+FAILED tests/contracts/test_wave3_runtime_openapi.py::test_every_runtime_operation_matches_contract[/teacher/courses/{course_id}/concept-edges-post]
+FAILED tests/contracts/test_wave3_runtime_openapi.py::test_every_runtime_operation_matches_contract[/teacher/courses/{course_id}/misconceptions-get]
+FAILED tests/contracts/test_wave3_runtime_openapi.py::test_every_runtime_operation_matches_contract[/teacher/courses/{course_id}/misconceptions-post]
+FAILED tests/contracts/test_wave3_runtime_openapi.py::test_every_runtime_operation_matches_contract[/teacher/courses/{course_id}/misconceptions/{misconception_id}-patch]
+FAILED tests/contracts/test_wave3_runtime_openapi.py::test_every_runtime_operation_matches_contract[/teacher/courses/{course_id}/misconceptions/{misconception_id}/review-post]
+FAILED tests/contracts/test_wave3_runtime_openapi.py::test_every_runtime_operation_matches_contract[/exercises/{exercise_id}/submissions-post]
+FAILED tests/contracts/test_wave3_runtime_openapi.py::test_every_runtime_operation_matches_contract[/submissions/{submission_id}-get]
+FAILED tests/contracts/test_wave3_runtime_openapi.py::test_every_runtime_operation_matches_contract[/submissions/{submission_id}/execution-result-get]
+FAILED tests/contracts/test_wave3_runtime_openapi.py::test_every_runtime_operation_matches_contract[/submissions/{submission_id}/diagnosis-get]
+FAILED tests/contracts/test_wave3_runtime_openapi.py::test_every_runtime_operation_matches_contract[/diagnoses/{diagnosis_id}/hints/next-post]
+FAILED tests/contracts/test_wave3_runtime_openapi.py::test_every_runtime_operation_matches_contract[/diagnoses/{diagnosis_id}/explanation-check-post]
+FAILED tests/contracts/test_wave3_runtime_openapi.py::test_every_runtime_operation_matches_contract[/me/memory-proposals-get]
+FAILED tests/contracts/test_wave3_runtime_openapi.py::test_every_runtime_operation_matches_contract[/memory-proposals/{proposal_id}/accept-post]
+FAILED tests/contracts/test_wave3_runtime_openapi.py::test_every_runtime_operation_matches_contract[/memory-proposals/{proposal_id}/reject-post]
+FAILED tests/contracts/test_wave3_runtime_openapi.py::test_every_runtime_operation_matches_contract[/memory-proposals/{proposal_id}-patch]
+FAILED tests/contracts/test_wave3_runtime_openapi.py::test_every_runtime_operation_matches_contract[/me/memories-get]
+FAILED tests/contracts/test_wave3_runtime_openapi.py::test_every_runtime_operation_matches_contract[/memories/{memory_id}-patch]
+FAILED tests/contracts/test_wave3_runtime_openapi.py::test_every_runtime_operation_matches_contract[/memories/{memory_id}-delete]
+FAILED tests/contracts/test_wave3_runtime_openapi.py::test_every_runtime_operation_matches_contract[/memory-deletions/{deletion_id}-get]
+FAILED tests/contracts/test_wave3_runtime_openapi.py::test_every_runtime_operation_matches_contract[/memory-deletions/{deletion_id}/retry-post]
+FAILED tests/contracts/test_wave3_runtime_openapi.py::test_every_runtime_operation_matches_contract[/diagnoses/{diagnosis_id}/share-grants-post]
+FAILED tests/contracts/test_wave3_runtime_openapi.py::test_every_runtime_operation_matches_contract[/me/share-grants-get]
+FAILED tests/contracts/test_wave3_runtime_openapi.py::test_every_runtime_operation_matches_contract[/share-grants/{grant_id}-get]
+FAILED tests/contracts/test_wave3_runtime_openapi.py::test_every_runtime_operation_matches_contract[/share-grants/{grant_id}-delete]
+FAILED tests/contracts/test_wave3_runtime_openapi.py::test_every_runtime_operation_matches_contract[/share-grants/{grant_id}/diagnosis-summary-get]
+FAILED tests/contracts/test_wave3_runtime_openapi.py::test_every_runtime_operation_matches_contract[/teacher/courses/{course_id}/analytics-get]
+FAILED tests/contracts/test_wave3_runtime_openapi.py::test_every_runtime_operation_matches_contract[/teacher/courses/{course_id}/review-queue-get]
+FAILED tests/contracts/test_wave3_runtime_openapi.py::test_every_runtime_operation_matches_contract[/teacher/diagnoses/{diagnosis_id}/review-post]
+FAILED tests/integration/test_wave3_gate.py::test_default_sql_application_mounts_teacher_routes_and_preserves_security_dependencies
+FAILED tests/integration/test_wave3_gate.py::test_development_application_uses_dynamic_domain_projection
+43 failed, 1 warning in 30.94s

@@ -1,0 +1,333 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://knowbound.invalid/evaluation/cases.schema.json",
+  "title": "KnowBound-CJ evaluation case (a case is not an execution result)",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "case_id",
+    "case_type",
+    "course_version",
+    "input",
+    "expected_concept_ids",
+    "evidence",
+    "teacher_annotators",
+    "annotation_status",
+    "privacy_classification",
+    "dataset_split",
+    "source_type",
+    "created_at",
+    "notes"
+  ],
+  "properties": {
+    "case_id": {
+      "type": "string",
+      "pattern": "^(sec|diag)-[a-z0-9-]+$",
+      "minLength": 8
+    },
+    "case_type": {
+      "type": "string",
+      "enum": [
+        "security",
+        "diagnosis"
+      ]
+    },
+    "course_version": {
+      "type": "string",
+      "minLength": 1
+    },
+    "input": {
+      "type": "object",
+      "minProperties": 1
+    },
+    "expected_concept_ids": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "pattern": "^cj\\.[a-z0-9.-]+$"
+      }
+    },
+    "evidence": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "kind",
+          "reference",
+          "status"
+        ],
+        "properties": {
+          "kind": {
+            "type": "string",
+            "enum": [
+              "planned_assertion",
+              "knowledge_base",
+              "toolchain",
+              "teacher_annotation"
+            ]
+          },
+          "reference": {
+            "type": "string",
+            "minLength": 1
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "planned",
+              "locally_checked",
+              "teacher_verified"
+            ]
+          }
+        }
+      }
+    },
+    "teacher_annotators": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "annotator_id",
+          "review_record",
+          "annotated_at",
+          "concept_ids"
+        ],
+        "properties": {
+          "annotator_id": {
+            "type": "string",
+            "pattern": "^annotator-[a-z0-9-]+$"
+          },
+          "review_record": {
+            "type": "string",
+            "minLength": 1
+          },
+          "annotated_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "concept_ids": {
+            "type": "array",
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "pattern": "^cj\\.[a-z0-9.-]+$"
+            }
+          }
+        }
+      }
+    },
+    "annotation_status": {
+      "type": "string",
+      "enum": [
+        "draft",
+        "verified"
+      ]
+    },
+    "privacy_classification": {
+      "type": "string",
+      "enum": [
+        "synthetic_public",
+        "synthetic_sensitive",
+        "deidentified"
+      ]
+    },
+    "dataset_split": {
+      "type": "string",
+      "enum": [
+        "train",
+        "dev",
+        "test"
+      ]
+    },
+    "source_type": {
+      "type": "string",
+      "enum": [
+        "synthetic",
+        "teacher_authored",
+        "deidentified_pilot"
+      ]
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "notes": {
+      "type": "string",
+      "minLength": 1
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "case_type": {
+            "const": "security"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "input": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "attack_category",
+              "preconditions",
+              "operation",
+              "expected_denial",
+              "execution_tier",
+              "test_reference"
+            ],
+            "properties": {
+              "attack_category": {
+                "type": "string",
+                "enum": [
+                  "idor",
+                  "cross_student",
+                  "cross_course",
+                  "cross_role",
+                  "prompt_injection",
+                  "memory_leakage",
+                  "deletion_recovery",
+                  "share_bypass",
+                  "sensitive_logging",
+                  "small_sample",
+                  "executor_abuse",
+                  "enumeration_idempotency"
+                ]
+              },
+              "preconditions": {
+                "type": "array",
+                "minItems": 1,
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "operation": {
+                "type": "string",
+                "minLength": 8
+              },
+              "expected_denial": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "http_status",
+                  "code",
+                  "public_fields",
+                  "semantics"
+                ],
+                "properties": {
+                  "http_status": {
+                    "type": [
+                      "integer",
+                      "null"
+                    ],
+                    "minimum": 100,
+                    "maximum": 599
+                  },
+                  "code": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "public_fields": {
+                    "type": "array",
+                    "uniqueItems": true,
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "semantics": {
+                    "type": "string",
+                    "minLength": 8
+                  }
+                }
+              },
+              "execution_tier": {
+                "type": "string",
+                "enum": [
+                  "local_mock",
+                  "contract",
+                  "postgres_gate",
+                  "container_gate",
+                  "ui_gate",
+                  "architecture_pending"
+                ]
+              },
+              "test_reference": {
+                "type": "string",
+                "minLength": 1
+              },
+              "payload": {
+                "type": "string"
+              },
+              "channel": {
+                "type": "string"
+              },
+              "filters": {
+                "type": "object"
+              },
+              "scenario": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "annotation_status": {
+            "const": "verified"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "teacher_annotators": {
+            "minItems": 1
+          },
+          "evidence": {
+            "contains": {
+              "properties": {
+                "kind": {
+                  "const": "teacher_annotation"
+                },
+                "status": {
+                  "const": "teacher_verified"
+                }
+              },
+              "required": [
+                "kind",
+                "status"
+              ]
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "source_type": {
+            "const": "deidentified_pilot"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "privacy_classification": {
+            "const": "deidentified"
+          }
+        }
+      }
+    }
+  ]
+}

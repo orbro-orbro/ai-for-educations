@@ -1,0 +1,108 @@
+F
+================================== FAILURES ===================================
+________ test_distinct_students_at_sql_boundary[4-insufficient_sample] ________
+..\..\..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1967: in _exec_single_context
+    self.dialect.do_execute(
+..\..\..\.venv\Lib\site-packages\sqlalchemy\engine\default.py:952: in do_execute
+    cursor.execute(statement, parameters)
+..\..\..\.venv\Lib\site-packages\psycopg\cursor.py:117: in execute
+    raise ex.with_traceback(None)
+E   psycopg.errors.ForeignKeyViolation: insert or update on table "course_authorized_teachers" violates foreign key constraint "course_authorized_teachers_course_id_fkey"
+E   DETAIL:  Key (course_id)=(course-a) is not present in table "courses".
+
+The above exception was the direct cause of the following exception:
+app\persistence\repositories.py:64: in add
+    with self._sessions.begin() as session:
+         ^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\..\..\miniconda3\Lib\contextlib.py:148: in __exit__
+    next(self.gen)
+..\..\..\.venv\Lib\site-packages\sqlalchemy\orm\session.py:1814: in _maker_context_manager
+    with self.begin():
+         ^^^^^^^^^^^^
+..\..\..\.venv\Lib\site-packages\sqlalchemy\engine\util.py:147: in __exit__
+    with util.safe_reraise():
+         ^^^^^^^^^^^^^^^^^^^
+..\..\..\.venv\Lib\site-packages\sqlalchemy\util\langhelpers.py:121: in __exit__
+    raise exc_value.with_traceback(exc_tb)
+..\..\..\.venv\Lib\site-packages\sqlalchemy\engine\util.py:145: in __exit__
+    self.commit()
+..\..\..\.venv\Lib\site-packages\sqlalchemy\orm\state_changes.py:137: in _go
+    ret_value = fn(self, *arg, **kw)
+                ^^^^^^^^^^^^^^^^^^^^
+..\..\..\.venv\Lib\site-packages\sqlalchemy\orm\session.py:1311: in commit
+    self._prepare_impl()
+..\..\..\.venv\Lib\site-packages\sqlalchemy\orm\state_changes.py:137: in _go
+    ret_value = fn(self, *arg, **kw)
+                ^^^^^^^^^^^^^^^^^^^^
+..\..\..\.venv\Lib\site-packages\sqlalchemy\orm\session.py:1286: in _prepare_impl
+    self.session.flush()
+..\..\..\.venv\Lib\site-packages\sqlalchemy\orm\session.py:4331: in flush
+    self._flush(objects)
+..\..\..\.venv\Lib\site-packages\sqlalchemy\orm\session.py:4466: in _flush
+    with util.safe_reraise():
+         ^^^^^^^^^^^^^^^^^^^
+..\..\..\.venv\Lib\site-packages\sqlalchemy\util\langhelpers.py:121: in __exit__
+    raise exc_value.with_traceback(exc_tb)
+..\..\..\.venv\Lib\site-packages\sqlalchemy\orm\session.py:4427: in _flush
+    flush_context.execute()
+..\..\..\.venv\Lib\site-packages\sqlalchemy\orm\unitofwork.py:466: in execute
+    rec.execute(self)
+..\..\..\.venv\Lib\site-packages\sqlalchemy\orm\unitofwork.py:642: in execute
+    util.preloaded.orm_persistence.save_obj(
+..\..\..\.venv\Lib\site-packages\sqlalchemy\orm\persistence.py:93: in save_obj
+    _emit_insert_statements(
+..\..\..\.venv\Lib\site-packages\sqlalchemy\orm\persistence.py:1048: in _emit_insert_statements
+    result = connection.execute(
+..\..\..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1419: in execute
+    return meth(
+..\..\..\.venv\Lib\site-packages\sqlalchemy\sql\elements.py:527: in _execute_on_connection
+    return connection._execute_clauseelement(
+..\..\..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1641: in _execute_clauseelement
+    ret = self._execute_context(
+..\..\..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1846: in _execute_context
+    return self._exec_single_context(
+..\..\..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1986: in _exec_single_context
+    self._handle_dbapi_exception(
+..\..\..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:2363: in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+..\..\..\.venv\Lib\site-packages\sqlalchemy\engine\base.py:1967: in _exec_single_context
+    self.dialect.do_execute(
+..\..\..\.venv\Lib\site-packages\sqlalchemy\engine\default.py:952: in do_execute
+    cursor.execute(statement, parameters)
+..\..\..\.venv\Lib\site-packages\psycopg\cursor.py:117: in execute
+    raise ex.with_traceback(None)
+E   sqlalchemy.exc.IntegrityError: (psycopg.errors.ForeignKeyViolation) insert or update on table "course_authorized_teachers" violates foreign key constraint "course_authorized_teachers_course_id_fkey"
+E   DETAIL:  Key (course_id)=(course-a) is not present in table "courses".
+E   [SQL: INSERT INTO course_authorized_teachers (course_id, teacher_id) VALUES (%(course_id)s::VARCHAR, %(teacher_id)s::VARCHAR)]
+E   [parameters: {'course_id': 'course-a', 'teacher_id': 'teacher-b'}]
+E   (Background on this error at: https://sqlalche.me/e/20/gkpj)
+
+The above exception was the direct cause of the following exception:
+tests\integration\test_wave3_analytics_postgres.py:16: in test_distinct_students_at_sql_boundary
+    wave3_pg.seed_diagnoses(students=students, duplicates=3)
+tests\integration\wave3_support.py:142: in seed_diagnoses
+    self.seed_vector_facts(facts)
+tests\integration\wave3_support.py:93: in seed_vector_facts
+    self.repos.courses.add(Course(course, "Synthetic \xb2\xd6\xf2\xa1\xd3\xef\xd1\xd4\xc9\xe8\xbc\xc6", "teacher-a", frozenset({"teacher-b"})))
+app\persistence\repositories.py:71: in add
+    raise ValueError("duplicate or invalid course") from exc
+E   ValueError: duplicate or invalid course
+---------------------------- Captured stderr setup ----------------------------
+INFO  [alembic.runtime.migration] Context impl PostgresqlImpl.
+INFO  [alembic.runtime.migration] Will assume transactional DDL.
+INFO  [alembic.runtime.migration] Running upgrade  -> 0001_identity_courses, Identity, courses and enrollments.
+INFO  [alembic.runtime.migration] Running upgrade 0001_identity_courses -> 0002_knowledge_graph, Course-scoped knowledge graph and review state.
+INFO  [alembic.runtime.migration] Running upgrade 0002_knowledge_graph -> 0003_submissions_diagnostics, Submission pipeline, compiler evidence, and exercise publication.
+INFO  [alembic.runtime.migration] Running upgrade 0003_submissions_diagnostics -> 0004_diagnostics_hints, Persist evidence-bound diagnoses, hints, attempts and explanation checks.
+INFO  [alembic.runtime.migration] Running upgrade 0004_diagnostics_hints -> 0005_memories_audit, Persist private learning-memory state, idempotency and metadata-only audit events.
+INFO  [alembic.runtime.migration] Running upgrade 0005_memories_audit -> 0006_token_revocations, Persist token digests so logout survives worker changes and restart.
+============================== warnings summary ===============================
+tests/integration/test_wave3_analytics_postgres.py::test_distinct_students_at_sql_boundary[4-insufficient_sample]
+  C:\Users\lenovo\Desktop\cs competition\.venv\Lib\site-packages\alembic\config.py:604: DeprecationWarning: No path_separator found in configuration; falling back to legacy splitting on spaces, commas, and colons for prepend_sys_path.  Consider adding path_separator=os to Alembic config.
+    util.warn_deprecated(
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED tests/integration/test_wave3_analytics_postgres.py::test_distinct_students_at_sql_boundary[4-insufficient_sample]
+!!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!
+1 failed, 1 warning in 13.20s

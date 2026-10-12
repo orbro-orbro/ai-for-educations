@@ -1,0 +1,136 @@
+.FFFFFFFF                                                                [100%]
+================================== FAILURES ===================================
+_ test_rollback_retains_non_target_data_requires_key_rotation_and_does_not_restore_text _
+tests\integration\test_wave3_migrations_postgres.py:66: in test_rollback_retains_non_target_data_requires_key_rotation_and_does_not_restore_text
+    live_diag = live.diagnostics.get(live.diagnostics.get_explanation(live_check).diagnosis_id)
+                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   TypeError: SqlDiagnosticRepository.get_explanation() missing 1 required positional argument: 'request_id'
+---------------------------- Captured stderr call -----------------------------
+INFO  [alembic.runtime.migration] Context impl PostgresqlImpl.
+INFO  [alembic.runtime.migration] Will assume transactional DDL.
+INFO  [alembic.runtime.migration] Running upgrade  -> 0001_identity_courses, Identity, courses and enrollments.
+INFO  [alembic.runtime.migration] Running upgrade 0001_identity_courses -> 0002_knowledge_graph, Course-scoped knowledge graph and review state.
+INFO  [alembic.runtime.migration] Running upgrade 0002_knowledge_graph -> 0003_submissions_diagnostics, Submission pipeline, compiler evidence, and exercise publication.
+INFO  [alembic.runtime.migration] Running upgrade 0003_submissions_diagnostics -> 0004_diagnostics_hints, Persist evidence-bound diagnoses, hints, attempts and explanation checks.
+INFO  [alembic.runtime.migration] Running upgrade 0004_diagnostics_hints -> 0005_memories_audit, Persist private learning-memory state, idempotency and metadata-only audit events.
+_______________ test_actual_migrated_constraints[short_digest] ________________
+tests\integration\test_wave3_migrations_postgres.py:105: in test_actual_migrated_constraints
+    values={"d":repos.diagnostics.get_explanation(check).diagnosis_id,"c":course,"t":teacher,"decision":"confirmed","reason":"synthetic reason","at":datetime.now(UTC)}
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   TypeError: SqlDiagnosticRepository.get_explanation() missing 1 required positional argument: 'request_id'
+---------------------------- Captured stderr call -----------------------------
+INFO  [alembic.runtime.migration] Context impl PostgresqlImpl.
+INFO  [alembic.runtime.migration] Will assume transactional DDL.
+INFO  [alembic.runtime.migration] Running upgrade  -> 0001_identity_courses, Identity, courses and enrollments.
+INFO  [alembic.runtime.migration] Running upgrade 0001_identity_courses -> 0002_knowledge_graph, Course-scoped knowledge graph and review state.
+INFO  [alembic.runtime.migration] Running upgrade 0002_knowledge_graph -> 0003_submissions_diagnostics, Submission pipeline, compiler evidence, and exercise publication.
+INFO  [alembic.runtime.migration] Running upgrade 0003_submissions_diagnostics -> 0004_diagnostics_hints, Persist evidence-bound diagnoses, hints, attempts and explanation checks.
+INFO  [alembic.runtime.migration] Running upgrade 0004_diagnostics_hints -> 0005_memories_audit, Persist private learning-memory state, idempotency and metadata-only audit events.
+INFO  [alembic.runtime.migration] Running upgrade 0005_memories_audit -> 0006_token_revocations, Persist token digests so logout survives worker changes and restart.
+INFO  [alembic.runtime.migration] Running upgrade 0006_token_revocations -> 0007_teacher_analytics_reviews, Persist one authoritative teacher review per diagnosis.
+_____________ test_actual_migrated_constraints[duplicate_digest] ______________
+tests\integration\test_wave3_migrations_postgres.py:105: in test_actual_migrated_constraints
+    values={"d":repos.diagnostics.get_explanation(check).diagnosis_id,"c":course,"t":teacher,"decision":"confirmed","reason":"synthetic reason","at":datetime.now(UTC)}
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   TypeError: SqlDiagnosticRepository.get_explanation() missing 1 required positional argument: 'request_id'
+---------------------------- Captured stderr call -----------------------------
+INFO  [alembic.runtime.migration] Context impl PostgresqlImpl.
+INFO  [alembic.runtime.migration] Will assume transactional DDL.
+INFO  [alembic.runtime.migration] Running upgrade  -> 0001_identity_courses, Identity, courses and enrollments.
+INFO  [alembic.runtime.migration] Running upgrade 0001_identity_courses -> 0002_knowledge_graph, Course-scoped knowledge graph and review state.
+INFO  [alembic.runtime.migration] Running upgrade 0002_knowledge_graph -> 0003_submissions_diagnostics, Submission pipeline, compiler evidence, and exercise publication.
+INFO  [alembic.runtime.migration] Running upgrade 0003_submissions_diagnostics -> 0004_diagnostics_hints, Persist evidence-bound diagnoses, hints, attempts and explanation checks.
+INFO  [alembic.runtime.migration] Running upgrade 0004_diagnostics_hints -> 0005_memories_audit, Persist private learning-memory state, idempotency and metadata-only audit events.
+INFO  [alembic.runtime.migration] Running upgrade 0005_memories_audit -> 0006_token_revocations, Persist token digests so logout survives worker changes and restart.
+INFO  [alembic.runtime.migration] Running upgrade 0006_token_revocations -> 0007_teacher_analytics_reviews, Persist one authoritative teacher review per diagnosis.
+_____________ test_actual_migrated_constraints[invalid_decision] ______________
+tests\integration\test_wave3_migrations_postgres.py:105: in test_actual_migrated_constraints
+    values={"d":repos.diagnostics.get_explanation(check).diagnosis_id,"c":course,"t":teacher,"decision":"confirmed","reason":"synthetic reason","at":datetime.now(UTC)}
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   TypeError: SqlDiagnosticRepository.get_explanation() missing 1 required positional argument: 'request_id'
+---------------------------- Captured stderr call -----------------------------
+INFO  [alembic.runtime.migration] Context impl PostgresqlImpl.
+INFO  [alembic.runtime.migration] Will assume transactional DDL.
+INFO  [alembic.runtime.migration] Running upgrade  -> 0001_identity_courses, Identity, courses and enrollments.
+INFO  [alembic.runtime.migration] Running upgrade 0001_identity_courses -> 0002_knowledge_graph, Course-scoped knowledge graph and review state.
+INFO  [alembic.runtime.migration] Running upgrade 0002_knowledge_graph -> 0003_submissions_diagnostics, Submission pipeline, compiler evidence, and exercise publication.
+INFO  [alembic.runtime.migration] Running upgrade 0003_submissions_diagnostics -> 0004_diagnostics_hints, Persist evidence-bound diagnoses, hints, attempts and explanation checks.
+INFO  [alembic.runtime.migration] Running upgrade 0004_diagnostics_hints -> 0005_memories_audit, Persist private learning-memory state, idempotency and metadata-only audit events.
+INFO  [alembic.runtime.migration] Running upgrade 0005_memories_audit -> 0006_token_revocations, Persist token digests so logout survives worker changes and restart.
+INFO  [alembic.runtime.migration] Running upgrade 0006_token_revocations -> 0007_teacher_analytics_reviews, Persist one authoritative teacher review per diagnosis.
+_______________ test_actual_migrated_constraints[blank_reason] ________________
+tests\integration\test_wave3_migrations_postgres.py:105: in test_actual_migrated_constraints
+    values={"d":repos.diagnostics.get_explanation(check).diagnosis_id,"c":course,"t":teacher,"decision":"confirmed","reason":"synthetic reason","at":datetime.now(UTC)}
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   TypeError: SqlDiagnosticRepository.get_explanation() missing 1 required positional argument: 'request_id'
+---------------------------- Captured stderr call -----------------------------
+INFO  [alembic.runtime.migration] Context impl PostgresqlImpl.
+INFO  [alembic.runtime.migration] Will assume transactional DDL.
+INFO  [alembic.runtime.migration] Running upgrade  -> 0001_identity_courses, Identity, courses and enrollments.
+INFO  [alembic.runtime.migration] Running upgrade 0001_identity_courses -> 0002_knowledge_graph, Course-scoped knowledge graph and review state.
+INFO  [alembic.runtime.migration] Running upgrade 0002_knowledge_graph -> 0003_submissions_diagnostics, Submission pipeline, compiler evidence, and exercise publication.
+INFO  [alembic.runtime.migration] Running upgrade 0003_submissions_diagnostics -> 0004_diagnostics_hints, Persist evidence-bound diagnoses, hints, attempts and explanation checks.
+INFO  [alembic.runtime.migration] Running upgrade 0004_diagnostics_hints -> 0005_memories_audit, Persist private learning-memory state, idempotency and metadata-only audit events.
+INFO  [alembic.runtime.migration] Running upgrade 0005_memories_audit -> 0006_token_revocations, Persist token digests so logout survives worker changes and restart.
+INFO  [alembic.runtime.migration] Running upgrade 0006_token_revocations -> 0007_teacher_analytics_reviews, Persist one authoritative teacher review per diagnosis.
+________________ test_actual_migrated_constraints[long_reason] ________________
+tests\integration\test_wave3_migrations_postgres.py:105: in test_actual_migrated_constraints
+    values={"d":repos.diagnostics.get_explanation(check).diagnosis_id,"c":course,"t":teacher,"decision":"confirmed","reason":"synthetic reason","at":datetime.now(UTC)}
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   TypeError: SqlDiagnosticRepository.get_explanation() missing 1 required positional argument: 'request_id'
+---------------------------- Captured stderr call -----------------------------
+INFO  [alembic.runtime.migration] Context impl PostgresqlImpl.
+INFO  [alembic.runtime.migration] Will assume transactional DDL.
+INFO  [alembic.runtime.migration] Running upgrade  -> 0001_identity_courses, Identity, courses and enrollments.
+INFO  [alembic.runtime.migration] Running upgrade 0001_identity_courses -> 0002_knowledge_graph, Course-scoped knowledge graph and review state.
+INFO  [alembic.runtime.migration] Running upgrade 0002_knowledge_graph -> 0003_submissions_diagnostics, Submission pipeline, compiler evidence, and exercise publication.
+INFO  [alembic.runtime.migration] Running upgrade 0003_submissions_diagnostics -> 0004_diagnostics_hints, Persist evidence-bound diagnoses, hints, attempts and explanation checks.
+INFO  [alembic.runtime.migration] Running upgrade 0004_diagnostics_hints -> 0005_memories_audit, Persist private learning-memory state, idempotency and metadata-only audit events.
+INFO  [alembic.runtime.migration] Running upgrade 0005_memories_audit -> 0006_token_revocations, Persist token digests so logout survives worker changes and restart.
+INFO  [alembic.runtime.migration] Running upgrade 0006_token_revocations -> 0007_teacher_analytics_reviews, Persist one authoritative teacher review per diagnosis.
+______________ test_actual_migrated_constraints[foreign_course] _______________
+tests\integration\test_wave3_migrations_postgres.py:105: in test_actual_migrated_constraints
+    values={"d":repos.diagnostics.get_explanation(check).diagnosis_id,"c":course,"t":teacher,"decision":"confirmed","reason":"synthetic reason","at":datetime.now(UTC)}
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   TypeError: SqlDiagnosticRepository.get_explanation() missing 1 required positional argument: 'request_id'
+---------------------------- Captured stderr call -----------------------------
+INFO  [alembic.runtime.migration] Context impl PostgresqlImpl.
+INFO  [alembic.runtime.migration] Will assume transactional DDL.
+INFO  [alembic.runtime.migration] Running upgrade  -> 0001_identity_courses, Identity, courses and enrollments.
+INFO  [alembic.runtime.migration] Running upgrade 0001_identity_courses -> 0002_knowledge_graph, Course-scoped knowledge graph and review state.
+INFO  [alembic.runtime.migration] Running upgrade 0002_knowledge_graph -> 0003_submissions_diagnostics, Submission pipeline, compiler evidence, and exercise publication.
+INFO  [alembic.runtime.migration] Running upgrade 0003_submissions_diagnostics -> 0004_diagnostics_hints, Persist evidence-bound diagnoses, hints, attempts and explanation checks.
+INFO  [alembic.runtime.migration] Running upgrade 0004_diagnostics_hints -> 0005_memories_audit, Persist private learning-memory state, idempotency and metadata-only audit events.
+INFO  [alembic.runtime.migration] Running upgrade 0005_memories_audit -> 0006_token_revocations, Persist token digests so logout survives worker changes and restart.
+INFO  [alembic.runtime.migration] Running upgrade 0006_token_revocations -> 0007_teacher_analytics_reviews, Persist one authoritative teacher review per diagnosis.
+_____________ test_actual_migrated_constraints[duplicate_review] ______________
+tests\integration\test_wave3_migrations_postgres.py:105: in test_actual_migrated_constraints
+    values={"d":repos.diagnostics.get_explanation(check).diagnosis_id,"c":course,"t":teacher,"decision":"confirmed","reason":"synthetic reason","at":datetime.now(UTC)}
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   TypeError: SqlDiagnosticRepository.get_explanation() missing 1 required positional argument: 'request_id'
+---------------------------- Captured stderr call -----------------------------
+INFO  [alembic.runtime.migration] Context impl PostgresqlImpl.
+INFO  [alembic.runtime.migration] Will assume transactional DDL.
+INFO  [alembic.runtime.migration] Running upgrade  -> 0001_identity_courses, Identity, courses and enrollments.
+INFO  [alembic.runtime.migration] Running upgrade 0001_identity_courses -> 0002_knowledge_graph, Course-scoped knowledge graph and review state.
+INFO  [alembic.runtime.migration] Running upgrade 0002_knowledge_graph -> 0003_submissions_diagnostics, Submission pipeline, compiler evidence, and exercise publication.
+INFO  [alembic.runtime.migration] Running upgrade 0003_submissions_diagnostics -> 0004_diagnostics_hints, Persist evidence-bound diagnoses, hints, attempts and explanation checks.
+INFO  [alembic.runtime.migration] Running upgrade 0004_diagnostics_hints -> 0005_memories_audit, Persist private learning-memory state, idempotency and metadata-only audit events.
+INFO  [alembic.runtime.migration] Running upgrade 0005_memories_audit -> 0006_token_revocations, Persist token digests so logout survives worker changes and restart.
+INFO  [alembic.runtime.migration] Running upgrade 0006_token_revocations -> 0007_teacher_analytics_reviews, Persist one authoritative teacher review per diagnosis.
+============================== warnings summary ===============================
+tests/integration/test_wave3_migrations_postgres.py: 15 warnings
+  C:\Users\lenovo\Desktop\cs competition\.venv\Lib\site-packages\alembic\config.py:604: DeprecationWarning: No path_separator found in configuration; falling back to legacy splitting on spaces, commas, and colons for prepend_sys_path.  Consider adding path_separator=os to Alembic config.
+    util.warn_deprecated(
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED tests/integration/test_wave3_migrations_postgres.py::test_rollback_retains_non_target_data_requires_key_rotation_and_does_not_restore_text
+FAILED tests/integration/test_wave3_migrations_postgres.py::test_actual_migrated_constraints[short_digest]
+FAILED tests/integration/test_wave3_migrations_postgres.py::test_actual_migrated_constraints[duplicate_digest]
+FAILED tests/integration/test_wave3_migrations_postgres.py::test_actual_migrated_constraints[invalid_decision]
+FAILED tests/integration/test_wave3_migrations_postgres.py::test_actual_migrated_constraints[blank_reason]
+FAILED tests/integration/test_wave3_migrations_postgres.py::test_actual_migrated_constraints[long_reason]
+FAILED tests/integration/test_wave3_migrations_postgres.py::test_actual_migrated_constraints[foreign_course]
+FAILED tests/integration/test_wave3_migrations_postgres.py::test_actual_migrated_constraints[duplicate_review]
+8 failed, 1 passed, 15 warnings in 20.20s

@@ -1,0 +1,10 @@
+F.                                                                       [100%]
+================================== FAILURES ===================================
+___ test_deleted_diagnosis_is_unavailable_instead_of_invalid_empty_success ____
+tests\contracts\test_wave3_http_contract.py:9: in test_deleted_diagnosis_is_unavailable_instead_of_invalid_empty_success
+    assert response.status_code == 404
+E   assert 200 == 404
+E    +  where 200 = <Response [200 OK]>.status_code
+=========================== short test summary info ===========================
+FAILED tests/contracts/test_wave3_http_contract.py::test_deleted_diagnosis_is_unavailable_instead_of_invalid_empty_success
+1 failed, 1 passed in 7.78s

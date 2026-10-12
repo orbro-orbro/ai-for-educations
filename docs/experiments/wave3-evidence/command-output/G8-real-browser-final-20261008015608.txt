@@ -1,0 +1,23 @@
+[WebServer] (node:8160) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] INFO  [alembic.runtime.migration] Context impl PostgresqlImpl.
+[WebServer] INFO  [alembic.runtime.migration] Will assume transactional DDL.
+
+Running 10 tests using 1 worker
+
+(node:5640) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok  1 [security-ui-projection] › e2e\security-ui.gate.ts:51:1 › student entering a teacher URL never renders teacher controls (879ms)
+  ok  2 [security-ui-projection] › e2e\security-ui.gate.ts:60:1 › teacher entering a private memory URL never requests or displays private content (553ms)
+  ok  3 [security-ui-projection] › e2e\security-ui.gate.ts:69:1 › suppressed analytics shows no exact learner count or private conversation (727ms)
+  ok  4 [security-ui-projection] › e2e\security-ui.gate.ts:79:1 › 403 and 404 render the same public denial without server details (1.1s)
+  ok  5 [security-ui-projection] › e2e\security-ui.gate.ts:92:1 › error page hides sensitive service internals (987ms)
+  ok  6 [security-ui-projection] › e2e\security-ui.gate.ts:102:1 › logout clears persisted session and protected-page access (962ms)
+  ok  7 [security-ui-projection] › e2e\security-ui.gate.ts:113:1 › repeated acceptance clicks send one pending sensitive request (1.1s)
+(node:43404) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok  8 [wave3-real-ui] › e2e\wave3-real.spec.ts:17:1 › real teacher SQL threshold, denial, authoritative review and logout (2.7s)
+  ok  9 [wave3-real-ui] › e2e\wave3-real.spec.ts:45:1 › real student learning, compiler, hints and owned memory lifecycle (11.1s)
+  ok 10 [wave3-real-ui] › e2e\wave3-real.spec.ts:72:1 › real SQL logout failure is sanitized and remains retryable (1.2s)
+
+  10 passed (35.5s)

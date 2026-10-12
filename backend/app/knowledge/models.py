@@ -5,11 +5,11 @@ from __future__ import annotations
 from enum import Enum
 from typing import Annotated, Any
 
-from pydantic import BaseModel, ConfigDict, Field, StringConstraints, ValidationError, field_validator
+from pydantic import BaseModel, ConfigDict, Field, StringConstraints, ValidationError, field_validator, model_serializer
 
 KNOWLEDGE_ID_PATTERN = r"^cj(\.[a-z0-9]+(-[a-z0-9]+)*){2,}$"
 
-KnowledgeId = Annotated[str, StringConstraints(pattern=KNOWLEDGE_ID_PATTERN)]
+KnowledgeId = Annotated[str, StringConstraints(pattern=KNOWLEDGE_ID_PATTERN), Field(examples=["cj.pattern-match.exhaustiveness", "cj.misconception.match-non-exhaustive"])]
 NonEmpty = Annotated[str, StringConstraints(min_length=1, strip_whitespace=True)]
 
 
@@ -85,16 +85,29 @@ class Outcome(str, Enum):
     run_ok = "run_ok"
 
 
+def _optional_schema(schema):
+    for field in schema.get("properties", {}).values():
+        if field.get("default", "absent") is None:
+            field.pop("default")
+
+
 class _Record(BaseModel):
-    model_config = ConfigDict(extra="forbid", frozen=True)
+    model_config = ConfigDict(extra="forbid", frozen=True, json_schema_extra=_optional_schema)
 
 
 class SourceMetadata(_Record):
     kind: SourceKind
     references: list[NonEmpty] = Field(min_length=1)
-    toolchain_version: NonEmpty
+    toolchain_version: NonEmpty = Field(examples=["cjc 1.2.0 (cjnative) / cjpm 1.2.0"])
     verification_status: VerificationStatus
-    note: str | None = None
+    note: str = None
+
+    @model_serializer(mode="wrap")
+    def omit_absent_note(self, handler):
+        data = handler(self)
+        if self.note is None:
+            data.pop("note", None)
+        return data
 
 
 class Concept(_Record):

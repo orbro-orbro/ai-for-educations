@@ -1,0 +1,14 @@
+..........F                                                              [100%]
+================================== FAILURES ===================================
+_______________ test_gate_services_are_reachable_over_loopback ________________
+tests\contracts\test_wave3_environment.py:25: in test_gate_services_are_reachable_over_loopback
+    with socket.create_connection(("127.0.0.1", 55430), timeout=3):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\..\..\miniconda3\Lib\socket.py:874: in create_connection
+    raise exceptions[0]
+..\..\..\..\..\miniconda3\Lib\socket.py:859: in create_connection
+    sock.connect(sa)
+E   ConnectionRefusedError: [WinError 10061] \xd3\xc9\xd3\xdaĿ\xb1\xea\xbc\xc6\xcb\xe3\xbb\xfa\xbb\xfd\xbc\xab\xbeܾ\xf8\xa3\xac\xce޷\xa8\xc1\xac\xbdӡ\xa3
+=========================== short test summary info ===========================
+FAILED tests/contracts/test_wave3_environment.py::test_gate_services_are_reachable_over_loopback
+1 failed, 10 passed in 7.04s

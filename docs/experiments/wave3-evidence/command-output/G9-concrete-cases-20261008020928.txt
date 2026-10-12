@@ -1,0 +1,40 @@
+..............................................FF..F..................... [ 69%]
+................................                                         [100%]
+================================== FAILURES ===================================
+________________ test_planned_operation[sec-share-bypass-002] _________________
+tests\security\test_wave3_case_execution.py:113: in test_planned_operation
+    public_denial(h.request('GET',path+'/diagnosis-b',actor=TEACHER))
+tests\security\security_support.py:178: in public_denial
+    assert set(body) == {"code", "message", "request_id"}
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   AssertionError
+________________ test_planned_operation[sec-share-bypass-003] _________________
+tests\security\test_wave3_case_execution.py:115: in test_planned_operation
+    elif n==3:public_denial(h.request('GET',f'/memories/{h.memories["a"].memory_id}',actor=TEACHER))
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\security\security_support.py:176: in public_denial
+    assert response.status_code == 404
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   AssertionError
+________________ test_planned_operation[sec-share-bypass-006] _________________
+tests\security\test_wave3_case_execution.py:122: in test_planned_operation
+    h.courses._courses[COURSE_A]=replace(h.courses.get(COURSE_A),teacher_user_id=OTHER_TEACHER.user_id)
+                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\..\..\miniconda3\Lib\dataclasses.py:1778: in replace
+    return _replace(obj, **changes)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\..\..\miniconda3\Lib\dataclasses.py:1812: in _replace
+    return self.__class__(**changes)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+E   TypeError: Course.__init__() got an unexpected keyword argument 'teacher_user_id'
+============================== warnings summary ===============================
+tests/security/test_wave3_case_execution.py: 104 warnings
+  tests\security\test_wave3_case_execution.py:35: PytestWarning: record_property is incompatible with junit_family 'xunit2' (use 'legacy' or 'xunit1')
+    @pytest.mark.parametrize('case',LOCAL,ids=lambda c:c['case_id'])
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED tests/security/test_wave3_case_execution.py::test_planned_operation[sec-share-bypass-002]
+FAILED tests/security/test_wave3_case_execution.py::test_planned_operation[sec-share-bypass-003]
+FAILED tests/security/test_wave3_case_execution.py::test_planned_operation[sec-share-bypass-006]
+3 failed, 101 passed, 104 warnings in 100.52s (0:01:40)

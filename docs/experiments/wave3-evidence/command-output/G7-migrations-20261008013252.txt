@@ -1,0 +1,139 @@
+EEEEEEEEE                                                                [100%]
+=================================== ERRORS ====================================
+___ ERROR at setup of test_empty_full_chain_and_disposable_full_round_trip ____
+tests\integration\test_wave3_migrations_postgres.py:31: in migration
+    config.set_main_option("sqlalchemy.url", url)
+..\..\..\.venv\Lib\site-packages\alembic\config.py:354: in set_main_option
+    self.set_section_option(self.config_ini_section, name, value)
+..\..\..\.venv\Lib\site-packages\alembic\config.py:387: in set_section_option
+    self.file_config.set(section, name, value)
+..\..\..\..\..\miniconda3\Lib\configparser.py:1273: in set
+    super().set(section, option, value)
+..\..\..\..\..\miniconda3\Lib\configparser.py:950: in set
+    value = self._interpolation.before_set(self, section, option,
+..\..\..\..\..\miniconda3\Lib\configparser.py:440: in before_set
+    raise ValueError("invalid interpolation syntax in %r at "
+E   ValueError: invalid interpolation syntax in 'postgresql+psycopg://knowbound:[REDACTED]@127.0.0.1:55430/wave3_migration?options=-csearch_path%3Dwave3_synthetic_a7f12dcd041c44d5812bd47ccef1f94d%2Cpublic' at position 94
+_ ERROR at setup of test_rollback_retains_non_target_data_requires_key_rotation_and_does_not_restore_text _
+tests\integration\test_wave3_migrations_postgres.py:31: in migration
+    config.set_main_option("sqlalchemy.url", url)
+..\..\..\.venv\Lib\site-packages\alembic\config.py:354: in set_main_option
+    self.set_section_option(self.config_ini_section, name, value)
+..\..\..\.venv\Lib\site-packages\alembic\config.py:387: in set_section_option
+    self.file_config.set(section, name, value)
+..\..\..\..\..\miniconda3\Lib\configparser.py:1273: in set
+    super().set(section, option, value)
+..\..\..\..\..\miniconda3\Lib\configparser.py:950: in set
+    value = self._interpolation.before_set(self, section, option,
+..\..\..\..\..\miniconda3\Lib\configparser.py:440: in before_set
+    raise ValueError("invalid interpolation syntax in %r at "
+E   ValueError: invalid interpolation syntax in 'postgresql+psycopg://knowbound:[REDACTED]@127.0.0.1:55430/wave3_migration?options=-csearch_path%3Dwave3_synthetic_5f2d474200f0410fa1f114bf2d2addfb%2Cpublic' at position 94
+______ ERROR at setup of test_actual_migrated_constraints[short_digest] _______
+tests\integration\test_wave3_migrations_postgres.py:31: in migration
+    config.set_main_option("sqlalchemy.url", url)
+..\..\..\.venv\Lib\site-packages\alembic\config.py:354: in set_main_option
+    self.set_section_option(self.config_ini_section, name, value)
+..\..\..\.venv\Lib\site-packages\alembic\config.py:387: in set_section_option
+    self.file_config.set(section, name, value)
+..\..\..\..\..\miniconda3\Lib\configparser.py:1273: in set
+    super().set(section, option, value)
+..\..\..\..\..\miniconda3\Lib\configparser.py:950: in set
+    value = self._interpolation.before_set(self, section, option,
+..\..\..\..\..\miniconda3\Lib\configparser.py:440: in before_set
+    raise ValueError("invalid interpolation syntax in %r at "
+E   ValueError: invalid interpolation syntax in 'postgresql+psycopg://knowbound:[REDACTED]@127.0.0.1:55430/wave3_migration?options=-csearch_path%3Dwave3_synthetic_7908cdf0a4664e338c17569a6a1e3918%2Cpublic' at position 94
+____ ERROR at setup of test_actual_migrated_constraints[duplicate_digest] _____
+tests\integration\test_wave3_migrations_postgres.py:31: in migration
+    config.set_main_option("sqlalchemy.url", url)
+..\..\..\.venv\Lib\site-packages\alembic\config.py:354: in set_main_option
+    self.set_section_option(self.config_ini_section, name, value)
+..\..\..\.venv\Lib\site-packages\alembic\config.py:387: in set_section_option
+    self.file_config.set(section, name, value)
+..\..\..\..\..\miniconda3\Lib\configparser.py:1273: in set
+    super().set(section, option, value)
+..\..\..\..\..\miniconda3\Lib\configparser.py:950: in set
+    value = self._interpolation.before_set(self, section, option,
+..\..\..\..\..\miniconda3\Lib\configparser.py:440: in before_set
+    raise ValueError("invalid interpolation syntax in %r at "
+E   ValueError: invalid interpolation syntax in 'postgresql+psycopg://knowbound:[REDACTED]@127.0.0.1:55430/wave3_migration?options=-csearch_path%3Dwave3_synthetic_d408d744c5214e20beacd2a81d8b9367%2Cpublic' at position 94
+____ ERROR at setup of test_actual_migrated_constraints[invalid_decision] _____
+tests\integration\test_wave3_migrations_postgres.py:31: in migration
+    config.set_main_option("sqlalchemy.url", url)
+..\..\..\.venv\Lib\site-packages\alembic\config.py:354: in set_main_option
+    self.set_section_option(self.config_ini_section, name, value)
+..\..\..\.venv\Lib\site-packages\alembic\config.py:387: in set_section_option
+    self.file_config.set(section, name, value)
+..\..\..\..\..\miniconda3\Lib\configparser.py:1273: in set
+    super().set(section, option, value)
+..\..\..\..\..\miniconda3\Lib\configparser.py:950: in set
+    value = self._interpolation.before_set(self, section, option,
+..\..\..\..\..\miniconda3\Lib\configparser.py:440: in before_set
+    raise ValueError("invalid interpolation syntax in %r at "
+E   ValueError: invalid interpolation syntax in 'postgresql+psycopg://knowbound:[REDACTED]@127.0.0.1:55430/wave3_migration?options=-csearch_path%3Dwave3_synthetic_14c474f2e0df4e0cb9d8ba35c33699b0%2Cpublic' at position 94
+______ ERROR at setup of test_actual_migrated_constraints[blank_reason] _______
+tests\integration\test_wave3_migrations_postgres.py:31: in migration
+    config.set_main_option("sqlalchemy.url", url)
+..\..\..\.venv\Lib\site-packages\alembic\config.py:354: in set_main_option
+    self.set_section_option(self.config_ini_section, name, value)
+..\..\..\.venv\Lib\site-packages\alembic\config.py:387: in set_section_option
+    self.file_config.set(section, name, value)
+..\..\..\..\..\miniconda3\Lib\configparser.py:1273: in set
+    super().set(section, option, value)
+..\..\..\..\..\miniconda3\Lib\configparser.py:950: in set
+    value = self._interpolation.before_set(self, section, option,
+..\..\..\..\..\miniconda3\Lib\configparser.py:440: in before_set
+    raise ValueError("invalid interpolation syntax in %r at "
+E   ValueError: invalid interpolation syntax in 'postgresql+psycopg://knowbound:[REDACTED]@127.0.0.1:55430/wave3_migration?options=-csearch_path%3Dwave3_synthetic_84b70c340d984886a90474df5847896c%2Cpublic' at position 94
+_______ ERROR at setup of test_actual_migrated_constraints[long_reason] _______
+tests\integration\test_wave3_migrations_postgres.py:31: in migration
+    config.set_main_option("sqlalchemy.url", url)
+..\..\..\.venv\Lib\site-packages\alembic\config.py:354: in set_main_option
+    self.set_section_option(self.config_ini_section, name, value)
+..\..\..\.venv\Lib\site-packages\alembic\config.py:387: in set_section_option
+    self.file_config.set(section, name, value)
+..\..\..\..\..\miniconda3\Lib\configparser.py:1273: in set
+    super().set(section, option, value)
+..\..\..\..\..\miniconda3\Lib\configparser.py:950: in set
+    value = self._interpolation.before_set(self, section, option,
+..\..\..\..\..\miniconda3\Lib\configparser.py:440: in before_set
+    raise ValueError("invalid interpolation syntax in %r at "
+E   ValueError: invalid interpolation syntax in 'postgresql+psycopg://knowbound:[REDACTED]@127.0.0.1:55430/wave3_migration?options=-csearch_path%3Dwave3_synthetic_ae24d96955754e6e876cd16bc99c4e5f%2Cpublic' at position 94
+_____ ERROR at setup of test_actual_migrated_constraints[foreign_course] ______
+tests\integration\test_wave3_migrations_postgres.py:31: in migration
+    config.set_main_option("sqlalchemy.url", url)
+..\..\..\.venv\Lib\site-packages\alembic\config.py:354: in set_main_option
+    self.set_section_option(self.config_ini_section, name, value)
+..\..\..\.venv\Lib\site-packages\alembic\config.py:387: in set_section_option
+    self.file_config.set(section, name, value)
+..\..\..\..\..\miniconda3\Lib\configparser.py:1273: in set
+    super().set(section, option, value)
+..\..\..\..\..\miniconda3\Lib\configparser.py:950: in set
+    value = self._interpolation.before_set(self, section, option,
+..\..\..\..\..\miniconda3\Lib\configparser.py:440: in before_set
+    raise ValueError("invalid interpolation syntax in %r at "
+E   ValueError: invalid interpolation syntax in 'postgresql+psycopg://knowbound:[REDACTED]@127.0.0.1:55430/wave3_migration?options=-csearch_path%3Dwave3_synthetic_bae73435995641dfa3e3a6219140fd99%2Cpublic' at position 94
+____ ERROR at setup of test_actual_migrated_constraints[duplicate_review] _____
+tests\integration\test_wave3_migrations_postgres.py:31: in migration
+    config.set_main_option("sqlalchemy.url", url)
+..\..\..\.venv\Lib\site-packages\alembic\config.py:354: in set_main_option
+    self.set_section_option(self.config_ini_section, name, value)
+..\..\..\.venv\Lib\site-packages\alembic\config.py:387: in set_section_option
+    self.file_config.set(section, name, value)
+..\..\..\..\..\miniconda3\Lib\configparser.py:1273: in set
+    super().set(section, option, value)
+..\..\..\..\..\miniconda3\Lib\configparser.py:950: in set
+    value = self._interpolation.before_set(self, section, option,
+..\..\..\..\..\miniconda3\Lib\configparser.py:440: in before_set
+    raise ValueError("invalid interpolation syntax in %r at "
+E   ValueError: invalid interpolation syntax in 'postgresql+psycopg://knowbound:[REDACTED]@127.0.0.1:55430/wave3_migration?options=-csearch_path%3Dwave3_synthetic_fc414da3ca234826bca40d40efc475b6%2Cpublic' at position 94
+=========================== short test summary info ===========================
+ERROR tests/integration/test_wave3_migrations_postgres.py::test_empty_full_chain_and_disposable_full_round_trip
+ERROR tests/integration/test_wave3_migrations_postgres.py::test_rollback_retains_non_target_data_requires_key_rotation_and_does_not_restore_text
+ERROR tests/integration/test_wave3_migrations_postgres.py::test_actual_migrated_constraints[short_digest]
+ERROR tests/integration/test_wave3_migrations_postgres.py::test_actual_migrated_constraints[duplicate_digest]
+ERROR tests/integration/test_wave3_migrations_postgres.py::test_actual_migrated_constraints[invalid_decision]
+ERROR tests/integration/test_wave3_migrations_postgres.py::test_actual_migrated_constraints[blank_reason]
+ERROR tests/integration/test_wave3_migrations_postgres.py::test_actual_migrated_constraints[long_reason]
+ERROR tests/integration/test_wave3_migrations_postgres.py::test_actual_migrated_constraints[foreign_course]
+ERROR tests/integration/test_wave3_migrations_postgres.py::test_actual_migrated_constraints[duplicate_review]
+9 errors in 10.77s

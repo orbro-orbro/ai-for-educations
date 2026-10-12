@@ -1,0 +1,18 @@
+# Local synthetic Gate resources. Always use -p knowbound-wave3-gate.
+services:
+  postgres:
+    networks: [internal, public]
+    labels:
+      knowbound.task: wave3-integration-gate
+    ports:
+      - "127.0.0.1:55430:5432"
+  runner-controller:
+    networks: [internal, public]
+    image: knowbound-cj-runner-controller:latest
+    labels:
+      knowbound.task: wave3-integration-gate
+    ports:
+      - "127.0.0.1:8199:8080"
+  runner-sandbox:
+    labels:
+      knowbound.task: wave3-integration-gate

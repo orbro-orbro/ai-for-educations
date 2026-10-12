@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from datetime import UTC, datetime
-from typing import Annotated
+from typing import Annotated, Literal
 
 from fastapi import APIRouter, Header, Path, Query, Request, Security
 from fastapi.security import HTTPBearer
@@ -11,6 +11,7 @@ from app.api.auth import Authenticator
 from app.api.errors import ErrorResponse, error_response, request_id_for
 from app.memories.deletion import DeletionService
 from app.memories.models import (
+    MemoryProposalStatus, LearningMemoryStatus, ShareGrantStatus, DeletionStatus,
     DeletionReceipt as DomainDeletionReceipt,
     DiagnosisSummary as DomainDiagnosisSummary,
     LearningMemory as DomainLearningMemory,
@@ -84,38 +85,40 @@ class ShareGrantCreateRequest(_StrictRequest):
 
 
 class MemoryProposal(BaseModel):
+    model_config = ConfigDict(extra="forbid")
     proposal_id: str = Field(json_schema_extra=_READ_ONLY)
     root_proposal_id: str = Field(json_schema_extra=_READ_ONLY)
     previous_proposal_id: str | None = Field(json_schema_extra=_READ_ONLY)
-    version: int = Field(json_schema_extra=_READ_ONLY)
+    version: int = Field(ge=1, json_schema_extra=_READ_ONLY)
     owner_user_id: str = Field(json_schema_extra=_READ_ONLY)
     course_id: str = Field(json_schema_extra=_READ_ONLY)
     diagnosis_id: str = Field(json_schema_extra=_READ_ONLY)
     explanation_check_id: str = Field(json_schema_extra=_READ_ONLY)
     content: str
     concept_ids: tuple[str, ...]
-    confidence: float
-    status: str = Field(json_schema_extra=_READ_ONLY)
+    confidence: float = Field(ge=0, le=1)
+    status: MemoryProposalStatus = Field(json_schema_extra=_READ_ONLY)
     created_at: datetime = Field(json_schema_extra=_READ_ONLY)
     expires_at: datetime = Field(json_schema_extra=_READ_ONLY)
     request_id: str = Field(json_schema_extra=_READ_ONLY)
 
 
 class LearningMemory(BaseModel):
+    model_config = ConfigDict(extra="forbid")
     memory_id: str = Field(json_schema_extra=_READ_ONLY)
     logical_memory_id: str = Field(json_schema_extra=_READ_ONLY)
     previous_version_id: str | None = Field(json_schema_extra=_READ_ONLY)
-    version: int = Field(json_schema_extra=_READ_ONLY)
+    version: int = Field(ge=1, json_schema_extra=_READ_ONLY)
     owner_user_id: str = Field(json_schema_extra=_READ_ONLY)
     course_id: str = Field(json_schema_extra=_READ_ONLY)
     memory_type: str
-    visibility: str
+    visibility: Literal["private"]
     content: str | None
     concept_ids: tuple[str, ...]
     source_diagnosis_id: str = Field(json_schema_extra=_READ_ONLY)
-    confidence: float
+    confidence: float = Field(ge=0, le=1)
     allowed_purposes: tuple[str, ...]
-    status: str = Field(json_schema_extra=_READ_ONLY)
+    status: LearningMemoryStatus = Field(json_schema_extra=_READ_ONLY)
     created_at: datetime = Field(json_schema_extra=_READ_ONLY)
     updated_at: datetime = Field(json_schema_extra=_READ_ONLY)
     expires_at: datetime | None
@@ -123,14 +126,15 @@ class LearningMemory(BaseModel):
 
 
 class ShareGrant(BaseModel):
+    model_config = ConfigDict(extra="forbid")
     grant_id: str = Field(json_schema_extra=_READ_ONLY)
     owner_user_id: str = Field(json_schema_extra=_READ_ONLY)
     course_id: str = Field(json_schema_extra=_READ_ONLY)
-    resource_type: str = Field(json_schema_extra=_READ_ONLY)
+    resource_type: Literal["diagnosis_summary"] = Field(json_schema_extra=_READ_ONLY)
     resource_id: str = Field(json_schema_extra=_READ_ONLY)
     grantee_user_id: str
     purpose: str
-    status: str = Field(json_schema_extra=_READ_ONLY)
+    status: ShareGrantStatus = Field(json_schema_extra=_READ_ONLY)
     created_at: datetime = Field(json_schema_extra=_READ_ONLY)
     expires_at: datetime | None
     revoked_at: datetime | None = Field(json_schema_extra=_READ_ONLY)
@@ -138,14 +142,15 @@ class ShareGrant(BaseModel):
 
 
 class DeletionReceipt(BaseModel):
+    model_config = ConfigDict(extra="forbid")
     deletion_id: str = Field(json_schema_extra=_READ_ONLY)
     memory_id: str = Field(json_schema_extra=_READ_ONLY)
     owner_user_id: str = Field(json_schema_extra=_READ_ONLY)
     course_id: str = Field(json_schema_extra=_READ_ONLY)
-    status: str = Field(json_schema_extra=_READ_ONLY)
+    status: DeletionStatus = Field(json_schema_extra=_READ_ONLY)
     requested_at: datetime = Field(json_schema_extra=_READ_ONLY)
     completed_at: datetime | None = Field(json_schema_extra=_READ_ONLY)
-    attempts: int = Field(json_schema_extra=_READ_ONLY)
+    attempts: int = Field(ge=0, json_schema_extra=_READ_ONLY)
     index_cleared: bool = Field(json_schema_extra=_READ_ONLY)
     cache_cleared: bool = Field(json_schema_extra=_READ_ONLY)
     model_references_cleared: bool = Field(json_schema_extra=_READ_ONLY)
@@ -155,13 +160,14 @@ class DeletionReceipt(BaseModel):
 
 
 class DiagnosisSummary(BaseModel):
-    diagnosis_id: str
-    owner_user_id: str
-    course_id: str
-    category: str
-    concept_ids: tuple[str, ...]
-    root_cause: str
-    confidence: float
+    model_config = ConfigDict(extra="forbid")
+    diagnosis_id: str = Field(json_schema_extra=_READ_ONLY)
+    owner_user_id: str = Field(json_schema_extra=_READ_ONLY)
+    course_id: str = Field(json_schema_extra=_READ_ONLY)
+    category: str = Field(json_schema_extra=_READ_ONLY)
+    concept_ids: tuple[str, ...] = Field(json_schema_extra=_READ_ONLY)
+    root_cause: str = Field(json_schema_extra=_READ_ONLY)
+    confidence: float = Field(ge=0, le=1, json_schema_extra=_READ_ONLY)
 
 
 def _proposal(item: DomainMemoryProposal) -> MemoryProposal:

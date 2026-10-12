@@ -25,6 +25,7 @@ from app.memories.repository import (
     IdempotencyReplay,
 )
 from app.persistence.models import (
+    DiagnosisRow,
     ExplanationCheckRow,
     LearningMemoryRow,
     MemoryDeletionRow,
@@ -102,6 +103,11 @@ class SqlMemoryUnitOfWork:
 
 
 class SqlMemoryRepository:
+    def erase_proposal_content(self, owner_user_id: str, course_id: str, diagnosis_ids: frozenset[str]) -> None:
+        self.uow.require_session().execute(update(MemoryProposalRow).where(
+            MemoryProposalRow.owner_user_id == owner_user_id, MemoryProposalRow.course_id == course_id,
+            MemoryProposalRow.diagnosis_id.in_(diagnosis_ids)).values(content="[Deleted by student]"))
+
     def __init__(self, uow: SqlMemoryUnitOfWork) -> None:
         self.uow = uow
 
@@ -111,6 +117,11 @@ class SqlMemoryRepository:
     @contextmanager
     def proposal_source_claim(self, explanation_check_id: str):
         with self.uow.transaction():
+            session = self.uow.require_session()
+            # Parent before child, matching source erasure and diagnostic writes.
+            diagnosis_id = session.scalar(select(ExplanationCheckRow.diagnosis_id).where(
+                ExplanationCheckRow.id == explanation_check_id))
+            session.execute(select(DiagnosisRow.id).where(DiagnosisRow.id == diagnosis_id).with_for_update(key_share=True)).all()
             self.uow.require_session().execute(
                 select(ExplanationCheckRow.id)
                 .where(ExplanationCheckRow.id == explanation_check_id)

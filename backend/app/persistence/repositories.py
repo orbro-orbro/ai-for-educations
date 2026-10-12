@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+import os
 from typing import TYPE_CHECKING, Iterable
 
 from sqlalchemy import create_engine, delete, event, select
@@ -8,6 +9,7 @@ from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session, sessionmaker
 
 from app.auth.models import Role, User
+from app.auth.persistence import SqlTokenRevocations
 from app.courses.models import Course, Enrollment, Exercise
 from app.knowledge.models import Concept, ConceptEdge, EdgeType, KnowledgeValidationError, MisconceptionPattern
 from app.knowledge.repository import ApprovedEvidence, KnowledgeGraph
@@ -25,6 +27,7 @@ from app.persistence.models import (
 )
 
 if TYPE_CHECKING:
+    from app.analytics.persistence import SqlTeacherAnalyticsRepository
     from app.audit.persistence import SqlAuditLog
     from app.diagnostics.persistence import SqlDiagnosticRepository
     from app.memories.persistence import SqlMemoryRepository, SqlMemoryUnitOfWork
@@ -62,6 +65,7 @@ class SqlCourseRepository:
         try:
             with self._sessions.begin() as session:
                 session.add(CourseRow(id=course.course_id, title=course.title, owner_teacher_id=course.owner_teacher_id))
+                session.flush()
                 session.add_all(
                     CourseAuthorizedTeacherRow(course_id=course.course_id, teacher_id=teacher_id)
                     for teacher_id in course.authorized_teacher_ids
@@ -277,6 +281,8 @@ class SqlRepositories:
     memories: "SqlMemoryRepository"
     audit: "SqlAuditLog"
     memory_source: "SqlDiagnosticMemorySource"
+    token_revocations: SqlTokenRevocations
+    analytics: "SqlTeacherAnalyticsRepository"
 
 
 def create_sql_repositories(
@@ -284,8 +290,10 @@ def create_sql_repositories(
     *,
     create_schema: bool = False,
     diagnosis_confidence_threshold: float = 0.75,
+    analytics_secret: str | None = None,
 ) -> SqlRepositories:
     from app.audit.persistence import SqlAuditLog
+    from app.analytics.persistence import SqlTeacherAnalyticsRepository
     from app.diagnostics.persistence import SqlDiagnosticRepository
     from app.memories.persistence import SqlMemoryRepository, SqlMemoryUnitOfWork
     from app.memories.source import SqlDiagnosticMemorySource
@@ -316,6 +324,9 @@ def create_sql_repositories(
             memory_uow,
             confidence_threshold=diagnosis_confidence_threshold,
         ),
+        SqlTokenRevocations(sessions),
+        SqlTeacherAnalyticsRepository(memory_uow, secret=analytics_secret or os.environ.get("AUTH_TOKEN_SECRET", "development-only-token-secret"),
+            confidence_threshold=diagnosis_confidence_threshold),
     )
 
 

@@ -10,11 +10,12 @@ overrides two dependencies:
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Any
+from typing import Any, Literal, Annotated
 
-from fastapi import APIRouter, Body, Depends, Header, Request
+from fastapi import APIRouter, Body, Depends, Header, Request, Security
+from app.api.contract import BEARER, errors
 from fastapi.responses import JSONResponse
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, Field, SkipValidation
 
 from app.knowledge.models import (
     Concept,
@@ -36,7 +37,7 @@ from app.knowledge.models import (
 )
 from app.knowledge.repository import InMemoryKnowledgeRepository, KnowledgeRepository
 
-router = APIRouter(prefix="/teacher/courses/{course_id}", tags=["knowledge"])
+router = APIRouter(prefix="/teacher/courses/{course_id}", tags=["knowledge"], dependencies=[Security(BEARER)])
 
 NOT_AVAILABLE = "RESOURCE_NOT_AVAILABLE"
 _STATUS_BY_CODE = {
@@ -67,7 +68,7 @@ class CourseAuthorization:
 def authorize_course_teacher(
     course_id: str,
     request: Request,
-    authorization: str | None = Header(default=None),
+    authorization: str | None = Header(default=None, include_in_schema=False),
 ) -> CourseAuthorization:
     """Authenticate the bearer and enforce Task 2's server-side course policy."""
 
@@ -87,8 +88,14 @@ def get_knowledge_repository(request: Request) -> KnowledgeRepository:
     return getattr(request.app.state, "knowledge_repository", _default_repository)
 
 
+def _optional_schema(schema):
+    for field in schema.get("properties", {}).values():
+        if field.get("default", "absent") is None:
+            field.pop("default")
+
+
 class _Body(BaseModel):
-    model_config = ConfigDict(extra="forbid")
+    model_config = ConfigDict(extra="forbid", json_schema_extra=_optional_schema)
 
 
 class ConceptCreate(_Body):
@@ -100,10 +107,11 @@ class ConceptCreate(_Body):
 
 
 class ConceptUpdate(_Body):
-    topic: Topic | None = None
-    title: NonEmpty | None = None
-    summary: NonEmpty | None = None
-    source: SourceMetadata | None = None
+    model_config = ConfigDict(extra="forbid", json_schema_extra=lambda schema: (_optional_schema(schema), schema.update(minProperties=1)))
+    topic: Topic = None
+    title: NonEmpty = None
+    summary: NonEmpty = None
+    source: SourceMetadata = None
 
 
 class MisconceptionCreate(_Body):
@@ -120,19 +128,20 @@ class MisconceptionCreate(_Body):
 
 
 class MisconceptionUpdate(_Body):
-    topic: Topic | None = None
-    title: NonEmpty | None = None
-    root_concept_id: KnowledgeId | None = None
-    related_concept_ids: list[KnowledgeId] | None = None
-    trigger_evidence: list[TriggerEvidence] | None = Field(default=None, min_length=1)
-    explanation: NonEmpty | None = None
-    hint_ladder: list[HintStep] | None = Field(default=None, min_length=4, max_length=4)
-    source: SourceMetadata | None = None
-    verification: Verification | None = None
+    model_config = ConfigDict(extra="forbid", json_schema_extra=lambda schema: (_optional_schema(schema), schema.update(minProperties=1)))
+    topic: Topic = None
+    title: NonEmpty = None
+    root_concept_id: KnowledgeId = None
+    related_concept_ids: list[KnowledgeId] = None
+    trigger_evidence: list[TriggerEvidence] = Field(default=None, min_length=1)
+    explanation: NonEmpty = None
+    hint_ladder: list[HintStep] = Field(default=None, min_length=4, max_length=4)
+    source: SourceMetadata = None
+    verification: Verification = None
 
 
 class ReviewDecision(_Body):
-    decision: ReviewStatus
+    decision: Literal["approved", "rejected"]
     note: str | None = None
 
 
@@ -164,6 +173,8 @@ def _changes(model: type[_Body], payload: Any) -> dict[str, Any]:
 def _parse_review(payload: Any) -> ReviewDecision:
     decision = payload.get("decision") if isinstance(payload, dict) else None
     require_review_status(decision, "review")
+    if decision not in ("approved", "rejected"):
+        raise KnowledgeValidationError("UNKNOWN_REVIEW_STATUS", "decision must be approved or rejected")
     review = validate_model(ReviewDecision, payload, "review")
     if review.decision not in (ReviewStatus.approved, ReviewStatus.rejected):
         raise KnowledgeValidationError("UNKNOWN_REVIEW_STATUS", "decision must be approved or rejected")
@@ -176,7 +187,7 @@ _RESET_REVIEW = {"review_status": ReviewStatus.pending_review, "reviewed_by": No
 # ---------------------------------------------------------------- concepts
 
 
-@router.get("/concepts")
+@router.get("/concepts", operation_id="listCourseConcepts", response_model=list[Concept], responses=errors(401, 404))
 def list_concepts(
     course_id: str,
     request: Request,
@@ -188,11 +199,11 @@ def list_concepts(
     return JSONResponse([c.model_dump(mode="json") for c in repo.list_concepts(course_id)])
 
 
-@router.post("/concepts", status_code=201)
+@router.post("/concepts", status_code=201, operation_id="createCourseConcept", response_model=Concept, responses=errors(401, 404, 409, 422))
 def create_concept(
     course_id: str,
     request: Request,
-    payload: Any = Body(...),
+    payload: Annotated[ConceptCreate, Body(...), SkipValidation()],
     auth: CourseAuthorization = Depends(authorize_course_teacher),
     repo: KnowledgeRepository = Depends(get_knowledge_repository),
 ):
@@ -207,12 +218,12 @@ def create_concept(
         return _error(request, exc.code, exc.message)
 
 
-@router.patch("/concepts/{concept_id}")
+@router.patch("/concepts/{concept_id}", operation_id="updateCourseConcept", response_model=Concept, responses=errors(401, 404, 422))
 def update_concept(
     course_id: str,
-    concept_id: str,
+    concept_id: KnowledgeId,
     request: Request,
-    payload: Any = Body(...),
+    payload: Annotated[ConceptUpdate, Body(...), SkipValidation()],
     auth: CourseAuthorization = Depends(authorize_course_teacher),
     repo: KnowledgeRepository = Depends(get_knowledge_repository),
 ):
@@ -226,12 +237,12 @@ def update_concept(
         return _error(request, exc.code, exc.message)
 
 
-@router.post("/concepts/{concept_id}/review")
+@router.post("/concepts/{concept_id}/review", operation_id="reviewCourseConcept", response_model=Concept, responses=errors(401, 404, 422))
 def review_concept(
     course_id: str,
-    concept_id: str,
+    concept_id: KnowledgeId,
     request: Request,
-    payload: Any = Body(...),
+    payload: Annotated[ReviewDecision, Body(...), SkipValidation()],
     auth: CourseAuthorization = Depends(authorize_course_teacher),
     repo: KnowledgeRepository = Depends(get_knowledge_repository),
 ):
@@ -242,7 +253,7 @@ def review_concept(
     except KnowledgeValidationError as exc:
         return _error(request, exc.code, exc.message)
     updated = current.model_copy(
-        update={"review_status": review.decision, "reviewed_by": auth.teacher_id, "review_note": review.note}
+        update={"review_status": ReviewStatus(review.decision), "reviewed_by": auth.teacher_id, "review_note": review.note}
     )
     return _dump(repo.replace_concept(course_id, updated))
 
@@ -250,7 +261,7 @@ def review_concept(
 # ---------------------------------------------------------------- edges
 
 
-@router.get("/concept-edges")
+@router.get("/concept-edges", operation_id="listCourseConceptEdges", response_model=list[ConceptEdge], responses=errors(401, 404))
 def list_edges(
     course_id: str,
     request: Request,
@@ -262,11 +273,11 @@ def list_edges(
     return JSONResponse([e.model_dump(mode="json") for e in repo.list_edges(course_id)])
 
 
-@router.post("/concept-edges", status_code=201)
+@router.post("/concept-edges", status_code=201, operation_id="createCourseConceptEdge", response_model=ConceptEdge, responses=errors(401, 404, 409, 422))
 def create_edge(
     course_id: str,
     request: Request,
-    payload: Any = Body(...),
+    payload: Annotated[ConceptEdge, Body(...), SkipValidation()],
     auth: CourseAuthorization = Depends(authorize_course_teacher),
     repo: KnowledgeRepository = Depends(get_knowledge_repository),
 ):
@@ -282,7 +293,7 @@ def create_edge(
 # ---------------------------------------------------------------- misconceptions
 
 
-@router.get("/misconceptions")
+@router.get("/misconceptions", operation_id="listCourseMisconceptions", response_model=list[MisconceptionPattern], responses=errors(401, 404))
 def list_misconceptions(
     course_id: str,
     request: Request,
@@ -294,11 +305,11 @@ def list_misconceptions(
     return JSONResponse([m.model_dump(mode="json") for m in repo.list_misconceptions(course_id)])
 
 
-@router.post("/misconceptions", status_code=201)
+@router.post("/misconceptions", status_code=201, operation_id="createCourseMisconception", response_model=MisconceptionPattern, responses=errors(401, 404, 409, 422))
 def create_misconception(
     course_id: str,
     request: Request,
-    payload: Any = Body(...),
+    payload: Annotated[MisconceptionCreate, Body(...), SkipValidation()],
     auth: CourseAuthorization = Depends(authorize_course_teacher),
     repo: KnowledgeRepository = Depends(get_knowledge_repository),
 ):
@@ -313,12 +324,12 @@ def create_misconception(
         return _error(request, exc.code, exc.message)
 
 
-@router.patch("/misconceptions/{misconception_id}")
+@router.patch("/misconceptions/{misconception_id}", operation_id="updateCourseMisconception", response_model=MisconceptionPattern, responses=errors(401, 404, 422))
 def update_misconception(
     course_id: str,
-    misconception_id: str,
+    misconception_id: KnowledgeId,
     request: Request,
-    payload: Any = Body(...),
+    payload: Annotated[MisconceptionUpdate, Body(...), SkipValidation()],
     auth: CourseAuthorization = Depends(authorize_course_teacher),
     repo: KnowledgeRepository = Depends(get_knowledge_repository),
 ):
@@ -333,12 +344,12 @@ def update_misconception(
         return _error(request, exc.code, exc.message)
 
 
-@router.post("/misconceptions/{misconception_id}/review")
+@router.post("/misconceptions/{misconception_id}/review", operation_id="reviewCourseMisconception", response_model=MisconceptionPattern, responses=errors(401, 404, 409, 422))
 def review_misconception(
     course_id: str,
-    misconception_id: str,
+    misconception_id: KnowledgeId,
     request: Request,
-    payload: Any = Body(...),
+    payload: Annotated[ReviewDecision, Body(...), SkipValidation()],
     auth: CourseAuthorization = Depends(authorize_course_teacher),
     repo: KnowledgeRepository = Depends(get_knowledge_repository),
 ):
@@ -349,10 +360,10 @@ def review_misconception(
     except KnowledgeValidationError as exc:
         return _error(request, exc.code, exc.message)
     root = repo.get_concept(course_id, current.root_concept_id)
-    if review.decision is ReviewStatus.approved and (root is None or root.review_status is not ReviewStatus.approved):
+    if review.decision == "approved" and (root is None or root.review_status is not ReviewStatus.approved):
         return _error(request, "ROOT_CONCEPT_NOT_APPROVED", "approve the root concept first")
     updated = current.model_copy(
-        update={"review_status": review.decision, "reviewed_by": auth.teacher_id, "review_note": review.note}
+        update={"review_status": ReviewStatus(review.decision), "reviewed_by": auth.teacher_id, "review_note": review.note}
     )
     return _dump(repo.replace_misconception(course_id, updated))
 
