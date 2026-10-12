@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import Annotated, Callable
 
-from fastapi import Security, APIRouter, Header, Path, Request
+from fastapi import Security, APIRouter, Header, Path, Request, Response
 from pydantic import BaseModel, ConfigDict, Field
 
 from app.api.contract import BEARER, errors
@@ -34,6 +34,11 @@ class ExplanationCheckRequest(BaseModel):
     explanation: str = Field(min_length=1, max_length=8_000)
 
 
+class SubmissionAttemptRequest(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    submission_id: str = Field(min_length=1, max_length=128)
+
+
 _ERROR_RESPONSES = {
     status: {"model": ErrorResponse}
     for status in (401, 404, 409, 422, 503)
@@ -47,6 +52,21 @@ def create_diagnostics_router(
     proposal_hook: Callable[[Actor, ExplanationCheck, str], object] | None = None,
 ) -> APIRouter:
     router = APIRouter(tags=["diagnostics"], dependencies=[Security(BEARER)])
+
+    @router.post(
+        "/diagnoses/{diagnosis_id}/attempts",
+        status_code=204,
+        operation_id="recordDiagnosisSubmissionAttempt",
+        responses=errors(401, 404, 422, 503),
+    )
+    def record_attempt(
+        diagnosis_id: Annotated[str, Path(min_length=1, max_length=128)],
+        payload: SubmissionAttemptRequest,
+        authorization: str | None = Header(default=None, include_in_schema=False),
+    ):
+        actor = authenticator.authenticate_header(authorization)
+        hint_service.record_submission_attempt(actor, diagnosis_id, payload.submission_id)
+        return Response(status_code=204)
 
     @router.get(
         "/submissions/{submission_id}/diagnosis",

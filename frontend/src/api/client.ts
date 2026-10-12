@@ -109,6 +109,7 @@ export class ApiClient {
   getSubmission(submissionId: string, signal?: AbortSignal) { return this.request<Submission>(`/submissions/${encodeURIComponent(submissionId)}`, {}, signal); }
   getExecutionResult(submissionId: string, signal?: AbortSignal) { return this.request<ExecutionResult>(`/submissions/${encodeURIComponent(submissionId)}/execution-result`, {}, signal); }
   getDiagnosis(submissionId: string, signal?: AbortSignal) { return this.request<Diagnosis>(`/submissions/${encodeURIComponent(submissionId)}/diagnosis`, {}, signal); }
+  recordAttempt(diagnosisId: string, submissionId: string, signal?: AbortSignal) { return this.request<void>(`/diagnoses/${encodeURIComponent(diagnosisId)}/attempts`, { method: "POST", body: JSON.stringify({ submission_id: submissionId }) }, signal); }
   nextHint(diagnosisId: string, reason: string, signal?: AbortSignal) { return this.request<HintEvent>(`/diagnoses/${encodeURIComponent(diagnosisId)}/hints/next`, { method: "POST", body: JSON.stringify({ reason }) }, signal); }
   checkExplanation(diagnosisId: string, explanation: string, signal?: AbortSignal) { return this.request<ExplanationCheck>(`/diagnoses/${encodeURIComponent(diagnosisId)}/explanation-check`, { method: "POST", body: JSON.stringify({ explanation }) }, signal); }
   listMemoryProposals(courseId: string, signal?: AbortSignal) { return this.request<MemoryProposal[]>(`/me/memory-proposals${queryString({ course_id: courseId })}`, {}, signal); }

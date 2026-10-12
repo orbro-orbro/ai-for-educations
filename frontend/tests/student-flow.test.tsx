@@ -144,6 +144,34 @@ describe("student learning loop", () => {
     vi.unstubAllGlobals();
   });
 
+  it("associates a correction with the original diagnosis and retries linkage without resubmitting", async () => {
+    let submissions = 0;
+    let associations = 0;
+    const fetchMock = useStudentApi((url, init) => {
+      if (url.pathname.endsWith("/submissions") && init.method === "POST") return json({ ...submission, submission_id: `submission-${++submissions}` }, 201);
+      if (url.pathname === "/submissions/submission-2") return json({ ...submission, submission_id: "submission-2" });
+      if (url.pathname.endsWith("/execution-result")) return json({ ...executionResult, submission_id: `submission-${submissions}`, status: submissions === 2 ? "succeeded" : "compile_failed" });
+      if (url.pathname.endsWith("/diagnosis")) return json(diagnosis);
+      if (url.pathname === "/diagnoses/diagnosis-1/attempts") {
+        expect(JSON.parse(String(init.body))).toEqual({ submission_id: "submission-2" });
+        return ++associations === 1 ? json({ code: "STORAGE_UNAVAILABLE", message: "Synthetic unavailable", request_id: "association-failed" }, 503) : new Response(null, { status: 204 });
+      }
+    });
+    render(<App />);
+    await submitCode();
+    await screen.findByText("没有覆盖枚举的全部可能值");
+    await waitFor(() => expect(screen.getByRole("button", { name: "提交并运行" })).toBeEnabled());
+    await submitCode();
+    await screen.findByText(/association-failed/);
+    expect(screen.queryByText("修复提交已关联原诊断")).not.toBeInTheDocument();
+    fireEvent.click(screen.getByRole("button", { name: "重试关联修复提交" }));
+    await screen.findByText("修复提交已关联原诊断");
+    expect(submissions).toBe(2);
+    expect(associations).toBe(2);
+    expect(fetchMock.mock.calls.filter(([url]) => new URL(String(url)).pathname.endsWith("/diagnosis"))).toHaveLength(1);
+    expect(screen.getByText("没有覆盖枚举的全部可能值")).toBeInTheDocument();
+  });
+
   it("submits Cangjie source through the selected exercise", async () => {
     const fetchMock = useStudentApi((url, init) => {
       if (url.pathname === "/exercises/exercise-match/submissions" && init.method === "POST") return json(submission, 201);
