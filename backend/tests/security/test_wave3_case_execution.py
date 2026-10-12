@@ -160,10 +160,12 @@ def test_planned_operation(case,caplog,monkeypatch,record_property):
             assert old.content not in h.state.memory_audit.serialized_events() and secret not in h.state.memory_audit.serialized_events()
         else:
             r=h.request('GET','/submissions/unknown',request_id=secret)
-            # Correlation is currently client-controlled by the public API.
-            # Record that exact observation without calling it sanitization.
-            assert r.status_code==404 and r.json()['request_id']==secret
-            record_property('limitation','client correlation header is reflected; no assertion of header sanitization')
+            import re
+            assert r.status_code==404
+            assert re.fullmatch('[0-9a-f]{32}', r.headers['X-Request-ID'])
+            assert r.json()['request_id']==r.headers['X-Request-ID']
+            assert secret not in r.text + str(r.headers) + caplog.text + h.state.memory_audit.serialized_events()
+            record_property('policy','ADR 0007: server-generated correlation; inbound marker absent')
     elif category=='executor_abuse':
         from runner.worker.protocol import RunnerRequest
         value={'protocol_version':'2','submission_id':'synthetic-protocol','source_files':[{'path':'main.cj','content':'main() {}'}],'entrypoint':'main.cj','timeout_ms':2000}

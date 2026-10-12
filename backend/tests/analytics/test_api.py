@@ -4,6 +4,7 @@ import base64
 import hashlib
 from functools import partial
 
+from tests.correlation import server_id, public_error
 import anyio
 import pytest
 from fastapi import FastAPI
@@ -80,7 +81,7 @@ def request(app, method, path, **kwargs):
     return anyio.run(partial(_request, app, method, path, **kwargs))
 
 
-def test_teacher_api_requires_authentication_and_preserves_request_id(api) -> None:
+def test_teacher_api_requires_authentication_and_server_request_id(api) -> None:
     app, _repository, _tokens = api
 
     response = request(
@@ -94,9 +95,9 @@ def test_teacher_api_requires_authentication_and_preserves_request_id(api) -> No
     assert response.json() == {
         "code": "AUTHENTICATION_FAILED",
         "message": "Authentication failed.",
-        "request_id": "request-unauthenticated",
+        "request_id": server_id(response, "request-unauthenticated"),
     }
-    assert response.headers["X-Request-ID"] == "request-unauthenticated"
+    assert response.headers["X-Request-ID"] == response.json()["request_id"]
 
 
 def test_teacher_analytics_api_matches_the_frozen_response(api) -> None:
@@ -145,7 +146,8 @@ def test_unknown_and_forbidden_courses_return_the_same_public_error(api) -> None
     )
 
     assert forbidden.status_code == missing.status_code == 404
-    assert forbidden.json() == missing.json()
+    assert public_error(forbidden, "request-api") == public_error(missing, "request-api")
+    assert server_id(forbidden) != server_id(missing)
     assert forbidden.json()["code"] == "RESOURCE_NOT_AVAILABLE"
 
 
@@ -168,7 +170,7 @@ def test_invalid_filters_use_the_uniform_validation_envelope(api, path) -> None:
     assert response.json() == {
         "code": "VALIDATION_ERROR",
         "message": "Request validation failed.",
-        "request_id": "request-filter",
+        "request_id": server_id(response, "request-filter"),
     }
 
 
@@ -213,7 +215,7 @@ def test_review_request_is_strict(api, payload) -> None:
 
     assert response.status_code == 422
     assert response.json()["code"] == "VALIDATION_ERROR"
-    assert response.json()["request_id"] == "request-strict"
+    assert response.json()["request_id"] == server_id(response, "request-strict")
 
 
 def test_review_api_records_server_identity_and_returns_conflict_on_changed_replay(api) -> None:
@@ -245,7 +247,7 @@ def test_review_api_records_server_identity_and_returns_conflict_on_changed_repl
     assert conflict.json() == {
         "code": "DIAGNOSIS_REVIEW_CONFLICT",
         "message": "The diagnosis already has a different authoritative review.",
-        "request_id": "request-conflict",
+        "request_id": server_id(conflict, "request-conflict"),
     }
 
 
@@ -272,7 +274,7 @@ def test_storage_failure_is_sanitized_and_does_not_complete_queue_item(api) -> N
     assert failed.json() == {
         "code": "STORAGE_UNAVAILABLE",
         "message": "Teacher analytics storage is temporarily unavailable.",
-        "request_id": "request-storage",
+        "request_id": server_id(failed, "request-storage"),
     }
     assert [item["diagnosis_id"] for item in queue.json()["items"]] == [
         "review-diagnosis-course-a-1"
@@ -295,7 +297,7 @@ def test_analytics_read_failure_is_sanitized(api) -> None:
     assert response.json() == {
         "code": "STORAGE_UNAVAILABLE",
         "message": "Teacher analytics storage is temporarily unavailable.",
-        "request_id": "request-read-storage",
+        "request_id": server_id(response, "request-read-storage"),
     }
 
 

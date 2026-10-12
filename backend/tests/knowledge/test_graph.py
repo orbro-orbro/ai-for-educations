@@ -1,4 +1,5 @@
 import anyio
+from tests.correlation import server_id
 import pytest
 from fastapi import FastAPI
 from httpx import ASGITransport, AsyncClient
@@ -325,6 +326,8 @@ OWNER = "teacher-1"
 
 def make_app(owner_courses=None, repo=None):
     app = FastAPI()
+    from app.api.errors import install_error_handling
+    install_error_handling(app)
     app.include_router(knowledge_api.router)
     repo = repo or InMemoryKnowledgeRepository()
     app.dependency_overrides[knowledge_api.get_knowledge_repository] = lambda: repo
@@ -369,7 +372,7 @@ def test_api_denies_by_default_without_task2_authorizer():
     assert response.json() == {
         "code": "RESOURCE_NOT_AVAILABLE",
         "message": "Resource is not available.",
-        "request_id": "req-1",
+        "request_id": server_id(response, "req-1"),
     }
 
 

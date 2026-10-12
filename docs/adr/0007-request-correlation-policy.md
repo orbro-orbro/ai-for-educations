@@ -1,6 +1,6 @@
 # ADR 0007: Server-generated request correlation
 
-- Status: Proposed — explicit approval pending; worktree approval does not change runtime policy.
+- Status: Accepted — user delegated both pending decisions on 2026-10-12 (「这些都是你来决定」); main Agent selects A.
 - Date: 2026-10-12
 - Scope: Task11 / WG-CORRELATION-POLICY; no role, schema or business DTO changes.
 
@@ -16,7 +16,7 @@ B: accept strictly formatted UUIDv4, replace everything else. Preserves caller c
 
 C: validate caller UUID and reject invalid values with422. Adds rejection semantics and broader contract/client changes.
 
-## Proposed decision A
+## Decision A
 
 Generate a new opaque random32hex ID for every request reaching the application. Do not normalize, echo, persist, log or hash the inbound value. Response X-Request-ID and current error-envelope request_id equal this server ID; metadata-only audit and application logs for the operation use the same ID. Existing resource DTO request_id is its original creation provenance and is not rewritten during reads. IDs never authorize actions or identify a learner. No inbound/client-ID field or new external tracing system is added.
 
@@ -28,4 +28,4 @@ First preserve an observed RED for a secret-bearing inbound header. Then test mi
 
 ## Consequences
 
-Callers cannot choose correlation IDs; they must read the server response. Existing authorization, statuses, persisted schema and business DTOs remain. No external erasure or historical Runner-stability claim follows from this decision. Runtime implementation awaits explicit approval of this draft.
+Callers cannot choose correlation IDs; they must read the server response. Existing authorization, statuses, persisted schema and business DTOs remain. No external erasure or historical Runner-stability claim follows from this decision. Implementation follows observed RED→GREEN evidence under the delegated approval.

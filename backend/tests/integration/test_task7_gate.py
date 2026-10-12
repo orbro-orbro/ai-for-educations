@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from datetime import UTC, datetime
 
+from tests.correlation import server_id, public_error
 import anyio
 from fastapi import FastAPI
 from httpx import ASGITransport, AsyncClient
@@ -134,7 +135,7 @@ def test_explanation_check_calls_server_side_proposal_hook_once():
 
     response = anyio.run(request)
     assert response.status_code == 200
-    assert calls == [("student-1", "check-1", "req-hook")]
+    assert calls == [("student-1", "check-1", server_id(response, "req-hook"))]
 
 
 def test_composed_explanation_route_creates_one_proposal_and_skips_ineligible():
@@ -303,13 +304,13 @@ def test_memory_errors_are_stable_redacted_and_keep_request_id():
     assert storage.json() == {
         "code": "STORAGE_UNAVAILABLE",
         "message": "The request could not be persisted safely.",
-        "request_id": "req-storage",
+        "request_id": server_id(storage, "req-storage"),
     }
     assert idempotency.status_code == 409
     assert idempotency.json() == {
         "code": "IDEMPOTENCY_KEY_REUSED",
         "message": "The idempotency key was already used for another request.",
-        "request_id": "req-idempotency",
+        "request_id": server_id(idempotency, "req-idempotency"),
     }
-    assert storage.headers["X-Request-ID"] == "req-storage"
-    assert idempotency.headers["X-Request-ID"] == "req-idempotency"
+    assert storage.headers["X-Request-ID"] == storage.json()["request_id"]
+    assert idempotency.headers["X-Request-ID"] == idempotency.json()["request_id"]

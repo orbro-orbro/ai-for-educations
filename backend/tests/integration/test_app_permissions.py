@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from tests.correlation import server_id, public_error
 import anyio
 import pytest
 from httpx import ASGITransport, AsyncClient
@@ -75,7 +76,7 @@ def test_real_bearer_owner_can_reach_knowledge_api():
 
     assert response.status_code == 200
     assert response.json() == []
-    assert response.headers["X-Request-ID"] == "req-integration"
+    server_id(response, "req-integration")
 
 
 def test_explicitly_authorized_teacher_can_reach_knowledge_api():
@@ -93,7 +94,7 @@ def test_missing_bearer_is_uniform_authentication_error():
     assert response.json() == {
         "code": "AUTHENTICATION_FAILED",
         "message": "Authentication failed.",
-        "request_id": "req-integration",
+        "request_id": server_id(response, "req-integration"),
     }
 
 
@@ -111,9 +112,10 @@ def test_student_other_teacher_and_unknown_course_do_not_leak_existence():
     ]
 
     assert {response.status_code for response in responses} == {404}
-    assert {response.text for response in responses} == {
-        '{"code":"RESOURCE_NOT_AVAILABLE","message":"Resource is not available.","request_id":"req-integration"}'
-    }
+    assert [public_error(response, "req-integration") for response in responses] == [
+        {"code": "RESOURCE_NOT_AVAILABLE", "message": "Resource is not available."}
+    ] * 3
+    assert len({server_id(response) for response in responses}) == 3
 
 
 def test_request_models_reject_unknown_fields_with_shared_error_shape():
@@ -130,7 +132,7 @@ def test_request_models_reject_unknown_fields_with_shared_error_shape():
     response = anyio.run(go)
     assert response.status_code == 422
     assert response.json()["code"] == "VALIDATION_ERROR"
-    assert response.json()["request_id"] == "req-validation"
+    assert response.json()["request_id"] == server_id(response, "req-validation")
 
 
 def test_production_rejects_the_development_token_secret(monkeypatch):
