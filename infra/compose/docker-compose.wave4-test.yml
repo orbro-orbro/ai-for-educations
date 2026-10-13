@@ -17,3 +17,14 @@ services:
   runner-sandbox:
     labels:
       knowbound.task: wave4-task11-test
+networks:
+  public:
+    name: knowbound-wave4-test_task11-public
+    labels: {knowbound.task: wave4-task11-test}
+  internal:
+    name: knowbound-wave4-test_task11-internal
+    labels: {knowbound.task: wave4-task11-test}
+volumes:
+  postgres-data:
+    name: knowbound-wave4-test_task11-postgres
+    labels: {knowbound.task: wave4-task11-test}
