@@ -15,7 +15,6 @@ paths:
         '204': {description: Owned executed retry associated idempotently with the original diagnosis.}
         '401': {$ref: '#/components/responses/AuthenticationFailed'}
         '404': {$ref: '#/components/responses/NotAvailable'}
-        '409': {$ref: '#/components/responses/Conflict'}
         '422': {$ref: '#/components/responses/Invalid'}
         '503': {$ref: '#/components/responses/Unavailable'}
   /submissions/{submission_id}/diagnosis:

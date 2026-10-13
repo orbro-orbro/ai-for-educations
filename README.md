@@ -2,6 +2,8 @@
 
 面向《仓颉语言设计》的概念误区诊断系统，只有学生、教师两类角色。学生通过提交、隔离编译、诊断、递进提示、重试与理解解释完成学习闭环；长期记忆须本人确认，可纠正、拒绝和删除。教师默认只能查看授权范围内的正式作业、主动分享摘要和达到五人阈值的匿名统计。
 
+系统由 React Web、FastAPI、PostgreSQL 和隔离 Runner 组成。Web 通过 OpenAPI DTO 调用 API，SQL 保存权威状态；API 将源码交给可信 controller，由一次性仓颉沙箱编译执行。
+
 ## 一键比赛演示
 
 需要 Windows PowerShell 7、已启动的 Docker Desktop Linux 引擎，以及首次拉取锁定镜像和依赖所需的网络。应用构建使用容器内 Python 3.12 / Node 22 和仓颉 1.2.0 STS cjnative；无需宿主 Python 虚拟环境、node_modules 或宿主仓颉工具链。
