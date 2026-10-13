@@ -1,4 +1,4 @@
-param([ValidateSet('Start','Stop','Status')][string]$Action='Start', [switch]$NoBuild)
+param([ValidateSet('Start','Stop','Status')][string]$Action='Start', [switch]$NoBuild, [switch]$FreshData)
 $ErrorActionPreference='Stop'
 $taskRoot=[IO.Path]::GetFullPath((Join-Path $PSScriptRoot '..'))
 $taskEnvFile=Join-Path $taskRoot '.delivery/demo.env'
@@ -43,11 +43,26 @@ try {
         }
     }
     $taskCompose=@('compose','--env-file',$taskEnvFile,'-p',$taskProject,'-f','infra/compose/docker-compose.yml','-f','infra/compose/docker-compose.delivery.yml')
+    $taskVolumeOverride=Join-Path $taskRoot '.delivery/active-volume.yml'
+    if($FreshData) {
+        if($Action -ne 'Start') { throw 'FreshData only applies to Start' }
+        # Preserve every previous synthetic volume and its failure history.
+        $taskVolume='knowbound-wave4-demo_postgres_task11-'+[Guid]::NewGuid().ToString('N')
+        @('volumes:','  postgres-data:',('    name: '+$taskVolume)) | Set-Content -LiteralPath $taskVolumeOverride -Encoding ascii
+        Write-Output ('Fresh synthetic volume selected: '+$taskVolume)
+    }
+    if(Test-Path -LiteralPath $taskVolumeOverride) {
+        $taskVolumeText=Get-Content -LiteralPath $taskVolumeOverride -Raw
+        if($taskVolumeText -notmatch '\Avolumes:\r?\n  postgres-data:\r?\n    name: knowbound-wave4-demo_postgres_task11-[a-f0-9]{32}\r?\n\z') { throw 'Invalid owned volume selection' }
+        $taskCompose+=@('-f',$taskVolumeOverride)
+    }
     & docker @taskCompose config --quiet
     if($LASTEXITCODE -ne 0) { throw 'Demo Compose configuration invalid' }
     if($Action -eq 'Start') {
         if(!$NoBuild) { & docker @taskCompose build; if($LASTEXITCODE -ne 0) { throw 'Locked demo build failed' } }
-        & docker @taskCompose up -d --no-build --wait --wait-timeout 180
+        $taskUp=@('up','-d','--no-build','--wait','--wait-timeout','180')
+        if($FreshData) { $taskUp+='--force-recreate' }
+        & docker @taskCompose @taskUp
         if($LASTEXITCODE -ne 0) { throw 'Demo services did not reach healthy state' }
         Write-Output 'Synthetic demo ready: http://127.0.0.1:5209 ; API http://127.0.0.1:8208'
         Write-Output 'Actors: demo-teacher, demo-student-1 through demo-student-6. Password is in ignored .delivery/demo.env (DEMO_PASSWORD).'

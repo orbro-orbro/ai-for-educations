@@ -23,6 +23,10 @@ elif args and args[0]=='inspect': print(json.dumps({'com.docker.compose.project'
         executable.write_text(f'#!/bin/sh\nexec "{sys.executable}" "{stub}" "$@"\n', encoding="utf-8")
         executable.chmod(0o755)
     env = {**os.environ, "PATH":str(tmp_path)+os.pathsep+os.environ["PATH"], "DELIVERY_STUB_LOG":str(log)}
+    # Regression's selected Runner endpoint must not short-circuit this separate
+    # foreign-container refusal test before the intended Docker inspection.
+    for key in ("RUNNER_ENDPOINT", "APP_ENV", "RUNNER_SANDBOX_IMAGE"):
+        env.pop(key, None)
     shell = shutil.which("pwsh")
     assert shell, "PowerShell is required for the delivery launcher acceptance test"
     result = subprocess.run([shell, "-NoProfile", "-File", str(root / "scripts/start-delivery.ps1")],
@@ -32,3 +36,11 @@ elif args and args[0]=='inspect': print(json.dumps({'com.docker.compose.project'
     import json
     calls = [json.loads(line) for line in log.read_text().splitlines()]
     assert not any("build" in call or "up" in call or "stop" in call for call in calls)
+
+
+def test_fresh_start_preserves_old_volume_and_selects_a_new_owned_name():
+    root = Path(__file__).resolve().parents[3]
+    source = (root / "scripts/start-delivery.ps1").read_text(encoding="utf-8")
+    assert "[switch]$FreshData" in source
+    assert "knowbound-wave4-demo_postgres_task11-" in source
+    assert "Remove-Item" not in source and "volume rm" not in source
