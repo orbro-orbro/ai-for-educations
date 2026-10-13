@@ -3,6 +3,21 @@ info:
   title: KnowBound-CJ API — Task 6 diagnostics fragment
   version: 0.1.0
 paths:
+  /diagnoses/{diagnosis_id}/attempts:
+    post:
+      operationId: recordDiagnosisSubmissionAttempt
+      security: [{bearerAuth: []}]
+      parameters: [{$ref: '#/components/parameters/DiagnosisId'}]
+      requestBody:
+        required: true
+        content: {application/json: {schema: {$ref: '#/components/schemas/SubmissionAttemptRequest'}}}
+      responses:
+        '204': {description: Owned executed retry associated idempotently with the original diagnosis.}
+        '401': {$ref: '#/components/responses/AuthenticationFailed'}
+        '404': {$ref: '#/components/responses/NotAvailable'}
+        '409': {$ref: '#/components/responses/Conflict'}
+        '422': {$ref: '#/components/responses/Invalid'}
+        '503': {$ref: '#/components/responses/Unavailable'}
   /submissions/{submission_id}/diagnosis:
     get:
       operationId: getSubmissionDiagnosis
@@ -58,6 +73,12 @@ components:
       required: true
       schema: {type: string, minLength: 1, maxLength: 128}
   schemas:
+    SubmissionAttemptRequest:
+      type: object
+      additionalProperties: false
+      required: [submission_id]
+      properties:
+        submission_id: {type: string, minLength: 1, maxLength: 128}
     NextHintRequest:
       type: object
       additionalProperties: false

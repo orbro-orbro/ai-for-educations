@@ -144,6 +144,32 @@ describe("student learning loop", () => {
     vi.unstubAllGlobals();
   });
 
+  it("starts a new diagnosis after rejecting the previous memory suggestion", async () => {
+    let submissions = 0;
+    let rejected = false;
+    const fetchMock = useStudentApi((url, init) => {
+      if (url.pathname.endsWith("/submissions") && init.method === "POST") return json({ ...submission, submission_id: `submission-${++submissions}` }, 201);
+      if (url.pathname === "/submissions/submission-2") return json({ ...submission, submission_id: "submission-2" });
+      if (url.pathname.endsWith("/execution-result")) return json({ ...executionResult, submission_id: `submission-${submissions}` });
+      if (url.pathname.endsWith("/diagnosis")) return json({ ...diagnosis, diagnosis_id: `diagnosis-${submissions}`, submission_id: `submission-${submissions}`, root_cause: submissions === 1 ? diagnosis.root_cause : "新一轮诊断" });
+      if (url.pathname === "/me/memory-proposals") return json(rejected ? [] : [proposal]);
+      if (url.pathname === "/memory-proposals/proposal-1/reject") {
+        rejected = true;
+        return json({ ...proposal, status: "rejected" });
+      }
+      if (url.pathname === "/diagnoses/diagnosis-1/attempts") return new Response(null, { status: 204 });
+    });
+    render(<App />);
+    await submitCode();
+    await screen.findByText(diagnosis.root_cause);
+    fireEvent.click(await screen.findByRole("button", { name: "拒绝记忆建议" }));
+    await screen.findByText("已拒绝这条记忆建议");
+    await submitCode();
+    await screen.findByText("新一轮诊断");
+    expect(fetchMock.mock.calls.some(([url]) => new URL(String(url)).pathname.endsWith("/attempts"))).toBe(false);
+    expect(screen.queryByText(proposal.content)).not.toBeInTheDocument();
+  });
+
   it("associates a correction with the original diagnosis and retries linkage without resubmitting", async () => {
     let submissions = 0;
     let associations = 0;

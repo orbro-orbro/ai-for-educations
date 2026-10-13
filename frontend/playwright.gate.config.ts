@@ -10,7 +10,7 @@ export default defineConfig({
     {name:"security-ui-projection",testMatch:"security-ui.gate.ts"},
     {name:"wave3-real-ui",testMatch:"wave3-real.spec.ts"},
   ],
-  outputDir: "./test-results/security-ui-gate",
+  outputDir: process.env.GATE_BROWSER_EVIDENCE ?? (process.env.WAVE4_TEST_MODE === "1" ? `../.superpowers/sdd/2026-10-12-wave4-task11-delivery/evidence/gate-browser-${Date.now()}` : "./test-results/security-ui-gate"),
   workers: 1,
   retries: 0,
   reporter: "list",

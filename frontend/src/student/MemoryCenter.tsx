@@ -80,7 +80,7 @@ export function MemoryCenter({ api, courseId, refreshKey = 0, onMemoryConfirmed 
   async function reject(item: MemoryProposal) {
     const lockId = `proposal:${item.proposal_id}`;
     if (!lock(lockId)) return;
-    try { await api.rejectProposal(item.proposal_id, undefined, keyFor(`reject:${item.proposal_id}`)); if (mounted.current) { idempotencyKeys.current.delete(`reject:${item.proposal_id}`); setProposals((items) => items.filter((candidate) => candidate.proposal_id !== item.proposal_id)); setNotice("已拒绝这条记忆建议"); } }
+    try { await api.rejectProposal(item.proposal_id, undefined, keyFor(`reject:${item.proposal_id}`)); if (mounted.current) { idempotencyKeys.current.delete(`reject:${item.proposal_id}`); setProposals((items) => items.filter((candidate) => candidate.proposal_id !== item.proposal_id)); setNotice("已拒绝这条记忆建议"); onMemoryConfirmed?.(); } }
     catch (nextError) { if (mounted.current) setError(nextError); }
     finally { unlock(lockId); }
   }

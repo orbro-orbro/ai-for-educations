@@ -99,13 +99,13 @@ export function ExercisePage({ api }: { api: ApiClient }) {
     finally { if (!controller.signal.aborted) setRunning(false); }
   }
 
-  async function readResults(id: string, controller: AbortController) {
+  async function readResults(id: string, controller: AbortController, original: Diagnosis | null = diagnosis) {
     try {
       const nextExecution = await api.getExecutionResult(id, controller.signal);
       if (controller.signal.aborted) return;
       setExecution(nextExecution);
-      if (diagnosis && diagnosis.submission_id !== id) {
-        await api.recordAttempt(diagnosis.diagnosis_id, id, controller.signal);
+      if (original && original.submission_id !== id) {
+        await api.recordAttempt(original.diagnosis_id, id, controller.signal);
         if (!controller.signal.aborted) setAttemptLinked(true);
         return;
       }
@@ -128,9 +128,11 @@ export function ExercisePage({ api }: { api: ApiClient }) {
     resultRequest.current?.abort();
     const controller = new AbortController();
     resultRequest.current = controller;
+    const original = memoryConfirmed ? null : diagnosis;
+    setDiagnosis(original);
     setRunning(true); setRunError(null); setExecution(null); setSubmissionId(null); setAttemptLinked(false);
     setExecutionUnavailable(false);
-    if (!diagnosis) { setUnderstandingChecked(false); setMemoryConfirmed(false); }
+    if (!original) { setUnderstandingChecked(false); setMemoryConfirmed(false); }
     try {
       const submission = await api.createSubmission(exerciseId, source, controller.signal);
       if (controller.signal.aborted) return;
@@ -138,7 +140,7 @@ export function ExercisePage({ api }: { api: ApiClient }) {
       if (submission.status === "execution_unavailable") { setExecutionUnavailable(true); return; }
       const durableSubmission = await api.getSubmission(submission.submission_id, controller.signal);
       if (durableSubmission.status === "execution_unavailable") { setExecutionUnavailable(true); return; }
-      await readResults(submission.submission_id, controller);
+      await readResults(submission.submission_id, controller, original);
     } catch (error) { if (!(error instanceof DOMException && error.name === "AbortError")) setRunError(error); }
     finally { if (!controller.signal.aborted) setRunning(false); }
   }
@@ -170,7 +172,7 @@ export function ExercisePage({ api }: { api: ApiClient }) {
         </section>}
         {attemptLinked && resultIsSuccess && <p role="status">修复提交已关联原诊断</p>}
         {runError !== null && <RequestState error={runError} retry={submissionId ? () => void (execution && (!diagnosis || diagnosis.submission_id === submissionId) ? readDiagnosis(submissionId) : retryResults(submissionId)) : () => void submit()} retryLabel={diagnosis && submissionId && diagnosis.submission_id !== submissionId ? "重试关联修复提交" : execution && submissionId ? "重新读取诊断" : "重新读取结果"} />}
-        {diagnosis && <DiagnosisPanel api={api} diagnosis={diagnosis} onExplanationChecked={() => { setUnderstandingChecked(true); setMemoryRefresh((value) => value + 1); }} />}
+        {diagnosis && <DiagnosisPanel key={diagnosis.diagnosis_id} api={api} diagnosis={diagnosis} onExplanationChecked={() => { setUnderstandingChecked(true); setMemoryRefresh((value) => value + 1); }} />}
       </section>
       {courseId && <aside className="memory-column"><MemoryCenter key={courseId} api={api} courseId={courseId} refreshKey={memoryRefresh} onMemoryConfirmed={() => setMemoryConfirmed(true)} /></aside>}
     </div>

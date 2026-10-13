@@ -15,7 +15,7 @@ export const gatePort = process.env.WAVE4_TEST_MODE === "1" ? 8218 : 8198;
 
 export default defineConfig({
   testDir: "./e2e",
-  outputDir: "./test-results",
+  outputDir: process.env.DEFAULT_BROWSER_EVIDENCE ?? (process.env.WAVE4_TEST_MODE === "1" ? `../.superpowers/sdd/2026-10-12-wave4-task11-delivery/evidence/default-browser-${Date.now()}` : "./test-results"),
   fullyParallel: false,
   workers: 1,
   retries: 0,

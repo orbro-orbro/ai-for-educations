@@ -554,6 +554,7 @@ def test_task6_contract_and_runtime_router_are_isolated_and_strict():
         "/submissions/{submission_id}/diagnosis",
         "/diagnoses/{diagnosis_id}/hints/next",
         "/diagnoses/{diagnosis_id}/explanation-check",
+        "/diagnoses/{diagnosis_id}/attempts",
     }
     operations = [
         operation
@@ -561,12 +562,12 @@ def test_task6_contract_and_runtime_router_are_isolated_and_strict():
         for method, operation in path.items()
         if method in {"get", "post"}
     ]
-    assert len({item["operationId"] for item in operations}) == 3
+    assert len({item["operationId"] for item in operations}) == 4
     assert all(item["security"] == [{"bearerAuth": []}] for item in operations)
     assert all({"401", "404", "409", "422", "503"} <= set(item["responses"]) for item in operations)
     schemas = contract["components"]["schemas"]
     assert {"Role", "ErrorResponse", "CompilerDiagnostic", "RuleMatch"}.isdisjoint(schemas)
-    for name in ("NextHintRequest", "ExplanationCheckRequest"):
+    for name in ("NextHintRequest", "ExplanationCheckRequest", "SubmissionAttemptRequest"):
         assert schemas[name]["additionalProperties"] is False
     for parameter in ("SubmissionId", "DiagnosisId"):
         assert contract["components"]["parameters"][parameter]["schema"]["maxLength"] == 128
