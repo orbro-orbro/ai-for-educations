@@ -1,5 +1,6 @@
 from tests.correlation import server_id, public_error
 import anyio
+import pytest
 from fastapi import FastAPI
 from httpx import ASGITransport, AsyncClient
 
@@ -174,7 +175,41 @@ def test_student_submit_derives_owner_and_course_from_bearer_and_exercise():
     assert execution.json()["status"] == "succeeded"
     assert execution.json()["stdout"] == "ok"
     assert execution.json()["rule_matches"] == []
-    assert execution.json()["request_id"] == server_id(execution, "req-execution")
+    assert execution.json()["request_id"] == response.json()["request_id"]
+    assert execution.json()["request_id"] != server_id(execution, "req-execution")
+
+
+@pytest.mark.parametrize("actor", ["student-a", "teacher-a"])
+@pytest.mark.parametrize("suffix", ["", "/execution-result"], ids=["submission", "execution"])
+def test_reads_preserve_creation_request_id_while_headers_identify_each_request(actor, suffix):
+    app, tokens, repository = fixture(SuccessfulRunner(), seed=False)
+    created = post(
+        app,
+        "/exercises/exercise-a/submissions",
+        tokens["student-a"],
+        {
+            "source_files": [{"path": "main.cj", "content": "main() {}"}],
+            "entrypoint": "main.cj",
+        },
+        request_id="untrusted-create-marker",
+    )
+    assert created.status_code == 201
+    creation_id = server_id(created, "untrusted-create-marker")
+    assert created.json()["request_id"] == creation_id
+    submission_id = created.json()["submission_id"]
+    path = f"/submissions/{submission_id}{suffix}"
+    current_ids = {creation_id}
+
+    for marker in ("untrusted-first-read", "untrusted-second-read"):
+        response = get(app, path, tokens[actor], request_id=marker)
+        assert response.status_code == 200
+        current_id = server_id(response, marker)
+        assert current_id not in current_ids
+        current_ids.add(current_id)
+        assert response.json()["request_id"] == creation_id
+        assert marker not in response.text
+        assert repository.get(submission_id).request_id == creation_id
+        assert repository.execution_result(submission_id).request_id == creation_id
 
 
 def test_teacher_reads_only_formal_submission_in_owned_course():
