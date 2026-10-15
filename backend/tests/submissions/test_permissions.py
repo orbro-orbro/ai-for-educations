@@ -1,4 +1,6 @@
+from tests.correlation import server_id, public_error
 import anyio
+import pytest
 from fastapi import FastAPI
 from httpx import ASGITransport, AsyncClient
 
@@ -136,10 +138,9 @@ def test_foreign_student_and_unknown_submission_share_non_enumerating_404():
     missing = get(app, "/submissions/sub-missing", tokens["student-b"])
 
     assert foreign.status_code == missing.status_code == 404
-    assert foreign.json() == missing.json() == {
+    assert public_error(foreign, "req-read") == public_error(missing, "req-read") == {
         "code": "RESOURCE_NOT_AVAILABLE",
         "message": "Resource is not available.",
-        "request_id": "req-read",
     }
 
 
@@ -174,7 +175,41 @@ def test_student_submit_derives_owner_and_course_from_bearer_and_exercise():
     assert execution.json()["status"] == "succeeded"
     assert execution.json()["stdout"] == "ok"
     assert execution.json()["rule_matches"] == []
-    assert execution.json()["request_id"] == "req-execution"
+    assert execution.json()["request_id"] == response.json()["request_id"]
+    assert execution.json()["request_id"] != server_id(execution, "req-execution")
+
+
+@pytest.mark.parametrize("actor", ["student-a", "teacher-a"])
+@pytest.mark.parametrize("suffix", ["", "/execution-result"], ids=["submission", "execution"])
+def test_reads_preserve_creation_request_id_while_headers_identify_each_request(actor, suffix):
+    app, tokens, repository = fixture(SuccessfulRunner(), seed=False)
+    created = post(
+        app,
+        "/exercises/exercise-a/submissions",
+        tokens["student-a"],
+        {
+            "source_files": [{"path": "main.cj", "content": "main() {}"}],
+            "entrypoint": "main.cj",
+        },
+        request_id="untrusted-create-marker",
+    )
+    assert created.status_code == 201
+    creation_id = server_id(created, "untrusted-create-marker")
+    assert created.json()["request_id"] == creation_id
+    submission_id = created.json()["submission_id"]
+    path = f"/submissions/{submission_id}{suffix}"
+    current_ids = {creation_id}
+
+    for marker in ("untrusted-first-read", "untrusted-second-read"):
+        response = get(app, path, tokens[actor], request_id=marker)
+        assert response.status_code == 200
+        current_id = server_id(response, marker)
+        assert current_id not in current_ids
+        current_ids.add(current_id)
+        assert response.json()["request_id"] == creation_id
+        assert marker not in response.text
+        assert repository.get(submission_id).request_id == creation_id
+        assert repository.execution_result(submission_id).request_id == creation_id
 
 
 def test_teacher_reads_only_formal_submission_in_owned_course():
@@ -226,7 +261,7 @@ def test_submission_api_rejects_missing_auth_cross_course_and_client_control_fie
     )
 
     assert missing_auth.status_code == 401
-    assert missing_auth.json()["request_id"] == "req-submit"
+    assert missing_auth.json()["request_id"] == server_id(missing_auth, "req-submit")
     assert cross_course.status_code == 404
     assert cross_course.json()["code"] == "RESOURCE_NOT_AVAILABLE"
     assert controlled.status_code == 422
@@ -278,7 +313,7 @@ def test_database_write_failure_returns_source_safe_retryable_error():
     assert response.json() == {
         "code": "PERSISTENCE_UNAVAILABLE",
         "message": "Submission storage is temporarily unavailable.",
-        "request_id": "req-submit",
+        "request_id": server_id(response, "req-submit"),
     }
     assert "private student source" not in response.text
     assert "database secret" not in response.text
@@ -301,7 +336,7 @@ def test_runner_v2_source_validation_happens_before_submission_persistence():
     assert response.json() == {
         "code": "VALIDATION_ERROR",
         "message": "Request validation failed.",
-        "request_id": "req-submit",
+        "request_id": server_id(response, "req-submit"),
     }
     assert repository.get("sub-new") is None
 
@@ -319,6 +354,6 @@ def test_submission_read_failure_uses_same_safe_persistence_error_shape():
     assert response.json() == {
         "code": "PERSISTENCE_UNAVAILABLE",
         "message": "Submission storage is temporarily unavailable.",
-        "request_id": "req-read",
+        "request_id": server_id(response, "req-read"),
     }
     assert "secret" not in response.text

@@ -7,6 +7,7 @@ def main():
     engine=create_engine(postgres_url('wave3_browser'))
     try:
         with engine.connect() as connection:
+            connection.execute(text('SET TRANSACTION READ ONLY'))
             queries={
                 'authoritative_reviews':"select count(*) from teacher_diagnosis_reviews",
                 'review_audits':"select count(*) from audit_events where event_type='teacher_diagnosis_review'",
@@ -19,7 +20,7 @@ def main():
             counts={name:connection.scalar(text(query)) for name,query in queries.items()}
         assert counts==dict(authoritative_reviews=1,review_audits=1,deleted_versions=2,
             remaining_private_versions=0,rejected_proposals=1,completed_deletions=1,revoked_logins=3),counts
-        print(json.dumps({'database':'wave3_browser','synthetic_only':True,'counts':counts}))
+        print(json.dumps({'database':engine.url.database,'synthetic_only':True,'counts':counts}))
     finally:engine.dispose()
 
 if __name__=='__main__':main()

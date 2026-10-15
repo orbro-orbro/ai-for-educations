@@ -1,8 +1,9 @@
 // No page.route or response fulfilment: official API, PG, and isolated Runner.
 import { expect, test, type Page } from "@playwright/test";
 import { resolve } from "node:path";
-const api="http://127.0.0.1:8198";
-const snapshots=resolve(import.meta.dirname,"../../docs/experiments/wave3-browser");
+const wave4 = process.env.WAVE4_TEST_MODE === "1";
+const api=wave4 ? "http://127.0.0.1:8218" : "http://127.0.0.1:8198";
+const snapshots=resolve(import.meta.dirname, wave4 ? `../../.superpowers/sdd/2026-10-12-wave4-task11-delivery/evidence/browser-${Date.now()}` : "../../docs/experiments/wave3-browser");
 async function login(page:Page,user:string){
   await page.goto("/");await page.getByLabel("用户名").fill(user);await page.getByLabel("密码",{exact:true}).fill("synthetic-password");
   await page.getByRole("button",{name:"登录",exact:true}).click();

@@ -120,7 +120,7 @@ class ExecutionResultResponse(BaseModel):
     rule_matches: list[RuleMatchResponse]
 
 
-def _submission_response(submission: Submission, request_id: str) -> SubmissionResponse:
+def _submission_response(submission: Submission) -> SubmissionResponse:
     return SubmissionResponse(
         submission_id=submission.submission_id,
         course_id=submission.course_id,
@@ -131,7 +131,7 @@ def _submission_response(submission: Submission, request_id: str) -> SubmissionR
         is_formal=submission.is_formal,
         status=submission.status,
         created_at=submission.created_at,
-        request_id=request_id,
+        request_id=submission.request_id,
     )
 
 
@@ -195,7 +195,7 @@ def create_submissions_router(
             )
         except SubmissionPersistenceError:
             return _persistence_unavailable(request)
-        return _submission_response(submission, str(request.state.request_id))
+        return _submission_response(submission)
 
     @router.get(
         "/submissions/{submission_id}",
@@ -210,10 +210,7 @@ def create_submissions_router(
     ):
         actor = authenticator.authenticate_header(authorization)
         try:
-            return _submission_response(
-                service.get_submission(actor, submission_id),
-                str(request.state.request_id),
-            )
+            return _submission_response(service.get_submission(actor, submission_id))
         except SubmissionPersistenceError:
             return _persistence_unavailable(request)
 
@@ -257,7 +254,7 @@ def create_submissions_router(
             limits=result.limits.model_dump(),
             toolchain=result.toolchain.model_dump(),
             created_at=result.created_at,
-            request_id=str(request.state.request_id),
+            request_id=result.request_id,
             rule_matches=[_rule_match_response(item) for item in matches],
         )
 

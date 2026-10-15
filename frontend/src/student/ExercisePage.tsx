@@ -32,6 +32,7 @@ export function ExercisePage({ api }: { api: ApiClient }) {
   const [executionUnavailable, setExecutionUnavailable] = useState(false);
   const [execution, setExecution] = useState<ExecutionResult | null>(null);
   const [diagnosis, setDiagnosis] = useState<Diagnosis | null>(null);
+  const [attemptLinked, setAttemptLinked] = useState(false);
   const [understandingChecked, setUnderstandingChecked] = useState(false);
   const [memoryConfirmed, setMemoryConfirmed] = useState(false);
   const [memoryRefresh, setMemoryRefresh] = useState(0);
@@ -43,6 +44,7 @@ export function ExercisePage({ api }: { api: ApiClient }) {
     resultRequest.current?.abort();
     setRunning(false);
     setSubmissionId(null); setExecution(null); setDiagnosis(null); setRunError(null);
+    setAttemptLinked(false);
     setExecutionUnavailable(false); setUnderstandingChecked(false); setMemoryConfirmed(false);
   }
 
@@ -97,11 +99,16 @@ export function ExercisePage({ api }: { api: ApiClient }) {
     finally { if (!controller.signal.aborted) setRunning(false); }
   }
 
-  async function readResults(id: string, controller: AbortController) {
+  async function readResults(id: string, controller: AbortController, original: Diagnosis | null = diagnosis) {
     try {
       const nextExecution = await api.getExecutionResult(id, controller.signal);
       if (controller.signal.aborted) return;
       setExecution(nextExecution);
+      if (original && original.submission_id !== id) {
+        await api.recordAttempt(original.diagnosis_id, id, controller.signal);
+        if (!controller.signal.aborted) setAttemptLinked(true);
+        return;
+      }
       try { setDiagnosis(await api.getDiagnosis(id, controller.signal)); }
       catch (error) { if (!(error instanceof DOMException && error.name === "AbortError")) setRunError(error); }
     } catch (error) { if (!(error instanceof DOMException && error.name === "AbortError")) setRunError(error); }
@@ -121,8 +128,11 @@ export function ExercisePage({ api }: { api: ApiClient }) {
     resultRequest.current?.abort();
     const controller = new AbortController();
     resultRequest.current = controller;
-    setRunning(true); setRunError(null); setExecution(null); setDiagnosis(null); setSubmissionId(null);
-    setExecutionUnavailable(false); setUnderstandingChecked(false); setMemoryConfirmed(false);
+    const original = memoryConfirmed ? null : diagnosis;
+    setDiagnosis(original);
+    setRunning(true); setRunError(null); setExecution(null); setSubmissionId(null); setAttemptLinked(false);
+    setExecutionUnavailable(false);
+    if (!original) { setUnderstandingChecked(false); setMemoryConfirmed(false); }
     try {
       const submission = await api.createSubmission(exerciseId, source, controller.signal);
       if (controller.signal.aborted) return;
@@ -130,7 +140,7 @@ export function ExercisePage({ api }: { api: ApiClient }) {
       if (submission.status === "execution_unavailable") { setExecutionUnavailable(true); return; }
       const durableSubmission = await api.getSubmission(submission.submission_id, controller.signal);
       if (durableSubmission.status === "execution_unavailable") { setExecutionUnavailable(true); return; }
-      await readResults(submission.submission_id, controller);
+      await readResults(submission.submission_id, controller, original);
     } catch (error) { if (!(error instanceof DOMException && error.name === "AbortError")) setRunError(error); }
     finally { if (!controller.signal.aborted) setRunning(false); }
   }
@@ -160,8 +170,9 @@ export function ExercisePage({ api }: { api: ApiClient }) {
           {execution.diagnostics.length > 0 && <ol className="compiler-diagnostics">{execution.diagnostics.map((item, index) => <li key={`${item.message}-${index}`}><strong>{item.file ?? "main.cj"}{item.start_line ? `:${item.start_line}` : ""}</strong><span>{item.message}</span></li>)}</ol>}
           {(execution.stdout || execution.stderr || execution.diagnostics.length === 0) && <div className="output-grid"><div><h3>标准输出{execution.stdout_truncated ? "（已截断）" : ""}</h3><pre className="console-output">{execution.stdout || "无输出"}</pre></div><div><h3>错误输出{execution.stderr_truncated ? "（已截断）" : ""}</h3><pre className="console-output error-output">{execution.stderr || "无输出"}</pre></div></div>}
         </section>}
-        {runError !== null && <RequestState error={runError} retry={submissionId ? () => void (execution ? readDiagnosis(submissionId) : retryResults(submissionId)) : () => void submit()} retryLabel={execution && submissionId ? "重新读取诊断" : "重新读取结果"} />}
-        {diagnosis && <DiagnosisPanel api={api} diagnosis={diagnosis} onExplanationChecked={() => { setUnderstandingChecked(true); setMemoryRefresh((value) => value + 1); }} />}
+        {attemptLinked && resultIsSuccess && <p role="status">修复提交已关联原诊断</p>}
+        {runError !== null && <RequestState error={runError} retry={submissionId ? () => void (execution && (!diagnosis || diagnosis.submission_id === submissionId) ? readDiagnosis(submissionId) : retryResults(submissionId)) : () => void submit()} retryLabel={diagnosis && submissionId && diagnosis.submission_id !== submissionId ? "重试关联修复提交" : execution && submissionId ? "重新读取诊断" : "重新读取结果"} />}
+        {diagnosis && <DiagnosisPanel key={diagnosis.diagnosis_id} api={api} diagnosis={diagnosis} onExplanationChecked={() => { setUnderstandingChecked(true); setMemoryRefresh((value) => value + 1); }} />}
       </section>
       {courseId && <aside className="memory-column"><MemoryCenter key={courseId} api={api} courseId={courseId} refreshKey={memoryRefresh} onMemoryConfirmed={() => setMemoryConfirmed(true)} /></aside>}
     </div>

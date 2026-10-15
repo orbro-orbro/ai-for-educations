@@ -12,7 +12,9 @@ RUN groupadd --gid 10003 api \
 
 WORKDIR /app
 COPY . /app
-RUN pip install --no-cache-dir .
+RUN pip install --no-cache-dir --no-deps --only-binary=:all: --require-hashes -r requirements.lock \
+    && pip install --no-cache-dir --no-deps --no-build-isolation . \
+    && pip check
 
 USER 10003:10003
 EXPOSE 8000

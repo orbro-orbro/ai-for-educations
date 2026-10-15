@@ -1,5 +1,6 @@
 """Host submits JSON only; every Cangjie execution is in controller jobs."""
 import json
+import os
 from urllib.request import Request, urlopen
 from uuid import uuid4
 import pytest
@@ -17,7 +18,8 @@ def test_real_controller_launches_and_cleans_isolated_job(scenario,source,expect
     before={c.id for c in client.containers.list(all=True,filters={"label":"knowbound.component=cangjie-sandbox"})}
     body={"protocol_version":"2","submission_id":"synthetic-gate-"+uuid4().hex,
         "source_files":[{"path":"main.cj","content":source}],"entrypoint":"main.cj","timeout_ms":2000}
-    request=Request("http://127.0.0.1:8199/v2/execute",data=json.dumps(body).encode(),headers={"Content-Type":"application/json"})
+    endpoint = "http://127.0.0.1:8209" if os.environ.get("WAVE4_TEST_MODE") == "1" else "http://127.0.0.1:8199"
+    request=Request(endpoint + "/v2/execute",data=json.dumps(body).encode(),headers={"Content-Type":"application/json"})
     with urlopen(request,timeout=25) as response:
         assert response.status==200
         result=json.load(response)

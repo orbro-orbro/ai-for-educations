@@ -4,6 +4,7 @@ import base64
 import hashlib
 from pathlib import Path
 
+from tests.correlation import server_id, public_error
 import anyio
 import yaml
 from fastapi import FastAPI
@@ -79,8 +80,8 @@ def test_memory_api_requires_authentication_and_uses_uniform_resource_denial(mem
     assert unauthenticated.status_code == 401
     assert unauthenticated.json()["code"] == "AUTHENTICATION_FAILED"
     assert foreign.status_code == missing.status_code == 404
-    assert foreign.json() == missing.json()
-    assert foreign.json()["request_id"] == "req-api-denied"
+    assert public_error(foreign, "req-api-denied") == public_error(missing, "req-api-denied")
+    assert server_id(foreign) != server_id(missing)
 
 
 def test_owner_can_accept_list_correct_and_delete_through_api(memory_fixture):
@@ -248,7 +249,7 @@ def test_whitespace_correction_uses_uniform_validation_error(memory_fixture):
     assert response.json() == {
         "code": "VALIDATION_ERROR",
         "message": "Request validation failed.",
-        "request_id": "req-whitespace",
+        "request_id": server_id(response, "req-whitespace"),
     }
 
 
@@ -276,7 +277,7 @@ def test_timezone_free_share_expiry_uses_uniform_validation_error(memory_fixture
 
     assert response.status_code == 422
     assert response.json()["code"] == "VALIDATION_ERROR"
-    assert response.json()["request_id"] == "req-naive-expiry"
+    assert response.json()["request_id"] == server_id(response, "req-naive-expiry")
 
 
 def test_task7_contract_is_strict_scoped_and_has_no_direct_memory_create():

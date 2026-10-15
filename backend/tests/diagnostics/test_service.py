@@ -554,6 +554,7 @@ def test_task6_contract_and_runtime_router_are_isolated_and_strict():
         "/submissions/{submission_id}/diagnosis",
         "/diagnoses/{diagnosis_id}/hints/next",
         "/diagnoses/{diagnosis_id}/explanation-check",
+        "/diagnoses/{diagnosis_id}/attempts",
     }
     operations = [
         operation
@@ -561,12 +562,13 @@ def test_task6_contract_and_runtime_router_are_isolated_and_strict():
         for method, operation in path.items()
         if method in {"get", "post"}
     ]
-    assert len({item["operationId"] for item in operations}) == 3
+    assert len({item["operationId"] for item in operations}) == 4
     assert all(item["security"] == [{"bearerAuth": []}] for item in operations)
-    assert all({"401", "404", "409", "422", "503"} <= set(item["responses"]) for item in operations)
+    assert all({"401", "404", "422", "503"} <= set(item["responses"]) for item in operations)
+    assert all("409" in item["responses"] for item in operations if item["operationId"] != "recordDiagnosisSubmissionAttempt")
     schemas = contract["components"]["schemas"]
     assert {"Role", "ErrorResponse", "CompilerDiagnostic", "RuleMatch"}.isdisjoint(schemas)
-    for name in ("NextHintRequest", "ExplanationCheckRequest"):
+    for name in ("NextHintRequest", "ExplanationCheckRequest", "SubmissionAttemptRequest"):
         assert schemas[name]["additionalProperties"] is False
     for parameter in ("SubmissionId", "DiagnosisId"):
         assert contract["components"]["parameters"][parameter]["schema"]["maxLength"] == 128
@@ -577,6 +579,18 @@ def test_task6_contract_and_runtime_router_are_isolated_and_strict():
         if route.operation_id
     }
     assert runtime_ids == {item["operationId"] for item in operations}
+
+
+def test_retry_response_contract_matches_fragment_frozen_and_runtime():
+    fragment = yaml.safe_load((ROOT / "contracts/fragments/task-6-diagnostics.yaml").read_text(encoding="utf-8"))
+    frozen = yaml.safe_load((ROOT / "contracts/openapi.yaml").read_text(encoding="utf-8"))
+    app = FastAPI()
+    app.include_router(create_diagnostics_router(None, None, None))
+    path = "/diagnoses/{diagnosis_id}/attempts"
+    expected = set(frozen["paths"][path]["post"]["responses"])
+    assert expected == {"204", "401", "404", "422", "503"}
+    assert set(app.openapi()["paths"][path]["post"]["responses"]) == expected
+    assert set(fragment["paths"][path]["post"]["responses"]) == expected
 
 
 def test_api_rejects_client_control_fields_and_hides_foreign_resources(

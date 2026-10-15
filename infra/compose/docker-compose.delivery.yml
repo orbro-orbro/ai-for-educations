@@ -1,0 +1,30 @@
+# Reproducible synthetic demo; launcher enforces project and generates credentials.
+services:
+  postgres:
+    labels: {knowbound.task: wave4-task11-demo}
+  api:
+    image: knowbound-wave4-demo-api:task11
+    labels: {knowbound.task: wave4-task11-demo}
+    environment:
+      KNOWBOUND_SYNTHETIC_DEMO: "1"
+      DEMO_PASSWORD: ${DEMO_PASSWORD:?Explicit synthetic actor password required}
+    command: ["sh", "-c", "alembic upgrade head && python -m scripts.delivery_demo && exec uvicorn scripts.delivery_demo:create_demo_app --factory --host 0.0.0.0 --port 8000"]
+  web:
+    image: knowbound-wave4-demo-web:task11
+    labels: {knowbound.task: wave4-task11-demo}
+    build:
+      args:
+        VITE_SYNTHETIC_DEMO: "true"
+  runner-controller:
+    image: knowbound-wave4-demo-controller:task11
+    labels: {knowbound.task: wave4-task11-demo}
+  runner-sandbox:
+    labels: {knowbound.task: wave4-task11-demo}
+networks:
+  public:
+    labels: {knowbound.task: wave4-task11-demo}
+  internal:
+    labels: {knowbound.task: wave4-task11-demo}
+volumes:
+  postgres-data:
+    labels: {knowbound.task: wave4-task11-demo}

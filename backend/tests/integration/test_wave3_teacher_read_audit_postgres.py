@@ -1,4 +1,5 @@
 """Official application, actual SQL audit commits and fail-closed teacher GETs."""
+from tests.correlation import server_id
 import pytest
 from sqlalchemy import event, select
 from sqlalchemy.exc import OperationalError
@@ -48,12 +49,13 @@ def test_teacher_get_audit_is_committed_metadata_and_visible_to_a_fresh_instance
     row = rows[0]
     assert (row.event_type, row.actor_user_id, row.actor_role, row.target_type, row.target_id,
             row.owner_user_id, row.course_id, row.outcome, row.request_id) == (
-        expected, 'teacher-a', 'teacher', 'course', 'course-a', '', 'course-a', 'success', 'synthetic-read-audit-' + read)
+        expected, 'teacher-a', 'teacher', 'course', 'course-a', '', 'course-a', 'success', server_id(response, 'synthetic-read-audit-' + read))
     fresh = create_sql_repositories(postgres_url())
     try:
         assert len([e for e in fresh.audit.events() if e.event_type == expected]) == 1
         rendered = fresh.audit.serialized_events()
         assert PRIVATE not in rendered + caplog.text
+        assert 'synthetic-read-audit-' + read not in rendered + caplog.text
         assert not any(f.subject_key in rendered for f in pg.application.state.teacher_analytics_repository.list_facts('course-a'))
     finally:
         fresh.memory_uow.sessions.kw['bind'].dispose()
@@ -78,7 +80,7 @@ def test_teacher_get_returns_only_sanitized_503_if_audit_flush_or_commit_fails(p
     assert response.status_code == 503
     assert set(response.json()) == {'code', 'message', 'request_id'}
     assert response.json()['code'] == 'STORAGE_UNAVAILABLE'
-    assert response.json()['request_id'] == 'synthetic-read-audit-' + read
+    assert response.json()['request_id'] == server_id(response, 'synthetic-read-audit-' + read)
     assert PRIVATE not in response.text + caplog.text and 'PRIVATE_AUDIT_FAILURE' not in response.text + caplog.text
     assert not read_events(sessions)
     assert request(pg, read).status_code == 200

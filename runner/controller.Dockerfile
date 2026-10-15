@@ -8,9 +8,10 @@ ENV PYTHONPATH=/app \
 RUN groupadd --gid 10002 controller \
     && useradd --uid 10002 --gid controller --no-create-home --shell /usr/sbin/nologin controller
 
-COPY controller-requirements.txt /tmp/requirements.txt
-RUN pip install --no-cache-dir --requirement /tmp/requirements.txt \
-    && rm /tmp/requirements.txt
+COPY controller-requirements.lock /tmp/requirements.lock
+RUN pip install --no-cache-dir --no-deps --only-binary=:all: --require-hashes --requirement /tmp/requirements.lock \
+    && pip check \
+    && rm /tmp/requirements.lock
 
 COPY __init__.py /app/runner/__init__.py
 COPY controller /app/runner/controller

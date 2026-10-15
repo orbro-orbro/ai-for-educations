@@ -517,6 +517,27 @@ paths:
         '409': {$ref: '#/components/responses/DiagnosticConflict'}
         '422': {$ref: '#/components/responses/InvalidRequest'}
         '503': {$ref: '#/components/responses/DiagnosticUnavailable'}
+  /diagnoses/{diagnosis_id}/attempts:
+    post:
+      operationId: recordDiagnosisSubmissionAttempt
+      summary: Explicitly associate an executed owned retry with its original diagnosis.
+      security:
+      - bearerAuth: []
+      parameters:
+      - $ref: '#/components/parameters/DiagnosisId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SubmissionAttemptRequest'
+      responses:
+        '204':
+          description: Retry association recorded idempotently.
+        '401': {$ref: '#/components/responses/AuthenticationFailed'}
+        '404': {$ref: '#/components/responses/NotAvailable'}
+        '422': {$ref: '#/components/responses/InvalidRequest'}
+        '503': {$ref: '#/components/responses/DiagnosticUnavailable'}
   /diagnoses/{diagnosis_id}/hints/next:
     post:
       operationId: createNextDiagnosisHint
@@ -1570,6 +1591,12 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/RuleMatch'
+    SubmissionAttemptRequest:
+      type: object
+      additionalProperties: false
+      required: [submission_id]
+      properties:
+        submission_id: {type: string, minLength: 1, maxLength: 128}
     NextHintRequest:
       type: object
       additionalProperties: false

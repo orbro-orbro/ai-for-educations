@@ -1,0 +1,30 @@
+# Synthetic regression only; use -p knowbound-wave4-test and a dedicated env file.
+services:
+  postgres:
+    image: pgvector/pgvector@sha256:ac08538c6f8b9904c33c8224c5e5706dbe760aca29db1d096972b4052c22a75d
+    networks: [internal, public]
+    labels:
+      knowbound.task: wave4-task11-test
+    ports:
+      - "127.0.0.1:55440:5432"
+  runner-controller:
+    image: ${WAVE4_CONTROLLER_IMAGE:?Explicit Task 11 controller image required}
+    networks: [internal, public]
+    labels:
+      knowbound.task: wave4-task11-test
+    ports:
+      - "127.0.0.1:8209:8080"
+  runner-sandbox:
+    labels:
+      knowbound.task: wave4-task11-test
+networks:
+  public:
+    name: knowbound-wave4-test_task11-public
+    labels: {knowbound.task: wave4-task11-test}
+  internal:
+    name: knowbound-wave4-test_task11-internal
+    labels: {knowbound.task: wave4-task11-test}
+volumes:
+  postgres-data:
+    name: knowbound-wave4-test_task11-postgres
+    labels: {knowbound.task: wave4-task11-test}
