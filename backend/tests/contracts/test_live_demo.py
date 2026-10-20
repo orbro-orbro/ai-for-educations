@@ -42,6 +42,33 @@ def test_live_launcher_fails_fast_without_keys_and_never_echoes_them():
     assert "MODEL_PROVIDER=mock" not in launcher
 
 
+def test_one_click_cmd_starts_live_demo_without_printing_secrets():
+    cmd = (ROOT / "start-live-demo.cmd").read_text(encoding="utf-8")
+    launcher = (ROOT / "scripts/start-live-demo.ps1").read_text(encoding="utf-8")
+    assert "start-live-demo.ps1" in cmd
+    assert "-ExecutionPolicy Bypass" in cmd
+    assert "API_PORT" not in cmd
+    for secret in ("DEEPSEEK_API_KEY", "QWEN_API_KEY", "DEMO_PASSWORD"):
+        assert secret not in cmd
+    assert "Start-Process" in launcher and "http://127.0.0.1:5309" in launcher
+    assert "notepad" in launcher.lower()
+    assert not re.search(r"Start-Process[^\n]*API_KEY", launcher)
+
+
+def test_live_launcher_rejects_inherited_environment_overrides_of_every_config_key():
+    launcher = (ROOT / "scripts/start-live-demo.ps1").read_text(encoding="utf-8")
+    assert "@($taskConfig.Keys)" in launcher and "foreach($taskKey in $taskGuardKeys)" in launcher
+    for sensitive in ("MODEL_BASE_URL", "DEEPSEEK_API_KEY", "QWEN_API_KEY", "MODEL_PROVIDER"):
+        assert f"'{sensitive}'" in launcher
+    assert "GetEnvironmentVariable($taskKey,'Process')" in launcher
+    assert "Inherited environment conflicts with live demo configuration" in launcher
+    # The guard must run before Compose can interpolate host variables.
+    assert launcher.index("Inherited environment conflicts") < launcher.index("docker @taskCompose") if "docker @taskCompose" in launcher else launcher.index("Inherited environment conflicts") < launcher.index("& docker")
+    assert "MODEL_BASE_URL" in launcher
+    # The error must name only the key, never its value.
+    assert not re.search(r"Inherited environment conflicts[^\n]*\$taskInherited", launcher)
+
+
 def test_mock_delivery_launcher_is_untouched_and_still_disabled():
     source = (ROOT / "scripts/start-delivery.ps1").read_text(encoding="utf-8")
     assert "'MODEL_PROVIDER','disabled'" in source
