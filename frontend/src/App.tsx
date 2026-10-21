@@ -61,7 +61,7 @@ export function App() {
       <header className="site-header"><a className="brand" href="#top" aria-label="知界·仓颉学伴首页"><span aria-hidden="true">知界</span><strong>仓颉学伴</strong></a><div className="session-meta"><span>{session.actor.role === "student" ? "学生端" : "教师端"}</span><button type="button" className="text-button" disabled={logoutBusy} onClick={() => void logout()}>{logoutBusy ? "正在退出…" : "退出"}</button></div></header>
       {logoutError !== null && <RequestState error={logoutError} />}
       {import.meta.env.VITE_SYNTHETIC_DEMO === "true" && <p role="note">比赛合成演示 · 模型响应为确定性 Mock · 编译反馈来自真实隔离 Runner · 非教学试点结果</p>}
-      <main id="top">{session.actor.role === "student" ? <StudentPage api={api} /> : <CourseDashboard api={api} />}</main>
+      <main id="top">{session.actor.role === "student" ? <StudentPage key={session.actor.user_id} api={api} ownerId={session.actor.user_id} /> : <CourseDashboard api={api} />}</main>
     </div>
   );
 }

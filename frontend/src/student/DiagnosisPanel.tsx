@@ -3,7 +3,7 @@ import { useState } from "react";
 import type { ApiClient, Diagnosis, ExplanationCheck, HintEvent } from "../api/client";
 import { RequestState } from "../components/RequestState";
 
-export function DiagnosisPanel({ api, diagnosis, onExplanationChecked }: { api: ApiClient; diagnosis: Diagnosis; onExplanationChecked: () => void }) {
+export function DiagnosisPanel({ api, diagnosis, onExplanationChecked }: { api: ApiClient; diagnosis: Diagnosis; onExplanationChecked: (understands: boolean) => void }) {
   const [hints, setHints] = useState<HintEvent[]>([]);
   const [explanation, setExplanation] = useState("");
   const [check, setCheck] = useState<ExplanationCheck | null>(null);
@@ -26,7 +26,7 @@ export function DiagnosisPanel({ api, diagnosis, onExplanationChecked }: { api: 
     try {
       const result = await api.checkExplanation(diagnosis.diagnosis_id, explanation.trim());
       setCheck(result);
-      onExplanationChecked();
+      onExplanationChecked(result.understands);
     } catch (nextError) { setError(nextError); }
     finally { setBusy(null); }
   }
