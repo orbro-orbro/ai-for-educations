@@ -48,6 +48,29 @@ export interface TeacherReviewQueueItem { queue_event_id: string; diagnosis_id: 
 export interface TeacherReviewQueue { course_id: string; filters: TeacherFilters; items: TeacherReviewQueueItem[] }
 export type TeacherReviewDecision = "confirmed" | "overturned" | "insufficient_evidence";
 export interface TeacherDiagnosisReview { diagnosis_id: string; course_id: string; reviewer_user_id: string; decision: TeacherReviewDecision; reason: string; reviewed_at: string }
+export type ModelProviderName = "environment" | "deepseek" | "qwen" | "openai_compatible" | "mock" | "disabled";
+export interface ModelSettingsView {
+  provider: string; model: string; base_url: string;
+  source: "environment" | "web"; configured: boolean; key_hint: string | null;
+  timeout_seconds: number; persistence: "file" | "memory"; environment_locked: boolean;
+}
+export interface ModelSettingsUpdate {
+  provider: ModelProviderName; model: string; base_url: string; api_key: string; timeout_seconds: number;
+}
+export type ModelProbeStatus = "ok" | "invalid_credentials" | "model_or_endpoint_not_found" | "rate_limited" | "rejected_request" | "timeout" | "transport_error" | "http_error";
+export interface ModelProbeResult { status: ModelProbeStatus; http_status: number | null }
+export type ModelSettingsScope = "shared" | "own";
+export interface SharedModelSummary { provider: string; model: string; configured: boolean }
+export interface PersonalModelSettingsView {
+  scope: ModelSettingsScope; provider: string; model: string; base_url: string;
+  source: "environment" | "web"; configured: boolean; key_hint: string | null;
+  timeout_seconds: number; personal_configured: boolean; shared: SharedModelSummary;
+  persistence: "file" | "memory"; environment_locked: boolean;
+}
+export interface PersonalModelSettingsUpdate {
+  mode: ModelSettingsScope; provider?: ModelProviderName; model?: string;
+  base_url?: string; api_key?: string; timeout_seconds?: number;
+}
 export interface ErrorEnvelope { code: string; message: string; request_id: string }
 
 export class ApiError extends Error {
@@ -123,4 +146,18 @@ export class ApiClient {
   getTeacherAnalytics(courseId: string, filters: TeacherFilters, signal?: AbortSignal) { return this.request<TeacherAnalytics>(`/teacher/courses/${encodeURIComponent(courseId)}/analytics${queryString({ ...filters })}`, {}, signal); }
   getTeacherReviewQueue(courseId: string, filters: TeacherFilters, signal?: AbortSignal) { return this.request<TeacherReviewQueue>(`/teacher/courses/${encodeURIComponent(courseId)}/review-queue${queryString({ ...filters })}`, {}, signal); }
   reviewDiagnosis(diagnosisId: string, decision: TeacherReviewDecision, reason: string, signal?: AbortSignal) { return this.request<TeacherDiagnosisReview>(`/teacher/diagnoses/${encodeURIComponent(diagnosisId)}/review`, { method: "POST", body: JSON.stringify({ decision, reason }) }, signal); }
+  getModelSettings(signal?: AbortSignal) { return this.request<ModelSettingsView>("/teacher/model-settings", {}, signal); }
+  updateModelSettings(update: ModelSettingsUpdate, signal?: AbortSignal) {
+    return this.request<ModelSettingsView>("/teacher/model-settings", { method: "PUT", body: JSON.stringify(update) }, signal);
+  }
+  probeModelSettings(update: ModelSettingsUpdate, signal?: AbortSignal) {
+    return this.request<ModelProbeResult>("/teacher/model-settings/probe", { method: "POST", body: JSON.stringify(update) }, signal);
+  }
+  getMyModelSettings(signal?: AbortSignal) { return this.request<PersonalModelSettingsView>("/model-settings", {}, signal); }
+  updateMyModelSettings(update: PersonalModelSettingsUpdate, signal?: AbortSignal) {
+    return this.request<PersonalModelSettingsView>("/model-settings", { method: "PUT", body: JSON.stringify(update) }, signal);
+  }
+  probeMyModelSettings(update: PersonalModelSettingsUpdate, signal?: AbortSignal) {
+    return this.request<ModelProbeResult>("/model-settings/probe", { method: "POST", body: JSON.stringify(update) }, signal);
+  }
 }
