@@ -1,6 +1,8 @@
 from __future__ import annotations
 
+import logging
 import os
+from dataclasses import replace
 from datetime import UTC, datetime
 from typing import Literal
 from pydantic import BaseModel, ConfigDict
@@ -18,6 +20,8 @@ from app.api.errors import install_error_handling
 from app.api.contract import install_generated_openapi
 from app.api.knowledge import router as knowledge_router
 from app.api.memories import create_memories_router
+from app.api.model_settings import create_model_settings_router
+from app.api.personal_model_settings import create_personal_model_settings_router
 from app.api.submissions import create_submissions_router
 from app.audit.service import AuditLog, AuditService
 from app.auth.models import UserRepository
@@ -36,6 +40,18 @@ from app.memories.retrieval import InMemoryRetrievalIndex, RetrievalIndex
 from app.memories.service import DiagnosticMemorySource, MemoryService, MemorySource
 from app.model_gateway.base import ModelProvider
 from app.model_gateway.config import model_provider_from_config
+from app.model_gateway.mock import DeterministicMockProvider
+from app.model_gateway.runtime import (
+    FileModelSettingsStore,
+    InMemoryModelSettingsStore,
+    ModelSettings,
+    ModelSettingsService,
+    ModelSettingsStorageError,
+    RuntimeModelProvider,
+    UserScopedModelProvider,
+    build_provider,
+    settings_from_environment,
+)
 from app.submissions.repository import (
     InMemorySubmissionRepository,
     SubmissionRepository,
@@ -44,6 +60,7 @@ from app.submissions.runner_client import RunnerClient
 from app.submissions.service import CourseSubmissionAccess, SubmissionService
 
 _DEVELOPMENT_TOKEN_SECRET = "development-only-token-secret"
+_LOG = logging.getLogger(__name__)
 _DEVELOPMENT_CORS_ORIGINS = (
     "http://localhost:5173",
     "http://127.0.0.1:5173",
@@ -167,6 +184,47 @@ def _default_dependencies(
     )
 
 
+def _model_runtime(
+    injected: ModelProvider | None,
+) -> tuple[RuntimeModelProvider, ModelSettingsService]:
+    """Build the swappable provider and the settings service around it."""
+    environment = os.environ.get("APP_ENV", "development")
+    settings_path = os.environ.get("MODEL_SETTINGS_PATH", "").strip()
+    store = (
+        FileModelSettingsStore(settings_path)
+        if settings_path
+        else InMemoryModelSettingsStore()
+    )
+    active = injected
+    described = settings_from_environment()
+    if isinstance(injected, DeterministicMockProvider):
+        # The synthetic delivery demo must never be overridden by a stored
+        # real-model configuration; it promises a deterministic Mock.
+        described = replace(described, provider="mock")
+    elif environment != "production":
+        stored = _stored_model_settings(store)
+        if stored is not None:
+            try:
+                active = build_provider(stored)
+                described = stored
+            except Exception:
+                _LOG.warning(
+                    "stored model configuration could not be applied; using the environment"
+                )
+    if active is None:
+        active = model_provider_from_config()
+    runtime = RuntimeModelProvider(active, described)
+    return runtime, ModelSettingsService(runtime, store, environment=environment)
+
+
+def _stored_model_settings(store) -> ModelSettings | None:
+    try:
+        return store.load()
+    except ModelSettingsStorageError:
+        _LOG.warning("stored model configuration is unreadable; using the environment")
+        return None
+
+
 def create_app(
     *,
     authenticator: Authenticator | None = None,
@@ -221,7 +279,10 @@ def create_app(
         memory_repository = memory_repository or defaults[6]
         memory_source = memory_source or defaults[7]
         memory_audit = memory_audit or defaults[8]
-    provider = model_provider or model_provider_from_config()
+    _shared_provider, model_settings_service = _model_runtime(model_provider)
+    # The services keep this one object; it picks the personal override of the
+    # requesting user and falls back to the shared configuration.
+    provider = UserScopedModelProvider(model_settings_service)
     access = CourseSubmissionAccess(
         course_service, is_published=lambda exercise: exercise.is_published
     )
@@ -317,6 +378,7 @@ def create_app(
     application.state.diagnosis_service = diagnosis_service
     application.state.hint_service = hint_ladder_service
     application.state.diagnosis_confidence_threshold = diagnosis_confidence_threshold
+    application.state.model_settings_service = model_settings_service
     application.state.memory_repository = memory_repository
     application.state.memory_source = memory_source
     application.state.memory_index = memory_index
@@ -347,6 +409,12 @@ def create_app(
     )
 
     application.include_router(create_teacher_router(teacher_analytics_service, authenticator))
+    application.include_router(
+        create_model_settings_router(model_settings_service, authenticator)
+    )
+    application.include_router(
+        create_personal_model_settings_router(model_settings_service, authenticator)
+    )
 
     @application.get("/health", operation_id="getHealth", response_model=HealthResponse)
     def health() -> dict[str, str]:

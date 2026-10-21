@@ -45,6 +45,9 @@ function useTeacherApi(...overrides: RouteHandler[]) {
       if (result) return result;
     }
     if (url.pathname === "/courses") return json([course]);
+    if (url.pathname === "/teacher/model-settings") {
+      return json({ provider: "disabled", model: "", base_url: "", source: "environment", configured: false, key_hint: null, timeout_seconds: 30, persistence: "memory", environment_locked: false });
+    }
     if (url.pathname === "/teacher/courses/course-cj/analytics") return json(analytics);
     if (url.pathname === "/teacher/courses/course-cj/review-queue") return json({ course_id: "course-cj", filters, items: [] });
     throw new Error(`Unexpected request: ${init.method ?? "GET"} ${url.pathname}${url.search}`);

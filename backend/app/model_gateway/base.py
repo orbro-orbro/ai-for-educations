@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Annotated, Literal, Protocol
+from typing import Annotated, Literal, Protocol, runtime_checkable
 
 from pydantic import BaseModel, ConfigDict, Field
 
@@ -144,3 +144,15 @@ class ModelProvider(Protocol):
     def check_explanation(
         self, request: ExplanationCheckRequest
     ) -> ExplanationModelOutput: ...
+
+
+@runtime_checkable
+class UserScopedModelProvider(Protocol):
+    """A provider that resolves the target per user.
+
+    The services still receive one object, but a request from a student who
+    configured a personal key must use that key, while everyone else keeps
+    using the shared (teacher) configuration.
+    """
+
+    def for_user(self, user_id: str | None) -> ModelProvider: ...
