@@ -12,7 +12,7 @@
 
 ## 前置条件
 
-- PowerShell 7；Docker Desktop，Linux 引擎已启动。
+- Windows PowerShell 5.1（系统自带）或 PowerShell 7 均可；Docker Desktop，Linux 引擎已启动。
 - cloudflared 已加入 PATH，且 `cloudflared tunnel --help` 包含 `--allowed-mail`。安装参考 https://developers.cloudflare.com/cloudflare-one/connections/connect-networks/downloads/ 。脚本不会自行安装或修改系统代理。
 - 首次构建需要下载容器镜像和项目锁定依赖；不是断网安装包。
 - 已确认 `docs/adr/0011-teacher-test-access.md`，准备好允许访问的具体教师邮箱。
@@ -22,7 +22,7 @@
 在仓库根目录运行，替换为真实邮箱：
 
 ```powershell
-pwsh -NoProfile -File ./scripts/start-teacher-test.ps1 -AllowedEmail 'teacher@example.com'
+powershell -NoProfile -File ./scripts/start-teacher-test.ps1 -AllowedEmail 'teacher@example.com'
 ```
 
 多个邮箱请从 PowerShell 直接调用脚本并传数组：
@@ -48,7 +48,7 @@ pwsh -NoProfile -File ./scripts/start-teacher-test.ps1 -AllowedEmail 'teacher@ex
 隧道退出后，本机 Docker 服务继续运行。停止本机服务：
 
 ```powershell
-pwsh -NoProfile -File ./scripts/start-delivery.ps1 -Action Stop -TeacherTest
+powershell -NoProfile -File ./scripts/start-delivery.ps1 -Action Stop -TeacherTest
 ```
 
 不要同时运行普通启动与教师测试启动。教师测试总会重新构建相对 API 地址版本。回到原本本地比赛模式时运行普通 `start-delivery.ps1`（不要加 `-NoBuild`），以恢复普通构建。
@@ -65,6 +65,6 @@ https://developers.cloudflare.com/tunnel/get-started/quick-tunnels/
 
 ## 开发验证
 
-前端目录：`npm ci --ignore-scripts`、`npm run build`、`npm test`、`node --test tests/teacher-preview.test.mjs`、`node --test tests/draft-browser.test.mjs`。浏览器测试需要已安装 Microsoft Edge，使用替身 API 验证草稿交互，不代表真实 Runner 端到端验证。
+前端目录：`npm ci --ignore-scripts`、`npm run build`、`npm test`、`npm run test:node`（包含代理、API 文档屏蔽、超时配置和草稿浏览器测试；草稿测试会自行构建，不依赖上一次 `dist`）。浏览器测试需要已安装 Microsoft Edge，使用替身 API 验证草稿交互，不代表真实 Runner 端到端验证。
 
-仓库根目录：`python -m unittest discover -s scripts/tests -p test_teacher_launcher.py`。该测试只运行替身命令，不打开隧道。完整 Docker/真实 Runner 验收继续使用原交付流程；缺少 Docker 不算通过。
+仓库根目录：`python -m unittest discover -s scripts/tests -p "test_teacher_*.py"`（启动器、教师本机启动器和教师包，均使用替身命令，在 Windows PowerShell 5.1 下运行）。该测试只运行替身命令，不打开隧道。完整 Docker/真实 Runner 验收继续使用原交付流程；缺少 Docker 不算通过。

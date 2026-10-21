@@ -4,7 +4,7 @@
 
 系统由 React Web、FastAPI、PostgreSQL 和隔离 Runner 组成。Web 通过 OpenAPI DTO 调用 API，SQL 保存权威状态；API 将源码交给可信 controller，由一次性仓颉沙箱编译执行。
 
-学生代码现支持按账号、课程和练习保存本机草稿，刷新后恢复；理解验证未通过时不会推进学习轨迹。可选的受邀教师测试入口见 [教师测试说明](docs/teacher-test.md)，公网启用决策见 [ADR 0011](docs/adr/0011-teacher-test-access.md)（待确认）。
+学生代码现支持按账号、课程和练习保存本机草稿，刷新后恢复；理解验证未通过时不会推进学习轨迹。可选的受邀教师测试入口见 [教师测试说明](docs/teacher-test.md)，公网启用决策见 [ADR 0011](docs/adr/0011-teacher-test-access.md)（待确认）。 教师可自选“自己安装”或“联系我们开机”，见 [教师测试指南](docs/teacher-guide.md)。
 
 ## 一键比赛演示
 
