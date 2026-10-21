@@ -11,7 +11,7 @@ $taskOutput = [IO.Path]::GetFullPath($OutputPath)
 if (Test-Path -LiteralPath $taskOutput) { throw ('Refuse to overwrite an existing file: ' + $taskOutput) }
 
 # Only what is needed to build and run the synthetic demo, plus the teacher guide.
-$taskInclude = @('backend', 'frontend', 'runner', 'infra', 'scripts', 'start-teacher-local.cmd', 'docs/teacher-guide.md')
+$taskInclude = @('backend', 'frontend', 'runner', 'infra', 'data', 'scripts', 'start-teacher-local.cmd', 'docs/teacher-guide.md')
 # Entries that must never travel to another machine, even if someone committed them by mistake.
 $taskForbiddenSegments = @('.git', '.delivery', '.superpowers', '.venv', 'node_modules', '__pycache__')
 $taskForbiddenFile = '(^|/)([^/]*\.env|\.env\.(?!example$)[^/]+|[^/]*\.(pem|key|pfx)|id_(rsa|ed25519)[^/]*)$'

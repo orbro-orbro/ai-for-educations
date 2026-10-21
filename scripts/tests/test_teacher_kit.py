@@ -2,6 +2,7 @@
 import json
 import os
 from pathlib import Path
+import re
 import shutil
 import subprocess
 import tempfile
@@ -94,7 +95,7 @@ class TeacherLocalLauncherTests(unittest.TestCase):
 class TeacherKitPackageTests(unittest.TestCase):
     def build_repo(self, root, tracked_extra=()):
         files = {
-            "backend/app/main.py": "print('api')\n", "frontend/package.json": "{}\n", "runner/Dockerfile": "FROM scratch\n",
+            "backend/app/main.py": "print('api')\n", "data/course_seed/cangjie_concepts.yaml": "seed: true\n", "frontend/package.json": "{}\n", "runner/Dockerfile": "FROM scratch\n",
             "infra/compose/docker-compose.yml": "services: {}\n", "scripts/start-delivery.ps1": "# stub\n",
             "start-teacher-local.cmd": "@echo off\n", "docs/teacher-guide.md": "# guide\n",
             "docs/superpowers/spec.md": "internal\n", "requirment.docx": "binary\n", ".gitignore": ".delivery/\n.env\nnode_modules/\n",
@@ -130,10 +131,23 @@ class TeacherKitPackageTests(unittest.TestCase):
         self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
         joined = "\n".join(names)
         for required in ("backend/app/main.py", "frontend/package.json", "runner/Dockerfile", "infra/compose/docker-compose.yml",
-                         "scripts/start-delivery.ps1", "start-teacher-local.cmd", "docs/teacher-guide.md"):
+                         "scripts/start-delivery.ps1", "start-teacher-local.cmd", "docs/teacher-guide.md", "data/course_seed/cangjie_concepts.yaml"):
             self.assertIn(required, joined)
         for forbidden in (".delivery", ".env", "node_modules", ".git/", "superpowers", "requirment.docx", "must-not-ship"):
             self.assertNotIn(forbidden, joined)
+
+    def test_every_top_level_folder_the_compose_files_use_is_in_the_kit(self):
+        # Guards against shipping a kit that cannot start, e.g. a bind-mounted seed folder left out.
+        script = (ROOT / "scripts/package-teacher-kit.ps1").read_text(encoding="utf-8-sig")
+        included = set(re.findall(r"\x27([^\x27]+)\x27", re.search(r"\$taskInclude = @\((.*?)\)", script, re.S).group(1)))
+        included_roots = {entry.split("/")[0] for entry in included}
+        used = set()
+        for compose in (ROOT / "infra/compose").glob("docker-compose*.yml"):
+            if compose.name.endswith("wave4-test.yml") or "wave3" in compose.name:
+                continue  # regression-test stacks are not part of the teacher demo
+            used |= set(re.findall(r"\.\./\.\./([A-Za-z0-9_-]+)", compose.read_text(encoding="utf-8")))
+        self.assertTrue(used, "the scan must find the compose-relative folders")
+        self.assertLessEqual(used, included_roots, "compose uses folders the kit would not contain")
 
     def test_a_tracked_secret_or_dependency_folder_makes_packaging_fail_and_leaves_no_archive(self):
         for extra in ("backend/.env", "frontend/node_modules/leak/index.js", "scripts/live-model.env"):
