@@ -22,6 +22,7 @@ class RunnerClient:
             base_url=base_url,
             transport=transport,
             timeout=timeout_seconds,
+            trust_env=False,
         )
 
     def execute(self, request: RunnerRequest) -> RunnerResult:
