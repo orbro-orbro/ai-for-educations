@@ -303,3 +303,18 @@ def test_missing_provider_is_rejected():
     )
 
     assert response.status_code == 422
+
+def test_a_blank_personal_key_is_not_reused_when_the_base_url_changes():
+    service = _service()
+    service.apply_personal("student-1", _payload())
+    with pytest.raises(ModelConfigurationError):
+        service.apply_personal("student-1", _payload(key="", base_url="https://attacker.example"))
+    with pytest.raises(ModelConfigurationError):
+        service.probe_personal("student-1", _payload(key="", base_url="https://attacker.example"))
+
+
+def test_a_blank_personal_key_is_still_reused_for_the_same_endpoint():
+    service = _service()
+    service.apply_personal("student-1", _payload())
+    updated = service.apply_personal("student-1", _payload(key="", model="deepseek-reasoner"))
+    assert updated.api_key == PERSONAL_KEY

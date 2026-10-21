@@ -385,3 +385,35 @@ def test_probe_rejects_control_providers():
     _runtime, service = _service()
     with pytest.raises(ModelConfigurationError):
         service.probe({"provider": "mock"})
+
+def test_blank_key_is_not_reused_when_the_base_url_changes():
+    # Reusing the stored key for a different endpoint would send the credential there.
+    runtime, service = _service()
+    service.apply(_deepseek_payload())
+    with pytest.raises(ModelConfigurationError):
+        service.apply(_deepseek_payload(api_key="", base_url="https://attacker.example"))
+    assert runtime.snapshot().base_url == "https://api.deepseek.com"
+
+
+def test_probe_never_sends_the_stored_key_to_a_different_endpoint():
+    sent: list[httpx.Request] = []
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        sent.append(request)
+        return httpx.Response(200, json={})
+
+    service = _service(client=httpx.Client(transport=httpx.MockTransport(handler)))[1]
+    service.apply(_deepseek_payload())
+    with pytest.raises(ModelConfigurationError):
+        service.probe(
+            {"provider": "deepseek", "model": "deepseek-chat", "api_key": "", "base_url": "https://attacker.example/v1"}
+        )
+    assert sent == [], "no request may leave the server with the stored credential"
+
+
+@pytest.mark.parametrize("base_url", ["", "https://api.deepseek.com", "https://api.deepseek.com/"])
+def test_blank_key_is_still_reused_for_the_same_endpoint(base_url):
+    _runtime, service = _service()
+    service.apply(_deepseek_payload())
+    updated = service.apply(_deepseek_payload(api_key="", model="deepseek-reasoner", base_url=base_url))
+    assert updated.api_key == REMOTE_KEY

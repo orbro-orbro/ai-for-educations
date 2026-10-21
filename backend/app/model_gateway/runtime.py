@@ -169,6 +169,19 @@ def validated_settings(payload: Mapping[str, Any], *, source: str = "web") -> Mo
     )
 
 
+def _same_endpoint(current: ModelSettings, payload: Mapping[str, Any]) -> bool:
+    """A stored key may only be reused for the endpoint it was saved for.
+
+    Reusing it for a different base URL would send the credential to whoever
+    controls that URL, so a changed (or non-default) endpoint needs a new key.
+    """
+    requested = str(payload.get("base_url") or "").strip().rstrip("/")
+    if not requested:
+        preset = CHAT_PROVIDER_PRESETS.get(str(payload.get("provider") or "").strip().lower())
+        requested = preset[1].rstrip("/") if preset else ""
+    return bool(requested) and requested == current.base_url.rstrip("/")
+
+
 def settings_from_environment(environ: Mapping[str, str] | None = None) -> ModelSettings:
     """Describe the configuration the deployment started with."""
     values = os.environ if environ is None else environ
@@ -607,7 +620,12 @@ class ModelSettingsService:
             return data
         current = self._runtime.snapshot()
         requested = str(data.get("provider") or "").strip().lower()
-        if current.is_remote and current.api_key and current.provider == requested:
+        if (
+            current.is_remote
+            and current.api_key
+            and current.provider == requested
+            and _same_endpoint(current, data)
+        ):
             data["api_key"] = current.api_key
         return data
 
@@ -631,7 +649,7 @@ class ModelSettingsService:
             return data
         current = self.personal_settings(user_id)
         if current is not None and current.is_remote and current.api_key:
-            if current.provider == requested:
+            if current.provider == requested and _same_endpoint(current, data):
                 data["api_key"] = current.api_key
         return data
 
