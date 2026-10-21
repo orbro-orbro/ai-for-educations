@@ -7,6 +7,7 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "test": "vitest run",
+    "test:node": "node --test tests/teacher-preview.test.mjs tests/draft-browser.test.mjs",
     "test:e2e": "playwright test"
   },
   "dependencies": {

@@ -10,14 +10,18 @@ if($AllowedEmail.Count -eq 0) { throw 'At least one teacher email is required' }
 $taskCloudflared=Get-Command cloudflared -ErrorAction SilentlyContinue
 if(!$taskCloudflared) { throw 'Install cloudflared with --allowed-mail support first; see docs/teacher-test.md' }
 if(!(Get-Command docker -ErrorAction SilentlyContinue)) { throw 'Docker Desktop with the Linux engine is required' }
+# Windows PowerShell 5.1 turns redirected native stderr into a terminating error under Stop.
+$ErrorActionPreference='Continue'
 $taskHelp=(& $taskCloudflared.Source tunnel --help 2>&1 | Out-String)
-if($LASTEXITCODE -ne 0 -or $taskHelp -notmatch '--allowed-mail') { throw 'This cloudflared cannot protect access by email; update it before starting' }
+$taskHelpExit=$LASTEXITCODE
+$ErrorActionPreference='Stop'
+if($taskHelpExit -ne 0 -or $taskHelp -notmatch '--allowed-mail') { throw 'This cloudflared cannot protect access by email; update it before starting' }
 
 & (Join-Path $PSScriptRoot 'start-delivery.ps1') -TeacherTest -FreshData:$FreshData
 if(!$? -or $LASTEXITCODE -ne 0) { throw 'Teacher test services failed to start' }
 # Verify both routes before creating an external URL. No credentials in output.
-$taskPage=Invoke-WebRequest -Uri 'http://127.0.0.1:5209/' -TimeoutSec 10
-$taskHealth=Invoke-WebRequest -Uri 'http://127.0.0.1:5209/api/health' -TimeoutSec 10
+$taskPage=Invoke-WebRequest -UseBasicParsing -Uri 'http://127.0.0.1:5209/' -TimeoutSec 10
+$taskHealth=Invoke-WebRequest -UseBasicParsing -Uri 'http://127.0.0.1:5209/api/health' -TimeoutSec 10
 if($taskPage.StatusCode -ne 200 -or $taskHealth.StatusCode -ne 200 -or $taskHealth.Headers.'Content-Type' -notmatch 'application/json') { throw 'The same-origin Web/API entry is not ready' }
 $taskArgs=@('tunnel','--url','http://127.0.0.1:5209')
 foreach($taskMail in ($AllowedEmail | Select-Object -Unique)) { $taskArgs+=@('--allowed-mail',$taskMail) }

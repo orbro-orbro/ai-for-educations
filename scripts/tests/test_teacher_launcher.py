@@ -8,10 +8,13 @@ import tempfile
 import unittest
 
 ROOT = Path(__file__).resolve().parents[2]
+# Teachers may only have the Windows PowerShell 5.1 that ships with Windows.
+SHELLS = [path for path in (shutil.which("powershell"), shutil.which("pwsh")) if path]
 
 
 class TeacherLauncherTests(unittest.TestCase):
-    def invoke(self, email="teacher@example.com", supported=True):
+    def invoke(self, email="teacher@example.com", supported=True, shell=None):
+        shell = shell or SHELLS[0]
         with tempfile.TemporaryDirectory() as folder:
             root = Path(folder)
             scripts = root / "scripts"
@@ -21,7 +24,7 @@ class TeacherLauncherTests(unittest.TestCase):
             (scripts / "start-delivery.ps1").write_text(
                 'param([switch]$TeacherTest,[switch]$NoBuild,[switch]$FreshData)\n'
                 '[pscustomobject]@{kind="delivery";teacher=[bool]$TeacherTest;fresh=[bool]$FreshData} | ConvertTo-Json -Compress | Add-Content $env:TEACHER_TEST_CALLS\n'
-                'function global:Invoke-WebRequest { param($Uri,$TimeoutSec) [pscustomobject]@{StatusCode=200;Headers=@{"Content-Type"="application/json"}} }\n', encoding="utf-8")
+                'function global:Invoke-WebRequest { param($Uri,$TimeoutSec,[switch]$UseBasicParsing) if(-not $UseBasicParsing) { throw "Windows PowerShell 5.1 needs -UseBasicParsing" } [pscustomobject]@{StatusCode=200;Headers=@{"Content-Type"="application/json"}} }\n', encoding="utf-8")
             stub = root / "stub.py"
             stub.write_text(
                 'import json,os,sys\n'
@@ -32,7 +35,7 @@ class TeacherLauncherTests(unittest.TestCase):
                 (root / f"{name}.cmd").write_text(f'@"{os.sys.executable}" "{stub}" {name} %*\n', encoding="utf-8")
             env = {**os.environ, "PATH": str(root) + os.pathsep + os.environ["PATH"],
                    "TEACHER_TEST_CALLS": str(calls), "TEACHER_TEST_SUPPORTED": "1" if supported else "0"}
-            result = subprocess.run([shutil.which("pwsh"), "-NoProfile", "-File", str(scripts / "start-teacher-test.ps1"),
+            result = subprocess.run([shell, "-NoProfile", "-File", str(scripts / "start-teacher-test.ps1"),
                                      "-AllowedEmail", email, "-FreshData"], capture_output=True, text=True, encoding="utf-8", env=env, timeout=30)
             return result, [json.loads(line) for line in calls.read_text().splitlines()] if calls.exists() else []
 

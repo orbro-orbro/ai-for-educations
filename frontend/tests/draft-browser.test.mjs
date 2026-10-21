@@ -1,11 +1,24 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
 import { fileURLToPath } from "node:url";
+import { mkdtemp, rm } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 import { chromium } from "@playwright/test";
-import { preview } from "vite";
+import react from "@vitejs/plugin-react";
+import { build, preview } from "vite";
 
 test("a student can edit offline and restore a draft in a real browser", async () => {
-  const server = await preview({ root: fileURLToPath(new URL("../", import.meta.url)), configFile: false, preview: { host: "127.0.0.1", port: 0 } });
+  const root = fileURLToPath(new URL("../", import.meta.url));
+  // Build our own copy with the default API address so this test never depends on
+  // whichever build (for example the same-origin /api teacher build) ran last.
+  const outDir = await mkdtemp(join(tmpdir(), "knowbound-draft-"));
+  await build({
+    root, configFile: false, envDir: false, logLevel: "silent", plugins: [react()],
+    define: { "import.meta.env.VITE_API_BASE_URL": JSON.stringify("http://localhost:8000") },
+    build: { outDir, emptyOutDir: true },
+  });
+  const server = await preview({ root, configFile: false, build: { outDir }, preview: { host: "127.0.0.1", port: 0 } });
   let browser;
   try {
     browser = await chromium.launch({ channel: "msedge", headless: true });
@@ -44,5 +57,6 @@ test("a student can edit offline and restore a draft in a real browser", async (
   } finally {
     await browser?.close();
     await new Promise((resolve) => server.httpServer.close(resolve));
+    await rm(outDir, { recursive: true, force: true });
   }
 });
