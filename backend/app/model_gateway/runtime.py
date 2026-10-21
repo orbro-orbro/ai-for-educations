@@ -11,6 +11,7 @@ from __future__ import annotations
 import json
 import logging
 import os
+import re
 import threading
 from dataclasses import dataclass, replace
 from pathlib import Path
@@ -55,6 +56,35 @@ PROBE_STATUSES = (
 )
 
 _LOOPBACK_HOSTS = {"localhost", "127.0.0.1", "::1"}
+
+# Hosts a web-supplied openai_compatible configuration may use. The operator can add
+# more through MODEL_EXTRA_ALLOWED_HOSTS (environment only, never from the web UI).
+_DEFAULT_ALLOWED_HOSTS = ("api.deepseek.com", "dashscope.aliyuncs.com", "api.openai.com")
+_HOST_ENTRY = re.compile(r"[a-z0-9]([a-z0-9.-]*[a-z0-9])?")
+
+
+def allowed_model_hosts(environ: Mapping[str, str] | None = None) -> frozenset[str]:
+    """Exact host names only: wildcards, URLs and other malformed entries are ignored."""
+    values = os.environ if environ is None else environ
+    hosts = set(_DEFAULT_ALLOWED_HOSTS)
+    for entry in str(values.get("MODEL_EXTRA_ALLOWED_HOSTS", "")).split(","):
+        entry = entry.strip().lower()
+        if entry and _HOST_ENTRY.fullmatch(entry):
+            hosts.add(entry)
+    return frozenset(hosts)
+
+
+def _require_permitted_endpoint(
+    provider: str, base_url: str, environ: Mapping[str, str] | None
+) -> None:
+    """Keep the server from sending a key, or probing, anywhere the operator did not allow."""
+    host = (urlparse(base_url).hostname or "").lower()
+    preset = CHAT_PROVIDER_PRESETS.get(provider)
+    if preset is not None:
+        if host != (urlparse(preset[1]).hostname or "").lower():
+            raise ModelConfigurationError("base_url must be the provider's own endpoint")
+    elif host not in allowed_model_hosts(environ):
+        raise ModelConfigurationError("base_url host is not on the allowed list")
 
 
 class ModelConfigurationError(ValueError):
@@ -134,7 +164,12 @@ def _validate_base_url(base_url: str) -> None:
         raise ModelConfigurationError("base_url must not embed credentials")
 
 
-def validated_settings(payload: Mapping[str, Any], *, source: str = "web") -> ModelSettings:
+def validated_settings(
+    payload: Mapping[str, Any],
+    *,
+    source: str = "web",
+    environ: Mapping[str, str] | None = None,
+) -> ModelSettings:
     """Validate one configuration request. Secrets are never echoed in errors."""
     provider = str(payload.get("provider") or "").strip().lower()
     if provider not in SUPPORTED_PROVIDERS:
@@ -159,6 +194,9 @@ def validated_settings(payload: Mapping[str, Any], *, source: str = "web") -> Mo
             raise ModelConfigurationError("base_url must be configured for this provider")
         base_url = preset[1]
     _validate_base_url(base_url)
+    if source == "web":
+        # Environment-sourced settings come from the operator and are trusted.
+        _require_permitted_endpoint(provider, base_url, environ)
     return ModelSettings(
         provider=provider,
         model=model,
@@ -556,7 +594,7 @@ class ModelSettingsService:
 
     def apply(self, payload: Mapping[str, Any]) -> ModelSettings:
         self._require_editable()
-        settings = validated_settings(self._inherit_key(payload))
+        settings = validated_settings(self._inherit_key(payload), environ=self._environ)
         provider = build_provider(settings, environ=self._environ, client=self._client)
         self._store.save(settings)
         self._runtime.swap(provider, settings)
@@ -570,7 +608,7 @@ class ModelSettingsService:
 
     def apply_personal(self, user_id: str, payload: Mapping[str, Any]) -> ModelSettings:
         self._require_editable()
-        settings = validated_settings(self._inherit_personal_key(user_id, payload))
+        settings = validated_settings(self._inherit_personal_key(user_id, payload), environ=self._environ)
         provider = build_provider(settings, environ=self._environ, client=self._client)
         self._store.save_user(user_id, settings)
         with self._lock:
@@ -601,14 +639,14 @@ class ModelSettingsService:
 
     def probe(self, payload: Mapping[str, Any]) -> ProbeOutcome:
         self._require_editable()
-        settings = validated_settings(self._inherit_key(payload))
+        settings = validated_settings(self._inherit_key(payload), environ=self._environ)
         if not settings.is_remote:
             raise ModelConfigurationError("connection test needs a remote provider")
         return probe_connection(settings, client=self._client)
 
     def probe_personal(self, user_id: str, payload: Mapping[str, Any]) -> ProbeOutcome:
         self._require_editable()
-        settings = validated_settings(self._inherit_personal_key(user_id, payload))
+        settings = validated_settings(self._inherit_personal_key(user_id, payload), environ=self._environ)
         if not settings.is_remote:
             raise ModelConfigurationError("connection test needs a remote provider")
         return probe_connection(settings, client=self._client)

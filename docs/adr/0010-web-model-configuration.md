@@ -143,3 +143,32 @@ reuses only that user's own key and never the shared one; `environment` is rejec
 personal provider; the production gate also blocks the personal scope; a version-1 file is
 read as the shared entry; the HTTP surface is scoped per student and a teacher cannot write
 the personal scope; the diagnosis path resolves the provider for `owner_user_id`.
+
+## Amendment (2026-10-21): endpoint allowlist and key binding
+
+Found in review: a stored key was reused whenever the provider name matched, without
+looking at `base_url`, and a web-supplied `base_url` could be any HTTPS host (or a loopback
+HTTP host). A teacher or a student could therefore send the stored key, or a probe, to a
+host of their choosing, and use the probe result to scan hosts reachable from the API
+container. With the public teacher-test entry (ADR 0011) the demo teacher account is
+reachable by every invited person, so this had to be closed before any public exposure.
+
+Decisions (the host allowlist was chosen by the user on 2026-10-21):
+
+1. A stored key (shared or personal) is reused only when the provider **and the effective
+   base URL** are unchanged. Any other endpoint requires the key to be entered again.
+2. For web-supplied settings, `deepseek` and `qwen` accept only their own preset host.
+3. `openai_compatible` accepts only an exact host from the allowlist. Built in:
+   `api.deepseek.com`, `dashscope.aliyuncs.com`, `api.openai.com`. The operator can add exact
+   host names through `MODEL_EXTRA_ALLOWED_HOSTS` (environment only). Wildcards, URLs and
+   malformed entries are ignored. Loopback and private addresses are accepted only if the
+   operator lists them explicitly.
+4. Settings that come from the environment (`source="environment"`) are operator-controlled
+   and are not subject to the allowlist. A previously stored web configuration that no longer
+   passes is ignored at startup in favour of the environment (existing tolerant startup).
+5. Adding a new host, for example a future TeleAgent relay, is a deliberate operator change
+   and needs the user's confirmation, as any permission change does.
+
+Not changed: roles, DTOs, OpenAPI operations, teaching-data access, plaintext-at-rest storage
+(still demo-only). Not verified: DNS-level behaviour for allowed hosts (the allowlist is by
+name, and the HTTP client does not follow redirects by default).

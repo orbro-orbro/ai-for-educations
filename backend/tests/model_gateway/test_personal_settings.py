@@ -318,3 +318,13 @@ def test_a_blank_personal_key_is_still_reused_for_the_same_endpoint():
     service.apply_personal("student-1", _payload())
     updated = service.apply_personal("student-1", _payload(key="", model="deepseek-reasoner"))
     assert updated.api_key == PERSONAL_KEY
+
+def test_a_personal_configuration_cannot_point_at_an_unlisted_endpoint():
+    service = _service()
+    for base_url in ("https://attacker.example", "http://127.0.0.1:8080/v1", "https://10.0.0.5"):
+        with pytest.raises(ModelConfigurationError):
+            service.apply_personal("student-1", _payload(base_url=base_url))
+        with pytest.raises(ModelConfigurationError):
+            service.probe_personal("student-1", _payload(base_url=base_url))
+        with pytest.raises(ModelConfigurationError):
+            service.apply_personal("student-1", _payload(provider="openai_compatible", base_url=base_url))

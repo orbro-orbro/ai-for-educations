@@ -94,7 +94,12 @@ def test_remote_configuration_rejects_plaintext_http_endpoints():
         validated_settings(
             _deepseek_payload(base_url="http://models.example.com/v1")
         )
-    allowed = validated_settings(_deepseek_payload(base_url="http://127.0.0.1:8080/v1"))
+    # A loopback endpoint is only usable when the operator listed it.
+    operator = {"MODEL_EXTRA_ALLOWED_HOSTS": "127.0.0.1"}
+    allowed = validated_settings(
+        _deepseek_payload(provider="openai_compatible", base_url="http://127.0.0.1:8080/v1"),
+        environ=operator,
+    )
     assert allowed.base_url == "http://127.0.0.1:8080/v1"
 
 
@@ -417,3 +422,100 @@ def test_blank_key_is_still_reused_for_the_same_endpoint(base_url):
     service.apply(_deepseek_payload())
     updated = service.apply(_deepseek_payload(api_key="", model="deepseek-reasoner", base_url=base_url))
     assert updated.api_key == REMOTE_KEY
+
+def _compatible(**overrides) -> dict[str, object]:
+    payload = _deepseek_payload(provider="openai_compatible", base_url="https://api.openai.com/v1")
+    payload.update(overrides)
+    return payload
+
+
+@pytest.mark.parametrize(
+    "base_url",
+    [
+        "https://api.openai.com",  # another provider's host must not receive a DeepSeek key
+        "https://attacker.example",
+        "https://api.deepseek.com.attacker.example",
+        "https://attacker.example/api.deepseek.com",
+        "http://api.deepseek.com",
+        "https://192.168.1.10",
+        "https://runner-controller:8080",
+    ],
+)
+def test_preset_providers_only_accept_their_own_endpoint(base_url):
+    with pytest.raises(ModelConfigurationError):
+        validated_settings(_deepseek_payload(base_url=base_url))
+    with pytest.raises(ModelConfigurationError):
+        validated_settings(
+            {"provider": "qwen", "model": "qwen-plus", "api_key": REMOTE_KEY, "base_url": base_url}
+        )
+
+
+def test_preset_provider_accepts_its_own_endpoint_in_any_letter_case():
+    assert validated_settings(_deepseek_payload(base_url="https://API.DeepSeek.com/")).base_url.lower() == "https://api.deepseek.com"
+    qwen = validated_settings(
+        {"provider": "qwen", "model": "qwen-plus", "api_key": REMOTE_KEY,
+         "base_url": "https://dashscope.aliyuncs.com/compatible-mode/v1"}
+    )
+    assert qwen.base_url == "https://dashscope.aliyuncs.com/compatible-mode/v1"
+
+
+@pytest.mark.parametrize(
+    "base_url",
+    [
+        "https://attacker.example/v1",
+        "https://169.254.169.254",
+        "https://10.0.0.5/v1",
+        "http://127.0.0.1:8080/v1",
+        "http://localhost:8080/v1",
+        "https://api.openai.com.attacker.example/v1",
+        "https://attacker.example/api.openai.com",
+        "http://api.openai.com/v1",
+    ],
+)
+def test_openai_compatible_rejects_hosts_that_are_not_on_the_list(base_url):
+    with pytest.raises(ModelConfigurationError):
+        validated_settings(_compatible(base_url=base_url))
+
+
+def test_openai_compatible_accepts_the_built_in_public_host():
+    assert validated_settings(_compatible()).base_url == "https://api.openai.com/v1"
+
+
+def test_operator_can_extend_the_list_through_the_environment_only():
+    environ = {"MODEL_EXTRA_ALLOWED_HOSTS": "relay.example.com, Models.School.edu"}
+    ok = validated_settings(_compatible(base_url="https://relay.example.com/v1"), environ=environ)
+    assert ok.base_url == "https://relay.example.com/v1"
+    assert validated_settings(_compatible(base_url="https://models.school.edu"), environ=environ)
+    with pytest.raises(ModelConfigurationError):
+        validated_settings(_compatible(base_url="https://other.example.com"), environ=environ)
+
+
+@pytest.mark.parametrize("entry", ["*", "*.example.com", "https://relay.example.com", "relay.example.com/v1", "a b"])
+def test_malformed_or_wildcard_list_entries_are_ignored(entry):
+    environ = {"MODEL_EXTRA_ALLOWED_HOSTS": entry}
+    with pytest.raises(ModelConfigurationError):
+        validated_settings(_compatible(base_url="https://relay.example.com/v1"), environ=environ)
+
+
+def test_environment_sourced_settings_are_trusted_to_the_operator():
+    settings = validated_settings(
+        _compatible(base_url="https://internal-gateway.corp.example/v1"), source="environment"
+    )
+    assert settings.base_url == "https://internal-gateway.corp.example/v1"
+
+
+def test_the_service_applies_the_same_list_to_apply_and_probe():
+    sent: list[httpx.Request] = []
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        sent.append(request)
+        return httpx.Response(200, json={})
+
+    _runtime, service = _service(client=httpx.Client(transport=httpx.MockTransport(handler)))
+    with pytest.raises(ModelConfigurationError):
+        service.apply(_compatible(base_url="https://attacker.example/v1"))
+    with pytest.raises(ModelConfigurationError):
+        service.probe(_compatible(base_url="https://attacker.example/v1"))
+    with pytest.raises(ModelConfigurationError):
+        service.probe(_compatible(base_url="http://127.0.0.1:9/v1"))
+    assert sent == [], "a rejected endpoint must never receive a request"
