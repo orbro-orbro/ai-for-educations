@@ -35,6 +35,7 @@ test("a student can edit offline and restore a draft in a real browser", async (
         "/courses": [{ course_id: "synthetic-course", title: "仓颉语言设计 · 合成测试" }],
         "/courses/synthetic-course/exercises": [{ exercise_id: "synthetic-exercise", course_id: "synthetic-course", title: "草稿恢复体验" }],
         "/me/memory-proposals": [], "/me/memories": [],
+        "/model-settings": { scope: "shared", provider: "mock", model: "", base_url: "", source: "environment", configured: false, key_hint: null, timeout_seconds: 30, personal_configured: false, shared: { provider: "mock", model: "", configured: false }, persistence: "memory", environment_locked: false },
       };
       assert.ok(url.pathname in fixtures, `Unexpected API call: ${url.pathname}`);
       await route.fulfill({ json: fixtures[url.pathname], headers: { "Access-Control-Allow-Origin": "*" } });

@@ -85,6 +85,7 @@ describe("Wave 3 integration UI",()=>{
       if(u.pathname.includes("course-a/exercises"))return new Promise<Response>(r=>{first=r;});
       if(u.pathname.includes("course-b/exercises"))return json([{exercise_id:"exercise-b",course_id:"course-b",title:"Exercise B"}]);
       if(u.pathname.startsWith("/me/"))return json([]);
+      if(u.pathname==="/model-settings")return json({scope:"shared",provider:"mock",model:"",base_url:"",source:"environment",configured:false,key_hint:null,timeout_seconds:30,personal_configured:false,shared:{provider:"mock",model:"",configured:false},persistence:"memory",environment_locked:false});
       throw new Error("Unexpected request "+u.pathname);
     }));
     render(<ExercisePage ownerId="synthetic-student" api={new ApiClient("http://localhost:8198",()=>"synthetic-token")}/>);
@@ -109,6 +110,7 @@ describe("Wave 3 integration UI",()=>{
         submissions.push(decodeURIComponent(u.pathname.split("/")[2]));
         return new Promise<Response>((_,reject)=>init.signal!.addEventListener("abort",()=>reject(new DOMException("Cancelled","AbortError")),{once:true}));
       }
+      if(u.pathname==="/model-settings")return json({scope:"shared",provider:"mock",model:"",base_url:"",source:"environment",configured:false,key_hint:null,timeout_seconds:30,personal_configured:false,shared:{provider:"mock",model:"",configured:false},persistence:"memory",environment_locked:false});
       throw new Error("Unexpected request "+u.pathname);
     }));
     render(<ExercisePage ownerId="synthetic-student" api={new ApiClient("http://localhost:8198",()=>"synthetic-token")}/>);

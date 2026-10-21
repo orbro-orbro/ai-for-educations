@@ -27,6 +27,14 @@ pwsh -NoProfile -File ./scripts/start-delivery.ps1 -Action Stop
 
 完整操作见 [15 步演示脚本](docs/demo-script.md) 和 [运维说明](docs/operations.md)。普通开发配置参考 `.env.example`；其中示例凭据不用于比赛启动或生产。模型默认禁用；演示入口显式装配确定性 Mock，不调用付费模型。
 
+## 在网页里配置模型
+
+教师端「课程诊断台」顶部的「模型接入」可以切换接入方式（DeepSeek / 千问 / 任意 OpenAI 兼容地址 / Mock / 停用）、填写模型名、Base URL 与 Key，并用「测试连接」先验证再启用。保存后下一次诊断请求即生效，不必再改 `.delivery/live-model.env`，也不必重启容器。
+
+Key 只写入本机 API 容器，不回传浏览器、不进入日志或审计；界面只显示后四位。同一接入方式下留空 Key 会沿用已保存的值。`APP_ENV=production` 时该入口只读，模型配置只能来自部署环境变量。首次启动仍需 env 中有一份可用配置，之后都可以在网页内改，细节见 [ADR 0010](docs/adr/0010-web-model-configuration.md)。
+
+学生端「我的模型接入」默认沿用教师配置；学生也可以填入自己的 Key，只作用于自己的诊断与提示，其他学生不受影响，也不会覆盖教师配置。教师配置是共享写入口，学生不能修改；切回「改用老师的配置」即删除个人覆盖。个人 Key 与共享 Key 分区存储在同一份 `0600` 文件里，接口只返回本人 Key 的后四位。
+
 ## 验证
 
 全量验证额外需要已安装项目测试依赖的 Python、Node/npm、Microsoft Edge。Python 版本范围来自 `backend/pyproject.toml`；交付时记录实际宿主版本。入口接受已有虚拟环境的绝对路径，不升级或在线解析 Python 依赖。前端使用现有 `package-lock.json` 执行 `npm ci`。

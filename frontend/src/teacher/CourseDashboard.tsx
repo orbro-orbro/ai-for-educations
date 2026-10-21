@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 
 import type { ApiClient, CourseSummary, TeacherAnalytics, TeacherFilters } from "../api/client";
 import { RequestState } from "../components/RequestState";
+import { ModelSettings } from "./ModelSettings";
 import { ReviewQueue } from "./ReviewQueue";
 
 interface FilterDraft { conceptId: string; exerciseId: string; startDate: string; endDate: string }
@@ -79,6 +80,7 @@ export function CourseDashboard({ api }: { api: ApiClient }) {
   return (
     <div className="teacher-layout">
       <header className="page-heading teacher-heading"><div><p className="section-kicker">TEACHER · COURSE SIGNALS</p><h1>课程诊断台</h1><p>观察匿名群体概念信号，复核证据不足的诊断。</p></div><span className="course-mark">《仓颉语言设计》</span></header>
+      <ModelSettings api={api} />
       {loading && <p role="status">正在读取课程…</p>}
       {error !== null && <RequestState error={error} retry={() => void (courses.length ? loadAnalytics() : loadCourses())} retryLabel="重试课程数据" deniedLabel={courses.length ? "无法访问该课程资源" : "无法访问该资源"} />}
       {!loading && !error && courses.length === 0 && <div className="empty-panel"><strong>还没有可管理的课程</strong></div>}

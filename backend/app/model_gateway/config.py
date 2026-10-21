@@ -11,10 +11,12 @@ from app.model_gateway.openai_chat_completions import OpenAIChatCompletionsProvi
 from app.model_gateway.openai_responses import OpenAIResponsesProvider
 
 
-_CHAT_PROVIDERS = {
+CHAT_PROVIDER_PRESETS = {
     "deepseek": ("DEEPSEEK_API_KEY", "https://api.deepseek.com"),
     "qwen": ("QWEN_API_KEY", "https://dashscope.aliyuncs.com/compatible-mode/v1"),
 }
+
+_CHAT_PROVIDERS = CHAT_PROVIDER_PRESETS
 
 
 def _timeout(values: Mapping[str, str]) -> float:

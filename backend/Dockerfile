@@ -3,12 +3,13 @@ FROM ${BASE_IMAGE}
 
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
-    PYTHONPATH=/app
+    PYTHONPATH=/app \
+    MODEL_SETTINGS_PATH=/var/lib/knowbound/model-settings.json
 
 RUN groupadd --gid 10003 api \
     && useradd --uid 10003 --gid api --no-create-home --shell /usr/sbin/nologin api \
-    && mkdir -p /app \
-    && chown api:api /app
+    && mkdir -p /app /var/lib/knowbound \
+    && chown api:api /app /var/lib/knowbound
 
 WORKDIR /app
 COPY . /app

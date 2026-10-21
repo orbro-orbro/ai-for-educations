@@ -123,6 +123,13 @@ function useStudentApi(...overrides: RouteHandler[]) {
     if (url.pathname === "/courses/course-cj/exercises") return json([exercise]);
     if (url.pathname === "/me/memory-proposals") return json([]);
     if (url.pathname === "/me/memories") return json([]);
+    if (url.pathname === "/model-settings") {
+      return json({
+        scope: "shared", provider: "mock", model: "", base_url: "", source: "environment",
+        configured: false, key_hint: null, timeout_seconds: 30, personal_configured: false,
+        shared: { provider: "mock", model: "", configured: false }, persistence: "memory", environment_locked: false,
+      });
+    }
     if (url.pathname === "/submissions/submission-1" && (init.method ?? "GET") === "GET") return json(submission);
     throw new Error(`Unexpected request: ${init.method ?? "GET"} ${url.pathname}${url.search}`);
   });

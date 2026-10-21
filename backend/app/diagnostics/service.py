@@ -28,6 +28,7 @@ from app.model_gateway.base import (
     ProviderTimeout,
     RuleMatchContext,
     SourceContext,
+    UserScopedModelProvider,
 )
 from app.submissions.models import SubmissionStatus, utc_now
 
@@ -67,6 +68,16 @@ class DiagnosisService:
         self._threshold = confidence_threshold
         self._max_provider_retries = max_provider_retries
         self._id_factory = id_factory
+
+    def _provider_for(self, user_id: str | None) -> ModelProvider:
+        """Resolve the provider for the owner of this request.
+
+        Tests and single-tenant callers may still inject a plain provider; only
+        the user-scoped wrapper knows about personal overrides.
+        """
+        if isinstance(self._provider, UserScopedModelProvider):
+            return self._provider.for_user(user_id)
+        return self._provider
 
     def diagnose(
         self,
@@ -158,7 +169,7 @@ class DiagnosisService:
         failure_reason = "invalid_provider_response"
         for _attempt in range(self._max_provider_retries + 1):
             try:
-                raw = self._provider.generate_diagnosis(request)
+                raw = self._provider_for(submission.owner_user_id).generate_diagnosis(request)
                 candidate = validate_diagnosis_output(raw, context)
                 break
             except ProviderTimeout:
@@ -291,7 +302,7 @@ class DiagnosisService:
             explanation=explanation,
         )
         try:
-            raw = self._provider.check_explanation(request)
+            raw = self._provider_for(actor.user_id).check_explanation(request)
             output = (
                 raw
                 if isinstance(raw, ExplanationModelOutput)
