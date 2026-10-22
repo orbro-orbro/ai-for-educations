@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import type { ApiClient, CourseSummary, Diagnosis, ExecutionResult, ExerciseSummary } from "../api/client";
+import { isApiError } from "../api/client";
 import { ConceptTrace } from "../components/ConceptTrace";
 import { RequestState } from "../components/RequestState";
 import { DiagnosisPanel } from "./DiagnosisPanel";
@@ -34,6 +35,7 @@ export function ExercisePage({ api, ownerId }: { api: ApiClient; ownerId: string
   const [executionUnavailable, setExecutionUnavailable] = useState(false);
   const [execution, setExecution] = useState<ExecutionResult | null>(null);
   const [diagnosis, setDiagnosis] = useState<Diagnosis | null>(null);
+  const [diagnosisUnavailable, setDiagnosisUnavailable] = useState<string | null>(null);
   const [attemptLinked, setAttemptLinked] = useState(false);
   const [understandingChecked, setUnderstandingChecked] = useState(false);
   const [memoryConfirmed, setMemoryConfirmed] = useState(false);
@@ -46,6 +48,7 @@ export function ExercisePage({ api, ownerId }: { api: ApiClient; ownerId: string
     resultRequest.current?.abort();
     setRunning(false);
     setSubmissionId(null); setExecution(null); setDiagnosis(null); setRunError(null);
+    setDiagnosisUnavailable(null);
     setAttemptLinked(false);
     setExecutionUnavailable(false); setUnderstandingChecked(false); setMemoryConfirmed(false);
   }
@@ -91,12 +94,33 @@ export function ExercisePage({ api, ownerId }: { api: ApiClient; ownerId: string
     } finally { if (!controller.signal.aborted) setLoading(false); }
   }
 
+  async function loadDiagnosis(id: string, controller: AbortController) {
+    setDiagnosisUnavailable(null);
+    try {
+      const nextDiagnosis = await api.getDiagnosis(id, controller.signal);
+      if (!controller.signal.aborted) setDiagnosis(nextDiagnosis);
+    } catch (error) {
+      if (controller.signal.aborted) return;
+      if (isApiError(error) && error.status === 404) {
+        // A diagnosis 404 alone never establishes ownership or model failure.
+        // Recheck current access before showing the existing public status.
+        const current = await api.getSubmission(id, controller.signal);
+        if (controller.signal.aborted) return;
+        if (current.status === "needs_review") {
+          setDiagnosisUnavailable(error.requestId);
+          return;
+        }
+      }
+      throw error;
+    }
+  }
+
   async function readDiagnosis(id: string) {
     resultRequest.current?.abort();
     const controller = new AbortController();
     resultRequest.current = controller;
     setRunning(true); setRunError(null);
-    try { setDiagnosis(await api.getDiagnosis(id, controller.signal)); }
+    try { await loadDiagnosis(id, controller); }
     catch (error) { if (!(error instanceof DOMException && error.name === "AbortError")) setRunError(error); }
     finally { if (!controller.signal.aborted) setRunning(false); }
   }
@@ -111,7 +135,7 @@ export function ExercisePage({ api, ownerId }: { api: ApiClient; ownerId: string
         if (!controller.signal.aborted) setAttemptLinked(true);
         return;
       }
-      try { setDiagnosis(await api.getDiagnosis(id, controller.signal)); }
+      try { await loadDiagnosis(id, controller); }
       catch (error) { if (!(error instanceof DOMException && error.name === "AbortError")) setRunError(error); }
     } catch (error) { if (!(error instanceof DOMException && error.name === "AbortError")) setRunError(error); }
   }
@@ -133,6 +157,7 @@ export function ExercisePage({ api, ownerId }: { api: ApiClient; ownerId: string
     const original = memoryConfirmed ? null : diagnosis;
     setDiagnosis(original);
     setRunning(true); setRunError(null); setExecution(null); setSubmissionId(null); setAttemptLinked(false);
+    setDiagnosisUnavailable(null);
     setExecutionUnavailable(false);
     if (!original) { setUnderstandingChecked(false); setMemoryConfirmed(false); }
     try {
@@ -174,6 +199,7 @@ export function ExercisePage({ api, ownerId }: { api: ApiClient; ownerId: string
           {(execution.stdout || execution.stderr || execution.diagnostics.length === 0) && <div className="output-grid"><div><h3>标准输出{execution.stdout_truncated ? "（已截断）" : ""}</h3><pre className="console-output">{execution.stdout || "无输出"}</pre></div><div><h3>错误输出{execution.stderr_truncated ? "（已截断）" : ""}</h3><pre className="console-output error-output">{execution.stderr || "无输出"}</pre></div></div>}
         </section>}
         {attemptLinked && resultIsSuccess && <p role="status">修复提交已关联原诊断</p>}
+        {diagnosisUnavailable !== null && <div className="request-state is-warning" role="alert"><strong>诊断暂不可用</strong><p>本次提交和编译结果已保留，但尚未生成可用诊断。你可以重新提交，或联系课程教师查看复核状态。</p><p className="request-id">请求编号：{diagnosisUnavailable}</p><p>重新读取只查询已有结果，不会再次调用大模型。</p><button type="button" className="button-secondary" disabled={running} onClick={() => { if (submissionId) void readDiagnosis(submissionId); }}>重新读取诊断</button></div>}
         {runError !== null && <RequestState error={runError} retry={submissionId ? () => void (execution && (!diagnosis || diagnosis.submission_id === submissionId) ? readDiagnosis(submissionId) : retryResults(submissionId)) : () => void submit()} retryLabel={diagnosis && submissionId && diagnosis.submission_id !== submissionId ? "重试关联修复提交" : execution && submissionId ? "重新读取诊断" : "重新读取结果"} />}
         {diagnosis && <DiagnosisPanel key={diagnosis.diagnosis_id} api={api} diagnosis={diagnosis} onExplanationChecked={(understands) => { setUnderstandingChecked(understands); if (!understands) setMemoryConfirmed(false); setMemoryRefresh((value) => value + 1); }} />}
       </section>

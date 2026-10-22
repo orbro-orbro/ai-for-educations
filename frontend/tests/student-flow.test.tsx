@@ -289,6 +289,30 @@ describe("student learning loop", () => {
     expect(fetchMock.mock.calls.some(([url, init]) => new URL(String(url)).pathname === "/submissions/submission-1" && (init?.method ?? "GET") === "GET")).toBe(true);
   });
 
+  it.each([
+    ["conceptual", "概念理解"], ["strategic", "解题策略"],
+    ["procedural", "操作步骤"], ["expression", "表达方式"],
+  ])("displays Chinese labels for %s without translating technical evidence", async (category, label) => {
+    useStudentApi((url, init) => {
+      if (url.pathname.endsWith("/submissions") && init.method === "POST") return json(submission, 201);
+      if (url.pathname.endsWith("/execution-result")) return json(executionResult);
+      if (url.pathname.endsWith("/diagnosis")) return json({ ...diagnosis, category, evidence: [
+        { kind: "compiler_diagnostic", summary: "non-exhaustive patterns", diagnostic_index: 0 },
+        { kind: "rule_match", summary: "规则已匹配", misconception_id: "match-rule" },
+        { kind: "approved_knowledge", summary: "课程知识依据", misconception_id: "match-rule", source_reference: "exp:match" },
+      ] });
+    });
+    render(<App />);
+    await submitCode();
+    expect(await screen.findByText(label, { exact: true })).toBeInTheDocument();
+    for (const kind of ["编译器诊断", "规则匹配", "已审核课程知识"]) {
+      expect(screen.getByText(kind, { exact: true })).toBeInTheDocument();
+    }
+    expect(screen.getByText("non-exhaustive patterns", { exact: true })).toBeInTheDocument();
+    expect(screen.getByText("cj.pattern-match.exhaustiveness", { exact: true })).toBeInTheDocument();
+    expect(screen.queryByText(category, { exact: true })).not.toBeInTheDocument();
+  });
+
   it("shows execution unavailable without inventing compiler output", async () => {
     useStudentApi((url, init) => {
       if (url.pathname === "/exercises/exercise-match/submissions" && init.method === "POST") {
@@ -321,6 +345,48 @@ describe("student learning loop", () => {
     fireEvent.click(screen.getByRole("button", { name: "重新读取诊断" }));
     expect(await screen.findByText("没有覆盖枚举的全部可能值")).toBeInTheDocument();
     expect(fetchMock.mock.calls.filter(([url]) => new URL(String(url)).pathname === "/exercises/exercise-match/submissions")).toHaveLength(1);
+  });
+
+  it("shows unavailable diagnosis for an accessible needs-review submission and only rereads on retry", async () => {
+    let diagnosisReads = 0;
+    const fetchMock = useStudentApi((url, init) => {
+      if (url.pathname.endsWith("/submissions") && init.method === "POST") return json({ ...submission, status: "needs_review" }, 201);
+      if (url.pathname === "/submissions/submission-1") return json({ ...submission, status: "needs_review" });
+      if (url.pathname.endsWith("/execution-result")) return json(executionResult);
+      if (url.pathname.endsWith("/diagnosis")) {
+        diagnosisReads++;
+        return json({ code: "RESOURCE_NOT_AVAILABLE", message: "Unavailable", request_id: "req-no-diagnosis" }, 404);
+      }
+    });
+    render(<App />);
+    await submitCode();
+    expect(await screen.findByText("诊断暂不可用")).toBeInTheDocument();
+    expect(screen.getByText("match 分支未穷举")).toBeInTheDocument();
+    expect(screen.getByText(/req-no-diagnosis/)).toBeInTheDocument();
+    expect(screen.queryByText("无法访问该资源")).not.toBeInTheDocument();
+    fireEvent.click(screen.getByRole("button", { name: "重新读取诊断" }));
+    await waitFor(() => expect(diagnosisReads).toBe(2));
+    expect(await screen.findByText("诊断暂不可用")).toBeInTheDocument();
+    expect(fetchMock.mock.calls.filter(([, init]) => init.method === "POST")).toHaveLength(1);
+  });
+
+  it.each([403, 404])("keeps permission errors when access is revoked after submission (%s)", async (status) => {
+    let submissionReads = 0;
+    useStudentApi((url, init) => {
+      if (url.pathname.endsWith("/submissions") && init.method === "POST") return json({ ...submission, status: "needs_review" }, 201);
+      if (url.pathname === "/submissions/submission-1") {
+        return ++submissionReads === 1 ? json({ ...submission, status: "needs_review" })
+          : json({ code: "RESOURCE_NOT_AVAILABLE", message: "Unavailable", request_id: "req-revoked" }, status);
+      }
+      if (url.pathname.endsWith("/execution-result")) return json(executionResult);
+      if (url.pathname.endsWith("/diagnosis")) return json({ code: "RESOURCE_NOT_AVAILABLE", message: "Unavailable", request_id: "req-hidden" }, 404);
+    });
+    render(<App />);
+    await submitCode();
+    expect(await screen.findByText("无法访问该资源")).toBeInTheDocument();
+    await waitFor(() => expect(submissionReads).toBe(2));
+    expect(screen.queryByText("诊断暂不可用")).not.toBeInTheDocument();
+    expect(screen.getByText(/req-revoked/)).toBeInTheDocument();
   });
 
   it("distinguishes runtime failure and preserves stderr", async () => {

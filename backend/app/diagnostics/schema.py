@@ -2,12 +2,18 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from datetime import datetime
-from enum import StrEnum
-from typing import Annotated, Literal
-
-from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
+from pydantic import BaseModel, ConfigDict, Field
 
 from app.knowledge.repository import ApprovedEvidence
+from app.model_gateway.base import (
+    ApprovedKnowledgeEvidenceOutput as ApprovedKnowledgeEvidence,
+    CompilerDiagnosticEvidenceOutput as CompilerDiagnosticEvidence,
+    DiagnosisCategory,
+    DiagnosisLocation,
+    DiagnosisModelOutput,
+    EvidenceOutput as EvidenceBinding,
+    RuleMatchEvidenceOutput as RuleMatchEvidence,
+)
 from app.submissions.models import ExecutionResult, Submission
 
 
@@ -15,65 +21,8 @@ class _StrictModel(BaseModel):
     model_config = ConfigDict(extra="forbid", frozen=True)
 
 
-class DiagnosisCategory(StrEnum):
-    conceptual = "conceptual"
-    strategic = "strategic"
-    procedural = "procedural"
-    expression = "expression"
-
-
-class DiagnosisLocation(_StrictModel):
-    file: str = Field(min_length=1)
-    start_line: int = Field(ge=1)
-    end_line: int = Field(ge=1)
-
-    @model_validator(mode="after")
-    def ordered(self):
-        if self.start_line > self.end_line:
-            raise ValueError("start_line must not exceed end_line")
-        return self
-
-
-class CompilerDiagnosticEvidence(_StrictModel):
-    kind: Literal["compiler_diagnostic"]
-    summary: str = Field(min_length=1)
-    diagnostic_index: int = Field(ge=0)
-
-
-class RuleMatchEvidence(_StrictModel):
-    kind: Literal["rule_match"]
-    summary: str = Field(min_length=1)
-    misconception_id: str = Field(min_length=1)
-
-
-class ApprovedKnowledgeEvidence(_StrictModel):
-    kind: Literal["approved_knowledge"]
-    summary: str = Field(min_length=1)
-    misconception_id: str = Field(min_length=1)
-    source_reference: str = Field(min_length=1)
-
-
-EvidenceBinding = Annotated[
-    CompilerDiagnosticEvidence | RuleMatchEvidence | ApprovedKnowledgeEvidence,
-    Field(discriminator="kind"),
-]
-
-
-class DiagnosisCandidate(_StrictModel):
-    category: DiagnosisCategory
-    locations: tuple[DiagnosisLocation, ...] = Field(min_length=1)
-    concept_ids: tuple[str, ...] = Field(min_length=1)
-    root_cause: str = Field(min_length=1)
-    evidence: tuple[EvidenceBinding, ...] = Field(min_length=1)
-    confidence: float = Field(ge=0, le=1)
-    recommended_hint_level: int = Field(ge=1, le=4)
-
-    @field_validator("concept_ids")
-    @classmethod
-    def concepts_are_unique(cls, value):
-        if len(value) != len(set(value)):
-            raise ValueError("concept_ids must be unique")
-        return value
+class DiagnosisCandidate(DiagnosisModelOutput):
+    """Structural validation is shared; evidence binding stays local below."""
 
 
 class Diagnosis(_StrictModel):

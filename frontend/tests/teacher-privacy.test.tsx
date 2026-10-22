@@ -73,6 +73,17 @@ describe("teacher privacy dashboard", () => {
     expect(screen.getByRole("table", { name: "匿名概念误区数据" })).toBeInTheDocument();
   });
 
+  it.each([
+    ["conceptual", "概念理解"], ["strategic", "解题策略"],
+    ["procedural", "操作步骤"], ["expression", "表达方式"],
+  ])("uses the same Chinese category label in teacher analytics (%s)", async (category, label) => {
+    useTeacherApi((url) => url.pathname.endsWith("/analytics")
+      ? json({ ...analytics, groups: [{ ...analytics.groups[0], category }] }) : undefined);
+    render(<App />);
+    expect(await screen.findByRole("cell", { name: label, exact: true })).toBeInTheDocument();
+    expect(screen.queryByRole("cell", { name: category, exact: true })).not.toBeInTheDocument();
+  });
+
   it("renders privacy suppression without an exact sample count", async () => {
     useTeacherApi((url) => url.pathname.endsWith("/analytics") ? json({ status: "insufficient_sample", course_id: "course-cj", filters, minimum_sample_size: 5 }) : undefined);
     render(<App />);

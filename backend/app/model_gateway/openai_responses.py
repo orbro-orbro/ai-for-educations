@@ -19,6 +19,7 @@ from app.model_gateway.base import (
     ProviderFailure,
     ProviderTimeout,
 )
+from app.model_gateway.instructions import CHINESE_OUTPUT_INSTRUCTIONS
 
 
 _LOG = logging.getLogger(__name__)
@@ -52,7 +53,7 @@ class OpenAIResponsesProvider:
         payload = {
             "model": self._model,
             "store": False,
-            "instructions": "Return only JSON matching the supplied schema. Use only authorized evidence and never invent compiler output or course facts.",
+            "instructions": "Return only JSON matching the supplied schema. Use only authorized evidence and never invent compiler output or course facts." + CHINESE_OUTPUT_INSTRUCTIONS,
             "input": [{"role": "user", "content": [{"type": "input_text", "text": json.dumps(request.model_dump(mode="json"), ensure_ascii=False, separators=(",", ":"))}]}],
             "text": {"format": {"type": "json_schema", "name": schema_name, "strict": True, "schema": output_type.model_json_schema()}},
         }

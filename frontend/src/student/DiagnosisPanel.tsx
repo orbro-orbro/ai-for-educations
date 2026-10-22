@@ -1,7 +1,14 @@
 import { useState } from "react";
 
-import type { ApiClient, Diagnosis, ExplanationCheck, HintEvent } from "../api/client";
+import type { ApiClient, Diagnosis, EvidenceBinding, ExplanationCheck, HintEvent } from "../api/client";
 import { RequestState } from "../components/RequestState";
+import { diagnosisCategoryLabel } from "../components/diagnosisLabels";
+
+const evidenceLabels: Record<EvidenceBinding["kind"], string> = {
+  compiler_diagnostic: "编译器诊断",
+  rule_match: "规则匹配",
+  approved_knowledge: "已审核课程知识",
+};
 
 export function DiagnosisPanel({ api, diagnosis, onExplanationChecked }: { api: ApiClient; diagnosis: Diagnosis; onExplanationChecked: (understands: boolean) => void }) {
   const [hints, setHints] = useState<HintEvent[]>([]);
@@ -42,12 +49,12 @@ export function DiagnosisPanel({ api, diagnosis, onExplanationChecked }: { api: 
       {diagnosis.requires_teacher_review && <p className="privacy-note">当前结论置信度较低，不会写入长期记忆；教师只能看到本次去标识诊断摘要。</p>}
       <p className="root-cause">{diagnosis.root_cause}</p>
       <dl className="diagnosis-meta">
-        <div><dt>类别</dt><dd>{diagnosis.category}</dd></div>
+        <div><dt>类别</dt><dd>{diagnosisCategoryLabel(diagnosis.category)}</dd></div>
         <div><dt>相关概念</dt><dd>{diagnosis.concept_ids.join(" · ")}</dd></div>
       </dl>
       <div className="evidence-list">
         <h3>证据</h3>
-        <ul>{diagnosis.evidence.map((item, index) => <li key={`${item.kind}-${index}`}><span>{item.kind}</span>{item.summary}</li>)}</ul>
+        <ul>{diagnosis.evidence.map((item, index) => <li key={`${item.kind}-${index}`}><span>{evidenceLabels[item.kind]}</span>{item.summary}</li>)}</ul>
       </div>
       <div className="hint-ladder">
         <div className="subsection-heading"><h3>提示阶梯</h3><button type="button" onClick={requestHint} disabled={busy !== null || hints.at(-1)?.current_level === 4}>请求下一层提示</button></div>

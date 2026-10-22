@@ -4,6 +4,56 @@ const course = { course_id: "course-cj", title: "仓颉语言设计" };
 const exercise = { exercise_id: "exercise-match", course_id: "course-cj", title: "补全 match 分支" };
 const filters = { concept_id: null, exercise_id: null, start_at: null, end_at: null };
 
+for (const viewport of [
+  { width: 1366, height: 768 }, { width: 1920, height: 1080 },
+  { width: 2560, height: 1440 }, { width: 1280, height: 720 },
+  { width: 390, height: 844 }, { width: 360, height: 640 },
+  { width: 640, height: 360 },
+]) {
+  test(`login layout keeps introduction and form aligned at ${viewport.width}x${viewport.height}`, async ({ page }) => {
+    await page.setViewportSize(viewport);
+    await page.goto("/");
+    await expect(page.getByRole("heading", { name: "进入课程空间" })).toBeVisible();
+    const intro = (await page.locator(".login-intro").boundingBox())!;
+    const panel = (await page.locator(".login-panel").boundingBox())!;
+    const heading = (await page.getByRole("heading", { name: "知界·仓颉学伴" }).boundingBox())!;
+    const login = page.getByRole("button", { name: "登录", exact: true });
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+    if (viewport.width > 720) {
+      expect(Math.abs(intro.y - panel.y)).toBeLessThanOrEqual(1);
+      expect(intro.x).toBe(0);
+      expect(panel.x).toBeGreaterThanOrEqual(intro.x + intro.width - 1);
+      const button = (await login.boundingBox())!;
+      expect(button.y + button.height).toBeLessThanOrEqual(viewport.height);
+    } else {
+      expect(intro.x).toBe(0);
+      expect(panel.x).toBe(0);
+      expect(panel.y).toBeGreaterThanOrEqual(intro.y + intro.height - 1);
+    }
+    expect(heading.y).toBeGreaterThanOrEqual(intro.y);
+    expect(heading.y + heading.height).toBeLessThanOrEqual(intro.y + intro.height);
+    const note = page.getByRole("note");
+    await expect(note).toHaveCount(process.env.VITE_SYNTHETIC_DEMO === "true" ? 1 : 0);
+    if (process.env.VITE_SYNTHETIC_DEMO === "true") {
+      await expect(note).toContainText("非教学试点结果");
+      const banner = (await note.boundingBox())!;
+      expect(banner.x).toBe(0);
+      expect(Math.abs(banner.width - viewport.width)).toBeLessThanOrEqual(1);
+      expect(banner.height).toBeLessThan(viewport.height / 4);
+      expect(intro.y).toBeGreaterThanOrEqual(banner.y + banner.height - 1);
+    }
+    await page.getByLabel("用户名").fill("synthetic-layout-user");
+    await page.getByLabel("密码").fill("synthetic-layout-password");
+    await page.getByLabel("用户名").focus();
+    await page.keyboard.press("Tab");
+    await expect(page.getByLabel("密码")).toBeFocused();
+    await page.keyboard.press("Tab");
+    await expect(login).toBeFocused();
+    await expect(login).toBeEnabled();
+    await expect(login).toBeInViewport();
+  });
+}
+
 async function installSession(page: Page, role: "student" | "teacher") {
   await page.addInitScript((nextRole) => localStorage.setItem("knowbound.session", JSON.stringify({ accessToken: `${nextRole}-token`, actor: { user_id: `${nextRole}-1`, role: nextRole } })), role);
 }
@@ -55,6 +105,8 @@ test("student completes the evidence, understanding, and memory path on desktop"
   await page.getByRole("button", { name: "提交并运行" }).click();
   await expect(page.getByRole("heading", { name: "真实编译反馈" })).toBeVisible();
   await expect(page.getByText("没有覆盖枚举的全部可能值")).toBeVisible();
+  await expect(page.getByText("概念理解", { exact: true })).toBeVisible();
+  await expect(page.getByText("编译器诊断", { exact: true })).toBeVisible();
   await page.getByRole("button", { name: "请求下一层提示" }).click();
   await expect(page.getByText("回顾枚举的所有构造器。")).toBeVisible();
   await page.getByLabel("我对错误原因的解释").fill("match 必须覆盖枚举的所有构造器。");
@@ -77,6 +129,39 @@ test("student completes the evidence, understanding, and memory path on desktop"
   await expect(page.getByText("记忆已删除")).toBeVisible();
 });
 
+test("missing diagnosis preserves execution feedback and rechecks access on reread", async ({ page }) => {
+  await installSession(page, "student");
+  await mockStudentApi(page);
+  let revoked = false;
+  let submissions = 0;
+  page.on("request", (request) => {
+    if (request.method() === "POST" && new URL(request.url()).pathname.endsWith("/submissions")) submissions++;
+  });
+  await page.route("**/submissions/submission-1", (route) => route.fulfill(revoked ? {
+    status: 404, json: { code: "RESOURCE_NOT_AVAILABLE", message: "Unavailable", request_id: "browser-revoked" },
+  } : {
+    json: { submission_id: "submission-1", course_id: "course-cj", exercise_id: "exercise-match", owner_user_id: "student-1", source_files: [{ path: "main.cj", content: "main() {}" }], entrypoint: "main.cj", is_formal: true, status: "needs_review", created_at: "2026-10-07T01:00:00Z", request_id: "req-submit-status" },
+  }));
+  await page.route("**/submissions/submission-1/diagnosis", (route) => route.fulfill({
+    status: 404, json: { code: "RESOURCE_NOT_AVAILABLE", message: "Unavailable", request_id: "browser-no-diagnosis" },
+  }));
+  await page.goto("/");
+  await page.getByRole("button", { name: "提交并运行" }).click();
+  await expect(page.getByText("诊断暂不可用", { exact: true })).toBeVisible();
+  await expect(page.getByText("真实编译反馈", { exact: true })).toBeVisible();
+  await expect(page.getByText("match 分支未穷举", { exact: true })).toBeVisible();
+  await expect(page.getByText(/browser-no-diagnosis/)).toBeVisible();
+  await expect(page.getByText("无法访问该资源", { exact: true })).toHaveCount(0);
+  await page.getByRole("button", { name: "重新读取诊断" }).click();
+  await expect(page.getByText("诊断暂不可用", { exact: true })).toBeVisible();
+  revoked = true;
+  await page.getByRole("button", { name: "重新读取诊断" }).click();
+  await expect(page.getByText("无法访问该资源", { exact: true })).toBeVisible();
+  await expect(page.getByText(/browser-revoked/)).toBeVisible();
+  await expect(page.getByText("诊断暂不可用", { exact: true })).toHaveCount(0);
+  expect(submissions).toBe(1);
+});
+
 test("teacher sees only anonymous signals on a phone viewport", async ({ page }) => {
   const requests: Request[] = [];
   await page.setViewportSize({ width: 390, height: 844 });
@@ -84,6 +169,7 @@ test("teacher sees only anonymous signals on a phone viewport", async ({ page })
   await mockTeacherApi(page, requests);
   await page.goto("/");
   await expect(page.getByRole("table", { name: "匿名概念误区数据" })).toBeVisible();
+  await expect(page.getByRole("cell", { name: "类型 概念理解", exact: true })).toBeVisible();
   await expect(page.getByText("match 分支可能未穷举")).toBeVisible();
   expect(requests.some((request) => /memory-proposals|\/me\/memories|\/memories\//.test(request.url()))).toBe(false);
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth)).toBe(true);

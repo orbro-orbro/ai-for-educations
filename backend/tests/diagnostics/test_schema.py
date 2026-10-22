@@ -1,5 +1,8 @@
 from __future__ import annotations
 
+import json
+
+import httpx
 import pytest
 from pydantic import ValidationError
 
@@ -9,6 +12,9 @@ from app.diagnostics.schema import (
     validate_diagnosis_output,
 )
 from app.knowledge.repository import ApprovedEvidence
+from app.diagnostics.service import _diagnosis_request
+from app.model_gateway.base import DiagnosisModelOutput
+from app.model_gateway.openai_chat_completions import OpenAIChatCompletionsProvider
 
 from conftest import CONCEPT_ID, diagnosis_output
 
@@ -20,6 +26,61 @@ def context(submissions, knowledge):
         rule_matches=submissions.rule_matches("sub-1"),
         approved_evidence=knowledge.approved_evidence("course-1"),
     )
+
+
+def test_outgoing_model_schema_describes_the_business_category_and_location(submissions, knowledge):
+    captured = {}
+
+    def handler(request):
+        captured.update(json.loads(request.content))
+        return httpx.Response(200, json={"choices": [{"message": {"content": json.dumps(diagnosis_output())}}]})
+
+    validation_context = context(submissions, knowledge)
+    request = _diagnosis_request(
+        submissions.get("sub-1"), submissions.execution_result("sub-1"),
+        validation_context.rule_matches, validation_context.approved_evidence, "",
+    )
+    with httpx.Client(transport=httpx.MockTransport(handler)) as client:
+        provider = OpenAIChatCompletionsProvider(
+            api_key="synthetic-key", model="synthetic-model", base_url="https://example.invalid", client=client,
+        )
+        result = provider.generate_diagnosis(request)
+    candidate = validate_diagnosis_output(result, validation_context)
+    assert candidate.category == "conceptual"
+    assert candidate.locations[0].file == "main.cj"
+    prompt = captured["messages"][0]["content"]
+    schema, _ = json.JSONDecoder().raw_decode(prompt[prompt.index("{"):])
+
+    def resolve(item):
+        return schema["$defs"][item["$ref"].split("/")[-1]] if "$ref" in item else item
+
+    properties = schema["properties"]
+    assert resolve(properties["category"])["enum"] == ["conceptual", "strategic", "procedural", "expression"]
+    location = resolve(properties["locations"]["items"])
+    assert set(location["required"]) == {"file", "start_line", "end_line"}
+    assert location["additionalProperties"] is False
+    assert location["properties"]["start_line"]["minimum"] == 1
+    assert location["properties"]["end_line"]["minimum"] == 1
+    for field in ("locations", "concept_ids", "evidence"):
+        assert properties[field]["minItems"] == 1
+    assert properties["confidence"]["minimum"] == 0
+    assert properties["confidence"]["maximum"] == 1
+    assert properties["recommended_hint_level"]["minimum"] == 1
+    assert properties["recommended_hint_level"]["maximum"] == 4
+
+
+@pytest.mark.parametrize("overrides", [
+    {"category": "pattern_match_exhaustiveness"},
+    {"locations": [{"path": "main.cj", "start_line": 2, "end_line": 2}]},
+    {"locations": [{"file": "main.cj", "start_line": 0, "end_line": 2}]},
+    {"locations": [{"file": "main.cj", "start_line": 3, "end_line": 2}]},
+    {"locations": []}, {"concept_ids": []}, {"concept_ids": [CONCEPT_ID, CONCEPT_ID]},
+    {"root_cause": ""}, {"evidence": []}, {"confidence": -0.1}, {"confidence": 1.1},
+    {"recommended_hint_level": 0}, {"recommended_hint_level": 5},
+])
+def test_gateway_rejects_structures_that_business_validation_rejects(overrides):
+    with pytest.raises(ValidationError):
+        DiagnosisModelOutput.model_validate(diagnosis_output(**overrides))
 
 
 def test_valid_schema_is_bound_to_real_submission_evidence(submissions, knowledge):

@@ -1,8 +1,9 @@
 from __future__ import annotations
 
+from enum import StrEnum
 from typing import Annotated, Literal, Protocol, runtime_checkable
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
 
 
 class _GatewayModel(BaseModel):
@@ -76,41 +77,74 @@ class ExplanationCheckRequest(_GatewayModel):
     explanation: str = Field(min_length=1)
 
 
-class CompilerDiagnosticEvidenceOutput(_GatewayModel):
+class CompilerDiagnosticEvidence(_GatewayModel):
     kind: Literal["compiler_diagnostic"]
     summary: str = Field(min_length=1)
     diagnostic_index: int = Field(ge=0)
 
 
-class RuleMatchEvidenceOutput(_GatewayModel):
+class RuleMatchEvidence(_GatewayModel):
     kind: Literal["rule_match"]
     summary: str = Field(min_length=1)
     misconception_id: str = Field(min_length=1)
 
 
-class ApprovedKnowledgeEvidenceOutput(_GatewayModel):
+class ApprovedKnowledgeEvidence(_GatewayModel):
     kind: Literal["approved_knowledge"]
     summary: str = Field(min_length=1)
     misconception_id: str = Field(min_length=1)
     source_reference: str = Field(min_length=1)
 
 
+# Keep existing gateway imports and public OpenAPI component names stable.
+CompilerDiagnosticEvidenceOutput = CompilerDiagnosticEvidence
+RuleMatchEvidenceOutput = RuleMatchEvidence
+ApprovedKnowledgeEvidenceOutput = ApprovedKnowledgeEvidence
+
 EvidenceOutput = Annotated[
-    CompilerDiagnosticEvidenceOutput
-    | RuleMatchEvidenceOutput
-    | ApprovedKnowledgeEvidenceOutput,
+    CompilerDiagnosticEvidence
+    | RuleMatchEvidence
+    | ApprovedKnowledgeEvidence,
     Field(discriminator="kind"),
 ]
 
 
+class DiagnosisCategory(StrEnum):
+    conceptual = "conceptual"
+    strategic = "strategic"
+    procedural = "procedural"
+    expression = "expression"
+
+
+class DiagnosisLocation(_GatewayModel):
+    file: str = Field(min_length=1)
+    start_line: int = Field(ge=1)
+    end_line: int = Field(ge=1)
+
+    @model_validator(mode="after")
+    def ordered(self):
+        if self.start_line > self.end_line:
+            raise ValueError("start_line must not exceed end_line")
+        return self
+
+
 class DiagnosisModelOutput(_GatewayModel):
-    category: str
-    locations: tuple[dict[str, object], ...]
-    concept_ids: tuple[str, ...]
-    root_cause: str
-    evidence: tuple[EvidenceOutput, ...]
-    confidence: float
-    recommended_hint_level: int
+    """Shared structural contract for the provider prompt and business validation."""
+
+    category: DiagnosisCategory
+    locations: tuple[DiagnosisLocation, ...] = Field(min_length=1)
+    concept_ids: tuple[str, ...] = Field(min_length=1)
+    root_cause: str = Field(min_length=1)
+    evidence: tuple[EvidenceOutput, ...] = Field(min_length=1)
+    confidence: float = Field(ge=0, le=1)
+    recommended_hint_level: int = Field(ge=1, le=4)
+
+    @field_validator("concept_ids")
+    @classmethod
+    def concepts_are_unique(cls, value):
+        if len(value) != len(set(value)):
+            raise ValueError("concept_ids must be unique")
+        return value
 
 
 class HintModelOutput(_GatewayModel):

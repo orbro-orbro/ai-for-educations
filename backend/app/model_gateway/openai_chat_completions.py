@@ -19,6 +19,7 @@ from app.model_gateway.base import (
     ProviderFailure,
     ProviderTimeout,
 )
+from app.model_gateway.instructions import CHINESE_OUTPUT_INSTRUCTIONS
 
 
 _LOG = logging.getLogger(__name__)
@@ -67,6 +68,7 @@ class OpenAIChatCompletionsProvider:
                         "Return only one JSON object that matches this JSON schema exactly, with no extra keys: "
                         + schema
                         + " Use only authorized evidence in the user JSON and never invent compiler output or course facts."
+                        + CHINESE_OUTPUT_INSTRUCTIONS
                     ),
                 },
                 {"role": "user", "content": json.dumps(request.model_dump(mode="json"), ensure_ascii=False, separators=(",", ":"))},
