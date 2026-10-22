@@ -44,6 +44,18 @@ def test_wave3_defaults_remain_compatible(monkeypatch):
     assert browser_origins() == "http://127.0.0.1:5199,http://localhost:5199"
 
 
+def test_environment_script_prepares_migrations_without_nested_python_c():
+    from pathlib import Path
+
+    root = Path(__file__).resolve().parents[3]
+    launcher = (root / "scripts/use-delivery-test-environment.ps1").read_text(encoding="utf-8")
+    source = (root / "backend/scripts/delivery_environment.py").read_text(encoding="utf-8")
+    assert "python -c" not in launcher and "-c '" not in launcher
+    assert "delivery_environment.py" in launcher and "migrate" in launcher
+    assert "def prepare_migrations" in source
+    assert "0005_memories_audit" in source
+
+
 def test_initializer_accepts_only_matching_task_labels():
     from scripts.delivery_environment import validate_target
     validate_target({"com.docker.compose.project": "knowbound-wave4-test", "knowbound.task": "wave4-task11-test"}, "wave4_router")
