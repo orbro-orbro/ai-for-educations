@@ -1,0 +1,89 @@
+[WebServer] (node:34504) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] INFO  [alembic.runtime.migration] Context impl PostgresqlImpl.
+[WebServer] INFO  [alembic.runtime.migration] Will assume transactional DDL.
+[WebServer] INFO:     Started server process [18044]
+[WebServer] INFO:     Waiting for application startup.
+[WebServer] INFO:     Application startup complete.
+[WebServer] INFO:     Uvicorn running on http://127.0.0.1:8218 (Press CTRL+C to quit)
+
+Running 10 tests using 1 worker
+
+(node:35748) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok  1 [security-ui-projection] › e2e\security-ui.gate.ts:51:1 › student entering a teacher URL never renders teacher controls (618ms)
+  ok  2 [security-ui-projection] › e2e\security-ui.gate.ts:60:1 › teacher entering a private memory URL never requests or displays private content (395ms)
+  ok  3 [security-ui-projection] › e2e\security-ui.gate.ts:69:1 › suppressed analytics shows no exact learner count or private conversation (489ms)
+  x   4 [security-ui-projection] › e2e\security-ui.gate.ts:79:1 › 403 and 404 render the same public denial without server details (5.4s)
+(node:11308) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x   5 [security-ui-projection] › e2e\security-ui.gate.ts:92:1 › error page hides sensitive service internals (5.4s)
+(node:18332) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok  6 [security-ui-projection] › e2e\security-ui.gate.ts:102:1 › logout clears persisted session and protected-page access (754ms)
+  ok  7 [security-ui-projection] › e2e\security-ui.gate.ts:113:1 › repeated acceptance clicks send one pending sensitive request (472ms)
+(node:41636) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok  8 [wave3-real-ui] › e2e\wave3-real.spec.ts:18:1 › real teacher SQL threshold, denial, authoritative review and logout (1.8s)
+  ok  9 [wave3-real-ui] › e2e\wave3-real.spec.ts:46:1 › real student learning, compiler, hints and owned memory lifecycle (6.2s)
+  ok 10 [wave3-real-ui] › e2e\wave3-real.spec.ts:74:1 › real SQL logout failure is sanitized and remains retryable (541ms)
+
+
+  1) [security-ui-projection] › e2e\security-ui.gate.ts:79:1 › 403 and 404 render the same public denial without server details 
+
+    Error: expect(locator).toContainText(expected) failed
+
+    Locator: getByRole('alert').first()
+    Expected substring: "无法访问该资源"
+    Received string:    "无法访问模型配置请返回可访问的课程，或联系课程教师确认权限。请求编号：req-ui-synthetic重试读取配置"
+    Timeout: 5000ms
+
+    Call log:
+      - Expect "toContainText" getByRole('alert').first() with timeout 5000ms
+      - waiting for getByRole('alert').first()
+        14 × locator resolved to <div role="alert" class="request-state is-denied">…</div>
+           - unexpected value "无法访问模型配置请返回可访问的课程，或联系课程教师确认权限。请求编号：req-ui-synthetic重试读取配置"
+
+
+      84 |     await page.goto(`/teacher/courses/${status === 403 ? "existing" : "unknown"}`);
+      85 |     const alert = page.getByRole("alert").first();
+    > 86 |     await expect(alert).toContainText("无法访问该资源");
+         |                         ^
+      87 |     await expect(alert).not.toContainText("PRIVATE_SERVER_DETAIL");
+      88 |     await expect(alert).not.toContainText("SQLAlchemy");
+      89 |   }
+        at C:\Users\lenovo\Desktop\cs competition\.worktrees\pr9-11-integration\frontend\e2e\security-ui.gate.ts:86:25
+
+    Error Context: ..\.superpowers\pr9-11-docker-20261022-run2\gate-browser\security-ui.gate.ts-403-an-d2791-nial-without-server-details-security-ui-projection\error-context.md
+
+  2) [security-ui-projection] › e2e\security-ui.gate.ts:92:1 › error page hides sensitive service internals 
+
+    Error: expect(locator).toContainText(expected) failed
+
+    Locator: getByRole('alert').first()
+    Expected substring: "服务暂不可用"
+    Received string:    "无法访问模型配置请返回可访问的课程，或联系课程教师确认权限。请求编号：req-ui-synthetic重试读取配置"
+    Timeout: 5000ms
+
+    Call log:
+      - Expect "toContainText" getByRole('alert').first() with timeout 5000ms
+      - waiting for getByRole('alert').first()
+        14 × locator resolved to <div role="alert" class="request-state is-denied">…</div>
+           - unexpected value "无法访问模型配置请返回可访问的课程，或联系课程教师确认权限。请求编号：req-ui-synthetic重试读取配置"
+
+
+       95 |   await page.goto("/");
+       96 |   const alert = page.getByRole("alert").first();
+    >  97 |   await expect(alert).toContainText("服务暂不可用");
+          |                       ^
+       98 |   await expect(alert).not.toContainText("PRIVATE_SERVER_DETAIL");
+       99 |   await expect(alert).not.toContainText("credential");
+      100 | });
+        at C:\Users\lenovo\Desktop\cs competition\.worktrees\pr9-11-integration\frontend\e2e\security-ui.gate.ts:97:23
+
+    Error Context: ..\.superpowers\pr9-11-docker-20261022-run2\gate-browser\security-ui.gate.ts-error--efeed-sensitive-service-internals-security-ui-projection\error-context.md
+
+  2 failed
+    [security-ui-projection] › e2e\security-ui.gate.ts:79:1 › 403 and 404 render the same public denial without server details 
+    [security-ui-projection] › e2e\security-ui.gate.ts:92:1 › error page hides sensitive service internals 
+  8 passed (31.6s)

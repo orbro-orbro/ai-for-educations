@@ -1,0 +1,20 @@
+{
+  "synthetic_only": true,
+  "read_only_transaction": true,
+  "compiler_failure_to_success": true,
+  "unique_retry_association": true,
+  "hint_levels": [
+    1,
+    2
+  ],
+  "mock_understanding_checks": 2,
+  "deleted_versions": 2,
+  "proposal_statuses": [
+    "accepted",
+    "rejected"
+  ],
+  "source_context_cleared": true,
+  "tombstone_present": true,
+  "browser_same_query_absent": true,
+  "external_physical_erasure": "not_verified; external adapters are not implemented"
+}

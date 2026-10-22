@@ -1,0 +1,9 @@
+{
+  "npm_config_offline": true,
+  "npm_config_audit": false,
+  "lockfile_unchanged": true,
+  "reason": "Official audit endpoint timed out. Exact lockfile install used local cache; audit not claimed passed.",
+  "raw_evidence_path": "C:\\Users\\lenovo\\Desktop\\cs competition\\.worktrees\\pr9-11-integration\\.superpowers\\pr9-11-docker-20261022-final",
+  "archive_scope": "Key logs, command records, XML/JSON and synthetic demo screenshots; transient pytest directories remain only in raw evidence.",
+  "preserve_bytes": "Local .gitattributes disables newline conversion and textual diffs for generated evidence; original bytes and SHA256 are retained."
+}

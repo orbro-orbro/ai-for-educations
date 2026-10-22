@@ -1,0 +1,23 @@
+{
+  "name": "runtime-openapi",
+  "started_utc": "2026-10-22T03:10:21.1743713Z",
+  "finished_utc": "2026-10-22T03:10:55.5804651Z",
+  "head": "59e22c0105896d884bc60cb32661836d3f1ed453",
+  "working_tree": [],
+  "cwd": "C:\\Users\\lenovo\\Desktop\\cs competition\\.worktrees\\pr9-11-integration\\backend",
+  "executable": "C:/Users/lenovo/Desktop/cs competition/.venv/Scripts/python.exe",
+  "arguments": [
+    "-B",
+    "-m",
+    "pytest",
+    "tests/contracts/test_wave3_runtime_openapi.py",
+    "-q",
+    "-p",
+    "no:cacheprovider",
+    "--basetemp=C:\\Users\\lenovo\\Desktop\\cs competition\\.worktrees\\pr9-11-integration\\.superpowers\\pr9-11-docker-20261022-final/openapi-temp"
+  ],
+  "exit_code": 0,
+  "log": "output.log",
+  "sha256": "c948a953c6c1d1564021525085cfae779f6402241a2c1aee21325da742f70149",
+  "artifacts": []
+}

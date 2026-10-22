@@ -1,0 +1,19 @@
+{
+  "name": "demo-idempotent-restart",
+  "started_utc": "2026-10-22T03:01:23.8717700Z",
+  "finished_utc": "2026-10-22T03:01:31.6560874Z",
+  "head": "59e22c0105896d884bc60cb32661836d3f1ed453",
+  "working_tree": [],
+  "cwd": "C:\\Users\\lenovo\\Desktop\\cs competition\\.worktrees\\pr9-11-integration",
+  "executable": "pwsh",
+  "arguments": [
+    "-NoProfile",
+    "-File",
+    "C:\\Users\\lenovo\\Desktop\\cs competition\\.worktrees\\pr9-11-integration\\scripts/start-delivery.ps1",
+    "-NoBuild"
+  ],
+  "exit_code": 0,
+  "log": "output.log",
+  "sha256": "e327b7b9890be1c3691c84f4381fb84d8fbcb95188025e52c70954253d866b89",
+  "artifacts": []
+}

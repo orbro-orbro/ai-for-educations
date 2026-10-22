@@ -1,0 +1,17 @@
+{
+  "name": "default-browser",
+  "started_utc": "2026-10-22T03:11:04.2826526Z",
+  "finished_utc": "2026-10-22T03:11:15.7528285Z",
+  "head": "59e22c0105896d884bc60cb32661836d3f1ed453",
+  "working_tree": [],
+  "cwd": "C:\\Users\\lenovo\\Desktop\\cs competition\\.worktrees\\pr9-11-integration\\frontend",
+  "executable": "npx.cmd",
+  "arguments": [
+    "playwright",
+    "test"
+  ],
+  "exit_code": 0,
+  "log": "output.log",
+  "sha256": "e30ef32432f093bdfe82b560ff77e91c1106d389d9cf4d5033fe1669466d375a",
+  "artifacts": []
+}

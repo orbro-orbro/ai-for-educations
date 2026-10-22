@@ -1,0 +1,18 @@
+{
+  "name": "gate-readonly-sql",
+  "started_utc": "2026-10-22T03:11:39.6445378Z",
+  "finished_utc": "2026-10-22T03:11:42.6892591Z",
+  "head": "59e22c0105896d884bc60cb32661836d3f1ed453",
+  "working_tree": [],
+  "cwd": "C:\\Users\\lenovo\\Desktop\\cs competition\\.worktrees\\pr9-11-integration\\backend",
+  "executable": "C:/Users/lenovo/Desktop/cs competition/.venv/Scripts/python.exe",
+  "arguments": [
+    "-B",
+    "-m",
+    "tests.integration.wave3_browser_sql_probe"
+  ],
+  "exit_code": 0,
+  "log": "output.log",
+  "sha256": "dfab051027139e4084dde657c53626efbaa3b3a4f383747fce4a644af2130b1e",
+  "artifacts": []
+}

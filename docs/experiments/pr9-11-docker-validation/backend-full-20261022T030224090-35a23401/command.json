@@ -1,0 +1,33 @@
+{
+  "name": "backend-full",
+  "started_utc": "2026-10-22T03:02:24.0944469Z",
+  "finished_utc": "2026-10-22T03:10:21.1143050Z",
+  "head": "59e22c0105896d884bc60cb32661836d3f1ed453",
+  "working_tree": [],
+  "cwd": "C:\\Users\\lenovo\\Desktop\\cs competition\\.worktrees\\pr9-11-integration\\backend",
+  "executable": "C:/Users/lenovo/Desktop/cs competition/.venv/Scripts/python.exe",
+  "arguments": [
+    "-B",
+    "-m",
+    "pytest",
+    "tests",
+    "-q",
+    "-p",
+    "no:cacheprovider",
+    "-o",
+    "junit_family=legacy",
+    "--basetemp=C:\\Users\\lenovo\\Desktop\\cs competition\\.worktrees\\pr9-11-integration\\.superpowers\\pr9-11-docker-20261022-final/backend-temp",
+    "--junitxml=C:\\Users\\lenovo\\Desktop\\cs competition\\.worktrees\\pr9-11-integration\\.superpowers\\pr9-11-docker-20261022-final/backend.xml"
+  ],
+  "exit_code": 0,
+  "log": "output.log",
+  "sha256": "0b47105da411e91dac7b850e368ecdc1c14ef5c1b01d71d8880eaf912a08770d",
+  "artifacts": [
+    {
+      "path": "C:\\Users\\lenovo\\Desktop\\cs competition\\.worktrees\\pr9-11-integration\\.superpowers\\pr9-11-docker-20261022-final\\backend.xml",
+      "sha256": "460fb0aa18c8ce6c2b378ca1f9cd489afb2059db02a2e6afe818903d06510b2a",
+      "modified_utc": "2026-10-22T03:10:18.4438390Z",
+      "length": 373006
+    }
+  ]
+}

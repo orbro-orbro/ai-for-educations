@@ -1,0 +1,19 @@
+{
+  "name": "gate-browser",
+  "started_utc": "2026-10-22T03:11:15.8107443Z",
+  "finished_utc": "2026-10-22T03:11:39.6000989Z",
+  "head": "59e22c0105896d884bc60cb32661836d3f1ed453",
+  "working_tree": [],
+  "cwd": "C:\\Users\\lenovo\\Desktop\\cs competition\\.worktrees\\pr9-11-integration\\frontend",
+  "executable": "npx.cmd",
+  "arguments": [
+    "playwright",
+    "test",
+    "--config",
+    "playwright.gate.config.ts"
+  ],
+  "exit_code": 0,
+  "log": "output.log",
+  "sha256": "26cf7513b89cdfa4e8e59dddd8aaa82796fc44e7ac5afa6c8e149c07a3c39fae",
+  "artifacts": []
+}

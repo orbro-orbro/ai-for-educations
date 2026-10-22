@@ -1,0 +1,29 @@
+{
+  "name": "runner-worker-test-build",
+  "started_utc": "2026-10-22T03:11:44.2270227Z",
+  "finished_utc": "2026-10-22T03:11:50.6013962Z",
+  "head": "59e22c0105896d884bc60cb32661836d3f1ed453",
+  "working_tree": [],
+  "cwd": "C:\\Users\\lenovo\\Desktop\\cs competition\\.worktrees\\pr9-11-integration",
+  "executable": "docker",
+  "arguments": [
+    "build",
+    "--pull=false",
+    "--build-arg",
+    "BASE_IMAGE=knowbound-wave4-test-sandbox:task11",
+    "-t",
+    "knowbound-wave4-worker-tests:task11",
+    "C:\\Users\\lenovo\\Desktop\\cs competition\\.worktrees\\pr9-11-integration\\.superpowers\\sdd\\2026-10-12-wave4-task11-delivery\\test-images-321be74e0f9a445c823d5ba7bc0f1320"
+  ],
+  "exit_code": 0,
+  "log": "output.log",
+  "sha256": "8832ca908729293815a206b7b0cdc5dc00811702fd90a98e83376ecb112a88c7",
+  "artifacts": [
+    {
+      "path": "C:\\Users\\lenovo\\Desktop\\cs competition\\.worktrees\\pr9-11-integration\\.superpowers\\pr9-11-docker-20261022-final\\runner-worker-base.json",
+      "sha256": "c49025dd76dd2dd25c5e0d263604490d3d7841fd4e699bb3eb68886d5bc3480c",
+      "modified_utc": "2026-10-22T03:11:44.2028772Z",
+      "length": 229
+    }
+  ]
+}

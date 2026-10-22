@@ -1,0 +1,288 @@
+Fresh synthetic volume selected: knowbound-wave4-demo_postgres_task11-042eb6ad8aa44a8d918a25c90268638d
+ Image knowbound-wave4-demo-sandbox:task11 Building 
+ Image knowbound-wave4-demo-api:task11 Building 
+ Image knowbound-wave4-demo-web:task11 Building 
+ Image knowbound-wave4-demo-controller:task11 Building 
+#1 [internal] load local bake definitions
+#1 reading from stdin 2.51kB 0.0s done
+#1 DONE 0.0s
+
+#2 [web internal] load build definition from Dockerfile
+#2 transferring dockerfile: 568B done
+#2 DONE 0.1s
+
+#3 [runner-controller internal] load build definition from controller.Dockerfile
+#3 transferring dockerfile: 931B 0.0s done
+#3 DONE 0.1s
+
+#4 [runner-sandbox internal] load build definition from Dockerfile
+#4 transferring dockerfile: 1.90kB 0.0s done
+#4 DONE 0.1s
+
+#5 [api internal] load build definition from Dockerfile
+#5 transferring dockerfile: 949B done
+#5 DONE 0.1s
+
+#6 [runner-sandbox internal] load metadata for mcr.microsoft.com/devcontainers/python:1-3.12-bookworm@sha256:7876580dc67fd460fd962f004cbeb480027e9bbc0657096f1087db11f9eaff39
+#6 ...
+
+#7 [web internal] load metadata for docker.io/library/node:22-bookworm-slim@sha256:43ac6c60b8f89723f746e8a92ce91abd5017e627ce1ddfe4238355d3a30b772c
+#7 DONE 0.1s
+
+#8 [web internal] load .dockerignore
+#8 transferring context: 97B done
+#8 DONE 0.0s
+
+#9 [web internal] load build context
+#9 DONE 0.0s
+
+#6 [api internal] load metadata for mcr.microsoft.com/devcontainers/python:1-3.12-bookworm@sha256:7876580dc67fd460fd962f004cbeb480027e9bbc0657096f1087db11f9eaff39
+#6 ...
+
+#10 [web 1/6] FROM docker.io/library/node:22-bookworm-slim@sha256:43ac6c60b8f89723f746e8a92ce91abd5017e627ce1ddfe4238355d3a30b772c
+#10 resolve docker.io/library/node:22-bookworm-slim@sha256:43ac6c60b8f89723f746e8a92ce91abd5017e627ce1ddfe4238355d3a30b772c 0.0s done
+#10 DONE 0.0s
+
+#9 [web internal] load build context
+#9 transferring context: 320.55kB 0.0s done
+#9 DONE 0.1s
+
+#11 [web 2/6] WORKDIR /app
+#11 CACHED
+
+#12 [web 3/6] COPY package.json package-lock.json ./
+#12 CACHED
+
+#13 [web 4/6] RUN npm ci
+#13 CACHED
+
+#14 [web 5/6] COPY . .
+#14 DONE 0.1s
+
+#15 [web 6/6] RUN npm run build
+#15 0.605 
+#15 0.605 > knowbound-web@0.1.0 build
+#15 0.605 > tsc -b && vite build
+#15 0.605 
+#15 1.074 vite v8.3.1 building client environment for production...
+#15 ...
+
+#6 [runner-controller internal] load metadata for mcr.microsoft.com/devcontainers/python:1-3.12-bookworm@sha256:7876580dc67fd460fd962f004cbeb480027e9bbc0657096f1087db11f9eaff39
+#6 DONE 1.5s
+
+#15 [web 6/6] RUN npm run build
+#15 1.085 transforming...
+#15 1.148 ✓ 31 modules transformed.
+#15 ...
+
+#16 [runner-sandbox internal] load .dockerignore
+#16 transferring context: 97B done
+#16 DONE 0.0s
+
+#17 [api internal] load .dockerignore
+#17 transferring context: 153B done
+#17 DONE 0.0s
+
+#18 [runner-controller 1/8] FROM mcr.microsoft.com/devcontainers/python:1-3.12-bookworm@sha256:7876580dc67fd460fd962f004cbeb480027e9bbc0657096f1087db11f9eaff39
+#18 resolve mcr.microsoft.com/devcontainers/python:1-3.12-bookworm@sha256:7876580dc67fd460fd962f004cbeb480027e9bbc0657096f1087db11f9eaff39 0.0s done
+#18 DONE 0.0s
+
+#19 [runner-sandbox internal] load build context
+#19 transferring context: 502B done
+#19 DONE 0.0s
+
+#20 [runner-controller internal] load build context
+#20 transferring context: 669B done
+#20 DONE 0.1s
+
+#15 [web 6/6] RUN npm run build
+#15 1.209 rendering chunks...
+#15 1.252 computing gzip size...
+#15 1.258 dist/index.html                   0.42 kB │ gzip:  0.31 kB
+#15 1.258 dist/assets/index-BXRugmVW.css   15.92 kB │ gzip:  4.14 kB
+#15 1.258 dist/assets/index-DhOM2zFO.js   274.12 kB │ gzip: 83.80 kB
+#15 1.258 
+#15 1.259 ✓ built in 185ms
+#15 DONE 1.3s
+
+#21 [api internal] load build context
+#21 transferring context: 10.48kB 0.0s done
+#21 DONE 0.1s
+
+#22 [runner-sandbox stage-1 3/9] COPY --from=sdk /opt/cangjie /opt/cangjie
+#22 CACHED
+
+#23 [runner-sandbox stage-1 7/9] COPY __init__.py /app/runner/__init__.py
+#23 CACHED
+
+#24 [runner-sandbox stage-1 2/9] RUN groupadd --gid 10001 runner     && useradd --uid 10001 --gid runner --no-create-home --shell /usr/sbin/nologin runner     && mkdir -p /app /work     && chown runner:runner /work
+#24 CACHED
+
+#25 [runner-sandbox stage-1 4/9] RUN chmod --recursive a+rX /opt/cangjie     && cjc -v     && cjpm -v
+#25 CACHED
+
+#26 [runner-sandbox stage-1 5/9] COPY requirements.lock /tmp/requirements.lock
+#26 CACHED
+
+#27 [runner-sandbox stage-1 6/9] RUN pip install --no-cache-dir --no-deps --only-binary=:all: --require-hashes --requirement /tmp/requirements.lock     && pip check     && rm /tmp/requirements.lock
+#27 CACHED
+
+#28 [runner-sandbox stage-1 8/9] COPY worker /app/runner/worker
+#28 CACHED
+
+#29 [runner-sandbox sdk 2/2] RUN curl --fail --location --retry 3 --output /tmp/cangjie-sdk.tar.gz "https://cangjie-lang.cn/v1/files/auth/downLoad?nsId=142267&fileName=cangjie-sdk-linux-x64-1.2.0.tar.gz&objectKey=6ab1e26eece1f87ff5befa73"     && echo "8c5fd944cd9cc51ee63d4a240e3ecc4f540345dae1468e8b47c927ecf2ba998f  /tmp/cangjie-sdk.tar.gz" | sha256sum --check --strict     && mkdir -p /opt/cangjie     && tar --extract --gzip --file /tmp/cangjie-sdk.tar.gz --directory /opt/cangjie --strip-components=1     && rm /tmp/cangjie-sdk.tar.gz
+#29 CACHED
+
+#30 [runner-sandbox stage-1 9/9] WORKDIR /work
+#30 CACHED
+
+#31 [api 2/5] RUN groupadd --gid 10003 api     && useradd --uid 10003 --gid api --no-create-home --shell /usr/sbin/nologin api     && mkdir -p /app /var/lib/knowbound     && chown api:api /app /var/lib/knowbound
+#31 CACHED
+
+#32 [api 4/5] COPY . /app
+#32 CACHED
+
+#33 [api 3/5] WORKDIR /app
+#33 CACHED
+
+#34 [api 5/5] RUN pip install --no-cache-dir --no-deps --only-binary=:all: --require-hashes -r requirements.lock     && pip install --no-cache-dir --no-deps --no-build-isolation .     && pip check
+#34 CACHED
+
+#35 [runner-controller 2/8] RUN groupadd --gid 10002 controller     && useradd --uid 10002 --gid controller --no-create-home --shell /usr/sbin/nologin controller
+#35 CACHED
+
+#36 [runner-controller 3/8] COPY controller-requirements.lock /tmp/requirements.lock
+#36 CACHED
+
+#37 [runner-controller 7/8] COPY worker /app/runner/worker
+#37 CACHED
+
+#38 [runner-controller 6/8] COPY controller /app/runner/controller
+#38 CACHED
+
+#39 [runner-controller 4/8] RUN pip install --no-cache-dir --no-deps --only-binary=:all: --require-hashes --requirement /tmp/requirements.lock     && pip check     && rm /tmp/requirements.lock
+#39 CACHED
+
+#40 [runner-controller 5/8] COPY __init__.py /app/runner/__init__.py
+#40 CACHED
+
+#41 [runner-controller 8/8] WORKDIR /app
+#41 CACHED
+
+#42 [runner-sandbox] exporting to image
+#42 exporting layers done
+#42 exporting manifest sha256:87ef37c6b5f0d5be350fa5909a2758381aa05d9c85083dcd5c8fd3947115ca1e 0.0s done
+#42 exporting config sha256:3b875f34976ad1cc29d14aca4c0a91e7cf307736b8123c2f32ffa384e1e3e63e 0.0s done
+#42 exporting attestation manifest sha256:ce7d25f2e4c5517360a5d9e54e99f9dfd4f9131ab8ed8b044bcb5bddaff3d98b
+#42 exporting attestation manifest sha256:ce7d25f2e4c5517360a5d9e54e99f9dfd4f9131ab8ed8b044bcb5bddaff3d98b 0.1s done
+#42 exporting manifest list sha256:35be0e2f8fe96234446674e54d2837212e73695e2eee482140822132c8031b3b
+#42 exporting manifest list sha256:35be0e2f8fe96234446674e54d2837212e73695e2eee482140822132c8031b3b 0.1s done
+#42 naming to docker.io/library/knowbound-wave4-demo-sandbox:task11
+#42 naming to docker.io/library/knowbound-wave4-demo-sandbox:task11 0.0s done
+#42 unpacking to docker.io/library/knowbound-wave4-demo-sandbox:task11 0.1s done
+#42 DONE 0.6s
+
+#43 [api] exporting to image
+#43 exporting layers done
+#43 exporting manifest sha256:ee83542d8ef05b9675167084ee6ed63824dafa539d3452c07e73ba9f4900ad76 0.0s done
+#43 exporting config sha256:586e303ae07247b02751f51c397509426f4bb0e5b71e273aee9dbf027d67c2e9 0.0s done
+#43 exporting attestation manifest sha256:8fb475a45d648d3a6f9e0ca643d528bcff771025cc06b364c053eb3cba3578b0 0.2s done
+#43 exporting manifest list sha256:214511ebd227ca3f0e8a669a447d9e4bdbbda9b38609dc5ff17f39d70793c5d4 0.1s done
+#43 naming to docker.io/library/knowbound-wave4-demo-api:task11 0.0s done
+#43 unpacking to docker.io/library/knowbound-wave4-demo-api:task11 0.1s done
+#43 DONE 0.7s
+
+#44 [runner-controller] exporting to image
+#44 exporting layers done
+#44 exporting manifest sha256:d1e1727c06da417c75277e3101ab6894344358a0dd73f9567de48cd4e317c9ca 0.0s done
+#44 exporting config sha256:ffa9965e4989eabbc9c1cb76777384074512e19c9eb853e2d56b270ad7aff524 0.1s done
+#44 exporting attestation manifest sha256:2777d4a8ed2c34810a46c9fe5af4e15a104bba5bf15f01789a9c471e6f820d45 0.2s done
+#44 exporting manifest list sha256:1d59b21566b1b2bac54d7536f7f832eee845e4ff886eb74846491178744e0aa0 0.1s done
+#44 naming to docker.io/library/knowbound-wave4-demo-controller:task11 0.0s done
+#44 unpacking to docker.io/library/knowbound-wave4-demo-controller:task11 0.1s done
+#44 DONE 0.7s
+
+#45 [web] exporting to image
+#45 exporting layers 0.9s done
+#45 exporting manifest sha256:d491c76786b32b868b3d1b758862b87015a5d2dd9acb41e3cc99ba4f08924452 0.1s done
+#45 exporting config sha256:024f9c3ac59ac5887115f0e2297f6f61f20fdbd1c897afc0b65e6b3eb795fb1a
+#45 exporting config sha256:024f9c3ac59ac5887115f0e2297f6f61f20fdbd1c897afc0b65e6b3eb795fb1a 0.0s done
+#45 exporting attestation manifest sha256:72aa937d4ff5e14ae12d0f6b375416ef6d7f28a12a71bf5c489f93ea8697b7e2
+#45 exporting attestation manifest sha256:72aa937d4ff5e14ae12d0f6b375416ef6d7f28a12a71bf5c489f93ea8697b7e2 0.1s done
+#45 exporting manifest list sha256:789151fd6627d631d7fdf83b4fc684047d35f7b2d887365aea60a846fcf72173 0.1s done
+#45 naming to docker.io/library/knowbound-wave4-demo-web:task11
+#45 naming to docker.io/library/knowbound-wave4-demo-web:task11 0.0s done
+#45 unpacking to docker.io/library/knowbound-wave4-demo-web:task11
+#45 unpacking to docker.io/library/knowbound-wave4-demo-web:task11 0.1s done
+#45 DONE 1.4s
+
+#46 [api] resolving provenance for metadata file
+#46 DONE 0.1s
+
+#47 [runner-sandbox] resolving provenance for metadata file
+#47 DONE 0.2s
+
+#48 [runner-controller] resolving provenance for metadata file
+#48 DONE 0.2s
+
+#49 [web] resolving provenance for metadata file
+#49 DONE 0.0s
+ Image knowbound-wave4-demo-api:task11 Built 
+ Image knowbound-wave4-demo-controller:task11 Built 
+ Image knowbound-wave4-demo-sandbox:task11 Built 
+ Image knowbound-wave4-demo-web:task11 Built 
+time="2026-10-22T11:01:02+08:00" level=warning msg="volume \"knowbound-wave4-demo_postgres_task11-108d6c70e39d4187a453af0a576a8900\" carries the compose label \"postgres-data\" but does not match the compose file (using \"knowbound-wave4-demo_postgres-data\"); it is left untouched — remove it manually if it is no longer needed"
+time="2026-10-22T11:01:02+08:00" level=warning msg="volume \"knowbound-wave4-demo_postgres_task11-1f917e75c2b9410186343e799ad228ee\" carries the compose label \"postgres-data\" but does not match the compose file (using \"knowbound-wave4-demo_postgres-data\"); it is left untouched — remove it manually if it is no longer needed"
+time="2026-10-22T11:01:02+08:00" level=warning msg="volume \"knowbound-wave4-demo_postgres_task11-207673fe0ddf482eb4978e92617aa02f\" carries the compose label \"postgres-data\" but does not match the compose file (using \"knowbound-wave4-demo_postgres-data\"); it is left untouched — remove it manually if it is no longer needed"
+time="2026-10-22T11:01:02+08:00" level=warning msg="volume \"knowbound-wave4-demo_postgres_task11-26fbccdb97cf449f97890fccf1ac7290\" carries the compose label \"postgres-data\" but does not match the compose file (using \"knowbound-wave4-demo_postgres-data\"); it is left untouched — remove it manually if it is no longer needed"
+time="2026-10-22T11:01:02+08:00" level=warning msg="volume \"knowbound-wave4-demo_postgres_task11-378e2446599f4103bf705e7882125571\" carries the compose label \"postgres-data\" but does not match the compose file (using \"knowbound-wave4-demo_postgres-data\"); it is left untouched — remove it manually if it is no longer needed"
+time="2026-10-22T11:01:02+08:00" level=warning msg="volume \"knowbound-wave4-demo_postgres_task11-3bd1734efe6c4d8090ded4eb37dde0d1\" carries the compose label \"postgres-data\" but does not match the compose file (using \"knowbound-wave4-demo_postgres-data\"); it is left untouched — remove it manually if it is no longer needed"
+time="2026-10-22T11:01:02+08:00" level=warning msg="volume \"knowbound-wave4-demo_postgres_task11-4adf4944e3a64268bb614b35d4c1c095\" carries the compose label \"postgres-data\" but does not match the compose file (using \"knowbound-wave4-demo_postgres-data\"); it is left untouched — remove it manually if it is no longer needed"
+time="2026-10-22T11:01:02+08:00" level=warning msg="volume \"knowbound-wave4-demo_postgres_task11-5923bc5e618749fbb36152b47fc7573c\" carries the compose label \"postgres-data\" but does not match the compose file (using \"knowbound-wave4-demo_postgres-data\"); it is left untouched — remove it manually if it is no longer needed"
+time="2026-10-22T11:01:02+08:00" level=warning msg="volume \"knowbound-wave4-demo_postgres_task11-7af7fafd3f944187aa367c79cc51d37b\" carries the compose label \"postgres-data\" but does not match the compose file (using \"knowbound-wave4-demo_postgres-data\"); it is left untouched — remove it manually if it is no longer needed"
+time="2026-10-22T11:01:02+08:00" level=warning msg="volume \"knowbound-wave4-demo_postgres_task11-c0f084d002764d8096e754fe194817d7\" carries the compose label \"postgres-data\" but does not match the compose file (using \"knowbound-wave4-demo_postgres-data\"); it is left untouched — remove it manually if it is no longer needed"
+time="2026-10-22T11:01:02+08:00" level=warning msg="volume \"knowbound-wave4-demo_postgres_task11-c7d2c316f3f24244b5382a1b0469ebd7\" carries the compose label \"postgres-data\" but does not match the compose file (using \"knowbound-wave4-demo_postgres-data\"); it is left untouched — remove it manually if it is no longer needed"
+ Volume knowbound-wave4-demo_postgres_task11-042eb6ad8aa44a8d918a25c90268638d Creating 
+ Container knowbound-wave4-demo-runner-sandbox-1 Recreate 
+ Volume knowbound-wave4-demo_postgres_task11-042eb6ad8aa44a8d918a25c90268638d Creating 
+ Volume knowbound-wave4-demo_postgres_task11-042eb6ad8aa44a8d918a25c90268638d Created 
+ Volume knowbound-wave4-demo_postgres_task11-042eb6ad8aa44a8d918a25c90268638d Created 
+ Container knowbound-wave4-demo-postgres-1 Recreate 
+ Container knowbound-wave4-demo-runner-sandbox-1 Recreated 
+ Container knowbound-wave4-demo-runner-controller-1 Recreate 
+ Container knowbound-wave4-demo-postgres-1 Recreated 
+ Container knowbound-wave4-demo-runner-controller-1 Recreated 
+ Container knowbound-wave4-demo-api-1 Recreate 
+ Container knowbound-wave4-demo-api-1 Recreated 
+ Container knowbound-wave4-demo-web-1 Recreate 
+ Container knowbound-wave4-demo-web-1 Recreated 
+ Container knowbound-wave4-demo-runner-sandbox-1 Starting 
+ Container knowbound-wave4-demo-postgres-1 Starting 
+ Container knowbound-wave4-demo-runner-sandbox-1 Started 
+ Container knowbound-wave4-demo-runner-sandbox-1 Waiting 
+ Container knowbound-wave4-demo-postgres-1 Started 
+ Container knowbound-wave4-demo-runner-sandbox-1 Exited 
+ Container knowbound-wave4-demo-runner-controller-1 Starting 
+ Container knowbound-wave4-demo-runner-controller-1 Started 
+ Container knowbound-wave4-demo-runner-controller-1 Waiting 
+ Container knowbound-wave4-demo-postgres-1 Waiting 
+ Container knowbound-wave4-demo-postgres-1 Healthy 
+ Container knowbound-wave4-demo-runner-controller-1 Healthy 
+ Container knowbound-wave4-demo-api-1 Starting 
+ Container knowbound-wave4-demo-api-1 Started 
+ Container knowbound-wave4-demo-api-1 Waiting 
+ Container knowbound-wave4-demo-api-1 Healthy 
+ Container knowbound-wave4-demo-web-1 Starting 
+ Container knowbound-wave4-demo-web-1 Started 
+ Container knowbound-wave4-demo-postgres-1 Waiting 
+ Container knowbound-wave4-demo-api-1 Waiting 
+ Container knowbound-wave4-demo-web-1 Waiting 
+ Container knowbound-wave4-demo-runner-controller-1 Waiting 
+ Container knowbound-wave4-demo-runner-sandbox-1 Waiting 
+ Container knowbound-wave4-demo-runner-controller-1 Healthy 
+ Container knowbound-wave4-demo-runner-sandbox-1 Exited 
+ Container knowbound-wave4-demo-api-1 Healthy 
+ Container knowbound-wave4-demo-postgres-1 Healthy 
+ Container knowbound-wave4-demo-web-1 Healthy 
+Synthetic demo ready: http://127.0.0.1:5209 ; API http://127.0.0.1:8208
+Actors: demo-teacher, demo-student-1 through demo-student-6. Password is in ignored .delivery/demo.env (DEMO_PASSWORD).

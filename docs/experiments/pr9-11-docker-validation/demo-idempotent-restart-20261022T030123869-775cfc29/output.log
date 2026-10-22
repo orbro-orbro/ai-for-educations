@@ -1,0 +1,38 @@
+time="2026-10-22T11:01:29+08:00" level=warning msg="volume \"knowbound-wave4-demo_postgres-data\" carries the compose label \"postgres-data\" but does not match the compose file (using \"knowbound-wave4-demo_postgres_task11-042eb6ad8aa44a8d918a25c90268638d\"); it is left untouched — remove it manually if it is no longer needed"
+time="2026-10-22T11:01:29+08:00" level=warning msg="volume \"knowbound-wave4-demo_postgres_task11-108d6c70e39d4187a453af0a576a8900\" carries the compose label \"postgres-data\" but does not match the compose file (using \"knowbound-wave4-demo_postgres_task11-042eb6ad8aa44a8d918a25c90268638d\"); it is left untouched — remove it manually if it is no longer needed"
+time="2026-10-22T11:01:29+08:00" level=warning msg="volume \"knowbound-wave4-demo_postgres_task11-1f917e75c2b9410186343e799ad228ee\" carries the compose label \"postgres-data\" but does not match the compose file (using \"knowbound-wave4-demo_postgres_task11-042eb6ad8aa44a8d918a25c90268638d\"); it is left untouched — remove it manually if it is no longer needed"
+time="2026-10-22T11:01:29+08:00" level=warning msg="volume \"knowbound-wave4-demo_postgres_task11-207673fe0ddf482eb4978e92617aa02f\" carries the compose label \"postgres-data\" but does not match the compose file (using \"knowbound-wave4-demo_postgres_task11-042eb6ad8aa44a8d918a25c90268638d\"); it is left untouched — remove it manually if it is no longer needed"
+time="2026-10-22T11:01:29+08:00" level=warning msg="volume \"knowbound-wave4-demo_postgres_task11-26fbccdb97cf449f97890fccf1ac7290\" carries the compose label \"postgres-data\" but does not match the compose file (using \"knowbound-wave4-demo_postgres_task11-042eb6ad8aa44a8d918a25c90268638d\"); it is left untouched — remove it manually if it is no longer needed"
+time="2026-10-22T11:01:29+08:00" level=warning msg="volume \"knowbound-wave4-demo_postgres_task11-378e2446599f4103bf705e7882125571\" carries the compose label \"postgres-data\" but does not match the compose file (using \"knowbound-wave4-demo_postgres_task11-042eb6ad8aa44a8d918a25c90268638d\"); it is left untouched — remove it manually if it is no longer needed"
+time="2026-10-22T11:01:29+08:00" level=warning msg="volume \"knowbound-wave4-demo_postgres_task11-3bd1734efe6c4d8090ded4eb37dde0d1\" carries the compose label \"postgres-data\" but does not match the compose file (using \"knowbound-wave4-demo_postgres_task11-042eb6ad8aa44a8d918a25c90268638d\"); it is left untouched — remove it manually if it is no longer needed"
+time="2026-10-22T11:01:29+08:00" level=warning msg="volume \"knowbound-wave4-demo_postgres_task11-4adf4944e3a64268bb614b35d4c1c095\" carries the compose label \"postgres-data\" but does not match the compose file (using \"knowbound-wave4-demo_postgres_task11-042eb6ad8aa44a8d918a25c90268638d\"); it is left untouched — remove it manually if it is no longer needed"
+time="2026-10-22T11:01:29+08:00" level=warning msg="volume \"knowbound-wave4-demo_postgres_task11-5923bc5e618749fbb36152b47fc7573c\" carries the compose label \"postgres-data\" but does not match the compose file (using \"knowbound-wave4-demo_postgres_task11-042eb6ad8aa44a8d918a25c90268638d\"); it is left untouched — remove it manually if it is no longer needed"
+time="2026-10-22T11:01:29+08:00" level=warning msg="volume \"knowbound-wave4-demo_postgres_task11-7af7fafd3f944187aa367c79cc51d37b\" carries the compose label \"postgres-data\" but does not match the compose file (using \"knowbound-wave4-demo_postgres_task11-042eb6ad8aa44a8d918a25c90268638d\"); it is left untouched — remove it manually if it is no longer needed"
+time="2026-10-22T11:01:29+08:00" level=warning msg="volume \"knowbound-wave4-demo_postgres_task11-c0f084d002764d8096e754fe194817d7\" carries the compose label \"postgres-data\" but does not match the compose file (using \"knowbound-wave4-demo_postgres_task11-042eb6ad8aa44a8d918a25c90268638d\"); it is left untouched — remove it manually if it is no longer needed"
+time="2026-10-22T11:01:29+08:00" level=warning msg="volume \"knowbound-wave4-demo_postgres_task11-c7d2c316f3f24244b5382a1b0469ebd7\" carries the compose label \"postgres-data\" but does not match the compose file (using \"knowbound-wave4-demo_postgres_task11-042eb6ad8aa44a8d918a25c90268638d\"); it is left untouched — remove it manually if it is no longer needed"
+ Container knowbound-wave4-demo-postgres-1 Running 
+ Container knowbound-wave4-demo-api-1 Running 
+ Container knowbound-wave4-demo-web-1 Running 
+ Container knowbound-wave4-demo-runner-controller-1 Running 
+ Container knowbound-wave4-demo-runner-sandbox-1 Starting 
+ Container knowbound-wave4-demo-runner-sandbox-1 Started 
+ Container knowbound-wave4-demo-runner-sandbox-1 Waiting 
+ Container knowbound-wave4-demo-runner-sandbox-1 Exited 
+ Container knowbound-wave4-demo-runner-controller-1 Waiting 
+ Container knowbound-wave4-demo-postgres-1 Waiting 
+ Container knowbound-wave4-demo-postgres-1 Healthy 
+ Container knowbound-wave4-demo-runner-controller-1 Healthy 
+ Container knowbound-wave4-demo-api-1 Waiting 
+ Container knowbound-wave4-demo-api-1 Healthy 
+ Container knowbound-wave4-demo-postgres-1 Waiting 
+ Container knowbound-wave4-demo-api-1 Waiting 
+ Container knowbound-wave4-demo-web-1 Waiting 
+ Container knowbound-wave4-demo-runner-controller-1 Waiting 
+ Container knowbound-wave4-demo-runner-sandbox-1 Waiting 
+ Container knowbound-wave4-demo-web-1 Healthy 
+ Container knowbound-wave4-demo-postgres-1 Healthy 
+ Container knowbound-wave4-demo-api-1 Healthy 
+ Container knowbound-wave4-demo-runner-sandbox-1 Exited 
+ Container knowbound-wave4-demo-runner-controller-1 Healthy 
+Synthetic demo ready: http://127.0.0.1:5209 ; API http://127.0.0.1:8208
+Actors: demo-teacher, demo-student-1 through demo-student-6. Password is in ignored .delivery/demo.env (DEMO_PASSWORD).
