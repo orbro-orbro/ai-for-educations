@@ -1,0 +1,18 @@
+
+> knowbound-web@0.1.0 test
+> vitest run
+
+
+ RUN  v5.0.3 C:/Users/lenovo/Desktop/cs competition/.worktrees/pr9-11-integration/frontend
+
+
+ Test Files  1 passed (1)
+      Tests  61 passed (61)
+   Start at  10:09:20
+   Duration  4.57s (tests 68%, environment 18%, transform 9%, setup 3%, import 2%)
+
+npm notice
+npm notice New major version of npm available! 11.12.1 -> 12.2.1
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.1
+npm notice To update run: npm install -g npm@12.2.1
+npm notice

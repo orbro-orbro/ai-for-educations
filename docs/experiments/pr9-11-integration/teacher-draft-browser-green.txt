@@ -1,0 +1,10 @@
+✔ a student can edit offline and restore a draft in a real browser (1408.665ms)
+✔ teacher entry serves the web and proxies authenticated API requests on one origin (196.6751ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 2
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 3050.8499

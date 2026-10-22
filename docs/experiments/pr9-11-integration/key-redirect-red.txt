@@ -1,0 +1,67 @@
+.................................................FF..................... [ 82%]
+.............FF                                                          [100%]
+================================== FAILURES ===================================
+_ test_blank_personal_key_cannot_be_redirected_to_another_endpoint[apply_personal] _
+
+action = 'apply_personal'
+
+    @pytest.mark.parametrize("action", ["apply_personal", "probe_personal"])
+    def test_blank_personal_key_cannot_be_redirected_to_another_endpoint(action):
+        service = _service()
+        service.apply_personal("student-1", _payload())
+>       with pytest.raises(ModelConfigurationError):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE ModelConfigurationError
+
+backend\tests\model_gateway\test_personal_settings.py:312: Failed
+_ test_blank_personal_key_cannot_be_redirected_to_another_endpoint[probe_personal] _
+
+action = 'probe_personal'
+
+    @pytest.mark.parametrize("action", ["apply_personal", "probe_personal"])
+    def test_blank_personal_key_cannot_be_redirected_to_another_endpoint(action):
+        service = _service()
+        service.apply_personal("student-1", _payload())
+>       with pytest.raises(ModelConfigurationError):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE ModelConfigurationError
+
+backend\tests\model_gateway\test_personal_settings.py:312: Failed
+____ test_blank_shared_key_cannot_be_redirected_to_another_endpoint[apply] ____
+
+action = 'apply'
+
+    @pytest.mark.parametrize("action", ["apply", "probe"])
+    def test_blank_shared_key_cannot_be_redirected_to_another_endpoint(action):
+        _, service = _service()
+        service.apply(_deepseek_payload())
+>       with pytest.raises(ModelConfigurationError):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE ModelConfigurationError
+
+backend\tests\model_gateway\test_runtime_settings.py:394: Failed
+____ test_blank_shared_key_cannot_be_redirected_to_another_endpoint[probe] ____
+
+action = 'probe'
+
+    @pytest.mark.parametrize("action", ["apply", "probe"])
+    def test_blank_shared_key_cannot_be_redirected_to_another_endpoint(action):
+        _, service = _service()
+        service.apply(_deepseek_payload())
+>       with pytest.raises(ModelConfigurationError):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE ModelConfigurationError
+
+backend\tests\model_gateway\test_runtime_settings.py:394: Failed
+============================== warnings summary ===============================
+..\..\.venv\Lib\site-packages\fastapi\testclient.py:1
+  C:\Users\lenovo\Desktop\cs competition\.venv\Lib\site-packages\fastapi\testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED backend\tests\model_gateway\test_personal_settings.py::test_blank_personal_key_cannot_be_redirected_to_another_endpoint[apply_personal]
+FAILED backend\tests\model_gateway\test_personal_settings.py::test_blank_personal_key_cannot_be_redirected_to_another_endpoint[probe_personal]
+FAILED backend\tests\model_gateway\test_runtime_settings.py::test_blank_shared_key_cannot_be_redirected_to_another_endpoint[apply]
+FAILED backend\tests\model_gateway\test_runtime_settings.py::test_blank_shared_key_cannot_be_redirected_to_another_endpoint[probe]
+4 failed, 83 passed, 1 warning in 5.44s

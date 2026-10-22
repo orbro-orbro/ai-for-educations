@@ -1,0 +1,15 @@
+{
+  "docker_engine": "unavailable",
+  "startup_error": "initializing Secrets Engine: engine.sock rename to engine.sock.stale failed: The file cannot be accessed by the system",
+  "action_taken": "Started Docker Desktop hidden; read engine status/log; no factory reset, socket deletion, volume deletion or WSL reset",
+  "affected": [
+    "Mock delivery cold start and 15-step real Runner/SQL rehearsal",
+    "dedicated PostgreSQL integration and migrations",
+    "container attack and isolated runner suites",
+    "gate browser suite backed by PostgreSQL/Runner"
+  ],
+  "git_refresh": "Initial fetch succeeded. End-of-work fetch failed with curl 28 connection reset; source PR states are rechecked via connector separately.",
+  "public_tunnel_started": false,
+  "whitelist_modified": false,
+  "paid_model_calls": 0
+}
