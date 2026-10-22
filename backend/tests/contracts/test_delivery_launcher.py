@@ -27,7 +27,7 @@ elif args and args[0]=='inspect': print(json.dumps({'com.docker.compose.project'
     # foreign-container refusal test before the intended Docker inspection.
     for key in ("RUNNER_ENDPOINT", "APP_ENV", "RUNNER_SANDBOX_IMAGE"):
         env.pop(key, None)
-    shell = shutil.which("pwsh")
+    shell = shutil.which("pwsh") or shutil.which("powershell")
     assert shell, "PowerShell is required for the delivery launcher acceptance test"
     result = subprocess.run([shell, "-NoProfile", "-File", str(root / "scripts/start-delivery.ps1")],
         env=env, text=True, encoding="utf-8", capture_output=True, timeout=30)
