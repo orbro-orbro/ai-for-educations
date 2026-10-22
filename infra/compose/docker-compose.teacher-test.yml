@@ -1,0 +1,10 @@
+# Explicit opt-in; use after the base and delivery Compose files.
+# Only the existing Web entry gets a same-origin API proxy. No new ports.
+services:
+  web:
+    build:
+      args:
+        VITE_API_BASE_URL: /api
+    environment:
+      KNOWBOUND_TEACHER_TEST: "1"
+      KNOWBOUND_API_PROXY_TARGET: http://api:8000

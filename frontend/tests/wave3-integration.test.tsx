@@ -87,7 +87,7 @@ describe("Wave 3 integration UI",()=>{
       if(u.pathname.startsWith("/me/"))return json([]);
       throw new Error("Unexpected request "+u.pathname);
     }));
-    render(<ExercisePage api={new ApiClient("http://localhost:8198",()=>"synthetic-token")}/>);
+    render(<ExercisePage ownerId="synthetic-student" api={new ApiClient("http://localhost:8198",()=>"synthetic-token")}/>);
     await waitFor(()=>expect(first).toBeDefined());
     expect(screen.getByText("正在准备课程与练习…")).toBeInTheDocument();
     fireEvent.change(screen.getByRole("combobox",{name:"课程"}),{target:{value:"course-b"}});
@@ -111,7 +111,7 @@ describe("Wave 3 integration UI",()=>{
       }
       throw new Error("Unexpected request "+u.pathname);
     }));
-    render(<ExercisePage api={new ApiClient("http://localhost:8198",()=>"synthetic-token")}/>);
+    render(<ExercisePage ownerId="synthetic-student" api={new ApiClient("http://localhost:8198",()=>"synthetic-token")}/>);
     await screen.findByRole("option",{name:"Exercise A"});
     fireEvent.click(screen.getByRole("button",{name:"提交并运行"}));
     await waitFor(()=>expect(submissions).toEqual(["exercise-a"]));
