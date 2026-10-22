@@ -1,0 +1,18 @@
+29.8.1 / 29.8.1
+Docker Compose version v5.5.1
+{"host_node":"v24.15.0"}
+11.12.1
+/knowbound-wave4-demo-postgres-1 image=sha256:ac08538c6f8b9904c33c8224c5e5706dbe760aca29db1d096972b4052c22a75d status=running health=healthy
+/knowbound-wave4-demo-api-1 image=sha256:214511ebd227ca3f0e8a669a447d9e4bdbbda9b38609dc5ff17f39d70793c5d4 status=running health=healthy
+/knowbound-wave4-demo-web-1 image=sha256:789151fd6627d631d7fdf83b4fc684047d35f7b2d887365aea60a846fcf72173 status=running health=healthy
+/knowbound-wave4-demo-runner-controller-1 image=sha256:1d59b21566b1b2bac54d7536f7f832eee845e4ff886eb74846491178744e0aa0 status=running health=healthy
+3.12.11 (main, Jul  1 2025, 05:29:09) [GCC 12.2.0]
+{'fastapi': '0.142.2', 'pydantic': '2.13.5', 'SQLAlchemy': '2.0.54', 'alembic': '1.20.0', 'psycopg': '3.3.6', 'uvicorn': '0.54.0'}
+v22.23.3
+10.9.9
+PostgreSQL 17.11 (Debian 17.11-1.pgdg12+2) on x86_64-pc-linux-gnu, compiled by gcc (Debian 12.2.0-14+deb12u1) 12.2.0, 64-bit
+vector|0.8.7|
+0007_teacher_analytics_reviews
+Cangjie Compiler: 1.2.0 (cjnative)
+Target: x86_64-unknown-linux-gnu
+Cangjie Project Manager: 1.2.0

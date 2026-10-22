@@ -1,0 +1,16 @@
+{
+  "name": "frontend-lock-install",
+  "started_utc": "2026-10-22T03:01:35.5538787Z",
+  "finished_utc": "2026-10-22T03:01:43.2392552Z",
+  "head": "59e22c0105896d884bc60cb32661836d3f1ed453",
+  "working_tree": [],
+  "cwd": "C:\\Users\\lenovo\\Desktop\\cs competition\\.worktrees\\pr9-11-integration\\frontend",
+  "executable": "npm.cmd",
+  "arguments": [
+    "ci"
+  ],
+  "exit_code": 0,
+  "log": "output.log",
+  "sha256": "4fe9799de7480ba333bc3bb5cbc9b62501e090e8d50921032b108822001a6243",
+  "artifacts": []
+}

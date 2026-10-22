@@ -1,0 +1,51 @@
+{
+  "status": "passed",
+  "stack": "actual deployed Docker Mock API",
+  "real_model_calls": 0,
+  "checks": [
+    {
+      "actor": "demo-teacher",
+      "method": "PUT",
+      "path": "/teacher/model-settings",
+      "status": 409
+    },
+    {
+      "actor": "demo-teacher",
+      "method": "POST",
+      "path": "/teacher/model-settings/probe",
+      "status": 409
+    },
+    {
+      "actor": "demo-teacher",
+      "method": "PUT",
+      "path": "/teacher/model-settings",
+      "status": 409
+    },
+    {
+      "actor": "demo-student-1",
+      "method": "PUT",
+      "path": "/model-settings",
+      "status": 409
+    },
+    {
+      "actor": "demo-student-1",
+      "method": "POST",
+      "path": "/model-settings/probe",
+      "status": 409
+    },
+    {
+      "actor": "demo-student-1",
+      "method": "PUT",
+      "path": "/model-settings",
+      "status": 409
+    },
+    {
+      "actor": "demo-student-1",
+      "method": "GET",
+      "path": "/teacher/model-settings",
+      "status": 404
+    }
+  ],
+  "cors_put": 200,
+  "head": "59e22c0105896d884bc60cb32661836d3f1ed453"
+}

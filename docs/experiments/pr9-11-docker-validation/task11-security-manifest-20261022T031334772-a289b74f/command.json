@@ -1,0 +1,32 @@
+{
+  "name": "task11-security-manifest",
+  "started_utc": "2026-10-22T03:13:34.7791437Z",
+  "finished_utc": "2026-10-22T03:13:35.3028243Z",
+  "head": "59e22c0105896d884bc60cb32661836d3f1ed453",
+  "working_tree": [],
+  "cwd": "C:\\Users\\lenovo\\Desktop\\cs competition\\.worktrees\\pr9-11-integration",
+  "executable": "C:/Users/lenovo/Desktop/cs competition/.venv/Scripts/python.exe",
+  "arguments": [
+    "-B",
+    "data/evaluation/map_delivery_execution.py",
+    "--report",
+    "C:\\Users\\lenovo\\Desktop\\cs competition\\.worktrees\\pr9-11-integration\\.superpowers\\pr9-11-docker-20261022-final/backend.xml",
+    "--command",
+    "C:\\Users\\lenovo\\Desktop\\cs competition\\.worktrees\\pr9-11-integration\\.superpowers\\pr9-11-docker-20261022-final\\backend-full-20261022T030224090-35a23401\\command.json",
+    "--head",
+    "59e22c0105896d884bc60cb32661836d3f1ed453",
+    "--output",
+    "C:\\Users\\lenovo\\Desktop\\cs competition\\.worktrees\\pr9-11-integration\\.superpowers\\pr9-11-docker-20261022-final/security-execution-manifest.json"
+  ],
+  "exit_code": 0,
+  "log": "output.log",
+  "sha256": "fcf67ed22467875fc291f48d4ce3ef021db78adaa0377b39e9bfb0e920f1f653",
+  "artifacts": [
+    {
+      "path": "C:\\Users\\lenovo\\Desktop\\cs competition\\.worktrees\\pr9-11-integration\\.superpowers\\pr9-11-docker-20261022-final\\security-execution-manifest.json",
+      "sha256": "c1ca77d1c8d72ce00b484fb1d702c46f256cc03889475ee6951b1fc2d1ae2a29",
+      "modified_utc": "2026-10-22T03:13:35.2792056Z",
+      "length": 199832
+    }
+  ]
+}

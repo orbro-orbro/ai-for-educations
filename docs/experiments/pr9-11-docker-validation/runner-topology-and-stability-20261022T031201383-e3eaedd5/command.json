@@ -1,0 +1,34 @@
+{
+  "name": "runner-topology-and-stability",
+  "started_utc": "2026-10-22T03:12:01.3882403Z",
+  "finished_utc": "2026-10-22T03:13:32.9772897Z",
+  "head": "59e22c0105896d884bc60cb32661836d3f1ed453",
+  "working_tree": [],
+  "cwd": "C:\\Users\\lenovo\\Desktop\\cs competition\\.worktrees\\pr9-11-integration",
+  "executable": "C:/Users/lenovo/Desktop/cs competition/.venv/Scripts/python.exe",
+  "arguments": [
+    "-B",
+    "-m",
+    "pytest",
+    "runner/tests/test_wave3_isolated_topology.py",
+    "runner/tests/test_wave4_stability.py",
+    "-q",
+    "-p",
+    "no:cacheprovider",
+    "-o",
+    "junit_family=legacy",
+    "--basetemp=C:\\Users\\lenovo\\Desktop\\cs competition\\.worktrees\\pr9-11-integration\\.superpowers\\pr9-11-docker-20261022-final/runner-temp",
+    "--junitxml=C:\\Users\\lenovo\\Desktop\\cs competition\\.worktrees\\pr9-11-integration\\.superpowers\\pr9-11-docker-20261022-final/runner.xml"
+  ],
+  "exit_code": 0,
+  "log": "output.log",
+  "sha256": "dbbca17b3a55ecf1ac92ff309313f83d6daa9718d21aa37fcdf5542686f2ad59",
+  "artifacts": [
+    {
+      "path": "C:\\Users\\lenovo\\Desktop\\cs competition\\.worktrees\\pr9-11-integration\\.superpowers\\pr9-11-docker-20261022-final\\runner.xml",
+      "sha256": "225d049bc164c9fb0fb769990b5fdaec0a8f5e54a9f590737eb20f3bc19e2e9d",
+      "modified_utc": "2026-10-22T03:13:32.8536787Z",
+      "length": 2185
+    }
+  ]
+}

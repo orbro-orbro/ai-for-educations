@@ -1,0 +1,19 @@
+{
+  "name": "delivery-browser-15-steps",
+  "started_utc": "2026-10-22T03:01:43.2858359Z",
+  "finished_utc": "2026-10-22T03:01:57.6828928Z",
+  "head": "59e22c0105896d884bc60cb32661836d3f1ed453",
+  "working_tree": [],
+  "cwd": "C:\\Users\\lenovo\\Desktop\\cs competition\\.worktrees\\pr9-11-integration\\frontend",
+  "executable": "npx.cmd",
+  "arguments": [
+    "playwright",
+    "test",
+    "--config",
+    "playwright.delivery.config.ts"
+  ],
+  "exit_code": 0,
+  "log": "output.log",
+  "sha256": "55e068df1bada1e13567873893a7caafc1e0c45f03b0bb45c3f8012892e6ea25",
+  "artifacts": []
+}

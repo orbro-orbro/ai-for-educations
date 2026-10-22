@@ -1,0 +1,242 @@
+{
+  "observations": {
+    "data_nature": "synthetic; deterministic Mock model; real SQL and isolated Runner",
+    "window_start": "2026-10-22T03:01:46.488Z",
+    "compiler_failure": {
+      "submission_id": "221fd58c-eef3-4662-aeb0-08dedb8d2b42",
+      "protocol_version": "2",
+      "status": "compile_failed",
+      "phase": "compile",
+      "retryable": false,
+      "exit_code": 1,
+      "signal": null,
+      "stdout": "",
+      "stderr": "{\n    \"Diags\":[\n            {\n                \"DiagKind\": \"sema_nonexhuastive_patterns\",\n                \"Severity\": \"error\",\n                \"WarnGroup\": \"none\",\n                \"DiagCategory\": \"sema\",\n                \"Message\": \"non-exhaustive patterns\",\n                \"Location\": {\n                    \"File\": \"main.cj\",\n                    \"Line\": 3,\n                    \"Column\": 12\n                },\n                \"MainHint\": {\n                    \"Content\": \"the selector is of type 'Enum-Choice'\",\n                    \"Range\": {\n                        \"Begin\": {\n                            \"File\": \"main.cj\",\n                            \"Line\": 3,\n                            \"Column\": 12\n                        },\n                        \"End\": {\n                            \"File\": \"main.cj\",\n                            \"Line\": 3,\n                            \"Column\": 18\n                        }\n                    }\n                },\n                \"OtherHints\": [],\n                \"Notes\": [\n                    {\n                        \"Message\": \"B is not covered\",\n                        \"MainHint\": null,\n                        \"OtherHints\": [],\n                        \"Help\": null\n                    }\n                ],\n                \"Helps\": []\n            }\n    ],\n    \"Num\":{\n        \"Errors\": 1,\n        \"PrintedErrors\": 1,\n        \"Warnings\": 0,\n        \"PrintedWarnings\": 0\n    }\n}\n",
+      "stdout_truncated": false,
+      "stderr_truncated": false,
+      "diagnostics": [
+        {
+          "severity": "error",
+          "message": "non-exhaustive patterns",
+          "code": "sema_nonexhuastive_patterns",
+          "file": "main.cj",
+          "start_line": 3,
+          "start_column": 12,
+          "end_line": 3,
+          "end_column": 18
+        }
+      ],
+      "command_summary": {
+        "compiler": "cjc",
+        "source_count": 1,
+        "entrypoint": "main.cj",
+        "output_kind": "executable"
+      },
+      "limits": {
+        "timeout_ms": 5000,
+        "max_output_chars": 65536,
+        "max_files": 32,
+        "max_source_bytes": 1048576,
+        "pids": 64,
+        "memory_bytes": 536870912,
+        "cpu_cores": 1
+      },
+      "toolchain": {
+        "cjc": "1.2.0",
+        "cjpm": "1.2.0",
+        "backend": "cjnative"
+      },
+      "created_at": "2026-10-22T03:01:49.053552Z",
+      "request_id": "201b84495e3a48eb809c4dcbf9aef92b",
+      "rule_matches": [
+        {
+          "misconception_id": "cj.synthetic.match-non-exhaustive",
+          "root_concept_id": "cj.pattern-match.exhaustiveness",
+          "related_concept_ids": [],
+          "diagnostic_indices": [
+            0
+          ],
+          "evidence_kind": "compiler_diagnostic",
+          "evidence_summary": "non-exhaustive patterns",
+          "source_references": [
+            "synthetic-demo:match-coverage"
+          ],
+          "match_strength": "strong"
+        }
+      ]
+    },
+    "original_submission_id": "221fd58c-eef3-4662-aeb0-08dedb8d2b42",
+    "diagnosis_id": "6b5fa211-f82c-4559-8cdf-a19101671411",
+    "compiler_success": {
+      "submission_id": "b925ee68-c2d8-4ae4-9754-3e6dffc63e7a",
+      "protocol_version": "2",
+      "status": "succeeded",
+      "phase": "run",
+      "retryable": false,
+      "exit_code": 0,
+      "signal": null,
+      "stdout": "2\n",
+      "stderr": "",
+      "stdout_truncated": false,
+      "stderr_truncated": false,
+      "diagnostics": [],
+      "command_summary": {
+        "compiler": "cjc",
+        "source_count": 1,
+        "entrypoint": "main.cj",
+        "output_kind": "executable"
+      },
+      "limits": {
+        "timeout_ms": 5000,
+        "max_output_chars": 65536,
+        "max_files": 32,
+        "max_source_bytes": 1048576,
+        "pids": 64,
+        "memory_bytes": 536870912,
+        "cpu_cores": 1
+      },
+      "toolchain": {
+        "cjc": "1.2.0",
+        "cjpm": "1.2.0",
+        "backend": "cjnative"
+      },
+      "created_at": "2026-10-22T03:01:51.234825Z",
+      "request_id": "4c9e59dd43e3431b994fa73b7fb84e7a",
+      "rule_matches": []
+    },
+    "retry_submission_id": "b925ee68-c2d8-4ae4-9754-3e6dffc63e7a",
+    "corrected_memory_id": "e95d3cf5-7346-4713-b036-7bf4f7de1085",
+    "analytics": {
+      "status": "available",
+      "course_id": "cangjie-language-design",
+      "filters": {
+        "concept_id": null,
+        "exercise_id": null,
+        "start_at": "2026-10-22T03:01:46.488000Z",
+        "end_at": null
+      },
+      "minimum_sample_size": 5,
+      "sample_size": 5,
+      "groups": [
+        {
+          "concept_id": "cj.pattern-match.exhaustiveness",
+          "exercise_id": "demo-match",
+          "category": "conceptual",
+          "sample_size": 5,
+          "diagnosis_count": 6,
+          "independent_repair_count": 1
+        }
+      ]
+    },
+    "reverse_query": "/me/memories?course_id=cangjie-language-design&purpose=learning_support&query=match",
+    "reverse_lookup_absent": true,
+    "logout_replay_status": 401
+  },
+  "timings": [
+    {
+      "step": "01 学生登录课程",
+      "start": "2026-10-22T03:01:46.666Z",
+      "end": "2026-10-22T03:01:48.339Z",
+      "duration_ms": 1673,
+      "status": "passed"
+    },
+    {
+      "step": "02 提交典型误区代码",
+      "start": "2026-10-22T03:01:48.340Z",
+      "end": "2026-10-22T03:01:49.132Z",
+      "duration_ms": 792,
+      "status": "passed"
+    },
+    {
+      "step": "03 真实隔离编译反馈",
+      "start": "2026-10-22T03:01:49.133Z",
+      "end": "2026-10-22T03:01:49.258Z",
+      "duration_ms": 125,
+      "status": "passed"
+    },
+    {
+      "step": "04 结构化概念诊断",
+      "start": "2026-10-22T03:01:49.258Z",
+      "end": "2026-10-22T03:01:49.280Z",
+      "duration_ms": 22,
+      "status": "passed"
+    },
+    {
+      "step": "05 逐级提示",
+      "start": "2026-10-22T03:01:49.280Z",
+      "end": "2026-10-22T03:01:49.416Z",
+      "duration_ms": 136,
+      "status": "passed"
+    },
+    {
+      "step": "06 修改并重新隔离执行",
+      "start": "2026-10-22T03:01:49.416Z",
+      "end": "2026-10-22T03:01:51.384Z",
+      "duration_ms": 1968,
+      "status": "passed"
+    },
+    {
+      "step": "07 验证修复执行与正式关联",
+      "start": "2026-10-22T03:01:51.384Z",
+      "end": "2026-10-22T03:01:51.405Z",
+      "duration_ms": 21,
+      "status": "passed"
+    },
+    {
+      "step": "08 解释理解",
+      "start": "2026-10-22T03:01:51.406Z",
+      "end": "2026-10-22T03:01:51.538Z",
+      "duration_ms": 132,
+      "status": "passed"
+    },
+    {
+      "step": "09 本人确认前仅建议",
+      "start": "2026-10-22T03:01:51.539Z",
+      "end": "2026-10-22T03:01:51.558Z",
+      "duration_ms": 19,
+      "status": "passed"
+    },
+    {
+      "step": "10 接受、纠正并拒绝另一建议",
+      "start": "2026-10-22T03:01:51.558Z",
+      "end": "2026-10-22T03:01:51.971Z",
+      "duration_ms": 413,
+      "status": "passed"
+    },
+    {
+      "step": "11 跨学生访问拒绝",
+      "start": "2026-10-22T03:01:51.972Z",
+      "end": "2026-10-22T03:01:52.045Z",
+      "duration_ms": 73,
+      "status": "passed"
+    },
+    {
+      "step": "12 教师私人数据拒绝",
+      "start": "2026-10-22T03:01:52.090Z",
+      "end": "2026-10-22T03:01:52.112Z",
+      "duration_ms": 22,
+      "status": "passed"
+    },
+    {
+      "step": "13 五人阈值与自主修复权威计数",
+      "start": "2026-10-22T03:01:52.112Z",
+      "end": "2026-10-22T03:01:56.945Z",
+      "duration_ms": 4833,
+      "status": "passed"
+    },
+    {
+      "step": "14 删除后相同查询反查",
+      "start": "2026-10-22T03:01:56.945Z",
+      "end": "2026-10-22T03:01:57.223Z",
+      "duration_ms": 278,
+      "status": "passed"
+    },
+    {
+      "step": "15 退出后旧令牌拒绝",
+      "start": "2026-10-22T03:01:57.224Z",
+      "end": "2026-10-22T03:01:57.281Z",
+      "duration_ms": 57,
+      "status": "passed"
+    }
+  ]
+}

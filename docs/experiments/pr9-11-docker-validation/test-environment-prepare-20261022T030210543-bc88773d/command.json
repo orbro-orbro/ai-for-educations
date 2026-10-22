@@ -1,0 +1,20 @@
+{
+  "name": "test-environment-prepare",
+  "started_utc": "2026-10-22T03:02:10.5461267Z",
+  "finished_utc": "2026-10-22T03:02:18.2404616Z",
+  "head": "59e22c0105896d884bc60cb32661836d3f1ed453",
+  "working_tree": [],
+  "cwd": "C:\\Users\\lenovo\\Desktop\\cs competition\\.worktrees\\pr9-11-integration",
+  "executable": "pwsh",
+  "arguments": [
+    "-NoProfile",
+    "-File",
+    "C:\\Users\\lenovo\\Desktop\\cs competition\\.worktrees\\pr9-11-integration\\scripts/use-delivery-test-environment.ps1",
+    "-Python",
+    "C:/Users/lenovo/Desktop/cs competition/.venv/Scripts/python.exe"
+  ],
+  "exit_code": 0,
+  "log": "output.log",
+  "sha256": "402b27b75d9926a78076d068e07febdecb365201580f1c8969be9b892a553b66",
+  "artifacts": []
+}
