@@ -1,0 +1,16 @@
+{
+  "name": "frontend-components",
+  "started_utc": "2026-10-22T03:10:55.6225585Z",
+  "finished_utc": "2026-10-22T03:11:02.1196804Z",
+  "head": "59e22c0105896d884bc60cb32661836d3f1ed453",
+  "working_tree": [],
+  "cwd": "C:\\Users\\lenovo\\Desktop\\cs competition\\.worktrees\\pr9-11-integration\\frontend",
+  "executable": "npm.cmd",
+  "arguments": [
+    "test"
+  ],
+  "exit_code": 0,
+  "log": "output.log",
+  "sha256": "5781ebbfe08dbfc5a654b557b283795f4321c54d4a5256a9f989ea627e9f8b6e",
+  "artifacts": []
+}

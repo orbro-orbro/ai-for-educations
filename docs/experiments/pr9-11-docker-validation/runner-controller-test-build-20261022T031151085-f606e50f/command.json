@@ -1,0 +1,29 @@
+{
+  "name": "runner-controller-test-build",
+  "started_utc": "2026-10-22T03:11:51.0904849Z",
+  "finished_utc": "2026-10-22T03:11:55.1508229Z",
+  "head": "59e22c0105896d884bc60cb32661836d3f1ed453",
+  "working_tree": [],
+  "cwd": "C:\\Users\\lenovo\\Desktop\\cs competition\\.worktrees\\pr9-11-integration",
+  "executable": "docker",
+  "arguments": [
+    "build",
+    "--pull=false",
+    "--build-arg",
+    "BASE_IMAGE=knowbound-wave4-demo-controller:task11",
+    "-t",
+    "knowbound-wave4-controller-tests:task11",
+    "C:\\Users\\lenovo\\Desktop\\cs competition\\.worktrees\\pr9-11-integration\\.superpowers\\sdd\\2026-10-12-wave4-task11-delivery\\test-images-321be74e0f9a445c823d5ba7bc0f1320"
+  ],
+  "exit_code": 0,
+  "log": "output.log",
+  "sha256": "ad443e4f6261c38a3e2cf66851d6b2f1f7fb9974be2ad40f4121f58b9e287a8e",
+  "artifacts": [
+    {
+      "path": "C:\\Users\\lenovo\\Desktop\\cs competition\\.worktrees\\pr9-11-integration\\.superpowers\\pr9-11-docker-20261022-final\\runner-controller-base.json",
+      "sha256": "45f8cf9c5642753682cc52efe8f06f577fe3da1383fd8f35c5f4c930b0f2daf6",
+      "modified_utc": "2026-10-22T03:11:51.0683641Z",
+      "length": 232
+    }
+  ]
+}

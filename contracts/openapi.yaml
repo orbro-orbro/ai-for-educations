@@ -554,7 +554,7 @@ paths:
               $ref: '#/components/schemas/NextHintRequest'
       responses:
         '200':
-          description: Persisted next hint; provider failure may return a safe fallback.
+          description: Persisted next hint; unsafe content may use a labeled safe fallback. Provider failure returns 503 without advancing the level.
           content:
             application/json:
               schema:
@@ -833,6 +833,77 @@ paths:
         '200': {description: Teacher review metadata; this operation never mutates student learning memory., content: {application/json: {schema: {$ref: '#/components/schemas/TeacherDiagnosisReview'}}}}
         '401': {$ref: '#/components/responses/AuthenticationFailed'}
         '404': {$ref: '#/components/responses/NotAvailable'}
+        '409': {$ref: '#/components/responses/Conflict'}
+        '422': {$ref: '#/components/responses/InvalidRequest'}
+        '503': {$ref: '#/components/responses/PersistenceUnavailable'}
+  /teacher/model-settings:
+    get:
+      operationId: getTeacherModelSettings
+      x-contract-status: frozen-for-wave-4
+      security: [{bearerAuth: []}]
+      responses:
+        '200': {description: Effective model configuration; the credential is never returned., content: {application/json: {schema: {$ref: '#/components/schemas/ModelSettingsView'}}}}
+        '401': {$ref: '#/components/responses/AuthenticationFailed'}
+        '404': {$ref: '#/components/responses/NotAvailable'}
+        '409': {$ref: '#/components/responses/Conflict'}
+        '422': {$ref: '#/components/responses/InvalidRequest'}
+        '503': {$ref: '#/components/responses/PersistenceUnavailable'}
+    put:
+      operationId: updateTeacherModelSettings
+      x-contract-status: frozen-for-wave-4
+      security: [{bearerAuth: []}]
+      requestBody: {required: true, content: {application/json: {schema: {$ref: '#/components/schemas/ModelSettingsUpdate'}}}}
+      responses:
+        '200': {description: The newly effective model configuration; applying a rejected configuration leaves the previous provider active., content: {application/json: {schema: {$ref: '#/components/schemas/ModelSettingsView'}}}}
+        '401': {$ref: '#/components/responses/AuthenticationFailed'}
+        '404': {$ref: '#/components/responses/NotAvailable'}
+        '409': {$ref: '#/components/responses/Conflict'}
+        '422': {$ref: '#/components/responses/InvalidRequest'}
+        '503': {$ref: '#/components/responses/PersistenceUnavailable'}
+  /teacher/model-settings/probe:
+    post:
+      operationId: probeTeacherModelSettings
+      x-contract-status: frozen-for-wave-4
+      security: [{bearerAuth: []}]
+      requestBody: {required: true, content: {application/json: {schema: {$ref: '#/components/schemas/ModelSettingsUpdate'}}}}
+      responses:
+        '200': {description: 'One minimal upstream call; only a closed status category and the upstream status code are returned, never the response body.', content: {application/json: {schema: {$ref: '#/components/schemas/ModelProbeResult'}}}}
+        '401': {$ref: '#/components/responses/AuthenticationFailed'}
+        '404': {$ref: '#/components/responses/NotAvailable'}
+        '409': {$ref: '#/components/responses/Conflict'}
+        '422': {$ref: '#/components/responses/InvalidRequest'}
+        '503': {$ref: '#/components/responses/PersistenceUnavailable'}
+  /model-settings:
+    get:
+      operationId: getMyModelSettings
+      x-contract-status: frozen-for-wave-4
+      security: [{bearerAuth: []}]
+      responses:
+        '200': {description: 'The configuration actually used for the caller; a personal override wins over the shared one, and the credential is never returned.', content: {application/json: {schema: {$ref: '#/components/schemas/PersonalModelSettingsView'}}}}
+        '401': {$ref: '#/components/responses/AuthenticationFailed'}
+        '409': {$ref: '#/components/responses/Conflict'}
+        '422': {$ref: '#/components/responses/InvalidRequest'}
+        '503': {$ref: '#/components/responses/PersistenceUnavailable'}
+    put:
+      operationId: updateMyModelSettings
+      x-contract-status: frozen-for-wave-4
+      security: [{bearerAuth: []}]
+      requestBody: {required: true, content: {application/json: {schema: {$ref: '#/components/schemas/PersonalModelSettingsUpdate'}}}}
+      responses:
+        '200': {description: 'The caller-scoped configuration after the change; mode "shared" drops the personal override, and only the caller is affected.', content: {application/json: {schema: {$ref: '#/components/schemas/PersonalModelSettingsView'}}}}
+        '401': {$ref: '#/components/responses/AuthenticationFailed'}
+        '409': {$ref: '#/components/responses/Conflict'}
+        '422': {$ref: '#/components/responses/InvalidRequest'}
+        '503': {$ref: '#/components/responses/PersistenceUnavailable'}
+  /model-settings/probe:
+    post:
+      operationId: probeMyModelSettings
+      x-contract-status: frozen-for-wave-4
+      security: [{bearerAuth: []}]
+      requestBody: {required: true, content: {application/json: {schema: {$ref: '#/components/schemas/PersonalModelSettingsUpdate'}}}}
+      responses:
+        '200': {description: 'One minimal upstream call; only a closed status category and the upstream status code are returned, never the response body.', content: {application/json: {schema: {$ref: '#/components/schemas/PersonalModelProbeResult'}}}}
+        '401': {$ref: '#/components/responses/AuthenticationFailed'}
         '409': {$ref: '#/components/responses/Conflict'}
         '422': {$ref: '#/components/responses/InvalidRequest'}
         '503': {$ref: '#/components/responses/PersistenceUnavailable'}
@@ -1907,6 +1978,86 @@ components:
         decision: {type: string, enum: [confirmed, overturned, insufficient_evidence]}
         reason: {type: string, minLength: 1, maxLength: 2000}
         reviewed_at: {type: string, format: date-time, readOnly: true}
+    ModelSettingsUpdate:
+      description: Runtime model configuration for the development and demonstration deployment; production keeps the environment-only rule.
+      type: object
+      additionalProperties: false
+      required: [provider]
+      properties:
+        provider: {type: string, enum: [environment, deepseek, qwen, openai_compatible, mock, disabled]}
+        model: {type: string, maxLength: 128, default: ''}
+        base_url: {type: string, maxLength: 512, default: ''}
+        api_key: {type: string, maxLength: 512, format: password, default: '', writeOnly: true}
+        timeout_seconds: {type: number, minimum: 1, maximum: 120, default: 30.0}
+    ModelSettingsView:
+      description: Effective model configuration; the credential itself is never returned, only a four-character hint.
+      type: object
+      additionalProperties: false
+      required: [provider, model, base_url, source, configured, key_hint, timeout_seconds, persistence, environment_locked]
+      properties:
+        provider: {type: string}
+        model: {type: string}
+        base_url: {type: string}
+        source: {type: string, enum: [environment, web]}
+        configured: {type: boolean}
+        key_hint: {type: [string, 'null']}
+        timeout_seconds: {type: number}
+        persistence: {type: string, enum: [file, memory]}
+        environment_locked: {type: boolean}
+    ModelProbeResult:
+      description: Outcome category of one minimal upstream call; upstream response bodies are never relayed.
+      type: object
+      additionalProperties: false
+      required: [status, http_status]
+      properties:
+        status: {type: string, enum: [ok, invalid_credentials, model_or_endpoint_not_found, rate_limited, rejected_request, timeout, transport_error, http_error]}
+        http_status: {type: [integer, 'null']}
+    PersonalModelSettingsUpdate:
+      description: Personal model override for the signed-in user. Mode "shared" drops the override and inherits the teacher configuration.
+      type: object
+      additionalProperties: false
+      properties:
+        mode: {type: string, enum: [own, shared], default: own}
+        provider: {type: [string, 'null'], enum: [environment, deepseek, qwen, openai_compatible, mock, disabled, null]}
+        model: {type: string, maxLength: 128, default: ''}
+        base_url: {type: string, maxLength: 512, default: ''}
+        api_key: {type: string, maxLength: 512, format: password, default: '', writeOnly: true}
+        timeout_seconds: {type: number, minimum: 1, maximum: 120, default: 30.0}
+    SharedModelSummary:
+      description: The teacher-managed configuration a user falls back to; no credential material is included.
+      type: object
+      additionalProperties: false
+      required: [provider, model, configured]
+      properties:
+        provider: {type: string}
+        model: {type: string}
+        configured: {type: boolean}
+    PersonalModelSettingsView:
+      description: The configuration actually used for the caller, plus the shared configuration it may fall back to.
+      type: object
+      additionalProperties: false
+      required: [scope, provider, model, base_url, source, configured, key_hint, timeout_seconds, personal_configured, shared, persistence, environment_locked]
+      properties:
+        scope: {type: string, enum: [shared, own]}
+        provider: {type: string}
+        model: {type: string}
+        base_url: {type: string}
+        source: {type: string, enum: [environment, web]}
+        configured: {type: boolean}
+        key_hint: {type: [string, 'null']}
+        timeout_seconds: {type: number}
+        personal_configured: {type: boolean}
+        shared: {$ref: '#/components/schemas/SharedModelSummary'}
+        persistence: {type: string, enum: [file, memory]}
+        environment_locked: {type: boolean}
+    PersonalModelProbeResult:
+      description: Outcome category of one minimal upstream call made with the caller's submitted configuration.
+      type: object
+      additionalProperties: false
+      required: [status, http_status]
+      properties:
+        status: {type: string, enum: [ok, invalid_credentials, model_or_endpoint_not_found, rate_limited, rejected_request, timeout, transport_error, http_error]}
+        http_status: {type: [integer, 'null']}
   parameters:
     CourseId:
       name: course_id

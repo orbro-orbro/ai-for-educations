@@ -1,0 +1,4 @@
+{
+  "status": "not_completed",
+  "reason": "Registry request did not finish; interrupted. npm ci separately reported 5 vulnerabilities (4 low, 1 high). Existing lockfile was not changed. No clean dependency-audit claim is made."
+}

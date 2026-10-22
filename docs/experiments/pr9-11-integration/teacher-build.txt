@@ -1,0 +1,14 @@
+
+> knowbound-web@0.1.0 build
+> tsc -b && vite build
+
+vite v8.3.1 building client environment for production...
+transforming...
+✓ 31 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                   0.42 kB │ gzip:  0.31 kB
+dist/assets/index-BXRugmVW.css   15.92 kB │ gzip:  4.14 kB
+dist/assets/index-Df6fybM6.js   273.94 kB │ gzip: 83.70 kB
+
+✓ built in 133ms

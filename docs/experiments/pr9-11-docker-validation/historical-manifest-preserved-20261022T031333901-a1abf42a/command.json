@@ -1,0 +1,17 @@
+{
+  "name": "historical-manifest-preserved",
+  "started_utc": "2026-10-22T03:13:33.9064111Z",
+  "finished_utc": "2026-10-22T03:13:34.7023739Z",
+  "head": "59e22c0105896d884bc60cb32661836d3f1ed453",
+  "working_tree": [],
+  "cwd": "C:\\Users\\lenovo\\Desktop\\cs competition\\.worktrees\\pr9-11-integration",
+  "executable": "C:/Users/lenovo/Desktop/cs competition/.venv/Scripts/python.exe",
+  "arguments": [
+    "-B",
+    "data/evaluation/map_security_execution.py"
+  ],
+  "exit_code": 0,
+  "log": "output.log",
+  "sha256": "26bcf3610bc03b096ff7f8a96db77bc32f0c615e008a56324354dc60a6f7c36c",
+  "artifacts": []
+}

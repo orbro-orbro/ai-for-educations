@@ -5,6 +5,8 @@ import { ConceptTrace } from "../components/ConceptTrace";
 import { RequestState } from "../components/RequestState";
 import { DiagnosisPanel } from "./DiagnosisPanel";
 import { MemoryCenter } from "./MemoryCenter";
+import { StudentModelSettings } from "./StudentModelSettings";
+import { useCodeDraft } from "./useCodeDraft";
 
 const starter = `main() {
     // 在这里编写仓颉代码
@@ -18,12 +20,12 @@ const executionLabels: Record<ExecutionResult["status"], string> = {
   resource_exhausted: "资源限制中止",
 };
 
-export function ExercisePage({ api }: { api: ApiClient }) {
+export function ExercisePage({ api, ownerId }: { api: ApiClient; ownerId: string }) {
   const [courses, setCourses] = useState<CourseSummary[]>([]);
   const [courseId, setCourseId] = useState("");
   const [exercises, setExercises] = useState<ExerciseSummary[]>([]);
   const [exerciseId, setExerciseId] = useState("");
-  const [source, setSource] = useState(starter);
+  const { source, updateSource, clearDraft, draftStatus } = useCodeDraft(ownerId, courseId, exerciseId, starter);
   const [loading, setLoading] = useState(true);
   const [courseError, setCourseError] = useState<unknown>(null);
   const [runError, setRunError] = useState<unknown>(null);
@@ -145,13 +147,14 @@ export function ExercisePage({ api }: { api: ApiClient }) {
     finally { if (!controller.signal.aborted) setRunning(false); }
   }
 
-  const activeStep = useMemo(() => memoryConfirmed ? 5 : understandingChecked ? 4 : diagnosis ? 3 : execution ? 2 : running ? 1 : 0, [diagnosis, execution, memoryConfirmed, running, understandingChecked]);
+  const activeStep = useMemo(() => memoryConfirmed && understandingChecked ? 5 : understandingChecked ? 4 : diagnosis ? 3 : execution ? 2 : running ? 1 : 0, [diagnosis, execution, memoryConfirmed, running, understandingChecked]);
   const resultIsSuccess = execution?.status === "succeeded";
 
   return (
     <div className="student-layout">
       <section className="workspace-column" aria-labelledby="student-workspace-title">
         <div className="page-heading"><div><p className="section-kicker">STUDENT · LEARNING LOOP</p><h1 id="student-workspace-title">学生工作台</h1><p>从真实编译证据出发，沿概念脉络完成一次可核验的学习闭环。</p></div><span className="course-mark">《仓颉语言设计》</span></div>
+        <StudentModelSettings api={api} />
         <ConceptTrace activeStep={activeStep} />
         {loading && <div className="loading-line" role="status">正在准备课程与练习…</div>}
         {courseError !== null && <RequestState error={courseError} retry={() => void loadCourses()} retryLabel="重试加载课程" />}
@@ -161,7 +164,7 @@ export function ExercisePage({ api }: { api: ApiClient }) {
             <label>课程<select value={courseId} onChange={(event) => void changeCourse(event.target.value)}>{courses.map((course) => <option key={course.course_id} value={course.course_id}>{course.title}</option>)}</select></label>
             <label>练习<select value={exerciseId} onChange={(event) => { setExerciseId(event.target.value); clearLearningResult(); }} disabled={exercises.length === 0}>{exercises.map((exercise) => <option key={exercise.exercise_id} value={exercise.exercise_id}>{exercise.title}</option>)}</select></label>
           </div></div>
-          {exercises.length === 0 ? <p className="empty-copy">这个课程还没有可用练习。</p> : <><label className="editor-label" htmlFor="cangjie-source"><span>仓颉源码</span><small>main.cj · 隔离执行</small></label><textarea id="cangjie-source" aria-label="仓颉源码" className="code-editor" value={source} onChange={(event) => setSource(event.target.value)} spellCheck={false} /><div className="submit-row"><p>代码只会发送到受限执行器，不在浏览器中模拟结果。</p><button type="button" onClick={() => void submit()} disabled={running || !source.trim()}>{running ? "正在隔离执行…" : "提交并运行"}</button></div></>}
+          {exercises.length === 0 ? <p className="empty-copy">这个课程还没有可用练习。</p> : <><label className="editor-label" htmlFor="cangjie-source"><span>仓颉源码</span><small>main.cj · 隔离执行</small></label><textarea id="cangjie-source" aria-label="仓颉源码" className="code-editor" value={source} onChange={(event) => updateSource(event.target.value)} spellCheck={false} /><div className="submit-row"><p role="status">{draftStatus}</p><button type="button" className="text-button" disabled={running} onClick={() => { if (window.confirm("清除本机当前练习的代码草稿？已提交的作业和个人记忆不受影响。")) clearDraft(); }}>清除本机草稿</button></div><p className="privacy-note">草稿仅保存在当前浏览器，不会自动提交给教师。公用电脑使用后请清除草稿；临时测试网址更换后无法读取旧网址的草稿。</p><div className="submit-row"><p>代码只会发送到受限执行器，不在浏览器中模拟结果。</p><button type="button" onClick={() => void submit()} disabled={running || !source.trim()}>{running ? "正在隔离执行…" : "提交并运行"}</button></div></>}
         </section>}
         {executionUnavailable && <div className="request-state is-warning" role="status"><strong>执行服务暂不可用</strong><p>本次没有生成编译输出。源码仍保留在编辑器中，请稍后重试。</p></div>}
         {execution && <section className="execution-panel" aria-labelledby="execution-title">
@@ -172,7 +175,7 @@ export function ExercisePage({ api }: { api: ApiClient }) {
         </section>}
         {attemptLinked && resultIsSuccess && <p role="status">修复提交已关联原诊断</p>}
         {runError !== null && <RequestState error={runError} retry={submissionId ? () => void (execution && (!diagnosis || diagnosis.submission_id === submissionId) ? readDiagnosis(submissionId) : retryResults(submissionId)) : () => void submit()} retryLabel={diagnosis && submissionId && diagnosis.submission_id !== submissionId ? "重试关联修复提交" : execution && submissionId ? "重新读取诊断" : "重新读取结果"} />}
-        {diagnosis && <DiagnosisPanel key={diagnosis.diagnosis_id} api={api} diagnosis={diagnosis} onExplanationChecked={() => { setUnderstandingChecked(true); setMemoryRefresh((value) => value + 1); }} />}
+        {diagnosis && <DiagnosisPanel key={diagnosis.diagnosis_id} api={api} diagnosis={diagnosis} onExplanationChecked={(understands) => { setUnderstandingChecked(understands); if (!understands) setMemoryConfirmed(false); setMemoryRefresh((value) => value + 1); }} />}
       </section>
       {courseId && <aside className="memory-column"><MemoryCenter key={courseId} api={api} courseId={courseId} refreshKey={memoryRefresh} onMemoryConfirmed={() => setMemoryConfirmed(true)} /></aside>}
     </div>

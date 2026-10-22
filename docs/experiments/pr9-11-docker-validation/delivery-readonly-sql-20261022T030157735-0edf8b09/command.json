@@ -1,0 +1,29 @@
+{
+  "name": "delivery-readonly-sql",
+  "started_utc": "2026-10-22T03:01:57.7381224Z",
+  "finished_utc": "2026-10-22T03:01:59.3597242Z",
+  "head": "59e22c0105896d884bc60cb32661836d3f1ed453",
+  "working_tree": [],
+  "cwd": "C:\\Users\\lenovo\\Desktop\\cs competition\\.worktrees\\pr9-11-integration",
+  "executable": "pwsh",
+  "arguments": [
+    "-NoProfile",
+    "-File",
+    "C:\\Users\\lenovo\\Desktop\\cs competition\\.worktrees\\pr9-11-integration\\scripts/probe-delivery.ps1",
+    "-RehearsalPath",
+    "C:\\Users\\lenovo\\Desktop\\cs competition\\.worktrees\\pr9-11-integration\\.superpowers\\pr9-11-docker-20261022-final\\delivery-browser\\delivery-real-all-15-synth-2327d-gh-the-deployed-real-system\\rehearsal.json",
+    "-OutputPath",
+    "C:\\Users\\lenovo\\Desktop\\cs competition\\.worktrees\\pr9-11-integration\\.superpowers\\pr9-11-docker-20261022-final/delivery-sql.json"
+  ],
+  "exit_code": 0,
+  "log": "output.log",
+  "sha256": "1f5c1485589c2938904e3a496d0d0b58b36b6097756e14fd4d1fd7fc2dbdfae0",
+  "artifacts": [
+    {
+      "path": "C:\\Users\\lenovo\\Desktop\\cs competition\\.worktrees\\pr9-11-integration\\.superpowers\\pr9-11-docker-20261022-final\\delivery-sql.json",
+      "sha256": "4f444bc8bb10b1e65fd34cc43d9111b0a12acd24c67c79fd7a32bc644c03594e",
+      "modified_utc": "2026-10-22T03:01:59.2693654Z",
+      "length": 500
+    }
+  ]
+}

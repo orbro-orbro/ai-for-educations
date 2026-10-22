@@ -1,0 +1,38 @@
+# Synthetic data + REAL model provider. Separate project, ports, images and volumes
+# from the Mock delivery demo. Secrets come only from the ignored env file.
+services:
+  postgres:
+    labels: {knowbound.task: live-model-demo}
+  api:
+    image: knowbound-live-demo-api:1
+    labels: {knowbound.task: live-model-demo}
+    environment:
+      KNOWBOUND_SYNTHETIC_DEMO: "1"
+      MODEL_SETTINGS_ENABLED: "1"
+      DEMO_PASSWORD: ${DEMO_PASSWORD:?Explicit synthetic actor password required}
+      MODEL_PROVIDER: ${MODEL_PROVIDER:?Live model provider required}
+      MODEL_NAME: ${MODEL_NAME:?Live model name required}
+      MODEL_BASE_URL: ${MODEL_BASE_URL:-}
+      DEEPSEEK_API_KEY: ${DEEPSEEK_API_KEY:-}
+      QWEN_API_KEY: ${QWEN_API_KEY:-}
+    command: ["sh", "-c", "alembic upgrade head && python -m scripts.delivery_demo && exec uvicorn scripts.live_demo:create_live_app --factory --host 0.0.0.0 --port 8000"]
+  web:
+    image: knowbound-live-demo-web:1
+    labels: {knowbound.task: live-model-demo}
+    build:
+      args:
+        VITE_SYNTHETIC_DEMO: "true"
+        VITE_MODEL_LABEL: ${MODEL_LABEL:?Model label required}
+  runner-controller:
+    image: knowbound-live-demo-controller:1
+    labels: {knowbound.task: live-model-demo}
+  runner-sandbox:
+    labels: {knowbound.task: live-model-demo}
+networks:
+  public:
+    labels: {knowbound.task: live-model-demo}
+  internal:
+    labels: {knowbound.task: live-model-demo}
+volumes:
+  postgres-data:
+    labels: {knowbound.task: live-model-demo}

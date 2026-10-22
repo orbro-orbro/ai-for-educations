@@ -24,6 +24,15 @@ async function contractApi(page: Page, options: { courseError?: number; detail?:
     const path = new URL(req.url()).pathname;
     calls.push(path);
     if (path === "/auth/logout" && req.method() === "POST") return route.fulfill({status:204});
+    const modelSettings = {
+      provider: "mock", model: "", base_url: "", source: "environment", configured: true,
+      key_hint: null, timeout_seconds: 30, persistence: "memory", environment_locked: true,
+    };
+    if (path === "/teacher/model-settings") return route.fulfill({ json: modelSettings });
+    if (path === "/model-settings") return route.fulfill({ json: {
+      ...modelSettings, scope: "shared", personal_configured: false,
+      shared: { provider: "mock", model: "", configured: true },
+    } });
     const unavailable = { code: "RESOURCE_NOT_AVAILABLE", message: options.detail ?? "Resource is not available.", request_id: "req-ui-synthetic" };
     if (path === "/courses") return options.courseError
       ? route.fulfill({ status: options.courseError, json: unavailable })

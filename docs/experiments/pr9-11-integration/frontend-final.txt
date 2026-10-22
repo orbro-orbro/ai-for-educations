@@ -1,0 +1,13 @@
+
+> knowbound-web@0.1.0 test
+> vitest run
+
+
+ RUN  v5.0.3 C:/Users/lenovo/Desktop/cs competition/.worktrees/pr9-11-integration/frontend
+
+
+ Test Files  1 passed (1)
+      Tests  67 passed (67)
+   Start at  10:28:44
+   Duration  3.99s (tests 65%, environment 19%, transform 9%, setup 5%, import 2%)
+

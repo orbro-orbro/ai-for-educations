@@ -1,0 +1,19 @@
+{
+  "name": "demo-cold-build-start",
+  "started_utc": "2026-10-22T03:00:51.7905899Z",
+  "finished_utc": "2026-10-22T03:01:23.8148608Z",
+  "head": "59e22c0105896d884bc60cb32661836d3f1ed453",
+  "working_tree": [],
+  "cwd": "C:\\Users\\lenovo\\Desktop\\cs competition\\.worktrees\\pr9-11-integration",
+  "executable": "pwsh",
+  "arguments": [
+    "-NoProfile",
+    "-File",
+    "C:\\Users\\lenovo\\Desktop\\cs competition\\.worktrees\\pr9-11-integration\\scripts/start-delivery.ps1",
+    "-FreshData"
+  ],
+  "exit_code": 0,
+  "log": "output.log",
+  "sha256": "de608dd4c95fd59793e477e533d31623a9db7904b6c3ecc95388cd64221b2767",
+  "artifacts": []
+}

@@ -1,0 +1,292 @@
+.................FF....FF                                                [100%]
+================================== FAILURES ===================================
+____ test_provider_failure_is_visible_and_does_not_advance_hints[failure] _____
+
+submissions = <app.submissions.repository.InMemorySubmissionRepository object at 0x000001E463325D30>
+knowledge = <app.knowledge.repository.InMemoryKnowledgeRepository object at 0x000001E466577EE0>
+error_type = 'failure'
+
+    @pytest.mark.parametrize("error_type", ["failure", "timeout"])
+    def test_provider_failure_is_visible_and_does_not_advance_hints(submissions, knowledge, error_type):
+        from app.model_gateway.base import ProviderFailure, ProviderTimeout
+        error = ProviderTimeout if error_type == "timeout" else ProviderFailure
+        diagnosis, service, repository, _ = setup_services(submissions, knowledge, [error("sentinel"), error("sentinel")])
+>       with pytest.raises(error):
+             ^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE ProviderFailure
+
+backend\tests\diagnostics\test_hints.py:361: Failed
+____ test_provider_failure_is_visible_and_does_not_advance_hints[timeout] _____
+
+submissions = <app.submissions.repository.InMemorySubmissionRepository object at 0x000001E4665C65B0>
+knowledge = <app.knowledge.repository.InMemoryKnowledgeRepository object at 0x000001E46645B890>
+error_type = 'timeout'
+
+    @pytest.mark.parametrize("error_type", ["failure", "timeout"])
+    def test_provider_failure_is_visible_and_does_not_advance_hints(submissions, knowledge, error_type):
+        from app.model_gateway.base import ProviderFailure, ProviderTimeout
+        error = ProviderTimeout if error_type == "timeout" else ProviderFailure
+        diagnosis, service, repository, _ = setup_services(submissions, knowledge, [error("sentinel"), error("sentinel")])
+>       with pytest.raises(error):
+             ^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE ProviderTimeout
+
+backend\tests\diagnostics\test_hints.py:361: Failed
+________ test_provider_http_errors_are_explicit_and_redacted[failure] _________
+
+error_type = 'failure'
+
+    @pytest.mark.parametrize("error_type", ["failure", "timeout"])
+    def test_provider_http_errors_are_explicit_and_redacted(error_type):
+        from fastapi import FastAPI
+        from fastapi.testclient import TestClient
+        from app.api.errors import install_error_handling
+        from app.model_gateway.base import ProviderFailure, ProviderTimeout
+        app = FastAPI()
+        install_error_handling(app)
+        @app.get("/test-error")
+        def fail():
+            raise (ProviderTimeout if error_type == "timeout" else ProviderFailure)("private-key-sentinel")
+>       response = TestClient(app).get("/test-error")
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+backend\tests\model_gateway\test_delivery_lock.py:60: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+..\..\.venv\Lib\site-packages\httpx\_client.py:1053: in get
+    return self.request(
+..\..\.venv\Lib\site-packages\starlette\testclient.py:463: in request
+    return super().request(
+..\..\.venv\Lib\site-packages\httpx\_client.py:825: in request
+    return self.send(request, auth=auth, follow_redirects=follow_redirects)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\.venv\Lib\site-packages\httpx\_client.py:914: in send
+    response = self._send_handling_auth(
+..\..\.venv\Lib\site-packages\httpx\_client.py:942: in _send_handling_auth
+    response = self._send_handling_redirects(
+..\..\.venv\Lib\site-packages\httpx\_client.py:979: in _send_handling_redirects
+    response = self._send_single_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\.venv\Lib\site-packages\httpx\_client.py:1014: in _send_single_request
+    response = transport.handle_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\.venv\Lib\site-packages\starlette\testclient.py:360: in handle_request
+    raise exc
+..\..\.venv\Lib\site-packages\starlette\testclient.py:357: in handle_request
+    portal.call(self.app, scope, receive, send)
+..\..\.venv\Lib\site-packages\anyio\from_thread.py:340: in call
+    return cast(T_Retval, self.start_task_soon(func, *args).result())
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\..\miniconda3\Lib\concurrent\futures\_base.py:454: in result
+    return self.__get_result()
+           ^^^^^^^^^^^^^^^^^^^
+..\..\..\..\miniconda3\Lib\concurrent\futures\_base.py:396: in __get_result
+    raise self._exception
+..\..\.venv\Lib\site-packages\anyio\from_thread.py:265: in _call_func
+    retval = await retval_or_awaitable
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\.venv\Lib\site-packages\fastapi\applications.py:1215: in __call__
+    await super().__call__(scope, receive, send)
+..\..\.venv\Lib\site-packages\starlette\applications.py:96: in __call__
+    await self.middleware_stack(scope, receive, send)
+..\..\.venv\Lib\site-packages\starlette\middleware\errors.py:186: in __call__
+    raise exc
+..\..\.venv\Lib\site-packages\starlette\middleware\errors.py:164: in __call__
+    await self.app(scope, receive, _send)
+..\..\.venv\Lib\site-packages\fastapi\telemetry\_asgi.py:151: in __call__
+    await self.app(scope, receive, send)
+..\..\.venv\Lib\site-packages\starlette\middleware\base.py:197: in __call__
+    response = await self.dispatch_func(request, call_next)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+backend\app\api\errors.py:46: in attach_request_id
+    response = await call_next(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\.venv\Lib\site-packages\starlette\middleware\base.py:173: in call_next
+    raise app_exc from app_exc.__cause__ or app_exc.__context__
+..\..\.venv\Lib\site-packages\starlette\middleware\base.py:149: in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+..\..\.venv\Lib\site-packages\starlette\middleware\exceptions.py:63: in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+..\..\.venv\Lib\site-packages\starlette\_exception_handler.py:53: in wrapped_app
+    raise exc
+..\..\.venv\Lib\site-packages\starlette\_exception_handler.py:42: in wrapped_app
+    await app(scope, receive, sender)
+..\..\.venv\Lib\site-packages\fastapi\middleware\asyncexitstack.py:18: in __call__
+    await self.app(scope, receive, send)
+..\..\.venv\Lib\site-packages\starlette\routing.py:676: in __call__
+    await self.middleware_stack(scope, receive, send)
+..\..\.venv\Lib\site-packages\fastapi\routing.py:2786: in app
+    await route.handle(scope, receive, send)
+..\..\.venv\Lib\site-packages\fastapi\routing.py:1310: in handle
+    await super().handle(scope, receive, send)
+..\..\.venv\Lib\site-packages\starlette\routing.py:282: in handle
+    await self.app(scope, receive, send)
+..\..\.venv\Lib\site-packages\fastapi\routing.py:165: in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+..\..\.venv\Lib\site-packages\starlette\_exception_handler.py:53: in wrapped_app
+    raise exc
+..\..\.venv\Lib\site-packages\starlette\_exception_handler.py:42: in wrapped_app
+    await app(scope, receive, sender)
+..\..\.venv\Lib\site-packages\fastapi\routing.py:151: in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+..\..\.venv\Lib\site-packages\fastapi\routing.py:727: in app
+    raw_response = await run_endpoint_function(
+..\..\.venv\Lib\site-packages\fastapi\routing.py:362: in run_endpoint_function
+    return await run_in_threadpool(
+..\..\.venv\Lib\site-packages\starlette\concurrency.py:34: in run_in_threadpool
+    return await anyio.to_thread.run_sync(func)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\.venv\Lib\site-packages\anyio\to_thread.py:65: in run_sync
+    return await get_async_backend().run_sync_in_worker_thread(
+..\..\.venv\Lib\site-packages\anyio\_backends\_asyncio.py:2706: in run_sync_in_worker_thread
+    return await future
+           ^^^^^^^^^^^^
+..\..\.venv\Lib\site-packages\anyio\_backends\_asyncio.py:1100: in run
+    result = context.run(func, *args)
+             ^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\.venv\Lib\site-packages\fastapi\telemetry\_api.py:240: in _run_sync_endpoint
+    return function(**arguments)
+           ^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+    @app.get("/test-error")
+    def fail():
+>       raise (ProviderTimeout if error_type == "timeout" else ProviderFailure)("private-key-sentinel")
+E       app.model_gateway.base.ProviderFailure: private-key-sentinel
+
+backend\tests\model_gateway\test_delivery_lock.py:59: ProviderFailure
+________ test_provider_http_errors_are_explicit_and_redacted[timeout] _________
+
+error_type = 'timeout'
+
+    @pytest.mark.parametrize("error_type", ["failure", "timeout"])
+    def test_provider_http_errors_are_explicit_and_redacted(error_type):
+        from fastapi import FastAPI
+        from fastapi.testclient import TestClient
+        from app.api.errors import install_error_handling
+        from app.model_gateway.base import ProviderFailure, ProviderTimeout
+        app = FastAPI()
+        install_error_handling(app)
+        @app.get("/test-error")
+        def fail():
+            raise (ProviderTimeout if error_type == "timeout" else ProviderFailure)("private-key-sentinel")
+>       response = TestClient(app).get("/test-error")
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+backend\tests\model_gateway\test_delivery_lock.py:60: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+..\..\.venv\Lib\site-packages\httpx\_client.py:1053: in get
+    return self.request(
+..\..\.venv\Lib\site-packages\starlette\testclient.py:463: in request
+    return super().request(
+..\..\.venv\Lib\site-packages\httpx\_client.py:825: in request
+    return self.send(request, auth=auth, follow_redirects=follow_redirects)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\.venv\Lib\site-packages\httpx\_client.py:914: in send
+    response = self._send_handling_auth(
+..\..\.venv\Lib\site-packages\httpx\_client.py:942: in _send_handling_auth
+    response = self._send_handling_redirects(
+..\..\.venv\Lib\site-packages\httpx\_client.py:979: in _send_handling_redirects
+    response = self._send_single_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\.venv\Lib\site-packages\httpx\_client.py:1014: in _send_single_request
+    response = transport.handle_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\.venv\Lib\site-packages\starlette\testclient.py:360: in handle_request
+    raise exc
+..\..\.venv\Lib\site-packages\starlette\testclient.py:357: in handle_request
+    portal.call(self.app, scope, receive, send)
+..\..\.venv\Lib\site-packages\anyio\from_thread.py:340: in call
+    return cast(T_Retval, self.start_task_soon(func, *args).result())
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\..\miniconda3\Lib\concurrent\futures\_base.py:454: in result
+    return self.__get_result()
+           ^^^^^^^^^^^^^^^^^^^
+..\..\..\..\miniconda3\Lib\concurrent\futures\_base.py:396: in __get_result
+    raise self._exception
+..\..\.venv\Lib\site-packages\anyio\from_thread.py:265: in _call_func
+    retval = await retval_or_awaitable
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\.venv\Lib\site-packages\fastapi\applications.py:1215: in __call__
+    await super().__call__(scope, receive, send)
+..\..\.venv\Lib\site-packages\starlette\applications.py:96: in __call__
+    await self.middleware_stack(scope, receive, send)
+..\..\.venv\Lib\site-packages\starlette\middleware\errors.py:186: in __call__
+    raise exc
+..\..\.venv\Lib\site-packages\starlette\middleware\errors.py:164: in __call__
+    await self.app(scope, receive, _send)
+..\..\.venv\Lib\site-packages\fastapi\telemetry\_asgi.py:151: in __call__
+    await self.app(scope, receive, send)
+..\..\.venv\Lib\site-packages\starlette\middleware\base.py:197: in __call__
+    response = await self.dispatch_func(request, call_next)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+backend\app\api\errors.py:46: in attach_request_id
+    response = await call_next(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\.venv\Lib\site-packages\starlette\middleware\base.py:173: in call_next
+    raise app_exc from app_exc.__cause__ or app_exc.__context__
+..\..\.venv\Lib\site-packages\starlette\middleware\base.py:149: in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+..\..\.venv\Lib\site-packages\starlette\middleware\exceptions.py:63: in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+..\..\.venv\Lib\site-packages\starlette\_exception_handler.py:53: in wrapped_app
+    raise exc
+..\..\.venv\Lib\site-packages\starlette\_exception_handler.py:42: in wrapped_app
+    await app(scope, receive, sender)
+..\..\.venv\Lib\site-packages\fastapi\middleware\asyncexitstack.py:18: in __call__
+    await self.app(scope, receive, send)
+..\..\.venv\Lib\site-packages\starlette\routing.py:676: in __call__
+    await self.middleware_stack(scope, receive, send)
+..\..\.venv\Lib\site-packages\fastapi\routing.py:2786: in app
+    await route.handle(scope, receive, send)
+..\..\.venv\Lib\site-packages\fastapi\routing.py:1310: in handle
+    await super().handle(scope, receive, send)
+..\..\.venv\Lib\site-packages\starlette\routing.py:282: in handle
+    await self.app(scope, receive, send)
+..\..\.venv\Lib\site-packages\fastapi\routing.py:165: in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+..\..\.venv\Lib\site-packages\starlette\_exception_handler.py:53: in wrapped_app
+    raise exc
+..\..\.venv\Lib\site-packages\starlette\_exception_handler.py:42: in wrapped_app
+    await app(scope, receive, sender)
+..\..\.venv\Lib\site-packages\fastapi\routing.py:151: in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+..\..\.venv\Lib\site-packages\fastapi\routing.py:727: in app
+    raw_response = await run_endpoint_function(
+..\..\.venv\Lib\site-packages\fastapi\routing.py:362: in run_endpoint_function
+    return await run_in_threadpool(
+..\..\.venv\Lib\site-packages\starlette\concurrency.py:34: in run_in_threadpool
+    return await anyio.to_thread.run_sync(func)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\.venv\Lib\site-packages\anyio\to_thread.py:65: in run_sync
+    return await get_async_backend().run_sync_in_worker_thread(
+..\..\.venv\Lib\site-packages\anyio\_backends\_asyncio.py:2706: in run_sync_in_worker_thread
+    return await future
+           ^^^^^^^^^^^^
+..\..\.venv\Lib\site-packages\anyio\_backends\_asyncio.py:1100: in run
+    result = context.run(func, *args)
+             ^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\.venv\Lib\site-packages\fastapi\telemetry\_api.py:240: in _run_sync_endpoint
+    return function(**arguments)
+           ^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+    @app.get("/test-error")
+    def fail():
+>       raise (ProviderTimeout if error_type == "timeout" else ProviderFailure)("private-key-sentinel")
+E       app.model_gateway.base.ProviderTimeout: private-key-sentinel
+
+backend\tests\model_gateway\test_delivery_lock.py:59: ProviderTimeout
+============================== warnings summary ===============================
+tests/model_gateway/test_delivery_lock.py::test_provider_http_errors_are_explicit_and_redacted[failure]
+  C:\Users\lenovo\Desktop\cs competition\.venv\Lib\site-packages\fastapi\testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED backend\tests\diagnostics\test_hints.py::test_provider_failure_is_visible_and_does_not_advance_hints[failure]
+FAILED backend\tests\diagnostics\test_hints.py::test_provider_failure_is_visible_and_does_not_advance_hints[timeout]
+FAILED backend\tests\model_gateway\test_delivery_lock.py::test_provider_http_errors_are_explicit_and_redacted[failure]
+FAILED backend\tests\model_gateway\test_delivery_lock.py::test_provider_http_errors_are_explicit_and_redacted[timeout]
+4 failed, 21 passed, 1 warning in 4.77s

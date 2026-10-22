@@ -1,4 +1,4 @@
-param([ValidateSet('Start','Stop','Status')][string]$Action='Start', [switch]$NoBuild, [switch]$FreshData)
+param([ValidateSet('Start','Stop','Status')][string]$Action='Start', [switch]$NoBuild, [switch]$FreshData, [switch]$TeacherTest)
 $ErrorActionPreference='Stop'
 $taskRoot=[IO.Path]::GetFullPath((Join-Path $PSScriptRoot '..'))
 $taskEnvFile=Join-Path $taskRoot '.delivery/demo.env'
@@ -43,6 +43,7 @@ try {
         }
     }
     $taskCompose=@('compose','--env-file',$taskEnvFile,'-p',$taskProject,'-f','infra/compose/docker-compose.yml','-f','infra/compose/docker-compose.delivery.yml')
+    if($TeacherTest) { $taskCompose+=@('-f','infra/compose/docker-compose.teacher-test.yml') }
     $taskVolumeOverride=Join-Path $taskRoot '.delivery/active-volume.yml'
     if($FreshData) {
         if($Action -ne 'Start') { throw 'FreshData only applies to Start' }

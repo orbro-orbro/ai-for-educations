@@ -144,6 +144,81 @@ describe("student learning loop", () => {
     vi.unstubAllGlobals();
   });
 
+  it("restores a private draft after refresh without submitting it", async () => {
+    const fetchMock = useStudentApi();
+    const first = render(<App />);
+    fireEvent.change(await screen.findByLabelText("仓颉源码"), { target: { value: "my unfinished draft" } });
+    expect(screen.getByText(/草稿已保存到本机/)).toBeInTheDocument();
+    first.unmount();
+    render(<App />);
+    await waitFor(() => expect(screen.getByLabelText("仓颉源码")).toHaveValue("my unfinished draft"));
+    expect(fetchMock.mock.calls.some(([, init]) => init.method === "POST")).toBe(false);
+  });
+
+  it("isolates drafts between courses and students", async () => {
+    useStudentApi((url) => {
+      if (url.pathname === "/courses") return json([course, secondCourse]);
+      if (url.pathname === "/courses/course-advanced/exercises") return json([secondExercise]);
+    });
+    const first = render(<App />);
+    fireEvent.change(await screen.findByLabelText("仓颉源码"), { target: { value: "private first course draft" } });
+    fireEvent.change(screen.getByLabelText("课程"), { target: { value: secondCourse.course_id } });
+    await screen.findByRole("option", { name: secondExercise.title });
+    expect(screen.getByLabelText("仓颉源码")).not.toHaveValue("private first course draft");
+    fireEvent.change(screen.getByLabelText("课程"), { target: { value: course.course_id } });
+    await waitFor(() => expect(screen.getByLabelText("仓颉源码")).toHaveValue("private first course draft"));
+    first.unmount();
+    localStorage.setItem("knowbound.session", JSON.stringify({ accessToken: "other", actor: { user_id: "student-2", role: "student" } }));
+    render(<App />);
+    await screen.findByLabelText("仓颉源码");
+    expect(screen.getByLabelText("仓颉源码")).not.toHaveValue("private first course draft");
+  });
+
+  it("keeps editing when browser storage is full and reports that saving failed", async () => {
+    useStudentApi();
+    render(<App />);
+    const editor = await screen.findByLabelText("仓颉源码");
+    const write = vi.spyOn(Storage.prototype, "setItem").mockImplementation(() => { throw new DOMException("full", "QuotaExceededError"); });
+    try {
+      fireEvent.change(editor, { target: { value: "still editable" } });
+      expect(editor).toHaveValue("still editable");
+      expect(screen.getByText(/本机保存失败/)).toBeInTheDocument();
+    } finally { write.mockRestore(); }
+  });
+
+  it("does not advance understanding progress when verification fails", async () => {
+    useStudentApi((url, init) => {
+      if (url.pathname.endsWith("/submissions") && init.method === "POST") return json(submission, 201);
+      if (url.pathname.endsWith("/execution-result")) return json(executionResult);
+      if (url.pathname.endsWith("/diagnosis")) return json(diagnosis);
+      if (url.pathname.endsWith("/explanation-check")) return json({ explanation_check_id: "check-fail", diagnosis_id: "diagnosis-1", understands: false, concept_ids: [], evidence_summary: "", confidence: 0.3, feedback: "再检查一下", memory_proposal_eligible: false });
+    });
+    render(<App />);
+    await submitCode();
+    fireEvent.change(await screen.findByLabelText("我对错误原因的解释"), { target: { value: "不确定" } });
+    fireEvent.click(screen.getByRole("button", { name: "验证我的理解" }));
+    await screen.findByText("还需要再想一步");
+    expect(screen.getByLabelText("理解验证，尚未开始")).toBeInTheDocument();
+  });
+
+  it("only clears the current local draft after confirmation", async () => {
+    const fetchMock = useStudentApi();
+    render(<App />);
+    const editor = await screen.findByLabelText("仓颉源码");
+    fireEvent.change(editor, { target: { value: "unfinished work" } });
+    const confirm = vi.spyOn(window, "confirm").mockReturnValue(false);
+    try {
+      fireEvent.click(screen.getByRole("button", { name: "清除本机草稿" }));
+      expect(editor).toHaveValue("unfinished work");
+      confirm.mockReturnValue(true);
+      fireEvent.click(screen.getByRole("button", { name: "清除本机草稿" }));
+      expect(editor).not.toHaveValue("unfinished work");
+      expect(screen.getByText("本机草稿已清除")).toBeInTheDocument();
+      expect(localStorage.getItem("knowbound.session")).not.toBeNull();
+      expect(fetchMock.mock.calls.some(([, init]) => init.method === "DELETE")).toBe(false);
+    } finally { confirm.mockRestore(); }
+  });
+
   it("starts a new diagnosis after rejecting the previous memory suggestion", async () => {
     let submissions = 0;
     let rejected = false;
@@ -449,4 +524,46 @@ describe("student learning loop", () => {
     expect(screen.getByText("请求编号：req-denied")).toBeInTheDocument();
     expect(screen.queryByText("资源不存在")).not.toBeInTheDocument();
   });
+  it("allows retry after a failed understanding check without showing mastery", async () => {
+    let checks = 0;
+    useStudentApi((url, init) => {
+      if (url.pathname.endsWith("/submissions") && init.method === "POST") return json(submission, 201);
+      if (url.pathname.endsWith("/execution-result")) return json(executionResult);
+      if (url.pathname.endsWith("/diagnosis")) return json(diagnosis);
+      if (url.pathname.endsWith("/explanation-check")) return json({ explanation_check_id: `check-${++checks}`, diagnosis_id: "diagnosis-1", understands: checks > 1, concept_ids: diagnosis.concept_ids, evidence_summary: "fixture", confidence: 0.9, feedback: checks === 1 ? "retry-fixture" : "understood-fixture", memory_proposal_eligible: checks > 1 });
+    });
+    render(<App />);
+    await submitCode();
+    fireEvent.change(await screen.findByLabelText("我对错误原因的解释"), { target: { value: "first explanation" } });
+    fireEvent.click(screen.getByRole("button", { name: "验证我的理解" }));
+    await screen.findByText("还需要再想一步");
+    expect(screen.queryByText("理解验证通过")).not.toBeInTheDocument();
+    expect(screen.getByLabelText("理解验证，尚未开始")).toBeInTheDocument();
+    fireEvent.change(screen.getByLabelText("我对错误原因的解释"), { target: { value: "revised explanation" } });
+    fireEvent.click(screen.getByRole("button", { name: "验证我的理解" }));
+    await screen.findByText("理解验证通过");
+    expect(checks).toBe(2);
+  });
+
+  it("does not let an older memory confirmation override a failed understanding check", async () => {
+    useStudentApi((url, init) => {
+      if (url.pathname.endsWith("/submissions") && init.method === "POST") return json(submission, 201);
+      if (url.pathname.endsWith("/execution-result")) return json(executionResult);
+      if (url.pathname.endsWith("/diagnosis")) return json(diagnosis);
+      if (url.pathname === "/me/memory-proposals") return json([proposal]);
+      if (url.pathname.endsWith("/accept")) return json(memory);
+      if (url.pathname.endsWith("/explanation-check")) return json({ explanation_check_id: "check-fail", diagnosis_id: "diagnosis-1", understands: false, concept_ids: [], evidence_summary: "fixture", confidence: 0.2, feedback: "try again", memory_proposal_eligible: false });
+    });
+    render(<App />);
+    await submitCode();
+    await screen.findByLabelText("我对错误原因的解释");
+    fireEvent.click(await screen.findByRole("button", { name: "接受记忆建议" }));
+    await screen.findByText("已保存到个人记忆");
+    fireEvent.change(screen.getByLabelText("我对错误原因的解释"), { target: { value: "uncertain" } });
+    fireEvent.click(screen.getByRole("button", { name: "验证我的理解" }));
+    await screen.findByText("还需要再想一步");
+    expect(screen.getByLabelText("理解验证，尚未开始")).toBeInTheDocument();
+    expect(screen.queryByLabelText("理解验证，已完成")).not.toBeInTheDocument();
+  });
+
 });

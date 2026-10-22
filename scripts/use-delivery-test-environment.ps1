@@ -22,7 +22,7 @@ $env:TASK10_RUNNER_IMAGE = $taskValues['RUNNER_SANDBOX_IMAGE']
 $env:PYTHONDONTWRITEBYTECODE = '1'
 Push-Location -LiteralPath (Join-Path $taskRoot 'backend')
 try {
-    & $Python -B -c 'from tests.integration.wave3_support import upgrade; upgrade("wave3_task6"); upgrade("wave3_task7", "0005_memories_audit"); upgrade("wave3_task10"); upgrade()'
+    & $Python -B (Join-Path $taskRoot 'backend/scripts/delivery_environment.py') migrate
     if ($LASTEXITCODE -ne 0) { throw 'Dedicated migration preparation failed' }
 } finally { Pop-Location }
 Write-Output 'Task 11 regression targets verified and prepared; credentials omitted.'

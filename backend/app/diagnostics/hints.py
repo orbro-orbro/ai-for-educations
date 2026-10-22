@@ -17,6 +17,7 @@ from app.model_gateway.base import (
     ModelProvider,
     ProviderFailure,
     ProviderTimeout,
+    UserScopedModelProvider,
 )
 from app.submissions.models import utc_now
 
@@ -48,6 +49,11 @@ class HintLadderService:
         self._min_attempts_for_level_four = min_attempts_for_level_four
         self._protected_answer_lookup = protected_answer_lookup
         self._id_factory = id_factory
+
+    def _provider_for(self, user_id: str | None) -> ModelProvider:
+        if isinstance(self._provider, UserScopedModelProvider):
+            return self._provider.for_user(user_id)
+        return self._provider
 
     def next_hint(
         self,
@@ -122,6 +128,7 @@ class HintLadderService:
         )
         content = safe_fallback(level)
         used_fallback = True
+        provider_error = None
         attempts_to_generate = self._max_regenerations + 1 if level <= 2 else 1
         for generation in range(attempts_to_generate):
             request = HintRequest(
@@ -134,13 +141,16 @@ class HintLadderService:
                 low_information=generation > 0,
             )
             try:
-                raw = self._provider.generate_hint(request)
+                raw = self._provider_for(actor.user_id).generate_hint(request)
                 output = (
                     raw
                     if isinstance(raw, HintModelOutput)
                     else HintModelOutput.model_validate(raw)
                 )
-            except (ProviderTimeout, ProviderFailure, ValidationError, ValueError, TypeError):
+            except (ProviderTimeout, ProviderFailure) as exc:
+                provider_error = exc
+                continue
+            except (ValidationError, ValueError, TypeError):
                 continue
             if output.level != level or not output.content.strip():
                 continue
@@ -153,6 +163,8 @@ class HintLadderService:
             content = output.content
             used_fallback = False
             break
+        if used_fallback and provider_error is not None:
+            raise provider_error
         event = HintEvent(
             hint_event_id=self._id_factory(),
             diagnosis_id=diagnosis_id,

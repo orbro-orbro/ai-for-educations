@@ -1,6 +1,8 @@
 """Trusted initializer restricted to this task's labeled synthetic PostgreSQL."""
 import json
+from pathlib import Path
 import subprocess
+import sys
 
 DATABASES = tuple("wave4_" + name for name in ("task6", "task7", "task10", "router", "migration", "browser"))
 PROJECT = "knowbound-wave4-test"
@@ -26,5 +28,20 @@ def initialize() -> None:
     print("Initialized six Task 11 synthetic databases with vector extension")
 
 
+def prepare_migrations() -> None:
+    backend = Path(__file__).resolve().parents[1]
+    if str(backend) not in sys.path:
+        sys.path.insert(0, str(backend))
+    from tests.integration.wave3_support import upgrade
+
+    upgrade("wave3_task6")
+    upgrade("wave3_task7", "0005_memories_audit")
+    upgrade("wave3_task10")
+    upgrade()
+
+
 if __name__ == "__main__":
-    initialize()
+    if sys.argv[1:] == ["migrate"]:
+        prepare_migrations()
+    else:
+        initialize()

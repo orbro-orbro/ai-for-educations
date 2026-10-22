@@ -124,6 +124,27 @@ def test_runner_client_maps_boundary_failures_to_source_safe_unavailable(handler
     assert "runner.internal" not in str(caught.value)
 
 
+def test_runner_client_does_not_honor_process_http_proxy():
+    captured = {}
+    real_client = httpx.Client
+
+    def fake_client(*args, **kwargs):
+        captured.update(kwargs)
+        kwargs["transport"] = httpx.MockTransport(lambda _request: httpx.Response(200, json=runner_payload()))
+        return real_client(*args, **kwargs)
+
+    import app.submissions.runner_client as module
+
+    original = module.httpx.Client
+    module.httpx.Client = fake_client
+    try:
+        module.RunnerClient("http://127.0.0.1:8209")
+    finally:
+        module.httpx.Client = original
+
+    assert captured.get("trust_env") is False
+
+
 def test_httpx_is_a_production_dependency_for_runner_client():
     pyproject = (Path(__file__).resolve().parents[2] / "pyproject.toml").read_text(
         encoding="utf-8"

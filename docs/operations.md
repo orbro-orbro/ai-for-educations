@@ -19,6 +19,16 @@ pwsh -NoProfile -File ./scripts/start-delivery.ps1 -Action Stop
 
 `-FreshData` 构建后强制重建本项目容器，选择新 UUID 合成 PostgreSQL 卷，并将选择记录在忽略文件 `.delivery/active-volume.yml`。旧卷保留，可用于追查失败，不删除日常/Wave 3/旧演示数据。后续普通启动继续使用该活动卷。此选项仅用于合成演示和冷启动验收，不能当真实数据清理操作。
 
+## 模型配置（网页，教师与学生）
+
+教师端「课程诊断台」的「模型接入」可在运行时切换 deepseek / qwen / 任意 OpenAI 兼容地址 / Mock / 停用，填写模型名、Base URL 与 Key，先「测试连接」再「保存并启用」，下一次诊断请求即生效。Key 只写入 API 容器内的 `MODEL_SETTINGS_PATH`（默认 `/var/lib/knowbound/model-settings.json`，权限 0600，原子替换），不回传浏览器、不写日志与审计；界面只显示后四位。同一接入方式及端点下留空 Key 沿用已保存的值；切换接入方式必须重新填写。
+
+学生端「我的模型接入」默认沿用教师配置，也可填入自己的 Key，只影响自己的诊断与提示：写入同一文件的 `users.<user_id>` 分区，其他学生和教师都读不到，也不改动共享配置。学生只能看到自己 Key 的后四位；继承教师配置时不显示教师的 Key 提示。保存后再次点「改用老师的配置」即删除个人分区、回到共享配置。接口为 `GET/PUT /model-settings` 与 `POST /model-settings/probe`，教师写该路径返回 `422`，共享配置只有 `/teacher/model-settings` 一个写入口。
+
+停止/启动容器保留该文件，重建容器、重跑构建或 `-FreshData` 后失效，需要重新填写或改用 `.delivery/live-model.env`。`APP_ENV=production` 时读取仍可用，写入与测试返回 `409 MODEL_CONFIGURATION_MANAGED`，学生的个人配置同样只读。首次启动依旧要求 env 中存在可用 provider（live 入口 fail-fast，ADR 0009 未变）；合成 Mock 交付入口不会被已保存的真实模型配置覆盖。页面顶部横幅的模型标签来自构建时 `MODEL_LABEL`，运行时不随之更新，冲突时面板会给出提示，以面板为准。
+
+个人配置在进程内缓存，按用户失效；当前部署为单 API 进程，多进程或多副本部署需要改为共享存储后再启用该能力。文件格式为 `{"version": 2, "shared": {...}, "users": {...}}`，版本 1 的扁平文件仍按共享配置读取，无需手工迁移。
+
 ## 初始化、迁移、备份和回滚
 
 API 启动依次执行 Alembic upgrade head、受限合成种子、显式 demo 工厂。种子只接受 development 的内部 postgres:5432/wave4_demo，或 test 的 loopback:55440/wave4_browser；拒绝生产和其他库，重复执行保留密码、提交与学习事实。只预置合成账号/课程/练习/批准知识，不预置诊断、执行成功或自主修复行。
@@ -74,3 +84,14 @@ pwsh -NoProfile -File ./scripts/verify-delivery.ps1 -Python 'C:/path/to/existing
 |git checks / evidence-index|diff 格式、无冲突、干净 HEAD、全命令退出和报告 hash 一致|
 
 开发 `-Candidate` 结果明确标候选。最终源码提交后必须全量重跑到授权外置目录；此后任何源码修改都会使上一轮证据失效。最终真实结果及完整提交号在 `evidence-index.json` 和外置交接记录中。历史失败记录保存在 Task 11 忽略账本中，历史 Wave 3 文件保持原样。
+
+## PR 9–11 集成配置边界（2026-10-22）
+
+- Mock：`pwsh -NoProfile -File ./scripts/start-delivery.ps1`，5209/8208，`knowbound-wave4-demo`。固定 DeliveryMock 注入忽略存储配置，所有共享/个人写入、探测、恢复环境操作返回 409；个人覆盖也不参与请求解析。
+- 真实模型：`start-live-demo.cmd` 或 `pwsh -NoProfile -File ./scripts/start-live-demo.ps1`，5309/8308，`knowbound-live-demo`；由独立 `.delivery/live-model.env` 提供首次有效模型和凭据。live Compose 显式设 `MODEL_SETTINGS_ENABLED=1`，仅 development/test 可启用网页配置；其他部署默认锁定。项目、卷、镜像和凭据隔离设计保持原样。
+- Key 复用同时要求 provider 和规范化端点相同。更换端点须明确填写 Key，探测与保存遵循同一规则。学生不能借用共享 Key 作为个人配置，也不能指定其他用户 ID。
+- 提示调用持续超时/供应商错误返回 503 `MODEL_PROVIDER_TIMEOUT` / `MODEL_PROVIDER_FAILURE`，不新增提示事件、不推进提示层级；不把服务失败伪装为成功。内容泄漏检查仍可产生已标注的安全备用提示，这与替换模型为 Mock 无关。诊断失败保持待复核，理解检查失败保持不具备记忆资格。
+- 配置文件仍为容器内明文 0600（Linux 权限；宿主 Windows 不据此承诺访问隔离），stop/start 保留，容器重建失效；不增加数据库迁移、持久卷或多副本能力。
+- 教师测试模式仅本地验证代理与构建参数；公网 ADR 为 `0011-teacher-test-access.md`，状态待确认，未启动隧道、未修改邮箱白名单。
+
+完整验证证据与未完成项见 `docs/pr9-11-integration-handoff.md`。

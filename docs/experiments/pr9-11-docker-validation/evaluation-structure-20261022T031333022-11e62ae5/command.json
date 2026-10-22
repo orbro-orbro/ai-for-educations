@@ -1,0 +1,17 @@
+{
+  "name": "evaluation-structure",
+  "started_utc": "2026-10-22T03:13:33.0263411Z",
+  "finished_utc": "2026-10-22T03:13:33.8653531Z",
+  "head": "59e22c0105896d884bc60cb32661836d3f1ed453",
+  "working_tree": [],
+  "cwd": "C:\\Users\\lenovo\\Desktop\\cs competition\\.worktrees\\pr9-11-integration",
+  "executable": "C:/Users/lenovo/Desktop/cs competition/.venv/Scripts/python.exe",
+  "arguments": [
+    "-B",
+    "data/evaluation/evaluate.py"
+  ],
+  "exit_code": 0,
+  "log": "output.log",
+  "sha256": "008cffa0ee45a670df0a70d24241a46ceff6c939ccd67fa97fb6e9290910839f",
+  "artifacts": []
+}

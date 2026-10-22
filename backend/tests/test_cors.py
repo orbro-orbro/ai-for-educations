@@ -4,6 +4,16 @@ from httpx import ASGITransport, AsyncClient
 from app.main import create_app
 
 
+def test_model_settings_put_can_preflight():
+    from fastapi.testclient import TestClient
+    response = TestClient(create_app()).options("/model-settings", headers={
+        "Origin": "http://localhost:5173", "Access-Control-Request-Method": "PUT",
+        "Access-Control-Request-Headers": "authorization,content-type",
+    })
+    assert response.status_code == 200
+    assert "PUT" in response.headers["access-control-allow-methods"]
+
+
 async def _preflight(origin: str):
     async with AsyncClient(
         transport=ASGITransport(app=create_app()), base_url="http://testserver"
