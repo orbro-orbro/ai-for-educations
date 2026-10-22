@@ -1,0 +1,4 @@
+Independent read-only review (integration_review, 2026-10-22):
+No provable Critical / Important defects found in the integration fixes.
+Reviewed fixed Mock locking, production personal settings, explicit web opt-in, endpoint-bound key reuse, request-id key redaction, hint failures without progression, and failed understanding overriding stale completion.
+No files changed, services started, public tunnel opened or real model called by reviewer. Full suites were not rerun by reviewer.

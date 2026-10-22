@@ -1,0 +1,35 @@
+{
+  "delivery": {
+    "status": "passed",
+    "command": "docker compose --env-file .env.example -p knowbound-wave4-demo -f infra/compose/docker-compose.yml -f infra/compose/docker-compose.delivery.yml config --format json",
+    "api_port": 8208,
+    "web_port": 5209,
+    "project": "knowbound-wave4-demo",
+    "volume": "knowbound-wave4-demo_postgres-data",
+    "private_services_not_published": true,
+    "runner_network": "none",
+    "synthetic_credentials_only": true
+  },
+  "live-model": {
+    "status": "passed",
+    "command": "docker compose --env-file .env.example -p knowbound-live-demo -f infra/compose/docker-compose.yml -f infra/compose/docker-compose.live-model.yml config --format json",
+    "api_port": 8308,
+    "web_port": 5309,
+    "project": "knowbound-live-demo",
+    "volume": "knowbound-live-demo_postgres-data",
+    "private_services_not_published": true,
+    "runner_network": "none",
+    "synthetic_credentials_only": true
+  },
+  "teacher-test": {
+    "status": "passed",
+    "command": "docker compose --env-file .env.example -p knowbound-wave4-demo -f infra/compose/docker-compose.yml -f infra/compose/docker-compose.delivery.yml -f infra/compose/docker-compose.teacher-test.yml config --format json",
+    "api_port": 8208,
+    "web_port": 5209,
+    "project": "knowbound-wave4-demo",
+    "volume": "knowbound-wave4-demo_postgres-data",
+    "private_services_not_published": true,
+    "runner_network": "none",
+    "synthetic_credentials_only": true
+  }
+}

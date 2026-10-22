@@ -1,0 +1,154 @@
+........................................................................ [  7%]
+........................................................................ [ 14%]
+........................................................................ [ 22%]
+........................................................................ [ 29%]
+........................................................................ [ 37%]
+........................................................................ [ 44%]
+........................................................................ [ 52%]
+........................................................................ [ 59%]
+........................................................................ [ 67%]
+.................ssssss................................................. [ 74%]
+........................................................................ [ 82%]
+........................................................................ [ 89%]
+...........................................sFs.......................... [ 97%]
+..........................                                               [100%]
+================================== FAILURES ===================================
+___________ test_concrete_container_attack[sec-executor-abuse-007] ____________
+
+self = <docker.api.client.APIClient object at 0x000002541A87D6A0>
+
+    def _retrieve_server_version(self):
+        try:
+>           return self.version(api_version=False)["ApiVersion"]
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+..\..\.venv\Lib\site-packages\docker\api\client.py:223: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+..\..\.venv\Lib\site-packages\docker\api\daemon.py:181: in version
+    return self._result(self._get(url), json=True)
+                        ^^^^^^^^^^^^^^
+..\..\.venv\Lib\site-packages\docker\utils\decorators.py:44: in inner
+    return f(self, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\.venv\Lib\site-packages\docker\api\client.py:246: in _get
+    return self.get(url, **self._set_request_timeout(kwargs))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\.venv\Lib\site-packages\requests\sessions.py:671: in get
+    return self.request("GET", url, params=params, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\.venv\Lib\site-packages\requests\sessions.py:651: in request
+    resp = self.send(prep, **send_kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\.venv\Lib\site-packages\requests\sessions.py:784: in send
+    r = adapter.send(request, **kwargs)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\.venv\Lib\site-packages\requests\adapters.py:696: in send
+    resp = conn.urlopen(
+..\..\.venv\Lib\site-packages\urllib3\connectionpool.py:793: in urlopen
+    response = self._make_request(
+..\..\.venv\Lib\site-packages\urllib3\connectionpool.py:499: in _make_request
+    conn.request(
+..\..\.venv\Lib\site-packages\urllib3\connection.py:567: in request
+    self.endheaders()
+..\..\..\..\miniconda3\Lib\http\client.py:1362: in endheaders
+    self._send_output(message_body, encode_chunked=encode_chunked)
+..\..\..\..\miniconda3\Lib\http\client.py:1122: in _send_output
+    self.send(msg)
+..\..\..\..\miniconda3\Lib\http\client.py:1066: in send
+    self.connect()
+..\..\.venv\Lib\site-packages\docker\transport\npipeconn.py:25: in connect
+    sock.connect(self.npipe_path)
+..\..\.venv\Lib\site-packages\docker\transport\npipesocket.py:25: in wrapped
+    return f(self, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\.venv\Lib\site-packages\docker\transport\npipesocket.py:76: in connect
+    raise e
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <docker.transport.npipesocket.NpipeSocket object at 0x000002541B95F4D0>
+address = '//./pipe/docker_engine', retry_count = 0
+
+    @check_closed
+    def connect(self, address, retry_count=0):
+        try:
+>           handle = win32file.CreateFile(
+                address,
+                win32file.GENERIC_READ | win32file.GENERIC_WRITE,
+                0,
+                None,
+                win32file.OPEN_EXISTING,
+                (cSECURITY_ANONYMOUS
+                    | cSECURITY_SQOS_PRESENT
+                    | win32file.FILE_FLAG_OVERLAPPED),
+                0
+            )
+E           pywintypes.error: (2, 'CreateFile', '系统找不到指定的文件。')
+
+..\..\.venv\Lib\site-packages\docker\transport\npipesocket.py:54: error
+
+The above exception was the direct cause of the following exception:
+
+case_id = 'sec-executor-abuse-007'
+source = 'import std.process.*\nimport std.collection.*\nmain() {\n  let children = ArrayList<SubProcess>()\n  try {\n    while...: Exception) { println("PID_DENIED:${children.size}") }\n  for (child in children) { child.terminate(force: true) }\n}'
+record_property = <function record_property.<locals>.append_property at 0x000002541EC34250>
+
+    @pytest.mark.parametrize('case_id,source',[
+        ('sec-executor-abuse-006',NETWORK),('sec-executor-abuse-007',PID),('sec-executor-abuse-008',OUTPUT)
+    ],ids=['sec-executor-abuse-006','sec-executor-abuse-007','sec-executor-abuse-008'])
+    def test_concrete_container_attack(case_id,source,record_property):
+        if case_id.endswith('007'):
+>           result,counts,limit=observed_pid_attack(source)
+                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+backend\tests\security\test_wave3_container_attacks.py:69: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+backend\tests\security\test_wave3_container_attacks.py:37: in observed_pid_attack
+    client=docker.from_env()
+           ^^^^^^^^^^^^^^^^^
+..\..\.venv\Lib\site-packages\docker\client.py:110: in from_env
+    return cls(
+..\..\.venv\Lib\site-packages\docker\client.py:48: in __init__
+    self.api = APIClient(*args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\.venv\Lib\site-packages\docker\api\client.py:207: in __init__
+    self._version = self._retrieve_server_version()
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <docker.api.client.APIClient object at 0x000002541A87D6A0>
+
+    def _retrieve_server_version(self):
+        try:
+            return self.version(api_version=False)["ApiVersion"]
+        except KeyError as ke:
+            raise DockerException(
+                'Invalid response from docker daemon: key "ApiVersion"'
+                ' is missing.'
+            ) from ke
+        except Exception as e:
+>           raise DockerException(
+                f'Error while fetching server API version: {e}'
+            ) from e
+E           docker.errors.DockerException: Error while fetching server API version: (2, 'CreateFile', '系统找不到指定的文件。')
+
+..\..\.venv\Lib\site-packages\docker\api\client.py:230: DockerException
+============================== warnings summary ===============================
+..\..\.venv\Lib\site-packages\fastapi\testclient.py:1
+  C:\Users\lenovo\Desktop\cs competition\.venv\Lib\site-packages\fastapi\testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+tests/security/test_wave3_case_execution.py: 104 warnings
+  tests\security\test_wave3_case_execution.py:35: PytestWarning: record_property is incompatible with junit_family 'xunit2' (use 'legacy' or 'xunit1')
+    @pytest.mark.parametrize('case',LOCAL,ids=lambda c:c['case_id'])
+
+tests/security/test_wave3_container_attacks.py::test_concrete_container_attack[sec-executor-abuse-006]
+tests/security/test_wave3_container_attacks.py::test_concrete_container_attack[sec-executor-abuse-007]
+tests/security/test_wave3_container_attacks.py::test_concrete_container_attack[sec-executor-abuse-008]
+  tests\security\test_wave3_container_attacks.py:64: PytestWarning: record_property is incompatible with junit_family 'xunit2' (use 'legacy' or 'xunit1')
+    @pytest.mark.parametrize('case_id,source',[
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+SKIPPED [8] backend\tests\security\test_isolated_runner.py:18: TASK10_RUNNER_IMAGE must explicitly select an authorized local sandbox image
+FAILED backend\tests\security\test_wave3_container_attacks.py::test_concrete_container_attack[sec-executor-abuse-007]
+1 failed, 953 passed, 8 skipped, 108 warnings in 263.12s (0:04:23)

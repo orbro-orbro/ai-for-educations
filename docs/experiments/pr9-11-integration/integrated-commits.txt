@@ -1,0 +1,9 @@
+1f986fb4dbae30abf4f8543ae084d50f53da4424 fix: preserve fixed Mock and scoped model credentials after PR integration
+ec4d2808016a1ff6cb917872eeddf2a34cebe56a merge: integrate PR #11 local drafts and teacher test entry
+f8575661af6ea2c57593b3dc361f6511a7ad602c merge: integrate PR #10 scoped model settings
+05bdbef4cb651239b7b560a75b493f24dfe95398 merge: integrate PR #9 live model provider
+7bf0efce2485c1ce5de65ddcf207aa5cadcad7db Add private code drafts and optional teacher testing entry
+8ba400ce6c92f28bb96f833f199c5d35ce1a472f feat: configure the model provider from the web UI, per user
+c7906fa97f4ef9682c4af435d7f0bf6de043e4ad fix: isolate Runner from HTTP proxies and run delivery checks on Windows PowerShell
+10e6f2c2f2441529cf08b2b19af635adeb6a9b94 feat: one-click live demo launcher and inherited-env guard
+6e2b8163661f81d3266cdbd54be19ecb99bc8c34 feat: add DeepSeek/Qwen live model providers and separate live demo stack

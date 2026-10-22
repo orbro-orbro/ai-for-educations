@@ -1,0 +1,391 @@
+
+> knowbound-web@0.1.0 test
+> vitest run
+
+
+ RUN  v5.0.3 C:/Users/lenovo/Desktop/cs competition/.worktrees/pr9-11-integration/frontend
+
+ ❯ tests/all.test.ts (66 tests | 4 failed) 2359ms
+   ❯ teacher model settings (7)
+     × is read-only when the deployment owns the configuration 21ms
+     × requires an explicit key when changing the endpoint 14ms
+   ❯ student model settings (5)
+     × keeps the panel read-only in production 10ms
+     × requires an explicit key when changing the endpoint 20ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/all.test.ts > teacher model settings > is read-only when the deployment owns the configuration
+TestingLibraryElementError: Unable to find an element with the text: /当前部署已锁定/. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <section
+      aria-labelledby="model-settings-title"
+      class="model-settings"
+    >
+      <div
+        class="section-heading"
+      >
+        <div>
+          <p
+            class="section-kicker"
+          >
+            MODEL PROVIDER
+          </p>
+          <h2
+            id="model-settings-title"
+          >
+            模型接入
+          </h2>
+        </div>
+        <span
+          class="privacy-chip"
+        >
+          已配置密钥
+        </span>
+      </div>
+      <p
+        class="privacy-note"
+      >
+        密钥只写入本机 API 容器，不会回传浏览器，也不进入日志与审计记录。改动对下一次诊断请求生效，无需重启。
+      </p>
+      <dl
+        aria-label="当前生效的模型配置"
+        class="settings-status"
+      >
+        <div>
+          <dt>
+            接入方式
+          </dt>
+          <dd>
+            deepseek
+          </dd>
+        </div>
+        <div>
+          <dt>
+            模型
+          </dt>
+          <dd>
+            deepseek-chat
+          </dd>
+        </div>
+        <div>
+          <dt>
+            密钥
+          </dt>
+          <dd>
+            ****9876
+          </dd>
+        </div>
+        <div>
+          <dt>
+            配置来源
+          </dt>
+          <dd>
+            本页设置
+          </dd>
+        </div>
+      </dl>
+      <div
+        class="notice"
+        role="status"
+      >
+        当前为生产环境，模型配置只读，只允许通过部署环境变量修改。
+      </div>
+      <div
+        class="settings-grid"
+      >
+        <label
+          for="model-provider"
+        >
+          接入方式
+          <select
+            disabled=""
+            id="model-provider"
+          >
+            <option
+              value="environment"
+            >
+              跟随部署环境变量（默认）
+            </option>
+            <option
+              value="deepseek"
+            >
+              DeepSeek
+            </option>
+            <option
+              value="qwen"
+            >
+              千问 Qwen（百炼兼容模式）
+            </option>
+            <option
+              value="openai_compatible"
+            >
+              OpenAI 兼容接口（自定义）
+            </option>
+            <option
+              value="mock"
+            >
+              确定性 Mock（不调用外部模型）
+            </option>
+            <option
+              value="disabled"
+            >
+              停用模型
+            </option>
+          </select>
+        </label>
+        <label
+          for="model-name"
+        >
+          模型名
+          <input
+            disabled=""
+            id="model-name"
+            placeholder="deepseek-chat"
+            value="deepseek-chat"
+          />
+        </label>
+        <label
+          for="model-base-url"
+        >
+          Base URL
+          <input
+            disabled=""
+            id="model-base-url"
+            placeholder="https://api.deepseek.com"
+            value="https://api.deepseek.com"
+          />
+        </label>
+        <label
+          for="model-api-key"
+        >
+          API Key
+          <input
+            autocomplete="off"
+            disabled=""
+            id="model-api-key"
+            placeholder="已保存 ****9876，留空则保持不变"
+            type="password"
+            value=""
+          />
+        </label>
+        <label
+          for="model-timeout"
+        >
+          超时（秒）
+          <input
+            disabled=""
+            id="model-timeout"
+            max="120"
+            min="1"
+            type="number"
+            value="30"
+          />
+        </label>
+        <div
+          class="action-row"
+        >
+          <button
+            class="button-secondary"
+            disabled=""
+            type="button"
+          >
+            测试连接
+          </button>
+          <button
+            disabled=""
+            type="button"
+          >
+            保存并启用
+          </button>
+        </div>
+      </div>
+      <div
+        class="notice"
+        role="status"
+      >
+        页面顶部横幅的模型声明来自构建时标签（
+        未设置，按 Mock 声明
+        ），与当前生效配置不一致。答辩或截图时请以本面板为准，或按当前模型重新构建前端。
+      </div>
+      <p
+        class="privacy-note"
+      >
+        配置保存在本机数据卷，重启容器后仍然生效。
+         
+        同一接入方式下留空密钥会沿用已保存的密钥；要回到部署配置请选择「跟随部署环境变量」。
+      </p>
+    </section>
+  </div>
+</body>
+ ❯ Object.getElementError node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/ModelSettings.test.tsx:123:19
+    121|     expect(screen.getByRole("combobox", { name: "接入方式" })).toBeDisable…
+    122|     expect(screen.getByRole("button", { name: "保存并启用" })).toBeDisabled…
+    123|     expect(screen.getByText(/当前部署已锁定/)).toBeInTheDocument();
+       |                   ^
+    124|   });
+    125|   it("requires an explicit key when changing the endpoint", async () =…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/4]⎯
+
+ FAIL  tests/all.test.ts > teacher model settings > requires an explicit key when changing the endpoint
+Error: expect(element).toBeDisabled()
+
+Received element is not disabled:
+  <button
+  type="button"
+/>
+ ❯ src/ModelSettings.test.tsx:128:59
+    126|     renderPanel((url) => url.pathname === "/teacher/model-settings" ? …
+    127|     fireEvent.change(await screen.findByLabelText("Base URL"), { targe…
+    128|     expect(screen.getByRole("button", { name: "保存并启用" })).toBeDisabled…
+       |                                                           ^
+    129|     expect(screen.getByRole("button", { name: "测试连接" })).toBeDisabled(…
+    130|     fireEvent.change(screen.getByLabelText("API Key"), { target: { val…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/4]⎯
+
+ FAIL  tests/all.test.ts > student model settings > keeps the panel read-only in production
+TestingLibraryElementError: Unable to find an element with the text: /当前部署已锁定/. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <section
+      aria-labelledby="my-model-title"
+      class="model-settings personal-model-settings"
+    >
+      <div
+        class="section-heading"
+      >
+        <div>
+          <p
+            class="section-kicker"
+          >
+            MY MODEL
+          </p>
+          <h2
+            id="my-model-title"
+          >
+            我的模型接入
+          </h2>
+        </div>
+        <span
+          class="privacy-chip"
+        >
+          使用老师配置
+        </span>
+      </div>
+      <p
+        class="privacy-note"
+      >
+        默认使用老师为本课程配置的模型，不需要额外设置。如果你有自己的 API Key，可以只为自己切换模型： 密钥只保存在服务端，不会回传浏览器，其他同学和老师都看不到，也不影响别人。
+      </p>
+      <dl
+        aria-label="当前用于你请求的模型"
+        class="settings-status"
+      >
+        <div>
+          <dt>
+            当前生效
+          </dt>
+          <dd>
+            deepseek
+             · deepseek-chat
+          </dd>
+        </div>
+        <div>
+          <dt>
+            来源
+          </dt>
+          <dd>
+            老师配置
+          </dd>
+        </div>
+        <div>
+          <dt>
+            老师配置
+          </dt>
+          <dd>
+            deepseek
+             · deepseek-chat
+          </dd>
+        </div>
+        <div>
+          <dt>
+            我的密钥
+          </dt>
+          <dd>
+            未设置
+          </dd>
+        </div>
+      </dl>
+      <div
+        class="notice"
+        role="status"
+      >
+        当前为生产环境，模型配置由部署统一管理，学生端不可修改。
+      </div>
+      <div
+        class="action-row"
+      >
+        <button
+          class="button-secondary"
+          disabled=""
+          type="button"
+        >
+          使用我自己的 API
+        </button>
+      </div>
+    </section>
+  </div>
+</body>
+ ❯ Object.getElementError node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ src/StudentModelSettings.test.tsx:108:19
+    106|
+    107|     expect(await screen.findByRole("button", { name: "使用我自己的 API" })).…
+    108|     expect(screen.getByText(/当前部署已锁定/)).toBeInTheDocument();
+       |                   ^
+    109|   });
+    110|   it("requires an explicit key when changing the endpoint", async () =…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/4]⎯
+
+ FAIL  tests/all.test.ts > student model settings > requires an explicit key when changing the endpoint
+Error: expect(element).toBeDisabled()
+
+Received element is not disabled:
+  <button
+  type="button"
+/>
+ ❯ src/StudentModelSettings.test.tsx:113:59
+    111|     renderPanel((url) => url.pathname === "/model-settings" ? json(own…
+    112|     fireEvent.change(await screen.findByLabelText("Base URL"), { targe…
+    113|     expect(screen.getByRole("button", { name: "保存并启用" })).toBeDisabled…
+       |                                                           ^
+    114|     expect(screen.getByRole("button", { name: "测试连接" })).toBeDisabled(…
+    115|     fireEvent.change(screen.getByLabelText("API Key"), { target: { val…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/4]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  4 failed | 62 passed (66)
+   Start at  10:18:15
+   Duration  3.63s (tests 67%, environment 18%, transform 9%, setup 4%, import 2%)
+
+npm notice
+npm notice New major version of npm available! 11.12.1 -> 12.2.1
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.1
+npm notice To update run: npm install -g npm@12.2.1
+npm notice

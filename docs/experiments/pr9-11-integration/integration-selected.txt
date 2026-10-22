@@ -1,0 +1,5 @@
+..............ss                                                         [100%]
+=========================== short test summary info ===========================
+SKIPPED [1] backend\tests\integration\test_task6_closed_loop.py:28: TASK6_POSTGRES_URL is required for the real-service closed loop
+SKIPPED [1] backend\tests\integration\test_task7_closed_loop.py:36: TASK7_POSTGRES_URL is required for the Task 7 real-service closed loop
+14 passed, 2 skipped in 4.37s

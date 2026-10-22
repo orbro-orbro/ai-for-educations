@@ -1,0 +1,628 @@
+
+> knowbound-web@0.1.0 test
+> vitest run
+
+
+ RUN  v5.0.3 C:/Users/lenovo/Desktop/cs competition/.worktrees/pr9-11-integration/frontend
+
+ ❯ tests/all.test.ts (67 tests | 1 failed) 2536ms
+   ❯ student learning loop (26)
+     × does not let an older memory confirmation override a failed understanding check 85ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/all.test.ts > student learning loop > does not let an older memory confirmation override a failed understanding check
+TestingLibraryElementError: Unable to find a label with the text of: 理解验证，尚未开始
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <div
+      class="app-shell"
+    >
+      <header
+        class="site-header"
+      >
+        <a
+          aria-label="知界·仓颉学伴首页"
+          class="brand"
+          href="#top"
+        >
+          <span
+            aria-hidden="true"
+          >
+            知界
+          </span>
+          <strong>
+            仓颉学伴
+          </strong>
+        </a>
+        <div
+          class="session-meta"
+        >
+          <span>
+            学生端
+          </span>
+          <button
+            class="text-button"
+            type="button"
+          >
+            退出
+          </button>
+        </div>
+      </header>
+      <main
+        id="top"
+      >
+        <div
+          class="student-layout"
+        >
+          <section
+            aria-labelledby="student-workspace-title"
+            class="workspace-column"
+          >
+            <div
+              class="page-heading"
+            >
+              <div>
+                <p
+                  class="section-kicker"
+                >
+                  STUDENT · LEARNING LOOP
+                </p>
+                <h1
+                  id="student-workspace-title"
+                >
+                  学生工作台
+                </h1>
+                <p>
+                  从真实编译证据出发，沿概念脉络完成一次可核验的学习闭环。
+                </p>
+              </div>
+              <span
+                class="course-mark"
+              >
+                《仓颉语言设计》
+              </span>
+            </div>
+            <section
+              aria-labelledby="my-model-title"
+              class="model-settings personal-model-settings"
+            >
+              <div
+                class="section-heading"
+              >
+                <div>
+                  <p
+                    class="section-kicker"
+                  >
+                    MY MODEL
+                  </p>
+                  <h2
+                    id="my-model-title"
+                  >
+                    我的模型接入
+                  </h2>
+                </div>
+              </div>
+              <p
+                class="privacy-note"
+              >
+                默认使用老师为本课程配置的模型，不需要额外设置。如果你有自己的 API Key，可以只为自己切换模型： 密钥只保存在服务端，不会回传浏览器，其他同学和老师都看不到，也不影响别人。
+              </p>
+              <div
+                class="request-state is-error"
+                role="alert"
+              >
+                <strong>
+                  请求未完成
+                </strong>
+                <p>
+                  你的操作未丢失，可以稍后重试。
+                </p>
+                <p
+                  class="request-id"
+                >
+                  请求编号：
+                  unknown
+                </p>
+                <button
+                  class="button-secondary"
+                  type="button"
+                >
+                  重试读取
+                </button>
+              </div>
+            </section>
+            <ol
+              aria-label="概念脉络轨迹"
+              class="concept-trace"
+            >
+              <li
+                aria-label="代码提交，已完成"
+                class="is-complete"
+              >
+                <span
+                  aria-hidden="true"
+                  class="trace-index"
+                >
+                  1
+                </span>
+                <span>
+                  代码提交
+                </span>
+              </li>
+              <li
+                aria-label="编译证据，已完成"
+                class="is-complete"
+              >
+                <span
+                  aria-hidden="true"
+                  class="trace-index"
+                >
+                  2
+                </span>
+                <span>
+                  编译证据
+                </span>
+              </li>
+              <li
+                aria-label="概念根因，已完成"
+                class="is-complete"
+              >
+                <span
+                  aria-hidden="true"
+                  class="trace-index"
+                >
+                  3
+                </span>
+                <span>
+                  概念根因
+                </span>
+              </li>
+              <li
+                aria-label="提示阶梯，已完成"
+                class="is-complete"
+              >
+                <span
+                  aria-hidden="true"
+                  class="trace-index"
+                >
+                  4
+                </span>
+                <span>
+                  提示阶梯
+                </span>
+              </li>
+              <li
+                aria-label="理解验证，已完成"
+                class="is-complete"
+              >
+                <span
+                  aria-hidden="true"
+                  class="trace-index"
+                >
+                  5
+                </span>
+                <span>
+                  理解验证
+                </span>
+              </li>
+              <li
+                aria-current="step"
+                aria-label="记忆确认，当前步骤"
+                class="is-current"
+              >
+                <span
+                  aria-hidden="true"
+                  class="trace-index"
+                >
+                  6
+                </span>
+                <span>
+                  记忆确认
+                </span>
+              </li>
+            </ol>
+            <section
+              aria-labelledby="code-title"
+              class="code-workbench"
+            >
+              <div
+                class="workbench-bar"
+              >
+                <div>
+                  <p
+                    class="section-kicker"
+                  >
+                    01 · 选择任务
+                  </p>
+                  <h2
+                    id="code-title"
+                  >
+                    代码实验台
+                  </h2>
+                </div>
+                <div
+                  class="selector-row"
+                >
+                  <label>
+                    课程
+                    <select>
+                      <option
+                        value="course-cj"
+                      >
+                        仓颉语言设计
+                      </option>
+                    </select>
+                  </label>
+                  <label>
+                    练习
+                    <select>
+                      <option
+                        value="exercise-match"
+                      >
+                        补全 match 分支
+                      </option>
+                    </select>
+                  </label>
+                </div>
+              </div>
+              <label
+                class="editor-label"
+                for="cangjie-source"
+              >
+                <span>
+                  仓颉源码
+                </span>
+                <small>
+                  main.cj · 隔离执行
+                </small>
+              </label>
+              <textarea
+                aria-label="仓颉源码"
+                class="code-editor"
+                id="cangjie-source"
+                spellcheck="false"
+              >
+                main() { match (value) { case Some(v) =&gt; v } }
+              </textarea>
+              <div
+                class="submit-row"
+              >
+                <p
+                  role="status"
+                >
+                  草稿已保存到本机，尚未自动提交
+                </p>
+                <button
+                  class="text-button"
+                  type="button"
+                >
+                  清除本机草稿
+                </button>
+              </div>
+              <p
+                class="privacy-note"
+              >
+                草稿仅保存在当前浏览器，不会自动提交给教师。公用电脑使用后请清除草稿；临时测试网址更换后无法读取旧网址的草稿。
+              </p>
+              <div
+                class="submit-row"
+              >
+                <p>
+                  代码只会发送到受限执行器，不在浏览器中模拟结果。
+                </p>
+                <button
+                  type="button"
+                >
+                  提交并运行
+                </button>
+              </div>
+            </section>
+            <section
+              aria-labelledby="execution-title"
+              class="execution-panel"
+            >
+              <div
+                class="section-heading"
+              >
+                <div>
+                  <p
+                    class="section-kicker"
+                  >
+                    02 · 执行证据
+                  </p>
+                  <h2
+                    id="execution-title"
+                  >
+                    真实编译反馈
+                  </h2>
+                </div>
+                <span
+                  class="status-badge status-warning"
+                >
+                  编译未通过
+                </span>
+              </div>
+              <div
+                class="compiler-strip"
+              >
+                <span>
+                  阶段 
+                  compile
+                </span>
+                <span>
+                  cjc 
+                  1.2.0
+                </span>
+                <span>
+                  退出码 
+                  1
+                </span>
+                <span>
+                  请求 
+                  req-execution
+                </span>
+              </div>
+              <ol
+                class="compiler-diagnostics"
+              >
+                <li>
+                  <strong>
+                    main.cj
+                    :2
+                  </strong>
+                  <span>
+                    match 分支未穷举
+                  </span>
+                </li>
+              </ol>
+              <div
+                class="output-grid"
+              >
+                <div>
+                  <h3>
+                    标准输出
+                  </h3>
+                  <pre
+                    class="console-output"
+                  >
+                    无输出
+                  </pre>
+                </div>
+                <div>
+                  <h3>
+                    错误输出
+                  </h3>
+                  <pre
+                    class="console-output error-output"
+                  >
+                    Non-exhaustive patterns
+                  </pre>
+                </div>
+              </div>
+            </section>
+            <section
+              aria-labelledby="diagnosis-title"
+              class="diagnosis-panel"
+            >
+              <div
+                class="section-heading"
+              >
+                <div>
+                  <p
+                    class="section-kicker"
+                  >
+                    概念根因
+                  </p>
+                  <h2
+                    id="diagnosis-title"
+                  >
+                    结构化误区诊断
+                  </h2>
+                </div>
+                <span
+                  class="status-badge status-success"
+                >
+                  置信度 92%
+                </span>
+              </div>
+              <p
+                class="root-cause"
+              >
+                没有覆盖枚举的全部可能值
+              </p>
+              <dl
+                class="diagnosis-meta"
+              >
+                <div>
+                  <dt>
+                    类别
+                  </dt>
+                  <dd>
+                    conceptual
+                  </dd>
+                </div>
+                <div>
+                  <dt>
+                    相关概念
+                  </dt>
+                  <dd>
+                    cj.pattern-match.exhaustiveness
+                  </dd>
+                </div>
+              </dl>
+              <div
+                class="evidence-list"
+              >
+                <h3>
+                  证据
+                </h3>
+                <ul>
+                  <li>
+                    <span>
+                      compiler_diagnostic
+                    </span>
+                    编译器报告 match 分支未穷举
+                  </li>
+                </ul>
+              </div>
+              <div
+                class="hint-ladder"
+              >
+                <div
+                  class="subsection-heading"
+                >
+                  <h3>
+                    提示阶梯
+                  </h3>
+                  <button
+                    type="button"
+                  >
+                    请求下一层提示
+                  </button>
+                </div>
+                <p
+                  class="empty-copy"
+                >
+                  先自己再试一次；需要时再逐级展开提示。
+                </p>
+              </div>
+              <div
+                class="explanation-check"
+              >
+                <label
+                  for="student-explanation"
+                >
+                  我对错误原因的解释
+                </label>
+                <textarea
+                  id="student-explanation"
+                  placeholder="用自己的话说明概念根因，而不是只描述修改步骤。"
+                >
+                  uncertain
+                </textarea>
+                <button
+                  type="button"
+                >
+                  验证我的理解
+                </button>
+                <div
+                  class="understanding-result "
+                  role="status"
+                >
+                  <strong>
+                    还需要再想一步
+                  </strong>
+                  <p>
+                    try again
+                  </p>
+                </div>
+              </div>
+            </section>
+          </section>
+          <aside
+            class="memory-column"
+          >
+            <section
+              aria-labelledby="memory-title"
+              class="memory-center"
+            >
+              <div
+                class="section-heading"
+              >
+                <div>
+                  <p
+                    class="section-kicker memory-kicker"
+                  >
+                    本人确认区
+                  </p>
+                  <h2
+                    id="memory-title"
+                  >
+                    个人课程记忆
+                  </h2>
+                </div>
+                <span
+                  class="privacy-chip"
+                >
+                  仅你可见
+                </span>
+              </div>
+              <p
+                class="privacy-note"
+              >
+                系统只能提出建议。只有你接受后，内容才会成为《仓颉语言设计》的长期学习记忆。
+              </p>
+              <p
+                class="notice"
+                role="status"
+              >
+                已保存到个人记忆
+              </p>
+              <article
+                class="memory-proposal"
+              >
+                <div>
+                  <span
+                    class="status-badge status-memory"
+                  >
+                    待你确认
+                  </span>
+                  <p>
+                    我需要先检查 match 是否覆盖所有枚举分支。
+                  </p>
+                  <small>
+                    置信度 
+                    90
+                    % · 到期 
+                    2026/11/7
+                  </small>
+                </div>
+                <div
+                  class="action-row"
+                >
+                  <button
+                    type="button"
+                  >
+                    接受记忆建议
+                  </button>
+                  <button
+                    class="button-secondary"
+                    type="button"
+                  >
+                    拒绝记忆建议
+                  </button>
+                </div>
+              </article>
+              <div
+                class="memory-list"
+              />
+            </section>
+          </aside>
+        </div>
+      </main>
+    </div>
+  </div>
+</body>
+ ❯ Object.getElementError node_modules/@testing-library/dom/dist/config.js:37:19
+ ❯ getAllByLabelText node_modules/@testing-library/dom/dist/queries/label-text.js:111:38
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+ ❯ tests/student-flow.test.tsx:565:19
+    563|     fireEvent.click(screen.getByRole("button", { name: "验证我的理解" }));
+    564|     await screen.findByText("还需要再想一步");
+    565|     expect(screen.getByLabelText("理解验证，尚未开始")).toBeInTheDocument();
+       |                   ^
+    566|     expect(screen.queryByLabelText("理解验证，已完成")).not.toBeInTheDocument(…
+    567|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 66 passed (67)
+   Start at  10:28:25
+   Duration  4.01s (tests 65%, environment 20%, transform 8%, setup 4%, import 3%)
+
