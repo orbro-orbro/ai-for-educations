@@ -151,3 +151,9 @@ def test_config_base_url_override_and_teleagent_still_unsupported():
     assert provider._endpoint == "https://proxy.invalid/v1/chat/completions"
     with pytest.raises(RuntimeError, match="unsupported"):
         model_provider_from_config({"MODEL_PROVIDER": "teleagent"})
+
+
+def test_provider_echoing_a_key_as_request_id_cannot_leak_it(caplog):
+    with caplog.at_level(logging.WARNING), pytest.raises(ProviderFailure):
+        _provider(lambda request: httpx.Response(401, headers={"x-request-id": "secret-key-sentinel"})).generate_hint(_request())
+    assert "secret-key-sentinel" not in caplog.text

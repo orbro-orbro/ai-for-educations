@@ -351,3 +351,13 @@ def test_concurrent_hint_requests_reserve_distinct_levels(submissions, knowledge
             for index in (1, 2)
         ]
     assert sorted(item.result().current_level for item in futures) == [1, 2]
+
+
+@pytest.mark.parametrize("error_type", ["failure", "timeout"])
+def test_provider_failure_is_visible_and_does_not_advance_hints(submissions, knowledge, error_type):
+    from app.model_gateway.base import ProviderFailure, ProviderTimeout
+    error = ProviderTimeout if error_type == "timeout" else ProviderFailure
+    diagnosis, service, repository, _ = setup_services(submissions, knowledge, [error("sentinel"), error("sentinel")])
+    with pytest.raises(error):
+        service.next_hint(Actor("student-1", Role.STUDENT), diagnosis.diagnosis_id, reason="help", request_id="failed-hint")
+    assert not repository.hint_events(diagnosis.diagnosis_id)

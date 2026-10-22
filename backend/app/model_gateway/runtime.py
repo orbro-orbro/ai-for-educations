@@ -482,10 +482,12 @@ class ModelSettingsService:
         store: ModelSettingsStore,
         *,
         environment: str | None = None,
+        editable: bool = True,
         environ: Mapping[str, str] | None = None,
         client: httpx.Client | None = None,
     ) -> None:
         self._runtime = runtime
+        self._editable = editable
         self._store = store
         self._environ = environ
         self._client = client
@@ -499,7 +501,7 @@ class ModelSettingsService:
 
     @property
     def environment_locked(self) -> bool:
-        return self._environment == "production"
+        return self._environment == "production" or not self._editable
 
     def snapshot(self) -> ModelSettings:
         return self._runtime.snapshot()
@@ -510,7 +512,7 @@ class ModelSettingsService:
         A broken personal entry must never take the request down: it falls back
         to the shared provider and logs one warning without the key.
         """
-        if not user_id:
+        if self.environment_locked or not user_id:
             return self._runtime.provider()
         with self._lock:
             cached = self._user_providers.get(user_id)
@@ -532,6 +534,8 @@ class ModelSettingsService:
         return provider
 
     def personal_settings(self, user_id: str) -> ModelSettings | None:
+        if self.environment_locked:
+            return None
         try:
             return self._store.load_user(user_id)
         except ModelSettingsStorageError:
@@ -608,6 +612,7 @@ class ModelSettingsService:
         current = self._runtime.snapshot()
         requested = str(data.get("provider") or "").strip().lower()
         if current.is_remote and current.api_key and current.provider == requested:
+            self._require_same_key_endpoint(current, data)
             data["api_key"] = current.api_key
         return data
 
@@ -632,13 +637,23 @@ class ModelSettingsService:
         current = self.personal_settings(user_id)
         if current is not None and current.is_remote and current.api_key:
             if current.provider == requested:
+                self._require_same_key_endpoint(current, data)
                 data["api_key"] = current.api_key
         return data
+
+    @staticmethod
+    def _require_same_key_endpoint(current: ModelSettings, payload: Mapping[str, Any]) -> None:
+        requested_url = str(payload.get("base_url") or "").strip().rstrip("/")
+        if not requested_url:
+            preset = CHAT_PROVIDER_PRESETS.get(current.provider)
+            requested_url = preset[1] if preset else ""
+        if requested_url != current.base_url:
+            raise ModelConfigurationError("api_key must be supplied when changing base_url")
 
     def _require_editable(self) -> None:
         if self.environment_locked:
             raise ModelConfigurationLocked(
-                "model configuration is managed by the environment in production"
+                "model configuration is managed by the deployment environment"
             )
 
 

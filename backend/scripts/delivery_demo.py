@@ -66,6 +66,8 @@ def seed(database_url, *, environment, enabled, password):
 
 class DeliveryMockProvider:
     """Repeatable fixtures, no model/network calls and no prompt retention."""
+    fixed_mock = True
+
     def generate_diagnosis(self, request):
         knowledge = next((item for item in request.knowledge if item.misconception_id == MISCONCEPTION), None)
         if knowledge is None:

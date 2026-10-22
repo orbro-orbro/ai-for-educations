@@ -385,3 +385,11 @@ def test_probe_rejects_control_providers():
     _runtime, service = _service()
     with pytest.raises(ModelConfigurationError):
         service.probe({"provider": "mock"})
+
+
+@pytest.mark.parametrize("action", ["apply", "probe"])
+def test_blank_shared_key_cannot_be_redirected_to_another_endpoint(action):
+    _, service = _service(client=httpx.Client(transport=httpx.MockTransport(lambda request: httpx.Response(200))))
+    service.apply(_deepseek_payload())
+    with pytest.raises(ModelConfigurationError):
+        getattr(service, action)(_deepseek_payload(api_key="", base_url="https://other.example/v1"))

@@ -8,6 +8,7 @@ services:
     labels: {knowbound.task: live-model-demo}
     environment:
       KNOWBOUND_SYNTHETIC_DEMO: "1"
+      MODEL_SETTINGS_ENABLED: "1"
       DEMO_PASSWORD: ${DEMO_PASSWORD:?Explicit synthetic actor password required}
       MODEL_PROVIDER: ${MODEL_PROVIDER:?Live model provider required}
       MODEL_NAME: ${MODEL_NAME:?Live model name required}

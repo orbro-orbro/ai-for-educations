@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import httpx
 
 import pytest
 from fastapi import FastAPI
@@ -36,12 +37,13 @@ def _runtime(provider: str = "disabled") -> RuntimeModelProvider:
     )
 
 
-def _service(*, environment: str = "development", store=None) -> ModelSettingsService:
+def _service(*, environment: str = "development", store=None, client=None) -> ModelSettingsService:
     return ModelSettingsService(
         _runtime(),
         store if store is not None else InMemoryModelSettingsStore(),
         environment=environment,
         environ={},
+        client=client,
     )
 
 
@@ -303,3 +305,28 @@ def test_missing_provider_is_rejected():
     )
 
     assert response.status_code == 422
+
+
+@pytest.mark.parametrize("action", ["apply_personal", "probe_personal"])
+def test_blank_personal_key_cannot_be_redirected_to_another_endpoint(action):
+    service = _service(client=httpx.Client(transport=httpx.MockTransport(lambda request: httpx.Response(200))))
+    service.apply_personal("student-1", _payload())
+    with pytest.raises(ModelConfigurationError):
+        getattr(service, action)("student-1", _payload(api_key="", base_url="https://other.example/v1"))
+
+
+def test_actual_calls_use_only_the_request_owners_key():
+    from app.model_gateway.base import HintRequest
+    captured = []
+    def handler(request):
+        captured.append(request.headers["authorization"])
+        return httpx.Response(200, json={"choices": [{"message": {"content": '{"level":1,"content":"reflect"}'}}]})
+    service = _service(client=httpx.Client(transport=httpx.MockTransport(handler)))
+    service.apply(_payload(key=SHARED_KEY))
+    service.apply_personal("student-1", _payload())
+    request = HintRequest(category="conceptual", root_cause="fixture", concept_ids=("fixture",), level=1, previous_attempt_count=0, approved_outline="reflect")
+    for owner in ["student-1", "student-2", None]:
+        service.provider_for(owner).generate_hint(request)
+    service.clear_personal("student-1")
+    service.provider_for("student-1").generate_hint(request)
+    assert captured == [f"Bearer {PERSONAL_KEY}", f"Bearer {SHARED_KEY}", f"Bearer {SHARED_KEY}", f"Bearer {SHARED_KEY}"]

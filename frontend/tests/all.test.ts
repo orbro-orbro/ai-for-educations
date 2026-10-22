@@ -8,3 +8,5 @@ import "../src/StudentModelSettings.test";
 import "./student-flow.test";
 import "./teacher-privacy.test";
 import "./wave3-integration.test";
+
+import "../src/DraftScope.test";

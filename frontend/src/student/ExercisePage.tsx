@@ -147,7 +147,7 @@ export function ExercisePage({ api, ownerId }: { api: ApiClient; ownerId: string
     finally { if (!controller.signal.aborted) setRunning(false); }
   }
 
-  const activeStep = useMemo(() => memoryConfirmed ? 5 : understandingChecked ? 4 : diagnosis ? 3 : execution ? 2 : running ? 1 : 0, [diagnosis, execution, memoryConfirmed, running, understandingChecked]);
+  const activeStep = useMemo(() => memoryConfirmed && understandingChecked ? 5 : understandingChecked ? 4 : diagnosis ? 3 : execution ? 2 : running ? 1 : 0, [diagnosis, execution, memoryConfirmed, running, understandingChecked]);
   const resultIsSuccess = execution?.status === "succeeded";
 
   return (
@@ -175,7 +175,7 @@ export function ExercisePage({ api, ownerId }: { api: ApiClient; ownerId: string
         </section>}
         {attemptLinked && resultIsSuccess && <p role="status">修复提交已关联原诊断</p>}
         {runError !== null && <RequestState error={runError} retry={submissionId ? () => void (execution && (!diagnosis || diagnosis.submission_id === submissionId) ? readDiagnosis(submissionId) : retryResults(submissionId)) : () => void submit()} retryLabel={diagnosis && submissionId && diagnosis.submission_id !== submissionId ? "重试关联修复提交" : execution && submissionId ? "重新读取诊断" : "重新读取结果"} />}
-        {diagnosis && <DiagnosisPanel key={diagnosis.diagnosis_id} api={api} diagnosis={diagnosis} onExplanationChecked={(understands) => { setUnderstandingChecked(understands); setMemoryRefresh((value) => value + 1); }} />}
+        {diagnosis && <DiagnosisPanel key={diagnosis.diagnosis_id} api={api} diagnosis={diagnosis} onExplanationChecked={(understands) => { setUnderstandingChecked(understands); if (!understands) setMemoryConfirmed(false); setMemoryRefresh((value) => value + 1); }} />}
       </section>
       {courseId && <aside className="memory-column"><MemoryCenter key={courseId} api={api} courseId={courseId} refreshKey={memoryRefresh} onMemoryConfirmed={() => setMemoryConfirmed(true)} /></aside>}
     </div>

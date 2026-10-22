@@ -65,6 +65,7 @@ describe("Wave 3 integration UI",()=>{
     let resolveFirst!:(value:Response)=>void;
     vi.stubGlobal("fetch",vi.fn(async(input:RequestInfo|URL)=>{
       const u=new URL(String(input));
+      if(u.pathname === "/teacher/model-settings") return json({provider:"mock",model:"",base_url:"",source:"environment",configured:true,key_hint:null,timeout_seconds:30,persistence:"memory",environment_locked:true});
       if(u.pathname==="/courses")return json([{course_id:"course-a",title:"Course A"},{course_id:"course-b",title:"Course B"}]);
       if(u.pathname.endsWith("/analytics"))return json({status:"insufficient_sample",course_id:"course-a",filters,minimum_sample_size:5});
       if(u.pathname.includes("course-a/review-queue"))return new Promise<Response>(r=>{resolveFirst=r;});
@@ -81,6 +82,7 @@ describe("Wave 3 integration UI",()=>{
     let first!:(value:Response)=>void;
     vi.stubGlobal("fetch",vi.fn(async(input:RequestInfo|URL)=>{
       const u=new URL(String(input));
+      if(u.pathname === "/teacher/model-settings") return json({provider:"mock",model:"",base_url:"",source:"environment",configured:true,key_hint:null,timeout_seconds:30,persistence:"memory",environment_locked:true});
       if(u.pathname==="/courses")return json([{course_id:"course-a",title:"Course A"},{course_id:"course-b",title:"Course B"}]);
       if(u.pathname.includes("course-a/exercises"))return new Promise<Response>(r=>{first=r;});
       if(u.pathname.includes("course-b/exercises"))return json([{exercise_id:"exercise-b",course_id:"course-b",title:"Exercise B"}]);
@@ -101,6 +103,7 @@ describe("Wave 3 integration UI",()=>{
     const submissions:string[]=[];
     vi.stubGlobal("fetch",vi.fn(async(input:RequestInfo|URL,init:RequestInit={})=>{
       const u=new URL(String(input));
+      if(u.pathname === "/teacher/model-settings") return json({provider:"mock",model:"",base_url:"",source:"environment",configured:true,key_hint:null,timeout_seconds:30,persistence:"memory",environment_locked:true});
       if(u.pathname==="/courses")return json([{course_id:"course-a",title:"Course A"},{course_id:"course-b",title:"Course B"}]);
       if(u.pathname.includes("course-a/exercises"))return json([{exercise_id:"exercise-a",course_id:"course-a",title:"Exercise A"},{exercise_id:"exercise-next",course_id:"course-a",title:"Exercise Next"}]);
       if(u.pathname.includes("course-b/exercises"))return json([{exercise_id:"exercise-b",course_id:"course-b",title:"Exercise B"}]);
@@ -126,6 +129,7 @@ describe("Wave 3 integration UI",()=>{
   it("labels multi-concept trend sums as associations rather than unique diagnosis totals",async()=>{
     vi.stubGlobal("fetch",vi.fn(async(input:RequestInfo|URL)=>{
       const u=new URL(String(input));
+      if(u.pathname === "/teacher/model-settings") return json({provider:"mock",model:"",base_url:"",source:"environment",configured:true,key_hint:null,timeout_seconds:30,persistence:"memory",environment_locked:true});
       if(u.pathname==="/courses")return json([{course_id:"course-a",title:"Course A"}]);
       if(u.pathname.endsWith("/review-queue"))return json({course_id:"course-a",filters,items:[]});
       return json({status:"available",course_id:"course-a",filters,sample_size:5,groups:["concept-a","concept-b"].map(concept_id=>({concept_id,exercise_id:"exercise-a",category:"conceptual",sample_size:5,diagnosis_count:5,independent_repair_count:1}))});
@@ -159,6 +163,7 @@ describe("Wave 3 integration UI",()=>{
     const item={queue_event_id:"queue-a",diagnosis_id:"diagnosis-a",submission_id:"submission-a",exercise_id:"exercise-a",category:"conceptual",concept_ids:[],root_cause:"OLD_REVIEW",evidence_summaries:[],confidence:.4,review_reason:"low_confidence",queued_at:"2026-10-07T00:00:00Z"};
     vi.stubGlobal("fetch",vi.fn(async(input:RequestInfo|URL)=>{
       const u=new URL(String(input));
+      if(u.pathname === "/teacher/model-settings") return json({provider:"mock",model:"",base_url:"",source:"environment",configured:true,key_hint:null,timeout_seconds:30,persistence:"memory",environment_locked:true});
       if(u.pathname.endsWith("/review"))return new Promise<Response>(resolve=>{finish=resolve;});
       return json({course_id:u.pathname.includes("course-a")?"course-a":"course-b",filters,items:u.pathname.includes("course-a")?[item]:[]});
     }));

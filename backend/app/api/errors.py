@@ -30,6 +30,7 @@ def error_response(request: Request, status_code: int, code: str, message: str) 
 
 
 def install_error_handling(app: FastAPI) -> None:
+    from app.model_gateway.base import ProviderFailure, ProviderTimeout
     from app.api.auth import AuthenticationFailed
     from app.auth.revocations import AuthenticationStorageError
     from app.courses.service import ResourceNotAvailable
@@ -46,6 +47,12 @@ def install_error_handling(app: FastAPI) -> None:
         response = await call_next(request)
         response.headers["X-Request-ID"] = request.state.request_id
         return response
+
+    @app.exception_handler(ProviderFailure)
+    @app.exception_handler(ProviderTimeout)
+    async def handle_model_failure(request: Request, exc: RuntimeError):
+        code = "MODEL_PROVIDER_TIMEOUT" if isinstance(exc, ProviderTimeout) else "MODEL_PROVIDER_FAILURE"
+        return error_response(request, 503, code, "Model provider request failed. Please retry.")
 
     @app.exception_handler(AuthenticationFailed)
     async def handle_authentication_failed(request: Request, _exc: AuthenticationFailed):

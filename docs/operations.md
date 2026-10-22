@@ -21,7 +21,7 @@ pwsh -NoProfile -File ./scripts/start-delivery.ps1 -Action Stop
 
 ## 模型配置（网页，教师与学生）
 
-教师端「课程诊断台」的「模型接入」可在运行时切换 deepseek / qwen / 任意 OpenAI 兼容地址 / Mock / 停用，填写模型名、Base URL 与 Key，先「测试连接」再「保存并启用」，下一次诊断请求即生效。Key 只写入 API 容器内的 `MODEL_SETTINGS_PATH`（默认 `/var/lib/knowbound/model-settings.json`，权限 0600，原子替换），不回传浏览器、不写日志与审计；界面只显示后四位。同一接入方式下留空 Key 沿用已保存的值；切换接入方式必须重新填写。
+教师端「课程诊断台」的「模型接入」可在运行时切换 deepseek / qwen / 任意 OpenAI 兼容地址 / Mock / 停用，填写模型名、Base URL 与 Key，先「测试连接」再「保存并启用」，下一次诊断请求即生效。Key 只写入 API 容器内的 `MODEL_SETTINGS_PATH`（默认 `/var/lib/knowbound/model-settings.json`，权限 0600，原子替换），不回传浏览器、不写日志与审计；界面只显示后四位。同一接入方式及端点下留空 Key 沿用已保存的值；切换接入方式必须重新填写。
 
 学生端「我的模型接入」默认沿用教师配置，也可填入自己的 Key，只影响自己的诊断与提示：写入同一文件的 `users.<user_id>` 分区，其他学生和教师都读不到，也不改动共享配置。学生只能看到自己 Key 的后四位；继承教师配置时不显示教师的 Key 提示。保存后再次点「改用老师的配置」即删除个人分区、回到共享配置。接口为 `GET/PUT /model-settings` 与 `POST /model-settings/probe`，教师写该路径返回 `422`，共享配置只有 `/teacher/model-settings` 一个写入口。
 
@@ -84,3 +84,14 @@ pwsh -NoProfile -File ./scripts/verify-delivery.ps1 -Python 'C:/path/to/existing
 |git checks / evidence-index|diff 格式、无冲突、干净 HEAD、全命令退出和报告 hash 一致|
 
 开发 `-Candidate` 结果明确标候选。最终源码提交后必须全量重跑到授权外置目录；此后任何源码修改都会使上一轮证据失效。最终真实结果及完整提交号在 `evidence-index.json` 和外置交接记录中。历史失败记录保存在 Task 11 忽略账本中，历史 Wave 3 文件保持原样。
+
+## PR 9–11 集成配置边界（2026-10-22）
+
+- Mock：`pwsh -NoProfile -File ./scripts/start-delivery.ps1`，5209/8208，`knowbound-wave4-demo`。固定 DeliveryMock 注入忽略存储配置，所有共享/个人写入、探测、恢复环境操作返回 409；个人覆盖也不参与请求解析。
+- 真实模型：`start-live-demo.cmd` 或 `pwsh -NoProfile -File ./scripts/start-live-demo.ps1`，5309/8308，`knowbound-live-demo`；由独立 `.delivery/live-model.env` 提供首次有效模型和凭据。live Compose 显式设 `MODEL_SETTINGS_ENABLED=1`，仅 development/test 可启用网页配置；其他部署默认锁定。项目、卷、镜像和凭据隔离设计保持原样。
+- Key 复用同时要求 provider 和规范化端点相同。更换端点须明确填写 Key，探测与保存遵循同一规则。学生不能借用共享 Key 作为个人配置，也不能指定其他用户 ID。
+- 提示调用持续超时/供应商错误返回 503 `MODEL_PROVIDER_TIMEOUT` / `MODEL_PROVIDER_FAILURE`，不新增提示事件、不推进提示层级；不把服务失败伪装为成功。内容泄漏检查仍可产生已标注的安全备用提示，这与替换模型为 Mock 无关。诊断失败保持待复核，理解检查失败保持不具备记忆资格。
+- 配置文件仍为容器内明文 0600（Linux 权限；宿主 Windows 不据此承诺访问隔离），stop/start 保留，容器重建失效；不增加数据库迁移、持久卷或多副本能力。
+- 教师测试模式仅本地验证代理与构建参数；公网 ADR 为 `0011-teacher-test-access.md`，状态待确认，未启动隧道、未修改邮箱白名单。
+
+完整验证证据与未完成项见 `docs/pr9-11-integration-handoff.md`。

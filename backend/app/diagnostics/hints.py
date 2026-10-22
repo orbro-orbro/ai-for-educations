@@ -128,6 +128,7 @@ class HintLadderService:
         )
         content = safe_fallback(level)
         used_fallback = True
+        provider_error = None
         attempts_to_generate = self._max_regenerations + 1 if level <= 2 else 1
         for generation in range(attempts_to_generate):
             request = HintRequest(
@@ -146,7 +147,10 @@ class HintLadderService:
                     if isinstance(raw, HintModelOutput)
                     else HintModelOutput.model_validate(raw)
                 )
-            except (ProviderTimeout, ProviderFailure, ValidationError, ValueError, TypeError):
+            except (ProviderTimeout, ProviderFailure) as exc:
+                provider_error = exc
+                continue
+            except (ValidationError, ValueError, TypeError):
                 continue
             if output.level != level or not output.content.strip():
                 continue
@@ -159,6 +163,8 @@ class HintLadderService:
             content = output.content
             used_fallback = False
             break
+        if used_fallback and provider_error is not None:
+            raise provider_error
         event = HintEvent(
             hint_event_id=self._id_factory(),
             diagnosis_id=diagnosis_id,

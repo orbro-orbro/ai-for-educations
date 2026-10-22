@@ -105,6 +105,15 @@ describe("student model settings", () => {
     );
 
     expect(await screen.findByRole("button", { name: "使用我自己的 API" })).toBeDisabled();
-    expect(screen.getByText(/生产环境/)).toBeInTheDocument();
+    expect(screen.getByText(/当前部署已锁定/)).toBeInTheDocument();
   });
+  it("requires an explicit key when changing the endpoint", async () => {
+    renderPanel((url) => url.pathname === "/model-settings" ? json(ownView) : undefined);
+    fireEvent.change(await screen.findByLabelText("Base URL"), { target: { value: "https://other.example/v1" } });
+    expect(screen.getByRole("button", { name: "保存并启用" })).toBeDisabled();
+    expect(screen.getByRole("button", { name: "测试连接" })).toBeDisabled();
+    fireEvent.change(screen.getByLabelText("API Key"), { target: { value: "new-explicit-key" } });
+    expect(screen.getByRole("button", { name: "保存并启用" })).not.toBeDisabled();
+  });
+
 });
