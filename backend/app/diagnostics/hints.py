@@ -17,6 +17,7 @@ from app.model_gateway.base import (
     ModelProvider,
     ProviderFailure,
     ProviderTimeout,
+    UserScopedModelProvider,
 )
 from app.submissions.models import utc_now
 
@@ -48,6 +49,11 @@ class HintLadderService:
         self._min_attempts_for_level_four = min_attempts_for_level_four
         self._protected_answer_lookup = protected_answer_lookup
         self._id_factory = id_factory
+
+    def _provider_for(self, user_id: str | None) -> ModelProvider:
+        if isinstance(self._provider, UserScopedModelProvider):
+            return self._provider.for_user(user_id)
+        return self._provider
 
     def next_hint(
         self,
@@ -134,7 +140,7 @@ class HintLadderService:
                 low_information=generation > 0,
             )
             try:
-                raw = self._provider.generate_hint(request)
+                raw = self._provider_for(actor.user_id).generate_hint(request)
                 output = (
                     raw
                     if isinstance(raw, HintModelOutput)
