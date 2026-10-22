@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import logging
 import os
-from dataclasses import replace
 from datetime import UTC, datetime
 from typing import Literal
 from pydantic import BaseModel, ConfigDict
@@ -197,11 +196,20 @@ def _model_runtime(
     )
     active = injected
     described = settings_from_environment()
-    if isinstance(injected, DeterministicMockProvider):
+    fixed_mock = (
+        isinstance(injected, DeterministicMockProvider)
+        or getattr(injected, "fixed_mock", False) is True
+    )
+    editable = (
+        os.environ.get("MODEL_SETTINGS_ENABLED") == "1"
+        and environment in {"development", "test"}
+        and not fixed_mock
+    )
+    if fixed_mock:
         # The synthetic delivery demo must never be overridden by a stored
         # real-model configuration; it promises a deterministic Mock.
-        described = replace(described, provider="mock")
-    elif environment != "production":
+        described = ModelSettings(provider="mock", source="environment")
+    elif editable:
         stored = _stored_model_settings(store)
         if stored is not None:
             try:
@@ -214,7 +222,7 @@ def _model_runtime(
     if active is None:
         active = model_provider_from_config()
     runtime = RuntimeModelProvider(active, described)
-    return runtime, ModelSettingsService(runtime, store, environment=environment)
+    return runtime, ModelSettingsService(runtime, store, environment=environment, editable=editable)
 
 
 def _stored_model_settings(store) -> ModelSettings | None:
@@ -358,7 +366,7 @@ def create_app(
             CORSMiddleware,
             allow_origins=list(allowed_origins),
             allow_credentials=False,
-            allow_methods=["GET", "POST", "PATCH", "DELETE"],
+            allow_methods=["GET", "POST", "PUT", "PATCH", "DELETE"],
             allow_headers=[
                 "Authorization",
                 "Content-Type",

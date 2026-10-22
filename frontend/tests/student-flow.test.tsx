@@ -524,4 +524,46 @@ describe("student learning loop", () => {
     expect(screen.getByText("请求编号：req-denied")).toBeInTheDocument();
     expect(screen.queryByText("资源不存在")).not.toBeInTheDocument();
   });
+  it("allows retry after a failed understanding check without showing mastery", async () => {
+    let checks = 0;
+    useStudentApi((url, init) => {
+      if (url.pathname.endsWith("/submissions") && init.method === "POST") return json(submission, 201);
+      if (url.pathname.endsWith("/execution-result")) return json(executionResult);
+      if (url.pathname.endsWith("/diagnosis")) return json(diagnosis);
+      if (url.pathname.endsWith("/explanation-check")) return json({ explanation_check_id: `check-${++checks}`, diagnosis_id: "diagnosis-1", understands: checks > 1, concept_ids: diagnosis.concept_ids, evidence_summary: "fixture", confidence: 0.9, feedback: checks === 1 ? "retry-fixture" : "understood-fixture", memory_proposal_eligible: checks > 1 });
+    });
+    render(<App />);
+    await submitCode();
+    fireEvent.change(await screen.findByLabelText("我对错误原因的解释"), { target: { value: "first explanation" } });
+    fireEvent.click(screen.getByRole("button", { name: "验证我的理解" }));
+    await screen.findByText("还需要再想一步");
+    expect(screen.queryByText("理解验证通过")).not.toBeInTheDocument();
+    expect(screen.getByLabelText("理解验证，尚未开始")).toBeInTheDocument();
+    fireEvent.change(screen.getByLabelText("我对错误原因的解释"), { target: { value: "revised explanation" } });
+    fireEvent.click(screen.getByRole("button", { name: "验证我的理解" }));
+    await screen.findByText("理解验证通过");
+    expect(checks).toBe(2);
+  });
+
+  it("does not let an older memory confirmation override a failed understanding check", async () => {
+    useStudentApi((url, init) => {
+      if (url.pathname.endsWith("/submissions") && init.method === "POST") return json(submission, 201);
+      if (url.pathname.endsWith("/execution-result")) return json(executionResult);
+      if (url.pathname.endsWith("/diagnosis")) return json(diagnosis);
+      if (url.pathname === "/me/memory-proposals") return json([proposal]);
+      if (url.pathname.endsWith("/accept")) return json(memory);
+      if (url.pathname.endsWith("/explanation-check")) return json({ explanation_check_id: "check-fail", diagnosis_id: "diagnosis-1", understands: false, concept_ids: [], evidence_summary: "fixture", confidence: 0.2, feedback: "try again", memory_proposal_eligible: false });
+    });
+    render(<App />);
+    await submitCode();
+    await screen.findByLabelText("我对错误原因的解释");
+    fireEvent.click(await screen.findByRole("button", { name: "接受记忆建议" }));
+    await screen.findByText("已保存到个人记忆");
+    fireEvent.change(screen.getByLabelText("我对错误原因的解释"), { target: { value: "uncertain" } });
+    fireEvent.click(screen.getByRole("button", { name: "验证我的理解" }));
+    await screen.findByText("还需要再想一步");
+    expect(screen.getByLabelText("理解验证，尚未开始")).toBeInTheDocument();
+    expect(screen.queryByLabelText("理解验证，已完成")).not.toBeInTheDocument();
+  });
+
 });

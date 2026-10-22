@@ -19,6 +19,7 @@ test("a student can edit offline and restore a draft in a real browser", async (
       if (url.port !== "8000") return route.continue();
       if (request.method() === "POST") writes++;
       const fixtures = {
+        "/model-settings": { scope: "shared", provider: "mock", model: "", base_url: "", source: "environment", configured: true, key_hint: null, timeout_seconds: 30, personal_configured: false, shared: {provider: "mock", model: "", configured: true}, persistence: "memory", environment_locked: true },
         "/courses": [{ course_id: "synthetic-course", title: "仓颉语言设计 · 合成测试" }],
         "/courses/synthetic-course/exercises": [{ exercise_id: "synthetic-exercise", course_id: "synthetic-course", title: "草稿恢复体验" }],
         "/me/memory-proposals": [], "/me/memories": [],

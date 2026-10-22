@@ -93,7 +93,7 @@ class OpenAIChatCompletionsProvider:
             self._log_failure("invalid_or_transport", provider_request_id, started)
             raise ProviderFailure("model provider request failed") from exc
 
-    @staticmethod
-    def _log_failure(category: str, request_id: str, started: float) -> None:
-        safe_request_id = request_id if _SAFE_REQUEST_ID.fullmatch(request_id) else "unavailable"
+    def _log_failure(self, category: str, request_id: str, started: float) -> None:
+        key = self._headers["Authorization"].removeprefix("Bearer ")
+        safe_request_id = request_id if _SAFE_REQUEST_ID.fullmatch(request_id) and key not in request_id else "unavailable"
         _LOG.warning("model provider failure category=%s request_id=%s elapsed_ms=%d", category, safe_request_id, int((monotonic() - started) * 1000))

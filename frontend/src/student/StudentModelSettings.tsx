@@ -107,8 +107,11 @@ export function StudentModelSettings({ api }: { api: ApiClient }) {
     finally { setBusy(null); }
   }
 
+  const effectiveBaseUrl = baseUrl.trim().replace(/\/+$/, "")
+    || (["deepseek", "qwen"].includes(provider) ? option.baseUrlHint : "");
+  const sameEndpoint = view?.base_url.replace(/\/+$/, "") === effectiveBaseUrl;
   const canReuseKey = usingOwn && view?.personal_configured === true
-    && view.provider === provider && Boolean(view.key_hint);
+    && view.provider === provider && sameEndpoint && Boolean(view.key_hint);
   const keyReady = Boolean(apiKey.trim()) || canReuseKey;
   const canSubmit = !locked && Boolean(model.trim()) && keyReady && !busy;
 
@@ -139,7 +142,7 @@ export function StudentModelSettings({ api }: { api: ApiClient }) {
             <div><dt>我的密钥</dt><dd>{view.personal_configured ? (view.key_hint ?? "已保存") : "未设置"}</dd></div>
           </dl>
 
-          {locked && <div className="notice" role="status">当前为生产环境，模型配置由部署统一管理，学生端不可修改。</div>}
+          {locked && <div className="notice" role="status">当前部署已锁定模型配置，学生端不可修改。</div>}
 
           <div className="action-row">
             {usingOwn ? (

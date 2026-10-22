@@ -106,7 +106,10 @@ export function ModelSettings({ api }: { api: ApiClient }) {
     }
   }
 
-  const canReuseKey = view?.configured === true && view.provider === provider;
+  const effectiveBaseUrl = baseUrl.trim().replace(/\/+$/, "")
+    || (["deepseek", "qwen"].includes(provider) ? option.baseUrlHint : "");
+  const sameEndpoint = view?.base_url.replace(/\/+$/, "") === effectiveBaseUrl;
+  const canReuseKey = view?.configured === true && view.provider === provider && sameEndpoint;
   const keyReady = Boolean(apiKey.trim()) || canReuseKey;
   const canSubmit = !locked
     && (option.remote ? Boolean(model.trim()) && keyReady : true)
@@ -148,7 +151,7 @@ export function ModelSettings({ api }: { api: ApiClient }) {
             <div><dt>配置来源</dt><dd>{sourceLabels[view.source]}</dd></div>
           </dl>
 
-          {locked && <div className="notice" role="status">当前为生产环境，模型配置只读，只允许通过部署环境变量修改。</div>}
+          {locked && <div className="notice" role="status">当前部署已锁定模型配置；固定 Mock 演示、生产环境或未启用网页配置时只读。</div>}
 
           <div className="settings-grid">
             <label htmlFor="model-provider">接入方式
@@ -182,7 +185,7 @@ export function ModelSettings({ api }: { api: ApiClient }) {
             {view.persistence === "file"
               ? "配置保存在本机数据卷，重启容器后仍然生效。"
               : "本次运行有效：重启 API 进程后回到环境变量配置。"}
-            {" "}同一接入方式下留空密钥会沿用已保存的密钥；要回到部署配置请选择「跟随部署环境变量」。
+            {" "}同一接入方式及地址下留空密钥会沿用已保存的密钥；更换地址须重新填写密钥；要回到部署配置请选择「跟随部署环境变量」。
           </p>
         </>
       )}

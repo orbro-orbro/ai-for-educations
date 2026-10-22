@@ -143,3 +143,7 @@ reuses only that user's own key and never the shared one; `environment` is rejec
 personal provider; the production gate also blocks the personal scope; a version-1 file is
 read as the shared entry; the HTTP surface is scoped per student and a teacher cannot write
 the personal scope; the diagnosis path resolves the provider for `owner_user_id`.
+
+## Integration clarification (2026-10-22)
+
+Approval status above is unchanged. Enforce the existing fixed-Mock and environment-only boundaries for both shared and personal settings. The live-model Compose explicitly enables `MODEL_SETTINGS_ENABLED=1`; other app deployments default to locked, and production and fixed Mock injections remain locked regardless of that flag. Locked deployments ignore stored personal settings as well as stored shared settings. A blank key may be reused only for the same provider and endpoint; changing the endpoint requires an explicitly supplied key. This clarification adds no role, supplier, teaching-data permission or persistence resource.

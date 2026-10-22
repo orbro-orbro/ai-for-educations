@@ -120,6 +120,15 @@ describe("teacher model settings", () => {
     await screen.findByLabelText("接入方式");
     expect(screen.getByRole("combobox", { name: "接入方式" })).toBeDisabled();
     expect(screen.getByRole("button", { name: "保存并启用" })).toBeDisabled();
-    expect(screen.getByText(/生产环境/)).toBeInTheDocument();
+    expect(screen.getByText(/当前部署已锁定/)).toBeInTheDocument();
   });
+  it("requires an explicit key when changing the endpoint", async () => {
+    renderPanel((url) => url.pathname === "/teacher/model-settings" ? json(configuredView) : undefined);
+    fireEvent.change(await screen.findByLabelText("Base URL"), { target: { value: "https://other.example/v1" } });
+    expect(screen.getByRole("button", { name: "保存并启用" })).toBeDisabled();
+    expect(screen.getByRole("button", { name: "测试连接" })).toBeDisabled();
+    fireEvent.change(screen.getByLabelText("API Key"), { target: { value: "new-explicit-key" } });
+    expect(screen.getByRole("button", { name: "保存并启用" })).not.toBeDisabled();
+  });
+
 });

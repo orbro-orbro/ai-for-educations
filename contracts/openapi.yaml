@@ -554,7 +554,7 @@ paths:
               $ref: '#/components/schemas/NextHintRequest'
       responses:
         '200':
-          description: Persisted next hint; provider failure may return a safe fallback.
+          description: Persisted next hint; unsafe content may use a labeled safe fallback. Provider failure returns 503 without advancing the level.
           content:
             application/json:
               schema:
