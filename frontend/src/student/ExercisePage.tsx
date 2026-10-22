@@ -5,6 +5,7 @@ import { ConceptTrace } from "../components/ConceptTrace";
 import { RequestState } from "../components/RequestState";
 import { DiagnosisPanel } from "./DiagnosisPanel";
 import { MemoryCenter } from "./MemoryCenter";
+import { StudentModelSettings } from "./StudentModelSettings";
 
 const starter = `main() {
     // 在这里编写仓颉代码
@@ -152,6 +153,7 @@ export function ExercisePage({ api }: { api: ApiClient }) {
     <div className="student-layout">
       <section className="workspace-column" aria-labelledby="student-workspace-title">
         <div className="page-heading"><div><p className="section-kicker">STUDENT · LEARNING LOOP</p><h1 id="student-workspace-title">学生工作台</h1><p>从真实编译证据出发，沿概念脉络完成一次可核验的学习闭环。</p></div><span className="course-mark">《仓颉语言设计》</span></div>
+        <StudentModelSettings api={api} />
         <ConceptTrace activeStep={activeStep} />
         {loading && <div className="loading-line" role="status">正在准备课程与练习…</div>}
         {courseError !== null && <RequestState error={courseError} retry={() => void loadCourses()} retryLabel="重试加载课程" />}

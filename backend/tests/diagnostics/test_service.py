@@ -647,3 +647,35 @@ def test_api_rejects_client_control_fields_and_hides_foreign_resources(
     assert foreign.status_code == missing.status_code == teacher.status_code == 404
     assert foreign.json()["code"] == missing.json()["code"] == teacher.json()["code"] == "RESOURCE_NOT_AVAILABLE"
     assert controlled_explanation.status_code == controlled_hint.status_code == 422
+
+
+class _RecordingScopedProvider:
+    """Stands in for UserScopedModelProvider and records the resolved owner."""
+
+    def __init__(self) -> None:
+        self.users: list[str | None] = []
+        self._inner = DeterministicMockProvider()
+
+    def for_user(self, user_id: str | None):
+        self.users.append(user_id)
+        return self._inner
+
+
+def test_diagnosis_resolves_the_provider_for_the_submission_owner(
+    submissions, knowledge
+):
+    provider = _RecordingScopedProvider()
+    service = DiagnosisService(
+        submissions=submissions,
+        knowledge=knowledge,
+        repository=InMemoryDiagnosticRepository(),
+        provider=provider,
+        access=StudentSubmissionAccess(),
+        confidence_threshold=0.75,
+        max_provider_retries=1,
+    )
+
+    service.diagnose("sub-1", request_id="req-scoped-owner")
+
+    assert provider.users
+    assert set(provider.users) == {"student-1"}
